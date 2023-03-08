@@ -6,13 +6,19 @@
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import ScheduleDate from '@/components/global/ScheduleDate.vue'
-    import ScheduleTime from '@/components/global/ScheduleTime.vue'
+    // import ScheduleTime from '@/components/global/ScheduleTime.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
 
 
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
+
+    const options = ref([
+        { id: 0, name: 'shirt', value: 'shirt'},
+        { id: 1, name: 'jacket', value: 'jacket'},
+        { id: 2, name: 'shoes', value: 'shoes'}
+    ])
 
     let dateInput = ref(null)
     let timeInput = ref(null)
@@ -53,13 +59,6 @@
 
         USIndividualSched.setUSIndividualSched(res)
 
-
-        // new Vue({
-        //     el:'#IA_calendar_icon',
-        //     methods: {  }
-            
-        // });
-
         router.push('/individual/us/applicant-details')
         
     }
@@ -72,7 +71,7 @@
     <!-- ============================================================== -->
     <form @submit.prevent="handleDateTime">
     <div class="wrapper_container row bg-white border">
-        <div class="col-12 mb-5">
+        <div class="col-lg-12 col-md-12 col-12">
             <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
         </div>
         
@@ -95,10 +94,26 @@
                         dateLabel="Preferred Date of Medical examination"
                         v-model:input="dateInput"
                       />
-                      <ScheduleTime 
+                      <!-- <ScheduleTime 
                         timeLabel="Preferred Time of Medical examination"
                         v-model:input="timeInput"
-                      />
+                      /> -->
+                       <!-- ====================== Time Input ======================== -->
+                      <div class="row mt-3 p-3">
+                            <div class="col-12 mt-3">
+                                <label class="text-capitalize">Preferred Time of Medical examination</label>
+                            </div>
+                            <div class="col-12 input-group">
+                                <select class="form-control form-select" v-model="timeInput" aria-label="Default select example">
+                                    <!-- <option selected></option> -->
+                                    <option v-for="option in options" :key="option" :value="option.value">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- =================== End of Time Input ==================== -->
+
                     </div>
                 </div>
                 

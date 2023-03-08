@@ -11,10 +11,10 @@ import IndividualView from '@/views/IndividualView.vue'
 import FamilyView from '@/views/FamilyView.vue'
 
 // =============== Child - Page Import ==================== //
-// --- Sign In Child
+// --- Sign In Child ---- //
 import SignInPage from '@/views/signin/SignInPage.vue'
 import ForgotPasswordPage from '@/views/signin/ForgotPasswordPage.vue'
-// --- Profile Child
+// --- Profile Child ------ //
 import ProfilePage from '@/views/profile/ProfilePage.vue'
 import EditProfilePage from '@/views/profile/EditProfilePage.vue'
 // ================== INDIVIDUAL CHILD =========================== //
@@ -27,7 +27,7 @@ import US_Ind_Preview from '@/views/individual/us/PreviewPage.vue'
 // ------ US END PAGE ---------- //
 // ================ INDIVIDUAL END PAGE ========================= //
 
-// --- Family Child
+// --- Family Child ------- //
 import FamilyCountryPage from '@/views/family/CountryPage.vue'
 
 
@@ -151,7 +151,10 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior() {
+    return {x: 0, y: 0}
+  }
 })
 
 export default router

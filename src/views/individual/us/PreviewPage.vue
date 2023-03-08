@@ -13,10 +13,8 @@
         <SideNavigation />
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2 class_for_padding">
+                <div class="container-md">
+                    <div class="row mb-2 pt-5 pb-5 class_for_padding">
                         <div class="col-sm-6">
                             <h1 class="m-0">Individual U.S.A.</h1>
                         </div><!-- /.col -->
@@ -30,8 +28,6 @@
                             <PreviewSection />
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
             <!-- /.content -->
         </div>
         <FooterSection />

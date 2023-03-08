@@ -4,12 +4,20 @@ import './registerServiceWorker'
 import router from './router'
 import './axios.js'
 
-
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+// import moment from 'moment'
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
+
+// ============== function for date format moment.js ============= //
+// Vue.filter('formatDate', function(value) {
+//     if (value) {
+//         return moment(String(value)).format('MMMM DD YYYY')
+//     }
+// })
+// ==================== End of Date Format ====================== //
 
 import '../src/assets/css/style.css'
 import 'admin-lte/plugins/fontawesome-free/css/all.min.css'

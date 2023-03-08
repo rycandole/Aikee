@@ -5,7 +5,7 @@
 <template>
     <div class="col-12">
         <div class="row mt-3 justify-content-center">
-            <div class="col-lg-10 col-md-12 col-sm-12 p-2 pt-5 pb-5 bg-white border">
+            <div class="col-12 p-2 pt-5 pb-5 bg-white border">
                 <div class="row">
                     <div class="col-12 mb-3">
                         <h1 class="text-secondary text-center fs-1 fw-bold" >Choose Country</h1>

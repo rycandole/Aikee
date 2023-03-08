@@ -9,6 +9,7 @@
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import PreviewText from '@/components/global/PreviewText.vue'
     import Swal from '@/sweetalert2'
+    import moment from 'moment'
     
     // import { ucwords } from '../../../assets/js/string_functions'
 
@@ -33,14 +34,14 @@
     let textSuccess2 = "text-success"
 
     // Schedule Store
-    let sched_date = schedule.date;
+    let sched_date = moment(schedule.date).format('MMMM DD, YYYY');
     let sched_time = schedule.time;
 
     // Details Store 
-    let detail_date_of_birth = details.date_of_birth;
+    let detail_date_of_birth = moment(details.date_of_birth).format('MMMM DD, YYYY');
     let detail_ci_nvc_number = details.ci_nvc_number;
     let detail_ci_visa_pref_category = details.ci_visa_pref_category;
-    let detail_ci_interview_date = details.ci_interview_date;
+    let detail_ci_interview_date = moment(details.ci_interview_date).format('MMMM DD, YYYY');
     let detail_ci_interview_source = details.ci_interview_source;
     let detail_ad_last_name = details.ad_last_name;
     let detail_ad_first_name = details.ad_first_name;
@@ -67,11 +68,11 @@
     let detail_ad_prior_residence = details.ad_prior_residence;
     let detail_ad_passport_number = details.ad_passport_number;
     let detail_ad_passport_issued_by = details.ad_passport_issued_by;
-    let detail_ad_passport_date = details.ad_passport_date;
+    let detail_ad_passport_date = moment(details.ad_passport_date).format('MMMM DD, YYYY');
     let detail_ad_passport_expiration_date = details.ad_passport_expiration_date;
     let detail_ad_was_in_us = details.ad_was_in_us;
-    let detail_ad_issuance_date = details.ad_issuance_date;
-    let detail_ad_expiration_date = details.ad_expiration_date;
+    let detail_ad_issuance_date = moment(details.ad_issuance_date).format('MMMM DD, YYYY');
+    let detail_ad_expiration_date = moment(details.ad_expiration_date).format('MMMM DD, YYYY');
     let detail_ad_prev_medical_exam_month = details.ad_prev_medical_exam_month;
     let detail_ad_prev_medical_exam_year = details.ad_prev_medical_exam_year;
     let detail_ad_prev_xray_month = details.ad_prev_xray_month;
@@ -94,8 +95,7 @@
     const handleBack = () => {
 
         Swal.fire({
-            title: 'Are you sure you want to go back?',
-            text: 'The details you filled up will be gone.',
+            title: 'Are you sure you want to go edit?',
             showCancelButton: true,
             confirmButtonText: 'Yes',
         }).then((result) => {
@@ -563,13 +563,13 @@
                 <SubmitFormButton 
                     btnType="button"
                     className="btn btn-secondary w-25 mr-5"
-                    btnText="Back"
+                    btnText="Edit"
                     @click="handleBack"
                 />
                 <SubmitFormButton 
                     btnType="submit"
                     className="btn btn-primary w-25"
-                    btnText="Preview"
+                    btnText="Submit"
                 />
             </div>
         </form>

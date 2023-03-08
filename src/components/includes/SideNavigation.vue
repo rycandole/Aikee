@@ -54,7 +54,8 @@
                         US_IndividualSched.clearUSIndividualSched()
                         US_IndividualDetails.clearUSIndividualDetails()
 
-                        router.push('signin')
+                        router.push(process.env.BASE_URL +"signin")
+                        
 
                     } catch (err) {
                         console.log(err)
