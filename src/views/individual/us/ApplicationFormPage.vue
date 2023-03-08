@@ -1,0 +1,55 @@
+<script setup>
+    import TopNavBar from '@/components/includes/TopNavBar.vue'
+    import SideNavigation from '@/components/includes/SideNavigation.vue'
+    import FooterSection from '@/components/includes/FooterSection.vue'
+    import FormSection from '@/components/pages/individual/us/FormSection.vue'
+
+    
+
+</script>
+<template>
+    <div class="wrapper">
+        <TopNavBar />
+        <SideNavigation />
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2 class_for_padding">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Individual U.S.A.</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item "><router-link to="/individual" class="text-secondary">Individual</router-link></li>
+                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">USA</router-link></li>
+                            </ol>
+                        </div><!-- /.col -->
+                            <FormSection />
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+            <!-- /.content -->
+        </div>
+        <FooterSection />
+    </div>
+</template>
+
+<style lang="scss">
+
+.class_for_padding {
+    padding: 1rem 0 0 0;
+}
+
+@media only screen and (min-width: 768px) {
+
+}
+
+@media only screen and (min-width: 1000px) {
+    .class_for_padding {
+        padding: 0 3rem 0 3rem;
+    }
+}
+</style>

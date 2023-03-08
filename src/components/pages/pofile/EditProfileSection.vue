@@ -1,0 +1,221 @@
+<script setup>
+    import { onMounted, ref } from 'vue'
+    import { useRouter } from 'vue-router'
+    import { useProfileStore } from '../../../store/profile-store'
+    // import { ucwords } from './../../../assets/js/string_functions.js'
+    // import RouterButton  from '../../global/RouterButton.vue'
+    import TextInput from '../../global/TextInput.vue'
+    import DisplayCropperButton from '@/components/global/DisplayCropperButton.vue'
+    import CroppedImage from '../../global/CroppedImage.vue'
+    import CropperModal from '../../global/CropperModal.vue'
+
+    const router = useRouter()
+    const profileStore = useProfileStore()
+
+
+    let showModal = ref(false)
+    let image = ref(null)
+    /**
+     * For Fetching user data
+     */
+    onMounted(async () => {
+        await profileStore.fetchProfileById(router.params.id)
+    })
+
+    const setCroppedImageData = (data) => {
+        // imageData = data
+        image.value = data.imageUrl
+    }
+
+</script>
+
+<template>
+    <div class="row col-12">
+        <div class="col-10 container-fluid p-0 mt-3">
+            <h3>Profile Information</h3>
+            <div class="bg-primary w-100 p-1 m-0"></div>
+            <CropperModal
+                v-if="showModal"
+                :minAspectRatioProp="{width: 8, height: 8}"
+                :maxAspectRatioProp="{width: 8, height: 8}"
+                @croppedImageData="setCroppedImageData"
+                @showModal="showModal = false"
+            />
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
+                    <TextInput
+                        labelClassName="
+                            text-uppercase 
+                            text-s 
+                            mb-0 
+                            text-dark
+                            pb-1
+                        "
+                        label="First Name"
+                        inputType="text"
+                        inputClassName="form-control"
+                        iconClassName="fas fa-user"
+                        placeholder="First Name"
+                    />
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
+                    <TextInput
+                        labelClassName="
+                            text-uppercase 
+                            text-s 
+                            mb-0 
+                            text-dark
+                            pb-1
+                        "
+                        label="Middle Name"
+                        inputType="text"
+                        inputClassName="form-control"
+                        iconClassName="fas fa-user"
+                        placeholder="Middle Name"
+                    />
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
+                    <TextInput
+                        labelClassName="
+                            text-uppercase 
+                            text-s 
+                            mb-0 
+                            text-dark
+                            pb-1
+                        "
+                        label="Last Name"
+                        inputType="text"
+                        inputClassName="form-control"
+                        iconClassName="fas fa-user"
+                        placeholder="Last Name"
+                    />
+                </div>
+                <div class="col-12 pt-3">
+                    <DisplayCropperButton 
+                        labelClass="
+                            text-uppercase 
+                            text-s 
+                            mb-0 
+                            text-dark
+                            pb-1
+                        "
+                        label="Profile Image"
+                        btnClass="btn btn-secondary"
+                        btnText="Update Profile Image"
+                        @showModal="showModal = true"
+                    />
+                </div>
+                <div class="col-12 pt-3">
+                    <div class="w-100">
+                        <CroppedImage
+                            label="Cropped Image"
+                            imageClass="CroppedImage border border-primary"
+                            :image="image"
+                        />
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
+                    <TextInput
+                        labelClassName="
+                            text-uppercase 
+                            text-s 
+                            mb-0 
+                            text-dark
+                            pb-1
+                        "
+                        label="Username"
+                        inputType="text"
+                        inputClassName="form-control"
+                        iconClassName="fas fa-user"
+                        placeholder="Username"
+                    />
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
+                    <TextInput
+                        labelClassName="
+                            text-uppercase 
+                            text-s 
+                            mb-0 
+                            text-dark
+                            pb-1
+                        "
+                        label="Email"
+                        inputType="email"
+                        inputClassName="form-control"
+                        iconClassName="fas fa-envelope"
+                        placeholder="Email"
+                    />
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
+                    <TextInput
+                        labelClassName="
+                            text-uppercase 
+                            text-s 
+                            mb-0 
+                            text-dark
+                            pb-1
+                        "
+                        label="Password"
+                        inputType="password"
+                        inputClassName="form-control"
+                        iconClassName="fas fa-lock"
+                        placeholder="Password"
+                    />
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
+                    <TextInput
+                        labelClassName="
+                            text-uppercase 
+                            text-s 
+                            mb-0 
+                            text-dark
+                            pb-1
+                        "
+                        label="Confirm Password"
+                        inputType="password"
+                        inputClassName="form-control"
+                        iconClassName="fas fa-lock"
+                        placeholder="Confirm Password"
+                    />
+                </div>
+                <div class="col-12 pt-5">
+                    <button class="btn btn-primary float-right">Update Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style lang="scss">
+.full_name {
+    text-align: center;
+}
+.CroppedImage {
+    min-width: 50%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    border-radius: 5px;
+}
+@media only screen and (min-width: 768px) {
+    .full_name {
+        text-align: center;
+    }
+    .CroppedImage {
+        min-width: 25%;
+        max-width: 100%;
+    }
+}
+
+@media only screen and (min-width: 1000px) {
+    .full_name {
+        text-align: left;
+    }
+    .CroppedImage {
+        min-width: 25%;
+        max-width: 30%;
+    }
+}
+
+</style>
