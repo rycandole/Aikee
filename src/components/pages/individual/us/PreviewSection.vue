@@ -95,7 +95,7 @@
     const handleBack = () => {
 
         Swal.fire({
-            title: 'Are you sure you want to go edit?',
+            title: 'Are you sure you want to edit?',
             showCancelButton: true,
             confirmButtonText: 'Yes',
         }).then((result) => {

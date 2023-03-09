@@ -14,11 +14,13 @@
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
 
+    // ============ select options =============== //
     const options = ref([
         { id: 0, name: 'shirt', value: 'shirt'},
         { id: 1, name: 'jacket', value: 'jacket'},
         { id: 2, name: 'shoes', value: 'shoes'}
     ])
+    // ============== select end ================== //
 
     let dateInput = ref(null)
     let timeInput = ref(null)
@@ -99,13 +101,13 @@
                         v-model:input="timeInput"
                       /> -->
                        <!-- ====================== Time Input ======================== -->
-                      <div class="row mt-3 p-3">
+                        <div class="row mt-3 p-3">
                             <div class="col-12 mt-3">
                                 <label class="text-capitalize">Preferred Time of Medical examination</label>
                             </div>
                             <div class="col-12 input-group">
                                 <select class="form-control form-select" v-model="timeInput" aria-label="Default select example">
-                                    <!-- <option selected></option> -->
+                                    <!-- <option selected> Select </option> -->
                                     <option v-for="option in options" :key="option" :value="option.value">
                                         {{ option.name }}
                                     </option>
