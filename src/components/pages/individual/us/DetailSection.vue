@@ -10,10 +10,11 @@
     import SubFormHeader from '@/components/global/SubFormHeader.vue'
     import RequiredInputField from '@/components/global/RequiredInputField.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
-    import SelectField from '@/components/global/SelectField.vue'
+    // import SelectField from '@/components/global/SelectField.vue'
     import InputField from '@/components/global/InputField.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
+
     // import { ucwords } from '../../../assets/js/string_functions'
 
     // ================= Select Option Array ===================== //
@@ -24,11 +25,16 @@
     import countries from '@/assets/js/arrays/countries_array'
     import philppineProvince from '@/assets/js/arrays/phil_province_array'
     import months from '@/assets/js/arrays/month_array'
+    import years from '@/assets/js/arrays/year_list_array'
+    import relationship from '@/assets/js/arrays/relationship_array'
+    import states from '@/assets/js/arrays/states_array'
+    // import YearList from '@/assets/js/arrays/year_list_array'
     
 
     const router = useRouter()
     const profileStore = useProfileStore()
     const USIndividualDetails = useUSIndividualDetails()
+
 
     /**
      * For Fetching user data
@@ -40,7 +46,9 @@
     let email = profileStore.email
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
-    // let textSuccess2 = "text-success"
+
+
+
 
     const handleBack = () => {
 
@@ -96,6 +104,7 @@
     let ad_passport_issued_by = ref(null)
     let ad_passport_date = ref(null)
     let ad_passport_expiration_date = ref(null)
+    let ad_has_been_issued_visa = ref(null)
     let ad_issuance_date = ref(null)
     let ad_expiration_date = ref(null)
     let ad_prev_medical_exam_month = ref(null)
@@ -103,6 +112,7 @@
     let ad_prev_xray_month = ref(null)
     let ad_prev_xray_year = ref(null)
     let petitioner_fullname = ref(null)
+    let petitioner_is_alive = ref(null)
     let petitioner_relationship = ref(null)
     let petitioner_us_street_addr = ref(null)
     let petitioner_us_city_addr = ref(null)
@@ -140,6 +150,7 @@
                 json_ad_mother_middle_name: ad_mother_middle_name.value,
                 json_ad_address: ad_address.value,
                 json_ad_city: ad_city.value,
+                json_ad_province: ad_province.value,
                 json_ad_zip_code: ad_zip_code.value,
                 json_ad_overseas_country: ad_overseas_country.value,
                 json_ad_overseas_street_address: ad_overseas_street_address.value,
@@ -153,6 +164,7 @@
                 json_ad_passport_issued_by: ad_passport_issued_by.value,
                 json_ad_passport_date: ad_passport_date.value,
                 json_ad_passport_expiration_date: ad_passport_expiration_date.value,
+                json_ad_has_been_issued_visa: ad_has_been_issued_visa.value,
                 json_ad_issuance_date: ad_issuance_date.value,
                 json_ad_expiration_date: ad_expiration_date.value,
                 json_ad_prev_medical_exam_month: ad_prev_medical_exam_month.value,
@@ -160,6 +172,7 @@
                 json_ad_prev_xray_month: ad_prev_xray_month.value,
                 json_ad_prev_xray_year: ad_prev_xray_year.value,
                 json_petitioner_fullname: petitioner_fullname.value,
+                json_petitioner_is_alive: petitioner_is_alive.value,
                 json_petitioner_relationship: petitioner_relationship.value,
                 json_petitioner_us_street_addr: petitioner_us_street_addr.value,
                 json_petitioner_us_city_addr: petitioner_us_city_addr.value,
@@ -253,7 +266,7 @@
                                 <label class="text-capitalize"> Visa Preference Category <b class="text-danger">*</b></label>
                             </div>
                             <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="inputComputed" aria-label="Default select example" required>
+                                <select class="form-control form-select w-100" v-model="ci_visa_pref_category" aria-label="Default select example" required>
                                     <option v-for="visaCategory in visaCategories" :key="visaCategory" :value="visaCategory">
                                         {{ visaCategory }}
                                     </option>
@@ -279,7 +292,7 @@
                                 <label class="text-capitalize">Interview Source <b class="text-danger p-3"></b></label>
                             </div>
                             <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="inputComputed" aria-label="Default select example">
+                                <select class="form-control form-select w-100" v-model="ci_interview_source" aria-label="Default select example">
                                     <option v-for="interviewSource in interviewSources" :key="interviewSource" :value="interviewSource">
                                         {{ interviewSource }}
                                     </option>
@@ -446,7 +459,7 @@
                     </div>
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
                         <InputField 
-                            label="PHILIPPINE ADDRESS"
+                            label="PHILIPPINES ADDRESS"
                             placeholder="Building Name and Street Address"
                             inputType="text"
                             v-model:input="ad_address"
@@ -666,16 +679,16 @@
                                     Have you been issued a U.S. Tourist Visa? <b class="text-danger">*</b>
                                 </label>
                             </div>
-                            <div class="col-lg-5 col-md-5 col-sm-12 pl-4 input-group">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <div class="col-lg-2 col-md-2 col-sm-12 pl-4 input-group">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" v-model="ad_has_been_issued_visa" value="yes" id="flexRadioDefault1">
                                 <label class="form-check-label" for="flexRadioDefault1">
-                                    Default radio
+                                    Yes
                                 </label>
                             </div>     
-                            <div class="col-lg-7 col-md-7 col-sm-12 pl-4">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                            <div class="col-lg-10 col-md-8 col-sm-12 pl-4">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" v-model="ad_has_been_issued_visa" value="no" id="flexRadioDefault2" checked>
                                 <label class="form-check-label" for="flexRadioDefault2">
-                                    Default checked radio
+                                    No
                                 </label>
                             </div>   
                         </div>
@@ -720,10 +733,25 @@
 
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <SelectField 
+                        <!-- <SelectField 
                             smallLabel="Year"
                             v-model:input="ad_prev_medical_exam_year"
-                        />
+                        /> -->
+                        <div class="row mt-3">
+                            <div class="col-12 p-lg-3">
+                            </div>
+                            <div class="col-12 input-group">
+                                <select class="form-control form-select w-100" v-model="ad_prev_medical_exam_year" aria-label="Default select example">
+                                    <option v-for="year in years" :key="year" :value="year">
+                                        {{ year }}
+                                    </option>
+                                </select>
+                                <span class="text-secondary text-s fw-light display-block float-left ml-2">
+                                    Year
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <!-- <SelectField 
@@ -750,10 +778,25 @@
 
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <SelectField 
+                        <!-- <SelectField 
                             smallLabel="Year"
                             v-model:input="ad_prev_xray_year"
-                        />
+                        /> -->
+                        <div class="row mt-3">
+                            <div class="col-12 p-lg-3">
+                            </div>
+                            <div class="col-12 input-group">
+                                <select class="form-control form-select w-100" v-model="ad_prev_xray_year" aria-label="Default select example">
+                                    <option v-for="year in years" :key="year" :value="year">
+                                        {{ year }}
+                                    </option>
+                                </select>
+                                <span class="text-secondary text-s fw-light display-block float-left ml-2">
+                                    Year
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="mt-3 mb-3 col-12">
                         <FormHeader
@@ -779,13 +822,13 @@
                                 </label>
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-12 pl-4 input-group">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" v-model="petitioner_is_alive" value="yes" id="flexRadioDefault1">
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     Yes
                                 </label>
                             </div>     
                             <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" v-model="petitioner_is_alive" value="no" id="flexRadioDefault2" checked>
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     No
                                 </label>
@@ -793,10 +836,25 @@
                         </div>
                     </div>
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
-                        <RequiredSelectField 
+                        <!-- <RequiredSelectField 
                             label="Relationship"
                             v-model:input="petitioner_relationship"
-                        />
+                        /> -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label class="text-capitalize"> Relationship <b class="text-danger">*</b></label>
+                            </div>
+                            <div class="col-12 input-group">
+                                <select class="form-control form-select w-100" v-model="petitioner_relationship" aria-label="Default select example" required>
+                                    <option v-for="relationships in relationship" :key="relationships" :value="relationships">
+                                        {{ relationships }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
@@ -845,12 +903,25 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
-                        <RequiredSelectField 
+                        <!-- <RequiredSelectField 
                             label="Intended Port of Entry"
                             v-model:input="intended_port_of_entry"
-                        />
+                        /> -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label class="text-capitalize"> Intended Port of Entry <b class="text-danger">*</b></label>
+                            </div>
+                            <div class="col-12 input-group">
+                                <select class="form-control form-select w-100" v-model="intended_port_of_entry" aria-label="Default select example" required>
+                                    <option v-for="state in states" :key="state" :value="state">
+                                        {{ state }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+
                     </div>
-                    
                 </div>        
             </div>
 
@@ -886,10 +957,6 @@
     margin: 0;
     margin-top: 1rem;
     padding: 1rem;
-}
-
-.section_header {
-    background-color: #069;
 }
 
 .inputDate {

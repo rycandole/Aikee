@@ -69,16 +69,14 @@
     let detail_ad_passport_number = details.ad_passport_number;
     let detail_ad_passport_issued_by = details.ad_passport_issued_by;
     let detail_ad_passport_date = moment(details.ad_passport_date).format('MMMM DD, YYYY');
-    let detail_ad_passport_expiration_date = details.ad_passport_expiration_date;
-    let detail_ad_was_in_us = details.ad_was_in_us;
+    let detail_ad_passport_expiration_date = moment(details.ad_passport_expiration_date).format('MMMM DD, YYYY');
+    let detail_ad_has_been_issued_visa = details.ad_has_been_issued_visa;
     let detail_ad_issuance_date = moment(details.ad_issuance_date).format('MMMM DD, YYYY');
     let detail_ad_expiration_date = moment(details.ad_expiration_date).format('MMMM DD, YYYY');
     let detail_ad_prev_medical_exam_month = details.ad_prev_medical_exam_month;
     let detail_ad_prev_medical_exam_year = details.ad_prev_medical_exam_year;
     let detail_ad_prev_xray_month = details.ad_prev_xray_month;
     let detail_ad_prev_xray_year = details.ad_prev_xray_year;
-
-
     let detail_petitioner_fullname = details.petitioner_fullname;
     let detail_petitioner_is_alive = details.petitioner_is_alive;
     let detail_petitioner_relationship = details.petitioner_relationship;
@@ -253,11 +251,45 @@
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-12">
-                        <PreviewText 
+                        <!-- <PreviewText 
                             previewLabel="Mother's maiden name"
                             v-bind:previewText="detail_ad_mother_last_name+', '+detail_ad_mother_first_name+', '+detail_ad_mother_middle_name"
+                        /> -->
+                        <div class="row mt-1 p-3">
+                            <div class="col-12">
+                                <label class="text-capitalize">
+                                    Mother's maiden name
+                                </label>
+                            </div>
+                            <div class="col-12 input-group">
+                                <span class="text-muted prev_text">{{ detail_ad_mother_last_name }}</span>
+                            </div>
+                            <div class="col-12">
+                                <span class="text-secondary text-s fw-light display-block float-left">
+                                    Last Name
+                                </span>
+                            </div>
+                            <div class="col-12 input-group">
+                                <span class="text-muted prev_text">{{ detail_ad_mother_first_name }}</span>
+                            </div>
+                            <div class="col-12">
+                                <span class="text-secondary text-s fw-light display-block float-left">
+                                    First Name
+                                </span>
+                            </div>
+                            <div class="col-12 input-group">
+                                <span class="text-muted prev_text">{{ detail_ad_mother_middle_name }}</span>
+                            </div>
+                            <div class="col-12">
+                                <span class="text-secondary text-s fw-light display-block float-left">
+                                    Middle Name
+                                </span>
+                            </div>
+                            
+                            
+                            
+                        </div>
 
-                        />
                     </div>
                     <div class="mb-3 mt-5 col-12">
                         <SubFormHeader 
@@ -336,18 +368,10 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize">
-                                Email Address
-                                </label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <span class=" ml-3 fs-2 fw-normal text-mute">
-                                {{ email }}
-                                </span>
-                            </div>
-                        </div>
+                        <PreviewText 
+                            previewLabel="Email Address"
+                            v-bind:previewText="email"
+                        />
                     </div>
 
                     <div class="col-12 mt-3 mb-1"><hr></div>
@@ -406,10 +430,10 @@
                             <div class="col-12">
                                 <PreviewText 
                                     previewLabel="Have you been issued a U.S. Tourist Visa?"
-                                    v-bind:previewText="detail_ad_was_in_us"
+                                    v-bind:previewText="detail_ad_has_been_issued_visa"
                                 />
                             </div>
-                            <div class="col-lg-5 col-md-5 col-sm-12 pl-4 input-group">
+                            <!-- <div class="col-lg-5 col-md-5 col-sm-12 pl-4 input-group">
                                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     Default radio
@@ -420,7 +444,7 @@
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     Default checked radio
                                 </label>
-                            </div>   
+                            </div>    -->
                         </div>
                     </div>
                     <div class="col-12"><hr /></div>
@@ -440,11 +464,13 @@
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Previous Medical Examination at SLEC"
+                            smallLabel="Month"
                             v-bind:previewText="detail_ad_prev_medical_exam_month"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
+                            smallLabel="Year"
                             v-bind:previewText="detail_ad_prev_medical_exam_year"
                         />
                     </div>
@@ -452,11 +478,13 @@
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Date of previous Chest X-Ray"
+                            smallLabel="Month"
                             v-bind:previewText="detail_ad_prev_xray_month"
                         />
                     </div>
                     <div class="mb-3 col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
+                            smallLabel="Year"
                             v-bind:previewText="detail_ad_prev_xray_year"
                         />
                     </div>
@@ -475,7 +503,7 @@
                     <div class="col-12"><hr /></div>
                     <div class="mb-1 col-12">
                         <PreviewText 
-                            previewLabel=" Is the petitioner still alive?"
+                            previewLabel="Is the petitioner still alive?"
                             v-bind:previewText="detail_petitioner_is_alive"
                         />
                     </div>

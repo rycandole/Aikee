@@ -36,7 +36,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
     ad_passport_issued_by: null,
     ad_passport_date: null,
     ad_passport_expiration_date: null,
-    ad_was_in_us: null,
+    ad_has_been_issued_visa: null,
     ad_issuance_date: null,
     ad_expiration_date: null,
     ad_prev_medical_exam_month: null,
@@ -91,11 +91,11 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.ad_passport_issued_by = jsonPARSE.json_ad_passport_issued_by
         this.$state.ad_passport_date = jsonPARSE.json_ad_passport_date
         this.$state.ad_passport_expiration_date = jsonPARSE.json_ad_passport_expiration_date
-        this.$state.ad_was_in_us = jsonPARSE.json_ad_was_in_us
+        this.$state.ad_has_been_issued_visa = jsonPARSE.json_ad_has_been_issued_visa
         this.$state.ad_issuance_date = jsonPARSE.json_ad_issuance_date
         this.$state.ad_expiration_date = jsonPARSE.json_ad_expiration_date
         this.$state.ad_prev_medical_exam_month = jsonPARSE.json_ad_prev_medical_exam_month
-        this.$state.ad_prev_medical_exam_year = jsonPARSE.json_json_d_prev_medical_exam_year
+        this.$state.ad_prev_medical_exam_year = jsonPARSE.json_ad_prev_medical_exam_year
         this.$state.ad_prev_xray_month = jsonPARSE.json_ad_prev_xray_month
         this.$state.ad_prev_xray_year = jsonPARSE.json_ad_prev_xray_year
         this.$state.petitioner_fullname = jsonPARSE.json_petitioner_fullname
@@ -148,7 +148,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.ad_passport_issued_by = null,
         this.$state.ad_passport_date = null,
         this.$state.ad_passport_expiration_date = null,
-        this.$state.ad_was_in_us = null,
+        this.$state.ad_has_been_issued_visa = null,
         this.$state.ad_issuance_date = null,
         this.$state.ad_expiration_date = null,
         this.$state.ad_prev_medical_exam_month = null,

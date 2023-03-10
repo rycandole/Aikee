@@ -74,11 +74,11 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link">
+        <router-link to="/" class="brand-link">
             <!-- :src="slecLogo" -->
             <img  src="img/icons/favicon.ico" alt="" class="img-circle elevation-2 m-2" style="opacity: .8" />
             <span class="brand-text font-weight-light">SLEC</span>
-        </a>
+        </router-link>
 
         <!-- Sidebar -->
         <div class="sidebar">
@@ -139,3 +139,9 @@
         <!-- /.sidebar -->
     </aside>
 </template>
+
+<style lang="scss">
+.main-sidebar {
+    position: fixed;
+}
+</style>

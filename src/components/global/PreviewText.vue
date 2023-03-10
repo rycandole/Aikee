@@ -6,10 +6,11 @@ const props = defineProps({
     previewLabelClassName: String,
     previewLabel: String,
     previewClassName: String,
-    previewText: String
+    previewText: String,
+    smallLabel: String
 })
 
-const { previewLabelClassName, previewLabel, previewClassName, previewText } = toRefs(props)
+const { previewLabelClassName, previewLabel, previewClassName, previewText, smallLabel } = toRefs(props)
 
 
 
@@ -25,6 +26,11 @@ const { previewLabelClassName, previewLabel, previewClassName, previewText } = t
         </div>
         <div class="col-12 input-group">
             <span :class="previewClassName" class="text-muted prev_text">{{ previewText }}</span>
+        </div>
+        <div class="col-12">
+            <span class="text-secondary text-s fw-light display-block float-left ml-2">
+                {{ smallLabel }}
+            </span>
         </div>
     </div>
     
