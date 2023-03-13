@@ -4,10 +4,11 @@ import { defineProps, toRefs } from 'vue'
 const props = defineProps({
     btnText: String,
     className: String,
+    id: String,
     btnType: String
 })
 
-const { btnText, className, btnType } = toRefs(props)
+const { btnText, className, id, btnType } = toRefs(props)
 
 
 
@@ -15,6 +16,7 @@ const { btnText, className, btnType } = toRefs(props)
 
 <template>
     <button 
+        :id="id"
         :class="className" 
         :type="btnType"
         @click="$emit('submit', true)"
