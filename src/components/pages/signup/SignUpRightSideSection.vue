@@ -1,11 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { Form } from 'vee-validate'
 import SubmitFormButton from "../../global/SubmitFormButton.vue";
 import RouterWithIcon from "../../global/RouterLinkBtnWithIcon.vue";
 import TextInput from "../../global/TextInput.vue";
 import Swal from '../../../../src/sweetalert2'
+
+import * as yup from 'yup';
 
 
 const router = useRouter()
@@ -21,55 +24,67 @@ let password = ref(null)
 let confirmPassword = ref(null)
 
 const handleSignUp = async () => {
+  errors.value = []
 
-errors.value = []
+  const JSONData = {
+          first_name: firstName.value,
+          middle_name: middleName.value,
+          last_name: lastName.value,
+          username: username.value,
+          birth_date: birthDate.value,
+          email: email.value,
+          password: password.value,
+          password_confirmation: confirmPassword.value,
+      }
 
-const JSONData = {
-        first_name: firstName.value,
-        middle_name: middleName.value,
-        last_name: lastName.value,
-        username: username.value,
-        birth_date: birthDate.value,
-        email: email.value,
-        password: password.value,
-        password_confirmation: confirmPassword.value,
-    }
+      try {
 
-    try {
+          let res = await axios.post('signup/', JSONData )
 
-        let res = await axios.post('signup/', JSONData )
+          if (res.data.status_code === 200 ) {
+              
+            Swal.fire(
+                  res.data.error,
+                  'You clicked the button!',
+                  'success'
+                )
 
-        if (res.data.status_code === 200 ) {
-            
-          Swal.fire(
-                res.data.error,
-                'You clicked the button!',
-                'success'
-              )
+            // alert(res.data.error)
 
-          // alert(res.data.error)
+            // axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token
+            // userStore.setUserDetails(res)
 
-          // axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token
-          // userStore.setUserDetails(res)
+            router.push('signin')
 
-          router.push('signin')
+          } else {
+            Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: res.data.error
+                })
+            // alert(res.data.error)
+            return false
+          }
+        
 
-        } else {
-          Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: res.data.error
-              })
-          // alert(res.data.error)
-          return false
-        }
-       
-
-    } catch (err) {
-        errors.value = err.response.data.errors
-    }
+      } catch (err) {
+          errors.value = err.response.data.errors
+      }
 
 }
+
+const schema = yup.object({
+  first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters'),
+  middle_name: yup.string().nullable(),
+  last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters'),
+  birthdate: yup.string().required('Birthdate is required!').min(new Date(1925, 0, 1)),
+  username: yup.string().required('Username is required!').min(2, 'Username must be atleast 2 characters').max(25, 'Username must be at most 25 characters'),
+  email: yup.string().required('Email is required!').email('Email must be a valid email'),
+  password: yup.string().required('Password is required!').min(8, 'Password must be atleast 8 characters'),
+  passwordConfirmation: yup.string().required('Confirm password is required!').oneOf([yup.ref('password')], 'Passwords do not match'),
+})
+
+
 
 
 </script>
@@ -83,8 +98,9 @@ const JSONData = {
           <p class="fw-light text-secondary">Enter your details below</p>
         </div>
         <div class="card-body">
-          <form @submit.prevent="handleSignUp" class="row">
+          <Form @submit="handleSignUp" :validation-schema="schema" class="row">
             <div class="mb-4 col-lg-6 col-md-12 col-sm-12">
+              
               <TextInput
                     labelClassName="
                         text-uppercase 
@@ -93,11 +109,13 @@ const JSONData = {
                         text-dark
                     "
                     label="First Name"
-                    inputType="text"
+                    type="text"
                     inputClassName="form-control"
                     placeholder="First Name"
                     iconClassName="fas fa-user"
-                    v-model:input="firstName"
+                    FieldName="first_name"
+                    ErrorName="first_name"
+                    v-model:input="firstName"      
                     :error="errors.first_name ? errors.first_name[0] : ''"
               />
             </div>
@@ -110,12 +128,13 @@ const JSONData = {
                         text-dark
                     "
                     label="Middle Name"
-                    inputType="text"
+                    type="text"
                     inputClassName="form-control"
                     placeholder="Middle Name"
                     iconClassName="fas fa-user"
                     optLabelClassName="text-secondary text-lowercase"
                     optionalLabel="(optional)"
+                    FieldName="middle_name"
                     v-model:input="middleName"
               />
             </div>
@@ -128,10 +147,12 @@ const JSONData = {
                         text-dark
                     "
                     label="Last Name"
-                    inputType="text"
+                    type="text"
                     inputClassName="form-control"
                     placeholder="Last Name"
                     iconClassName="fas fa-user"
+                    FieldName="last_name"
+                    ErrorName="last_name"
                     v-model:input="lastName"
                     :error="errors.last_name ? errors.last_name[0] : ''"
               />
@@ -145,9 +166,11 @@ const JSONData = {
                         text-dark
                     "
                     label="Birthdate"
-                    inputType="date"
+                    type="date"
                     inputClassName="form-control"
                     iconClassName="fa fa-calendar"
+                    FieldName="birthdate"
+                    ErrorName="birthdate"
                     v-model:input="birthDate"
                     :error="errors.birth_date ? errors.birth_date[0] : ''"
               />              
@@ -163,12 +186,15 @@ const JSONData = {
                         text-dark
                     "
                     label="Username"
-                    inputType="text"
+                    type="text"
                     inputClassName="form-control"
                     placeholder="Username"
                     iconClassName="fas fa-user"
+                    FieldName="username"
+                    ErrorName="username"
                     v-model:input="username"
                     :error="errors.username ? errors.username[0] : ''"
+                   
               />
             </div>
             <div class="mb-4 col-lg-6 col-md-12 col-sm-12">
@@ -180,12 +206,15 @@ const JSONData = {
                         text-dark
                     "
                     label="Email"
-                    inputType="email"
+                    type="email"
                     inputClassName="form-control"
                     placeholder="Email"
                     iconClassName="fas fa-envelope"
+                    FieldName="email"
+                    ErrorName="email"
                     v-model:input="email"
                     :error="errors.email ? errors.email[0] : ''"
+                  
               />
             </div>
             <div class="mb-4 col-lg-6 col-md-12 col-sm-12">
@@ -197,12 +226,15 @@ const JSONData = {
                         text-dark
                     "
                 label="Password"
-                inputType="password"
+                type="password"
                 inputClassName="form-control"
                 placeholder="Password"
                 iconClassName="fas fa-lock"
+                FieldName="password"
+                ErrorName="password"
                 v-model:input="password"
                 :error="errors.password ? errors.password[0] : ''"
+              
               />
             </div>
 
@@ -215,10 +247,12 @@ const JSONData = {
                         text-dark
                     "
                 label="Confirm password"
-                inputType="password"
+                type="password"
                 inputClassName="form-control"
                 placeholder="Confirm password"
                 iconClassName="fas fa-lock"
+                FieldName="passwordConfirmation"
+                ErrorName="passwordConfirmation"
                 v-model:input="confirmPassword"
               />
             </div>
@@ -235,12 +269,13 @@ const JSONData = {
 
             <div class="col-12">
                 <SubmitFormButton
+                  :disabled="isDisabled"
                   btnType="submit"
                   className="btn btn-primary btn-block"
                   btnText="Sign Up"
                 />
             </div>
-          </form>
+          </Form>
 
           <div class="social-auth-links text-center mt-4 mb-3">
             <RouterWithIcon
