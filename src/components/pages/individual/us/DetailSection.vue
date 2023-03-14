@@ -5,15 +5,17 @@
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useUSIndividualDetails } from '@/store/us-individual-details'
+    import { Form } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import SubFormHeader from '@/components/global/SubFormHeader.vue'
     import RequiredInputField from '@/components/global/RequiredInputField.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
-    // import SelectField from '@/components/global/SelectField.vue'
+    import SelectField from '@/components/global/SelectField.vue'
     import InputField from '@/components/global/InputField.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
+    import * as yup from 'yup';
 
     // import { ucwords } from '../../../assets/js/string_functions'
 
@@ -194,8 +196,24 @@
 
     }
 
-    
+const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
+const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
+const numOnlyRegex = /^[\p{N}]+$/u;
 
+const schema = yup.object({
+  birthdate: yup.string().required('Birthdate is required!').min(new Date(1925, 0, 1), "Birthdate must be atleast January 01, 1923"),
+  nvc_caseNumber: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be atleast 13 characters').max(13, 'NVC Case Number must be at most 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
+  confirm_nvc_caseNumber: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be atleast 13 characters').max(13, 'NVC Case Number must be at most 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('nvc_caseNumber')], 'NVC Case Number do not match'),
+  visa_category: yup.string().required('Last name is required!'),
+  first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  middle_name: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  interview_date: yup.string().required('Interview date is required!').min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
+  mother_middle_name: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  ad_addrs: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  ad_ct: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  zip_code: yup.string().min(4, "Zip Code must be at least 4 character").max(4, "Zip Code must be at most 4 characters").matches(numOnlyRegex, "Zip Code must be number only!").nullable(),
+})
 
 
 </script>
@@ -218,7 +236,7 @@
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-        <form @submit.prevent="handleDetails" class="col-lg-9 col-md-12 col-sm-12 mb-3">
+        <Form @submit="handleDetails" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="col-12">
@@ -227,7 +245,9 @@
                     <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Date of Birth"
-                            inputType="date"
+                            FieldName="birthdate"
+                            ErrorName="birthdate"
+                            type="date"
                             v-model:input="date_of_birth"
                         />
                     </div>
@@ -240,9 +260,9 @@
                     <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="NVC Case Number"
-                            inputType="text"
-                            minLength=3
-                            maxLength=14
+                            type="text"
+                            FieldName="nvc_caseNumber"
+                            ErrorName="nvc_caseNumber"
                             smallLabel="3-character Consulate Code+10-digit case number (ex. MNL##########)"
                             v-model:input="ci_nvc_number"
                         />
@@ -250,18 +270,21 @@
                     <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Confirm NVC Case Number"
-                            inputType="text"
-                            maxLength=14
+                            type="text"
+                            FieldName="confirm_nvc_caseNumber"
+                            ErrorName="confirm_nvc_caseNumber"
                             smallLabel="Please re-enter your NVC Case Number"
                             v-model:input="ci_nvc_confirm"
                         />
                     </div>
                     <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Visa Preferemce Category"
+                            FieldName="visa_category"
                             v-model:input="ci_visa_pref_category"
-                        /> -->
-                        <div class="row mt-3">
+                            :items="visaCategories"
+                        />
+                        <!-- <div class="row mt-3">
                             <div class="col-12">
                                 <label class="text-capitalize"> Visa Preference Category <b class="text-danger">*</b></label>
                             </div>
@@ -272,33 +295,24 @@
                                     </option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <InputField 
                             label="Interview Date"
-                            inputType="date"
+                            type="date"
+                            FieldName="interview_date"
+                            ErrorName="interview_date"
                             v-model:input="ci_interview_date"
                             smallLabel="If none, leave blank'"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <SelectField 
+                        <SelectField 
                             label="Interview Source"
                             v-model:input="ci_interview_source"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize">Interview Source <b class="text-danger p-3"></b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ci_interview_source" aria-label="Default select example">
-                                    <option v-for="interviewSource in interviewSources" :key="interviewSource" :value="interviewSource">
-                                        {{ interviewSource }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
+                            :items="interviewSources"
+                        />
                     </div>
                     <div class="mb-3 mt-3 col-12">
                         <FormHeader
@@ -312,7 +326,9 @@
                         <RequiredInputField 
                             label="Last Name"
                             placeholder="Last Name"
-                            inputType="text"
+                            type="text"
+                            FieldName="last_name"
+                            ErrorName="last_name"
                             v-model:input="ad_last_name"
                         />
                     </div>
@@ -320,7 +336,9 @@
                         <RequiredInputField 
                             label="First Name"
                             placeholder="First Name"
-                            inputType="text"
+                            type="text"
+                            FieldName="first_name"
+                            ErrorName="first_name"
                             v-model:input="ad_first_name"
                         />
                     </div>
@@ -328,105 +346,59 @@
                         <InputField 
                             label="Middle Name"
                             placeholder="Middle Name"
-                            inputType="text"
+                            type="text"
+                            FieldName="middle_name"
+                            ErrorName="middle_name"
                             v-model:input="ad_middle_name"
                         />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Gender"
                             v-model:input="ad_gender"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Gender <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_gender" aria-label="Default select example" required>
-                                    <option v-for="gender in genderOption" :key="gender" :value="gender">
-                                        {{ gender }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
+                            :items="genderOption"
+                        />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Civil Status"
                             v-model:input="ad_civil_status"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Civil Status <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_civil_status" aria-label="Default select example" required>
-                                    <option v-for="civStatus in civilStatus" :key="civStatus" :value="civStatus">
-                                        {{ civStatus }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
+                            :items="civilStatus"
+                        />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Country or Nationality"
                             v-model:input="ad_nationality"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Country or Nationality <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_nationality" aria-label="Default select example" required>
-                                    <option v-for="country in countries" :key="country" :value="country">
-                                        {{ country }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-
+                            :items="countries"
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Birthplace"
                             placeholder="Birth City"
                             smallLabel="Birth City"
-                            inputType="text"
+                            type="text"
+                            FieldName="birth_city"
+                            ErrorName="birth_city"
                             v-model:input="ad_birthplace"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Country"
                             smallLabel="Birth Country"
                             v-model:input="ad_birth_country"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12 p-lg-3">
-                                
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_birth_country" aria-label="Default select example" required>
-                                    <option v-for="country in countries" :key="country" :value="country">
-                                        {{ country }}
-                                    </option>
-                                </select>
-                                <span class="text-secondary text-s fw-light display-block float-left ml-2">
-                                    Birth Country
-                                </span>
-                            </div>
-                        </div>
-
+                            :items="countries"
+                        />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Mother's maiden name"
                             placeholder="Last Name"
-                            inputType="text"
+                            type="text"
+                            FieldName="mother_last_name"
+                            ErrorName="mother_last_name"
                             smallLabel="Last Name"
                             v-model:input="ad_mother_last_name"
                         />
@@ -436,7 +408,9 @@
                             inputClassName="mt-2"
                             starClassName="d-none"
                             placeholder="First Name"
-                            inputType="text"
+                            type="text"
+                            FieldName="mother_first_name"
+                            ErrorName="mother_first_name"
                             smallLabel="First Name"
                             v-model:input="ad_mother_first_name"
                         />
@@ -444,9 +418,11 @@
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <InputField 
                             placeholder="Middle Name"
-                            inputType="text"
+                            type="text"
                             smallLabel="Middle Name"
                             v-model:input="ad_mother_middle_name"
+                            FieldName="mother_middle_name"
+                            ErrorName="mother_middle_name"
                         />
                     </div>
                     <div class="mb-3 mt-5 col-12">
@@ -461,98 +437,74 @@
                         <InputField 
                             label="PHILIPPINES ADDRESS"
                             placeholder="Building Name and Street Address"
-                            inputType="text"
+                            type="text"
                             v-model:input="ad_address"
+                            FieldName="ad_addrs"
+                            ErrorName="ad_addrs"
                         />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <InputField 
                             placeholder="City/Town"
-                            inputType="text"
+                            type="text"
                             v-model:input="ad_city"
+                            FieldName="ad_ct"
+                            ErrorName="ad_ct"
                         />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <!-- <SelectField 
+                        <SelectField 
                             label="Province"
                             v-model:input="ad_province"
-                        /> -->
-
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize">
-                                    Province <b class="text-danger p-3"></b>
-                                </label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_province" aria-label="Default select example">
-                                    <option v-for="philProvince in philppineProvince" :key="philProvince" :value="philProvince">
-                                        {{ philProvince }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
+                            :items="philppineProvince"
+                        />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <InputField 
                             placeholder="Zip Code"
-                            inputType="text"
+                            type="text"
                             v-model:input="ad_zip_code"
+                            FieldName="zip_code"
+                            ErrorName="zip_code"
                         />
                     </div>
                     <div class="mb-3 mt-5 col-12">
                         <h5 class="text-uppercase">FOR APPLICANTS CURRENTLY LIVING OUTSIDE THE PHILIPPINES:</h5>
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <!-- <SelectField 
+                        <SelectField 
                             label="Overseas Address"
                             v-model:input="ad_overseas_country"
-                        /> -->
-
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize">
-                                    Overseas Address <b class="text-danger p-3"></b>
-                                </label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_overseas_country" aria-label="Default select example">
-                                    <option v-for="country in countries" :key="country" :value="country">
-                                        {{ country }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
+                            :items="countries"
+                        />
                     </div>
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
-                        <InputField 
+                        <!-- <InputField 
                             placeholder="Street Address"
-                            inputType="text"
+                            type="text"
                             v-model:input="ad_overseas_street_address"
-                        />
+                        /> -->
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <InputField 
+                        <!-- <InputField 
                             placeholder="City/Town"
-                            inputType="text"
+                            type="text"
                             v-model:input="ad_overseas_city"
-                        />
+                        /> -->
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <InputField 
+                        <!-- <InputField 
                             placeholder="Province/State"
-                            inputType="text"
+                            type="text"
                             v-model:input="ad_overseas_province"
-                        />
+                        /> -->
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <InputField 
+                        <!-- <InputField 
                             placeholder="Zip Code"
-                            inputType="text"
+                            type="text"
                             v-model:input="ad_overseas_zipcode"
-                        />
+                        /> -->
                     </div>
                     <div class="col-12 mt-3 mb-1"><hr></div>
                     
@@ -560,7 +512,9 @@
                         <RequiredInputField 
                             label="Contact Number(s), separate with a slash"
                             placeholder="Contact Number"
-                            inputType="text"
+                            type="text"
+                            FieldName="contact_no"
+                            ErrorName="contact_no"
                             smallLabel="(Area Code)<space>Tel.Number."
                             v-model:input="ad_contact_numbers"
                         />
@@ -583,42 +537,18 @@
                     <div class="col-12 mt-3 mb-1"><hr></div>
 
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Present Country of Residence"
                             v-model:input="ad_present_residence"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Present Country of Residence <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_present_residence" aria-label="Default select example" required>
-                                    <option v-for="country in countries" :key="country" :value="country">
-                                        {{ country }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
+                            :items="countries"
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Prior Country of Residence"
                             v-model:input="ad_prior_residence"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Prior Country of Residence <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_prior_residence" aria-label="Default select example" required>
-                                    <option v-for="country in countries" :key="country" :value="country">
-                                        {{ country }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
+                            :items="countries"
+                        />
                     </div>
                     <div class="mb-3 mt-5 col-12">
                         <SubFormHeader 
@@ -629,40 +559,34 @@
                         <RequiredInputField 
                             label="Passport Number"
                             placeholder="Passport Number"
-                            inputType="text"
+                            type="text"
+                            FieldName="passport_number"
+                            ErrorName="passport_number"
                             v-model:input="ad_passport_number"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Issued by (Country) "
                             v-model:input="ad_passport_issued_by"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Issued by (Country) <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_passport_issued_by" aria-label="Default select example" required>
-                                    <option v-for="country in countries" :key="country" :value="country">
-                                        {{ country }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
+                            :items="countries"
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Issue Date"
-                            inputType="date"
+                            type="date"
+                            FieldName="passport_date"
+                            ErrorName="passport_date"
                             v-model:input="ad_passport_date"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Expiration Date"
-                            inputType="date"
+                            type="date"
+                            FieldName="exp_passport_date"
+                            ErrorName="exp_passport_date"
                             v-model:input="ad_passport_expiration_date"
                         />
                     </div>
@@ -696,107 +620,51 @@
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Issuance Date"
-                            inputType="date"
+                            type="date"
+                            FieldName="issuance_date"
+                            ErrorName="issuance_date"
                             v-model:input="ad_issuance_date"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Expiration Date"
-                            inputType="date"
+                            type="date"
+                            FieldName="expiration_date"
+                            ErrorName="expiration_date"
                             v-model:input="ad_expiration_date"
                         />
                         
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <SelectField 
+                        <SelectField 
                             label="Previous Medical Examination at SLEC"
+                            smallLabel="Month"
                             v-model:input="ad_prev_medical_exam_month"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize">
-                                    Previous Medical Examination at SLEC <b class="text-danger p-3"></b>
-                                </label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_prev_medical_exam_month" aria-label="Default select example">
-                                    <option v-for="month in months" :key="month" :value="month">
-                                        {{ month }}
-                                    </option>
-                                </select>
-                                <span class="text-secondary text-s fw-light display-block float-left ml-2">
-                                    Month
-                                </span>
-                            </div>
-                        </div>
-
+                            :items="months"
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <SelectField 
+                        <SelectField 
                             smallLabel="Year"
                             v-model:input="ad_prev_medical_exam_year"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12 p-lg-3">
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_prev_medical_exam_year" aria-label="Default select example">
-                                    <option v-for="year in years" :key="year" :value="year">
-                                        {{ year }}
-                                    </option>
-                                </select>
-                                <span class="text-secondary text-s fw-light display-block float-left ml-2">
-                                    Year
-                                </span>
-                            </div>
-                        </div>
-
+                            :items="years"
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <SelectField 
+                        <SelectField 
                             label="Date of previous Chest X-Ray"
+                            smallLabel="Month"
                             v-model:input="ad_prev_xray_month"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize">
-                                    Date of previous Chest X-Ray
-                                </label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_prev_xray_month" aria-label="Default select example">
-                                    <option v-for="month in months" :key="month" :value="month">
-                                        {{ month }}
-                                    </option>
-                                </select>
-                                <span class="text-secondary text-s fw-light display-block float-left ml-2">
-                                    Month
-                                </span>
-                            </div>
-                        </div>
-
+                            :items="months"
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <SelectField 
+                        <SelectField 
                             smallLabel="Year"
                             v-model:input="ad_prev_xray_year"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12 p-lg-3">
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ad_prev_xray_year" aria-label="Default select example">
-                                    <option v-for="year in years" :key="year" :value="year">
-                                        {{ year }}
-                                    </option>
-                                </select>
-                                <span class="text-secondary text-s fw-light display-block float-left ml-2">
-                                    Year
-                                </span>
-                            </div>
-                        </div>
-
+                            :items="years"
+                        />
                     </div>
                     <div class="mt-3 mb-3 col-12">
                         <FormHeader
@@ -807,7 +675,9 @@
                         <RequiredInputField 
                             label="Name of Petitioner"
                             placeholder="Enter Full Name"
-                            inputType="text"
+                            type="text"
+                            FieldName="petitioner_name"
+                            ErrorName="petitioner_name"
                             smallLabel="(Area Code)<space>Tel.Number."
                             v-model:input="petitioner_fullname"
                         />
@@ -836,53 +706,44 @@
                         </div>
                     </div>
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Relationship"
                             v-model:input="petitioner_relationship"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Relationship <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="petitioner_relationship" aria-label="Default select example" required>
-                                    <option v-for="relationships in relationship" :key="relationships" :value="relationships">
-                                        {{ relationships }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-                        
-
+                            :items="relationship"
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="U.S. Address"
-                            inputType="text"
+                            type="text"
+                            FieldName="petitioner_us_street_addr"
+                            ErrorName="petitioner_us_street_addr"
                             smallLabel="Street Address"
                             v-model:input="petitioner_us_street_addr"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <InputField 
+                        <!-- <InputField 
                             label="City"
-                            inputType="text"
+                            type="text"
                             smallLabel="City"
                             v-model:input="petitioner_us_city_addr"
-                        />
+                        /> -->
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="State"
                             v-model:input="petitioner_us_state_addr"
+                            :items="states"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Postal Code"
                             placeholder="Enter postal code"
-                            inputType="text"
+                            type="text"
+                            FieldName="petitioner_us_postal_code"
+                            ErrorName="petitioner_us_postal_code"
                             v-model:input="petitioner_us_postal_code"
                         />
                     </div>
@@ -890,7 +751,9 @@
                         <RequiredInputField 
                             label="Contact Number"
                             placeholder="Enter postal code"
-                            inputType="text"
+                            type="text"
+                            FieldName="petitioner_contact_no"
+                            ErrorName="petitioner_contact_no"
                             v-model:input="petitioner_contact_no"
                         />
                     </div>
@@ -898,29 +761,18 @@
                         <RequiredInputField 
                             label="Email Address"
                             placeholder="Enter postal code"
-                            inputType="text"
+                            type="text"
+                            FieldName="petitioner_email_addr"
+                            ErrorName="petitioner_email_addr"
                             v-model:input="petitioner_email_addr"
                         />
                     </div>
                     <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
-                        <!-- <RequiredSelectField 
+                        <RequiredSelectField 
                             label="Intended Port of Entry"
                             v-model:input="intended_port_of_entry"
-                        /> -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Intended Port of Entry <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="intended_port_of_entry" aria-label="Default select example" required>
-                                    <option v-for="state in states" :key="state" :value="state">
-                                        {{ state }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-
+                            :items="states"
+                        />
                     </div>
                 </div>        
             </div>
@@ -939,7 +791,7 @@
                     btnText="Preview"
                 />
             </div>
-        </form>
+        </Form>
         <!-- ============================================================== -->
                             <!-- End of Main Container -->
         <!-- ============================================================== -->

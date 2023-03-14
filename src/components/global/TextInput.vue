@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps, toRefs, defineEmits, computed } from 'vue'
-import { Field, ErrorMessage } from 'vee-validate';
+import { Field, ErrorMessage } from 'vee-validate'
 
 const emit = defineEmits(['update:input'])
 

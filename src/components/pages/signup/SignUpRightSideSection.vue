@@ -3,11 +3,10 @@ import { ref } from 'vue'
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { Form } from 'vee-validate'
-import SubmitFormButton from "../../global/SubmitFormButton.vue";
-import RouterWithIcon from "../../global/RouterLinkBtnWithIcon.vue";
-import TextInput from "../../global/TextInput.vue";
-import Swal from '../../../../src/sweetalert2'
-
+import SubmitFormButton from "@/components/global/SubmitFormButton.vue";
+import RouterWithIcon from "@/components/global/RouterLinkBtnWithIcon.vue";
+import TextInput from "@/components/global/TextInput.vue";
+import Swal from '@/sweetalert2'
 import * as yup from 'yup';
 
 
@@ -73,12 +72,14 @@ const handleSignUp = async () => {
 
 }
 
+const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
+
 const schema = yup.object({
-  first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters'),
-  middle_name: yup.string().nullable(),
-  last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters'),
-  birthdate: yup.string().required('Birthdate is required!').min(new Date(1925, 0, 1)),
-  username: yup.string().required('Username is required!').min(2, 'Username must be atleast 2 characters').max(25, 'Username must be at most 25 characters'),
+  first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  middle_name: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+  birthdate: yup.string().required('Birthdate is required!').min(new Date(1925, 0, 1), "Birthdate must be atleast January 01, 1923"),
+  username: yup.string().required('Username is required!').min(5, 'Username must be atleast 2 characters').max(25, 'Username must be at most 25 characters'),
   email: yup.string().required('Email is required!').email('Email must be a valid email'),
   password: yup.string().required('Password is required!').min(8, 'Password must be atleast 8 characters'),
   passwordConfirmation: yup.string().required('Confirm password is required!').oneOf([yup.ref('password')], 'Passwords do not match'),

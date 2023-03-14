@@ -2,12 +2,12 @@
     import { ref } from 'vue'
     import axios from 'axios'
     import { useRouter } from 'vue-router'
-    import { useUserStore } from '../../../store/user-store'
-    import { useProfileStore } from '../../../store/profile-store'
-    import SubmitFormButton from '../../global/SubmitFormButton.vue'
-    import RouterWithIcon from '../../global/RouterLinkBtnWithIcon.vue'
-    import TextInput from '../../global/TextInput.vue'
-    import Swal from '../../../../src/sweetalert2'
+    import { useUserStore } from '@/store/user-store'
+    import { useProfileStore } from '@/store/profile-store'
+    import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
+    import RouterWithIcon from '@/components/global/RouterLinkBtnWithIcon.vue'
+    import TextInput from '@/components/global/TextInput.vue'
+    import Swal from '@/sweetalert2'
 
 
     const router = useRouter()
@@ -90,7 +90,7 @@
                         text-dark
                     "
                     label="Username"
-                    inputType="text"
+                    type="text"
                     v-model:input="email"
                     inputClassName="form-control"
                     placeholder="Email or Username"
@@ -106,7 +106,7 @@
                         text-dark
                     "
                 label="Password"
-                inputType="password"
+                type="password"
                 v-model:input="password"
                 inputClassName="form-control"
                 placeholder="Password"

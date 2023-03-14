@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, toRefs, defineEmits, computed } from 'vue'
+
 const emit = defineEmits(['update:input'])
 
 const props = defineProps({
@@ -7,11 +8,13 @@ const props = defineProps({
     label: String,
     className: String,
     input: String,
+    items: String,
+    FieldName: String,
     error: String,
     smallLabel: String
 })
 
-const { labelClassName, label, className, input, error, smallLabel } = toRefs(props)
+const { labelClassName, label, className, input, items, error, smallLabel, FieldName } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
@@ -30,11 +33,10 @@ const inputComputed = computed({
             </label>
         </div>
         <div class="col-12 input-group">
-            <select class="form-control form-select w-100" :class="className" v-model="inputComputed" aria-label="Default select example" required>
-                <option selected>Select</option>
-                <option value="1">7:00 am</option>
-                <option value="2">8:00 am</option>
-                <option value="3">9:00 am</option>
+            <select :name="FieldName" class="form-control form-select w-100" :class="className" v-model="inputComputed" aria-label="Default select example" required>
+                <option v-for="item in items" :key="item" :value="item">
+                    {{ item }}
+                </option>
             </select>
             <span class="text-secondary text-s fw-light display-block float-left ml-2">
                 {{ smallLabel }}
@@ -45,8 +47,6 @@ const inputComputed = computed({
                 {{ error }}
             </span>
         </div>
-
-       
     </div>
     
 </template>
