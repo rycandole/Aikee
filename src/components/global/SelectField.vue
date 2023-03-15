@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, toRefs, defineEmits, computed } from 'vue'
+import { Field, ErrorMessage } from 'vee-validate'
 
 const emit = defineEmits(['update:input'])
 
@@ -7,13 +8,15 @@ const props = defineProps({
     labelClassName: String,
     label: String,
     className: String,
-    input: String,
-    items: String,
+    input: [String, Number],
+    items: Array,
+    FieldName: String,
+    ErrorName: String,
     error: String,
     smallLabel: String
 })
 
-const { labelClassName, label, className, input, items, error, smallLabel } = toRefs(props)
+const { labelClassName, label, className, input, items, error, smallLabel, FieldName, ErrorName } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
@@ -32,22 +35,22 @@ const inputComputed = computed({
             </label>
         </div>
         <div class="col-12 input-group">
-            <select class="form-control form-select w-100" :class="className" v-model="inputComputed" aria-label="Default select example">
+            <Field :name="FieldName" as="select" class="form-control form-select w-100" :class="className" v-model="inputComputed" aria-label="Default select example">
+                <option :selected="true" value="">Select</option>
                 <option v-for="item in items" :key="item" :value="item">
                     {{ item }}
                 </option>
-            </select>
+            </Field>
             <span class="text-secondary text-s fw-light display-block float-left ml-2">
                 {{ smallLabel }}
             </span>
         </div>
-        <div v-if="error" class="col-12">
-            <span class="text-danger">
+        <div class="col-12">
+            <span v-if="error" class="text-danger">
                 {{ error }}
             </span>
+            <ErrorMessage :name="ErrorName" class="text-danger"/>
         </div>
-
-       
     </div>
     
 </template>

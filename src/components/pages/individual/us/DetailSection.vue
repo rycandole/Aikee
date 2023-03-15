@@ -1,6 +1,6 @@
 <script setup>
     // import axios from 'axios'
-    import { ref } from 'vue'
+    // import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
@@ -49,11 +49,131 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
 
+    // let date_of_birth = ref(null)
+    // let ci_nvc_number = ref(null)
+    // let ci_nvc_confirm = ref(null)
+    // let ci_visa_pref_category = ref(null)
+    // let ci_interview_date = ref(null)
+    // let ci_interview_source = ref(null)
+    // let ad_last_name = ref(null)
+    // let ad_first_name = ref(null)
+    // let ad_middle_name = ref(null)
+    // let ad_gender = ref(null)
+    // let ad_civil_status = ref(null)
+    // let ad_nationality = ref(null)
+    // let ad_birthplace = ref(null)
+    // let ad_birth_country = ref(null)
+    // let ad_mother_last_name = ref(null)
+    // let ad_mother_first_name = ref(null)
+    // let ad_mother_middle_name = ref(null)
+    // let ad_address = ref(null)
+    // let ad_city = ref(null)
+    // let ad_province = ref(null)
+    // let ad_zip_code = ref(null)
+    // let ad_overseas_country = ref(null)
+    // let ad_overseas_street_address = ref(null)
+    // let ad_overseas_city = ref(null)
+    // let ad_overseas_province = ref(null)
+    // let ad_overseas_zipcode = ref(null)
+    // let ad_contact_numbers = ref(null)
+    // let ad_present_residence = ref(null)
+    // let ad_prior_residence = ref(null)
+    // let ad_passport_number = ref(null)
+    // let ad_passport_issued_by = ref(null)
+    // let ad_passport_date = ref(null)
+    // let ad_passport_expiration_date = ref(null)
+    // let ad_has_been_issued_visa = ref(null)
+    // let ad_issuance_date = ref(null)
+    // let ad_expiration_date = ref(null)
+    // let ad_prev_medical_exam_month = ref(null)
+    // let ad_prev_medical_exam_year = ref(null)
+    // let ad_prev_xray_month = ref(null)
+    // let ad_prev_xray_year = ref(null)
+    // let petitioner_fullname = ref(null)
+    // let petitioner_is_alive = ref(null)
+    // let petitioner_relationship = ref(null)
+    // let petitioner_us_street_addr = ref(null)
+    // let petitioner_us_city_addr = ref(null)
+    // let petitioner_us_state_addr = ref(null)
+    // let petitioner_us_postal_code = ref(null)
+    // let petitioner_contact_no = ref(null)
+    // let petitioner_email_addr = ref(null)
+    // let intended_port_of_entry = ref(null)
 
+    
+    /**
+     * Submit US individual form
+     * 
+     */
+     const handleDetails = (values) => {
 
+    // let res = JSON.stringify(values)
+     console.log(values.date_of_birth)
+
+    const jsonDATA = {
+            json_date_of_birth: values.date_of_birth,
+            json_ci_nvc_number: values.ci_nvc_number,
+            json_ci_nvc_confirm: values.ci_nvc_confirm,
+            json_ci_visa_pref_category: values.ci_visa_pref_category,
+            json_ci_interview_date: values.ci_interview_date,
+            json_ci_interview_source: values.ci_interview_source,
+            json_ad_last_name: values.ad_last_name,
+            json_ad_first_name: values.ad_first_name,
+            json_ad_middle_name: values.ad_middle_name,
+            json_ad_gender: values.ad_gender,
+            json_ad_civil_status: values.ad_civil_status,
+            json_ad_nationality: values.ad_nationality,
+            json_ad_birthplace: values.ad_birthplace,
+            json_ad_birth_country: values.ad_birth_country,
+            json_ad_mother_last_name: values.ad_mother_last_name,
+            json_ad_mother_first_name: values.ad_mother_first_name,
+            json_ad_mother_middle_name: values.ad_mother_middle_name,
+            json_ad_address: values.ad_address,
+            json_ad_city: values.ad_city,
+            json_ad_province: values.ad_province,
+            json_ad_zip_code: values.ad_zip_code,
+            json_ad_overseas_country: values.ad_overseas_country,
+            json_ad_overseas_street_address: values.ad_overseas_street_address,
+            json_ad_overseas_city: values.ad_overseas_city,
+            json_ad_overseas_province: values.ad_overseas_province,
+            json_ad_overseas_zipcode: values.ad_overseas_zipcode,
+            json_ad_contact_numbers: values.ad_contact_numbers,
+            json_ad_present_residence: values.ad_present_residence,
+            json_ad_prior_residence: values.ad_prior_residence,
+            json_ad_passport_number: values.ad_passport_number,
+            json_ad_passport_issued_by: values.ad_passport_issued_by,
+            json_ad_passport_date: values.ad_passport_date,
+            json_ad_passport_expiration_date: values.ad_passport_expiration_date,
+            json_ad_has_been_issued_visa: "yes",
+            json_ad_issuance_date: values.ad_issuance_date,
+            json_ad_expiration_date: values.ad_expiration_date,
+            json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
+            json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
+            json_ad_prev_xray_month: values.ad_prev_xray_month,
+            json_ad_prev_xray_year: values.ad_prev_xray_year,
+            json_petitioner_fullname: values.petitioner_fullname,
+            json_petitioner_is_alive: "yes",
+            json_petitioner_relationship: values.petitioner_relationship,
+            json_petitioner_us_street_addr: values.petitioner_us_street_addr,
+            json_petitioner_us_city_addr: values.petitioner_us_city_addr,
+            json_petitioner_us_state_addr: values.petitioner_us_state_addr,
+            json_petitioner_us_postal_code: values.petitioner_us_postal_code,
+            json_petitioner_contact_no: values.petitioner_contact_no,
+            json_petitioner_email_addr: values.petitioner_email_addr,
+            json_intended_port_of_entry: values.intended_port_of_entry
+    }
+
+    let res = JSON.stringify(jsonDATA)
+    // console.log(res)
+
+    USIndividualDetails.setUSIndividualDetails(res)
+    router.push('/individual/us/preview')
+
+    
+
+    }
 
     const handleBack = () => {
-
         Swal.fire({
             title: 'Are you sure you want to go back?',
             text: 'The details you filled up will be gone.',
@@ -71,149 +191,64 @@
         })
     }
 
-    // ======================================================== //
 
-    let date_of_birth = ref(null)
-    let ci_nvc_number = ref(null)
-    let ci_nvc_confirm = ref(null)
-    let ci_visa_pref_category = ref(null)
-    let ci_interview_date = ref(null)
-    let ci_interview_source = ref(null)
-    let ad_last_name = ref(null)
-    let ad_first_name = ref(null)
-    let ad_middle_name = ref(null)
-    let ad_gender = ref(null)
-    let ad_civil_status = ref(null)
-    let ad_nationality = ref(null)
-    let ad_birthplace = ref(null)
-    let ad_birth_country = ref(null)
-    let ad_mother_last_name = ref(null)
-    let ad_mother_first_name = ref(null)
-    let ad_mother_middle_name = ref(null)
-    let ad_address = ref(null)
-    let ad_city = ref(null)
-    let ad_province = ref(null)
-    let ad_zip_code = ref(null)
-    let ad_overseas_country = ref(null)
-    let ad_overseas_street_address = ref(null)
-    let ad_overseas_city = ref(null)
-    let ad_overseas_province = ref(null)
-    let ad_overseas_zipcode = ref(null)
-    let ad_contact_numbers = ref(null)
-    let ad_present_residence = ref(null)
-    let ad_prior_residence = ref(null)
-    let ad_passport_number = ref(null)
-    let ad_passport_issued_by = ref(null)
-    let ad_passport_date = ref(null)
-    let ad_passport_expiration_date = ref(null)
-    let ad_has_been_issued_visa = ref(null)
-    let ad_issuance_date = ref(null)
-    let ad_expiration_date = ref(null)
-    let ad_prev_medical_exam_month = ref(null)
-    let ad_prev_medical_exam_year = ref(null)
-    let ad_prev_xray_month = ref(null)
-    let ad_prev_xray_year = ref(null)
-    let petitioner_fullname = ref(null)
-    let petitioner_is_alive = ref(null)
-    let petitioner_relationship = ref(null)
-    let petitioner_us_street_addr = ref(null)
-    let petitioner_us_city_addr = ref(null)
-    let petitioner_us_state_addr = ref(null)
-    let petitioner_us_postal_code = ref(null)
-    let petitioner_contact_no = ref(null)
-    let petitioner_email_addr = ref(null)
-    let intended_port_of_entry = ref(null)
+    const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
+    const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
+    const numOnlyRegex = /^[\p{N}]+$/u;
+    const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
-    
-
-    /**
-     * Submit US individual form
-     * 
-     */
-     const handleDetails = async () => {
-
-        const jsonDATA = {
-                json_date_of_birth: date_of_birth.value,
-                json_ci_nvc_number: ci_nvc_number.value,
-                json_ci_nvc_confirm: ci_nvc_confirm.value,
-                json_ci_visa_pref_category: ci_visa_pref_category.value,
-                json_ci_interview_date: ci_interview_date.value,
-                json_ci_interview_source: ci_interview_source.value,
-                json_ad_last_name: ad_last_name.value,
-                json_ad_first_name: ad_first_name.value,
-                json_ad_middle_name: ad_middle_name.value,
-                json_ad_gender: ad_gender.value,
-                json_ad_civil_status: ad_civil_status.value,
-                json_ad_nationality: ad_nationality.value,
-                json_ad_birthplace: ad_birthplace.value,
-                json_ad_birth_country: ad_birth_country.value,
-                json_ad_mother_last_name: ad_mother_last_name.value,
-                json_ad_mother_first_name: ad_mother_first_name.value,
-                json_ad_mother_middle_name: ad_mother_middle_name.value,
-                json_ad_address: ad_address.value,
-                json_ad_city: ad_city.value,
-                json_ad_province: ad_province.value,
-                json_ad_zip_code: ad_zip_code.value,
-                json_ad_overseas_country: ad_overseas_country.value,
-                json_ad_overseas_street_address: ad_overseas_street_address.value,
-                json_ad_overseas_city: ad_overseas_city.value,
-                json_ad_overseas_province: ad_overseas_province.value,
-                json_ad_overseas_zipcode: ad_overseas_zipcode.value,
-                json_ad_contact_numbers: ad_contact_numbers.value,
-                json_ad_present_residence: ad_present_residence.value,
-                json_ad_prior_residence: ad_prior_residence.value,
-                json_ad_passport_number: ad_passport_number.value,
-                json_ad_passport_issued_by: ad_passport_issued_by.value,
-                json_ad_passport_date: ad_passport_date.value,
-                json_ad_passport_expiration_date: ad_passport_expiration_date.value,
-                json_ad_has_been_issued_visa: ad_has_been_issued_visa.value,
-                json_ad_issuance_date: ad_issuance_date.value,
-                json_ad_expiration_date: ad_expiration_date.value,
-                json_ad_prev_medical_exam_month: ad_prev_medical_exam_month.value,
-                json_ad_prev_medical_exam_year: ad_prev_medical_exam_year.value,
-                json_ad_prev_xray_month: ad_prev_xray_month.value,
-                json_ad_prev_xray_year: ad_prev_xray_year.value,
-                json_petitioner_fullname: petitioner_fullname.value,
-                json_petitioner_is_alive: petitioner_is_alive.value,
-                json_petitioner_relationship: petitioner_relationship.value,
-                json_petitioner_us_street_addr: petitioner_us_street_addr.value,
-                json_petitioner_us_city_addr: petitioner_us_city_addr.value,
-                json_petitioner_us_state_addr: petitioner_us_state_addr.value,
-                json_petitioner_us_postal_code: petitioner_us_postal_code.value,
-                json_petitioner_contact_no: petitioner_contact_no.value,
-                json_petitioner_email_addr: petitioner_email_addr.value,
-                json_intended_port_of_entry: intended_port_of_entry.value
-        }
-
-        let res = JSON.stringify(jsonDATA)
-        // console.log(res)
-
-        USIndividualDetails.setUSIndividualDetails(res)
-        router.push('/individual/us/preview')
-
-        
+    const schema = yup.object({
+        date_of_birth: yup.string().required('Birthdate is required!').min(new Date(1925, 0, 1), "Birthdate must be atleast January 01, 1923"),
+        ci_nvc_number: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be atleast 13 characters').max(13, 'NVC Case Number must be at most 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
+        ci_nvc_confirm: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be atleast 13 characters').max(13, 'NVC Case Number must be at most 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('ci_nvc_number')], 'NVC Case Number do not match'),
+        ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
+        ci_visa_pref_category: yup.string().required('Interview date is required!'),
+        ci_interview_source: yup.string().nullable(),
+        ad_last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_middle_name: yup.string().nullable().optional(),
+        ad_gender: yup.string().required('Gender is required!'),
+        ad_civil_status: yup.string().required('Civil status is required!'),
+        ad_nationality: yup.string().required('Nationality is required!'),
+        ad_birthplace:yup.string().required('Birthplace is required!').min(2, 'Birthplace must be atleast 4 characters').max(25, 'Birthplace must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_birth_country:yup.string().required('Birth country is required!').min(4, 'Birth country must be atleast 4 characters').max(25, 'Birth country must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_mother_last_name: yup.string().required('Last name is required!').min(4, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_mother_first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_mother_middle_name: yup.string().nullable().optional(),
+        ad_address: yup.string().nullable().optional().min(5, 'Address must be atleast 5 characters'),
+        ad_city: yup.string().nullable().optional().min(5, 'City must be atleast 5 characters'),
+        ad_province: yup.string().nullable().optional(),
+        ad_zip_code: yup.string().nullable().optional().min(4, 'Zip code must be atleast 4 characters').matches(numOnlyRegex, "Zip Code must be number only!"),
+        ad_overseas_country: yup.string().nullable().optional(),
+        ad_overseas_street_address: yup.string().nullable().optional().min(5, 'Street address must be atleast 5 characters'),
+        ad_overseas_city: yup.string().nullable().optional().min(5, 'City must be atleast 5 characters'),
+        ad_overseas_province: yup.string().nullable().optional().min(5, 'Province must be atleast 5 characters'),
+        ad_overseas_zipcode: yup.string().nullable().optional().min(4, 'Zip code must be atleast 4 characters').matches(numOnlyRegex, "Zip Code must be number only!"),
+        ad_contact_numbers: yup.string().required('Contact number is required!').min(11, 'Contact number must be atleast 13 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
+        ad_present_residence: yup.string().required('Present residence is required!'),
+        ad_prior_residence: yup.string().required('Prior residence is required!'),
+        ad_passport_number: yup.string().required('Passport number is required!'),
+        ad_passport_issued_by: yup.string().required('Passport issued by is required!'),
+        ad_passport_date: yup.string().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923"),
+        ad_passport_expiration_date: yup.string().required('Passport expiration date is required!'),
+        ad_issuance_date: yup.string().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923"),
+        ad_expiration_date: yup.string().required("Expiration date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923"),
+        ad_prev_medical_exam_month: yup.string().nullable().optional(),
+        ad_prev_medical_exam_year: yup.string().nullable().optional(),
+        ad_prev_xray_month: yup.string().nullable().optional(),
+        ad_prev_xray_year: yup.string().nullable().optional(),
+        petitioner_fullname: yup.string().required("Petitioner name is required").min(6, "Petitioner name must be atleast 6 characters").max(50, "Petitioner name must be at most 50 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        petitioner_relationship: yup.string().required("Petitioner relationship is required!"),
+        petitioner_us_street_addr: yup.string().required("Street address is required!").min(5, "Street Address must be atleast 5 characters").max(100, "Street Address must be most 100 characters"),
+        petitioner_us_city_addr: yup.string().required("City is required!").min(5, "City must be atleast 5 characters").max(25, "City must be most 25 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        petitioner_us_state_addr: yup.string().required("State is required!"),
+        petitioner_us_postal_code: yup.string().required("Postal code is required!").min(4, 'Postal code must be atleast 4 characters').max(4, 'Postal code must be at most 4 characters').matches(numOnlyRegex, "Postal Code must be number only!"),
+        petitioner_contact_no: yup.string().required("Petitioner contact no. is required!").min(11, 'Contact number must be atleast 11 characters').max(11, 'Contact number must be at most 11 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
+        petitioner_email_addr: yup.string().required("Petitioner email address is required!").min(10, "Email must be atleast 10 characters").max(30, "Email must be at most 30 characters").email("Enter a valid email"),
+        intended_port_of_entry: yup.string().required("Port of entry is required!"),
+    })
 
 
-    }
-
-const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
-const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
-const numOnlyRegex = /^[\p{N}]+$/u;
-
-const schema = yup.object({
-  birthdate: yup.string().required('Birthdate is required!').min(new Date(1925, 0, 1), "Birthdate must be atleast January 01, 1923"),
-  nvc_caseNumber: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be atleast 13 characters').max(13, 'NVC Case Number must be at most 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
-  confirm_nvc_caseNumber: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be atleast 13 characters').max(13, 'NVC Case Number must be at most 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('nvc_caseNumber')], 'NVC Case Number do not match'),
-  visa_category: yup.string().required('Last name is required!'),
-  first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  middle_name: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  interview_date: yup.string().required('Interview date is required!').min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
-  mother_middle_name: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  ad_addrs: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  ad_ct: yup.string().nullable().matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  zip_code: yup.string().min(4, "Zip Code must be at least 4 character").max(4, "Zip Code must be at most 4 characters").matches(numOnlyRegex, "Zip Code must be number only!").nullable(),
-})
 
 
 </script>
@@ -230,7 +265,7 @@ const schema = yup.object({
             <SideNav 
                 :className="textSuccess ? textSuccess : 'text-secondary'"
                 :className1="textSuccess1 ? textSuccess1 : 'text-secondary'"
-                :className2="textSuccess2 ? textSuccess2 : 'text-secondary'"
+                
             />
         </div>
          <!-- ============================================================== -->
@@ -245,8 +280,8 @@ const schema = yup.object({
                     <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Date of Birth"
-                            FieldName="birthdate"
-                            ErrorName="birthdate"
+                            FieldName="date_of_birth"
+                            ErrorName="date_of_birth"
                             type="date"
                             v-model:input="date_of_birth"
                         />
@@ -261,8 +296,8 @@ const schema = yup.object({
                         <RequiredInputField 
                             label="NVC Case Number"
                             type="text"
-                            FieldName="nvc_caseNumber"
-                            ErrorName="nvc_caseNumber"
+                            FieldName="ci_nvc_number"
+                            ErrorName="ci_nvc_number"
                             smallLabel="3-character Consulate Code+10-digit case number (ex. MNL##########)"
                             v-model:input="ci_nvc_number"
                         />
@@ -271,8 +306,8 @@ const schema = yup.object({
                         <RequiredInputField 
                             label="Confirm NVC Case Number"
                             type="text"
-                            FieldName="confirm_nvc_caseNumber"
-                            ErrorName="confirm_nvc_caseNumber"
+                            FieldName="ci_nvc_confirm"
+                            ErrorName="ci_nvc_confirm"
                             smallLabel="Please re-enter your NVC Case Number"
                             v-model:input="ci_nvc_confirm"
                         />
@@ -280,29 +315,18 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Visa Preferemce Category"
-                            FieldName="visa_category"
+                            FieldName="ci_visa_pref_category"
+                            ErrorName="ci_visa_pref_category"
                             v-model:input="ci_visa_pref_category"
                             :items="visaCategories"
                         />
-                        <!-- <div class="row mt-3">
-                            <div class="col-12">
-                                <label class="text-capitalize"> Visa Preference Category <b class="text-danger">*</b></label>
-                            </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select w-100" v-model="ci_visa_pref_category" aria-label="Default select example" required>
-                                    <option v-for="visaCategory in visaCategories" :key="visaCategory" :value="visaCategory">
-                                        {{ visaCategory }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div> -->
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <InputField 
                             label="Interview Date"
                             type="date"
-                            FieldName="interview_date"
-                            ErrorName="interview_date"
+                            FieldName="ci_interview_date"
+                            ErrorName="ci_interview_date"
                             v-model:input="ci_interview_date"
                             smallLabel="If none, leave blank'"
                         />
@@ -310,6 +334,8 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <SelectField 
                             label="Interview Source"
+                            FieldName="ci_interview_source"
+                            ErrorName="ci_interview_source"
                             v-model:input="ci_interview_source"
                             :items="interviewSources"
                         />
@@ -327,8 +353,8 @@ const schema = yup.object({
                             label="Last Name"
                             placeholder="Last Name"
                             type="text"
-                            FieldName="last_name"
-                            ErrorName="last_name"
+                            FieldName="ad_last_name"
+                            ErrorName="ad_last_name"
                             v-model:input="ad_last_name"
                         />
                     </div>
@@ -337,8 +363,8 @@ const schema = yup.object({
                             label="First Name"
                             placeholder="First Name"
                             type="text"
-                            FieldName="first_name"
-                            ErrorName="first_name"
+                            FieldName="ad_first_name"
+                            ErrorName="ad_first_name"
                             v-model:input="ad_first_name"
                         />
                     </div>
@@ -347,14 +373,16 @@ const schema = yup.object({
                             label="Middle Name"
                             placeholder="Middle Name"
                             type="text"
-                            FieldName="middle_name"
-                            ErrorName="middle_name"
+                            FieldName="ad_middle_name"
+                            ErrorName="ad_middle_name"
                             v-model:input="ad_middle_name"
                         />
                     </div>
-                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                   <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Gender"
+                            FieldName="ad_gender"
+                            ErrorName="ad_gender"
                             v-model:input="ad_gender"
                             :items="genderOption"
                         />
@@ -362,6 +390,8 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Civil Status"
+                            FieldName="ad_civil_status"
+                            ErrorName="ad_civil_status"
                             v-model:input="ad_civil_status"
                             :items="civilStatus"
                         />
@@ -369,6 +399,8 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Country or Nationality"
+                            FieldName="ad_nationality"
+                            ErrorName="ad_nationality"
                             v-model:input="ad_nationality"
                             :items="countries"
                         />
@@ -379,8 +411,8 @@ const schema = yup.object({
                             placeholder="Birth City"
                             smallLabel="Birth City"
                             type="text"
-                            FieldName="birth_city"
-                            ErrorName="birth_city"
+                            FieldName="ad_birthplace"
+                            ErrorName="ad_birthplace"
                             v-model:input="ad_birthplace"
                         />
                     </div>
@@ -388,6 +420,8 @@ const schema = yup.object({
                         <RequiredSelectField 
                             label="Country"
                             smallLabel="Birth Country"
+                            FieldName="ad_birth_country"
+                            ErrorName="ad_birth_country"
                             v-model:input="ad_birth_country"
                             :items="countries"
                         />
@@ -397,8 +431,8 @@ const schema = yup.object({
                             label="Mother's maiden name"
                             placeholder="Last Name"
                             type="text"
-                            FieldName="mother_last_name"
-                            ErrorName="mother_last_name"
+                            FieldName="ad_mother_last_name"
+                            ErrorName="ad_mother_last_name"
                             smallLabel="Last Name"
                             v-model:input="ad_mother_last_name"
                         />
@@ -409,8 +443,8 @@ const schema = yup.object({
                             starClassName="d-none"
                             placeholder="First Name"
                             type="text"
-                            FieldName="mother_first_name"
-                            ErrorName="mother_first_name"
+                            FieldName="ad_mother_first_name"
+                            ErrorName="ad_mother_first_name"
                             smallLabel="First Name"
                             v-model:input="ad_mother_first_name"
                         />
@@ -420,9 +454,10 @@ const schema = yup.object({
                             placeholder="Middle Name"
                             type="text"
                             smallLabel="Middle Name"
+                            FieldName="ad_mother_middle_name"
+                            ErrorName="ad_mother_middle_name"
                             v-model:input="ad_mother_middle_name"
-                            FieldName="mother_middle_name"
-                            ErrorName="mother_middle_name"
+                            
                         />
                     </div>
                     <div class="mb-3 mt-5 col-12">
@@ -438,23 +473,26 @@ const schema = yup.object({
                             label="PHILIPPINES ADDRESS"
                             placeholder="Building Name and Street Address"
                             type="text"
+                            FieldName="ad_address"
+                            ErrorName="ad_address"
                             v-model:input="ad_address"
-                            FieldName="ad_addrs"
-                            ErrorName="ad_addrs"
                         />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <InputField 
                             placeholder="City/Town"
                             type="text"
+                            FieldName="ad_city"
+                            ErrorName="ad_city"
                             v-model:input="ad_city"
-                            FieldName="ad_ct"
-                            ErrorName="ad_ct"
+                            
                         />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <SelectField 
                             label="Province"
+                            FieldName="ad_province"
+                            ErrorName="ad_province"
                             v-model:input="ad_province"
                             :items="philppineProvince"
                         />
@@ -463,48 +501,58 @@ const schema = yup.object({
                         <InputField 
                             placeholder="Zip Code"
                             type="text"
+                            FieldName="ad_zip_code"
+                            ErrorName="ad_zip_code"
                             v-model:input="ad_zip_code"
-                            FieldName="zip_code"
-                            ErrorName="zip_code"
                         />
                     </div>
-                    <div class="mb-3 mt-5 col-12">
+                   <div class="mb-3 mt-5 col-12">
                         <h5 class="text-uppercase">FOR APPLICANTS CURRENTLY LIVING OUTSIDE THE PHILIPPINES:</h5>
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <SelectField 
                             label="Overseas Address"
+                            FieldName="ad_overseas_country"
+                            ErrorName="ad_overseas_country"
                             v-model:input="ad_overseas_country"
                             :items="countries"
                         />
                     </div>
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
-                        <!-- <InputField 
+                        <InputField 
                             placeholder="Street Address"
                             type="text"
+                            FieldName="ad_overseas_street_address"
+                            ErrorName="ad_overseas_street_address"
                             v-model:input="ad_overseas_street_address"
-                        /> -->
+                        />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <!-- <InputField 
+                        <InputField 
                             placeholder="City/Town"
                             type="text"
+                            FieldName="ad_overseas_city"
+                            ErrorName="ad_overseas_city"
                             v-model:input="ad_overseas_city"
-                        /> -->
+                        />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <!-- <InputField 
+                        <InputField 
                             placeholder="Province/State"
                             type="text"
+                            FieldName="ad_overseas_province"
+                            ErrorName="ad_overseas_province"
                             v-model:input="ad_overseas_province"
-                        /> -->
+                        />
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-                        <!-- <InputField 
+                        <InputField 
                             placeholder="Zip Code"
                             type="text"
+                            FieldName="ad_overseas_zipcode"
+                            ErrorName="ad_overseas_zipcode"
                             v-model:input="ad_overseas_zipcode"
-                        /> -->
+                        />
                     </div>
                     <div class="col-12 mt-3 mb-1"><hr></div>
                     
@@ -513,8 +561,8 @@ const schema = yup.object({
                             label="Contact Number(s), separate with a slash"
                             placeholder="Contact Number"
                             type="text"
-                            FieldName="contact_no"
-                            ErrorName="contact_no"
+                            FieldName="ad_contact_numbers"
+                            ErrorName="ad_contact_numbers"
                             smallLabel="(Area Code)<space>Tel.Number."
                             v-model:input="ad_contact_numbers"
                         />
@@ -536,9 +584,11 @@ const schema = yup.object({
 
                     <div class="col-12 mt-3 mb-1"><hr></div>
 
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                   <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Present Country of Residence"
+                            FieldName="ad_present_residence"
+                            ErrorName="ad_present_residence"
                             v-model:input="ad_present_residence"
                             :items="countries"
                         />
@@ -546,6 +596,8 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Prior Country of Residence"
+                            FieldName="ad_prior_residence"
+                            ErrorName="ad_prior_residence"
                             v-model:input="ad_prior_residence"
                             :items="countries"
                         />
@@ -555,19 +607,21 @@ const schema = yup.object({
                             headerText="Passport Information"
                         />
                     </div>
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
                             label="Passport Number"
                             placeholder="Passport Number"
                             type="text"
-                            FieldName="passport_number"
-                            ErrorName="passport_number"
+                            FieldName="ad_passport_number"
+                            ErrorName="ad_passport_number"
                             v-model:input="ad_passport_number"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Issued by (Country) "
+                            FieldName="ad_passport_issued_by"
+                            ErrorName="ad_passport_issued_by"
                             v-model:input="ad_passport_issued_by"
                             :items="countries"
                         />
@@ -576,8 +630,8 @@ const schema = yup.object({
                         <RequiredInputField 
                             label="Issue Date"
                             type="date"
-                            FieldName="passport_date"
-                            ErrorName="passport_date"
+                            FieldName="ad_passport_date"
+                            ErrorName="ad_passport_date"
                             v-model:input="ad_passport_date"
                         />
                     </div>
@@ -585,8 +639,8 @@ const schema = yup.object({
                         <RequiredInputField 
                             label="Expiration Date"
                             type="date"
-                            FieldName="exp_passport_date"
-                            ErrorName="exp_passport_date"
+                            FieldName="ad_passport_expiration_date"
+                            ErrorName="ad_passport_expiration_date"
                             v-model:input="ad_passport_expiration_date"
                         />
                     </div>
@@ -621,8 +675,8 @@ const schema = yup.object({
                         <RequiredInputField 
                             label="Issuance Date"
                             type="date"
-                            FieldName="issuance_date"
-                            ErrorName="issuance_date"
+                            FieldName="ad_issuance_date"
+                            ErrorName="ad_issuance_date"
                             v-model:input="ad_issuance_date"
                         />
                     </div>
@@ -630,8 +684,8 @@ const schema = yup.object({
                         <RequiredInputField 
                             label="Expiration Date"
                             type="date"
-                            FieldName="expiration_date"
-                            ErrorName="expiration_date"
+                            FieldName="ad_expiration_date"
+                            ErrorName="ad_expiration_date"
                             v-model:input="ad_expiration_date"
                         />
                         
@@ -640,6 +694,8 @@ const schema = yup.object({
                         <SelectField 
                             label="Previous Medical Examination at SLEC"
                             smallLabel="Month"
+                            FieldName="ad_prev_medical_exam_month"
+                            ErrorName="ad_prev_medical_exam_month"
                             v-model:input="ad_prev_medical_exam_month"
                             :items="months"
                         />
@@ -647,6 +703,8 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <SelectField 
                             smallLabel="Year"
+                            FieldName="ad_prev_medical_exam_year"
+                            ErrorName="ad_prev_medical_exam_year"
                             v-model:input="ad_prev_medical_exam_year"
                             :items="years"
                         />
@@ -655,6 +713,8 @@ const schema = yup.object({
                         <SelectField 
                             label="Date of previous Chest X-Ray"
                             smallLabel="Month"
+                            FieldName="ad_prev_xray_month"
+                            ErrorName="ad_prev_xray_month"
                             v-model:input="ad_prev_xray_month"
                             :items="months"
                         />
@@ -662,6 +722,8 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <SelectField 
                             smallLabel="Year"
+                            FieldName="ad_prev_xray_year"
+                            ErrorName="ad_prev_xray_year"
                             v-model:input="ad_prev_xray_year"
                             :items="years"
                         />
@@ -676,8 +738,8 @@ const schema = yup.object({
                             label="Name of Petitioner"
                             placeholder="Enter Full Name"
                             type="text"
-                            FieldName="petitioner_name"
-                            ErrorName="petitioner_name"
+                            FieldName="petitioner_fullname"
+                            ErrorName="petitioner_fullname"
                             smallLabel="(Area Code)<space>Tel.Number."
                             v-model:input="petitioner_fullname"
                         />
@@ -686,7 +748,7 @@ const schema = yup.object({
                     <div class="mb-1 col-12">
                         <div class="row mt-3">
                             <!-- ====================== Date Input ======================== -->
-                            <div class="col-12">
+                           <div class="col-12">
                                 <label class="text-capitalize">
                                 Is the petitioner still alive? <b class="text-danger">*</b>
                                 </label>
@@ -708,6 +770,8 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Relationship"
+                            FieldName="petitioner_relationship"
+                            ErrorName="petitioner_relationship"
                             v-model:input="petitioner_relationship"
                             :items="relationship"
                         />
@@ -723,16 +787,20 @@ const schema = yup.object({
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <InputField 
+                        <RequiredInputField 
                             label="City"
+                            FieldName="petitioner_us_city_addr"
+                            ErrorName="petitioner_us_city_addr"
                             type="text"
                             smallLabel="City"
                             v-model:input="petitioner_us_city_addr"
-                        /> -->
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="State"
+                            FieldName="petitioner_us_state_addr"
+                            ErrorName="petitioner_us_state_addr"
                             v-model:input="petitioner_us_state_addr"
                             :items="states"
                         />
@@ -770,12 +838,14 @@ const schema = yup.object({
                     <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Intended Port of Entry"
+                            FieldName="intended_port_of_entry"
+                            ErrorName="intended_port_of_entry"
                             v-model:input="intended_port_of_entry"
                             :items="states"
                         />
-                    </div>
-                </div>        
-            </div>
+                    </div>    
+                </div>    
+            </div> 
 
             <!-- <div class="col-lg-3 col-md-12 col-sm-12"></div> -->
             <div class="col-12 d-flex justify-content-center">
