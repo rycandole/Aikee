@@ -17,8 +17,7 @@ const { previewLabelClassName, previewLabel, previewClassName, previewText, smal
 </script>
 
 <template>
-    <div class="row mt-1 p-3">
-        <!-- ====================== Date Input ======================== -->
+    <div class="row mt-1 p-2">
         <div class="col-12">
             <label class="text-capitalize" :class="previewLabelClassName">
                 {{ previewLabel }}
@@ -33,7 +32,6 @@ const { previewLabelClassName, previewLabel, previewClassName, previewText, smal
             </span>
         </div>
     </div>
-    
 </template>
 
 <style lang="scss">

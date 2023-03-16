@@ -11,6 +11,7 @@
     import SubFormHeader from '@/components/global/SubFormHeader.vue'
     import RequiredInputField from '@/components/global/RequiredInputField.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
+    import RequiredRadioButton from '@/components/global/RequiredRadioButton.vue'
     import SelectField from '@/components/global/SelectField.vue'
     import InputField from '@/components/global/InputField.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
@@ -144,7 +145,7 @@
             json_ad_passport_issued_by: values.ad_passport_issued_by,
             json_ad_passport_date: values.ad_passport_date,
             json_ad_passport_expiration_date: values.ad_passport_expiration_date,
-            json_ad_has_been_issued_visa: "yes",
+            json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
             json_ad_issuance_date: values.ad_issuance_date,
             json_ad_expiration_date: values.ad_expiration_date,
             json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
@@ -152,7 +153,7 @@
             json_ad_prev_xray_month: values.ad_prev_xray_month,
             json_ad_prev_xray_year: values.ad_prev_xray_year,
             json_petitioner_fullname: values.petitioner_fullname,
-            json_petitioner_is_alive: "yes",
+            json_petitioner_is_alive: values.petitioner_is_alive,
             json_petitioner_relationship: values.petitioner_relationship,
             json_petitioner_us_street_addr: values.petitioner_us_street_addr,
             json_petitioner_us_city_addr: values.petitioner_us_city_addr,
@@ -197,10 +198,10 @@
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
-    const schema = yup.object({
-        date_of_birth: yup.string().required('Birthdate is required!').min(new Date(1925, 0, 1), "Birthdate must be atleast January 01, 1923"),
-        ci_nvc_number: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be atleast 13 characters').max(13, 'NVC Case Number must be at most 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
-        ci_nvc_confirm: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be atleast 13 characters').max(13, 'NVC Case Number must be at most 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('ci_nvc_number')], 'NVC Case Number do not match'),
+    const schema = yup.object().shape({
+        date_of_birth: yup.date().required('Birthdate is required!').min(new Date(1925, 0, 1), "Birthdate must be atleast January 01, 1923").max(new Date(), "Future date not allowed"),
+        ci_nvc_number: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
+        ci_nvc_confirm: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('ci_nvc_number')], 'NVC Case Number do not match'),
         ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
         ci_visa_pref_category: yup.string().required('Interview date is required!'),
         ci_interview_source: yup.string().nullable(),
@@ -218,36 +219,37 @@
         ad_address: yup.string().nullable().optional().min(5, 'Address must be atleast 5 characters'),
         ad_city: yup.string().nullable().optional().min(5, 'City must be atleast 5 characters'),
         ad_province: yup.string().nullable().optional(),
-        ad_zip_code: yup.string().nullable().optional().min(4, 'Zip code must be atleast 4 characters').matches(numOnlyRegex, "Zip Code must be number only!"),
+        ad_zip_code: yup.string().nullable().optional().min(4, 'Zip code must be exactly 4 numbers').max(4, 'Zip code must be exactly 4 numbers').matches(numOnlyRegex, "Zip Code must be number only!"),
         ad_overseas_country: yup.string().nullable().optional(),
         ad_overseas_street_address: yup.string().nullable().optional().min(5, 'Street address must be atleast 5 characters'),
         ad_overseas_city: yup.string().nullable().optional().min(5, 'City must be atleast 5 characters'),
         ad_overseas_province: yup.string().nullable().optional().min(5, 'Province must be atleast 5 characters'),
-        ad_overseas_zipcode: yup.string().nullable().optional().min(4, 'Zip code must be atleast 4 characters').matches(numOnlyRegex, "Zip Code must be number only!"),
-        ad_contact_numbers: yup.string().required('Contact number is required!').min(11, 'Contact number must be atleast 13 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
+        ad_overseas_zipcode: yup.string().nullable().optional().min(5, 'Zip code must be exactly 5 characters').max(5, 'Zip code must be exactly 5 numbers').matches(numOnlyRegex, "Zip Code must be number only!"),
+        ad_contact_numbers: yup.string().required('Contact number is required!').min(7, 'Contact number must be atleast 7 characters').max(39, 'Contact number at most 39 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
         ad_present_residence: yup.string().required('Present residence is required!'),
         ad_prior_residence: yup.string().required('Prior residence is required!'),
-        ad_passport_number: yup.string().required('Passport number is required!'),
+        ad_passport_number: yup.string().required('Passport number is required!').min(9, "Passport number must be at least 9 characters").max(10, "Passport number must be at most 10 characters"),
         ad_passport_issued_by: yup.string().required('Passport issued by is required!'),
-        ad_passport_date: yup.string().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923"),
-        ad_passport_expiration_date: yup.string().required('Passport expiration date is required!'),
-        ad_issuance_date: yup.string().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923"),
-        ad_expiration_date: yup.string().required("Expiration date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923"),
+        ad_passport_date: yup.date().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
+        ad_passport_expiration_date: yup.date().required('Passport expiration date is required!').min(yup.ref('ad_passport_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_passport_date')], 'Expiration date must not be equal to the issuance date'),
+        ad_has_been_issued_visa: yup.string().required("This field is required, please choose an option"),
+        ad_issuance_date: yup.date().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
+        ad_expiration_date: yup.date().required("Expiration date is required").min(yup.ref('ad_issuance_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_issuance_date')], 'Expiration date must not be equal to the issuance date'),
         ad_prev_medical_exam_month: yup.string().nullable().optional(),
         ad_prev_medical_exam_year: yup.string().nullable().optional(),
         ad_prev_xray_month: yup.string().nullable().optional(),
         ad_prev_xray_year: yup.string().nullable().optional(),
         petitioner_fullname: yup.string().required("Petitioner name is required").min(6, "Petitioner name must be atleast 6 characters").max(50, "Petitioner name must be at most 50 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        petitioner_is_alive: yup.string().required("This field is required, please choose an option"),
         petitioner_relationship: yup.string().required("Petitioner relationship is required!"),
         petitioner_us_street_addr: yup.string().required("Street address is required!").min(5, "Street Address must be atleast 5 characters").max(100, "Street Address must be most 100 characters"),
         petitioner_us_city_addr: yup.string().required("City is required!").min(5, "City must be atleast 5 characters").max(25, "City must be most 25 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         petitioner_us_state_addr: yup.string().required("State is required!"),
-        petitioner_us_postal_code: yup.string().required("Postal code is required!").min(4, 'Postal code must be atleast 4 characters').max(4, 'Postal code must be at most 4 characters').matches(numOnlyRegex, "Postal Code must be number only!"),
+        petitioner_us_postal_code: yup.string().required("Postal code is required!").min(5, 'Postal code must be exactly 5 numbers').max(5, 'Postal code must be exactly 5 numbers').matches(numOnlyRegex, "Postal Code must be number only!"),
         petitioner_contact_no: yup.string().required("Petitioner contact no. is required!").min(11, 'Contact number must be atleast 11 characters').max(11, 'Contact number must be at most 11 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
         petitioner_email_addr: yup.string().required("Petitioner email address is required!").min(10, "Email must be atleast 10 characters").max(30, "Email must be at most 30 characters").email("Enter a valid email"),
         intended_port_of_entry: yup.string().required("Port of entry is required!"),
     })
-
 
 
 
@@ -261,7 +263,7 @@
         <div class="col-12 mb-5">
             <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
         </div>
-        <div class="col-lg-3 col-md-12 col-sm-12">
+        <div class="col-lg-3 col-md-12 col-sm-12" @click="checkValidation">
             <SideNav 
                 :className="textSuccess ? textSuccess : 'text-secondary'"
                 :className1="textSuccess1 ? textSuccess1 : 'text-secondary'"
@@ -650,26 +652,17 @@
                         />
                     </div>
                     <div class="mb-1 col-12">
-                        <div class="row mt-3">
-                            <!-- ====================== Date Input ======================== -->
-                            <div class="col-12">
-                                <label class="text-capitalize">
-                                    Have you been issued a U.S. Tourist Visa? <b class="text-danger">*</b>
-                                </label>
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-12 pl-4 input-group">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" v-model="ad_has_been_issued_visa" value="yes" id="flexRadioDefault1">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                    Yes
-                                </label>
-                            </div>     
-                            <div class="col-lg-10 col-md-8 col-sm-12 pl-4">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" v-model="ad_has_been_issued_visa" value="no" id="flexRadioDefault2" checked>
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    No
-                                </label>
-                            </div>   
-                        </div>
+
+                        <RequiredRadioButton 
+                            label="Have you been issued a U.S. Tourist Visa?"
+                            FieldName1="ad_has_been_issued_visa"
+                            FieldName2="ad_has_been_issued_visa"
+                            radioLabel1="Yes"
+                            radioLabel2="No"
+                            value1="Yes"
+                            value2="No"
+                            ErrorName="ad_has_been_issued_visa"
+                        />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
@@ -746,27 +739,18 @@
                     </div>
 
                     <div class="mb-1 col-12">
-                        <div class="row mt-3">
-                            <!-- ====================== Date Input ======================== -->
-                           <div class="col-12">
-                                <label class="text-capitalize">
-                                Is the petitioner still alive? <b class="text-danger">*</b>
-                                </label>
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-12 pl-4 input-group">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" v-model="petitioner_is_alive" value="yes" id="flexRadioDefault1">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                    Yes
-                                </label>
-                            </div>     
-                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" v-model="petitioner_is_alive" value="no" id="flexRadioDefault2" checked>
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    No
-                                </label>
-                            </div>   
-                        </div>
+                        <RequiredRadioButton 
+                            label="Is the petitioner still alive?"
+                            FieldName1="petitioner_is_alive"
+                            FieldName2="petitioner_is_alive"
+                            radioLabel1="Yes"
+                            radioLabel2="No"
+                            value1="Yes"
+                            value2="No"
+                            ErrorName="petitioner_is_alive"
+                        />
                     </div>
+                    
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Relationship"

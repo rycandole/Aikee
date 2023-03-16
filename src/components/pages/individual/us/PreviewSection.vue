@@ -117,7 +117,7 @@
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >Review all the details</h1>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12">
             <SideNav 
@@ -153,7 +153,7 @@
                         />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class=" col-lg-8 col-md-12 col-sm-12">
+                    <div class="mb-3 col-12">
                         <PreviewText 
                             previewLabel="Date of Birth"
                             v-bind:previewText="detail_date_of_birth"
@@ -172,7 +172,7 @@
                         />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
+                    <div class="mb-1 col-12">
                         <PreviewText 
                             previewLabel="Visa Preferemce Category"
                             v-bind:previewText="detail_ci_visa_pref_category"
@@ -218,19 +218,19 @@
                         />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Gender"
                             v-bind:previewText="detail_ad_gender"
                         />
                     </div>
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Civil Status"
                             v-bind:previewText="detail_ad_civil_status"
                         />
                     </div>
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Country"
                             v-bind:previewText="detail_ad_nationality"
@@ -251,43 +251,31 @@
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-12">
-                        <!-- <PreviewText 
-                            previewLabel="Mother's maiden name"
-                            v-bind:previewText="detail_ad_mother_last_name+', '+detail_ad_mother_first_name+', '+detail_ad_mother_middle_name"
-                        /> -->
                         <div class="row mt-1 p-3">
                             <div class="col-12">
                                 <label class="text-capitalize">
                                     Mother's maiden name
                                 </label>
                             </div>
-                            <div class="col-12 input-group">
-                                <span class="text-muted prev_text">{{ detail_ad_mother_last_name }}</span>
+                            <div class="col-lg-4 col-md-12 col-sm-12">
+                                <PreviewText 
+                                    previewLabel=""
+                                    v-bind:previewText="detail_ad_mother_last_name"
+                                    smallLabel="Last Name"
+                                />
                             </div>
-                            <div class="col-12">
-                                <span class="text-secondary text-s fw-light display-block float-left">
-                                    Last Name
-                                </span>
+                            <div class="col-lg-4 col-md-12 col-sm-12">
+                                <PreviewText 
+                                    v-bind:previewText="detail_ad_mother_first_name"
+                                    smallLabel="First Name"
+                                />
                             </div>
-                            <div class="col-12 input-group">
-                                <span class="text-muted prev_text">{{ detail_ad_mother_first_name }}</span>
+                            <div class="col-lg-4 col-md-12 col-sm-12">
+                                <PreviewText 
+                                    v-bind:previewText="detail_ad_mother_middle_name"
+                                    smallLabel="Middle Name"
+                                />
                             </div>
-                            <div class="col-12">
-                                <span class="text-secondary text-s fw-light display-block float-left">
-                                    First Name
-                                </span>
-                            </div>
-                            <div class="col-12 input-group">
-                                <span class="text-muted prev_text">{{ detail_ad_mother_middle_name }}</span>
-                            </div>
-                            <div class="col-12">
-                                <span class="text-secondary text-s fw-light display-block float-left">
-                                    Middle Name
-                                </span>
-                            </div>
-                            
-                            
-                            
                         </div>
 
                     </div>
@@ -312,14 +300,13 @@
                         />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Province"
                             v-bind:previewText="detail_ad_province"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Zip Code"
                             v-bind:previewText="detail_ad_zip_code"
@@ -342,19 +329,19 @@
                         />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="City/Town"
                             v-bind:previewText="detail_ad_overseas_city"
                         />
                     </div>
-                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Province/State"
                             v-bind:previewText="detail_ad_overseas_province"
                         />
                     </div>
-                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                    <div class="mb-1 col-12">
                         <PreviewText 
                             previewLabel="Zip Code"
                             v-bind:previewText="detail_ad_overseas_zipcode"
@@ -393,13 +380,13 @@
                             headerText="Passport Information"
                         />
                     </div>
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Passport Number"
                             v-bind:previewText="detail_ad_passport_number"
                         />
                     </div>
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Issued by (Country) "
                             v-bind:previewText="detail_ad_passport_issued_by"
@@ -418,7 +405,6 @@
                             v-bind:previewText="detail_ad_passport_expiration_date"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
                     <div class="mb-3 mt-5 col-12">
                         <SubFormHeader 
                             headerText="Additional Questions"
@@ -433,18 +419,6 @@
                                     v-bind:previewText="detail_ad_has_been_issued_visa"
                                 />
                             </div>
-                            <!-- <div class="col-lg-5 col-md-5 col-sm-12 pl-4 input-group">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                    Default radio
-                                </label>
-                            </div>     
-                            <div class="col-lg-7 col-md-7 col-sm-12 pl-4">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    Default checked radio
-                                </label>
-                            </div>    -->
                         </div>
                     </div>
                     <div class="col-12"><hr /></div>
@@ -488,7 +462,6 @@
                             v-bind:previewText="detail_ad_prev_xray_year"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="Petitioner's Information"
@@ -560,7 +533,6 @@
                             v-bind:previewText="detail_intended_port_of_entry"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
                     <div class="col-12 mt-4 border-top container-fluid p-3 irc_div">
                         <h6 class="text-bold mt-3">Information Registration Consent:</h6>
                         <div class="form-check">
