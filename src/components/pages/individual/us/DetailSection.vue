@@ -1,6 +1,6 @@
 <script setup>
     // import axios from 'axios'
-    // import { ref } from 'vue'
+    import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
@@ -50,7 +50,7 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
 
-    // let date_of_birth = ref(null)
+    let date_of_birth = ref(null)
     // let ci_nvc_number = ref(null)
     // let ci_nvc_confirm = ref(null)
     // let ci_visa_pref_category = ref(null)
@@ -109,7 +109,6 @@
      const handleDetails = (values) => {
 
     // let res = JSON.stringify(values)
-     console.log(values.date_of_birth)
 
     const jsonDATA = {
             json_date_of_birth: values.date_of_birth,
@@ -252,6 +251,26 @@
     })
 
 
+    // const currentDate = new Date(); // current date
+
+    const birthDate = document.getElementById('myDate').value;
+    // const day = birthDate.getDate()
+    // const month = birthDate.getMonth() + 1
+    // const year = birthDate.getFullYear()
+
+    // const date_to_compare = `${year}-${month}-${day}`
+
+
+    // const ageInMilliseconds = currentDate - date_to_compare;
+    // const ageInYears = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365); // converting milliseconds to years
+    // const age = Math.floor(ageInYears);
+
+    const alertChange = () => {
+       alert(`His birthday is ${ birthDate}`)
+    //    alert(formattedDate)
+    }
+
+
 
 </script>
 
@@ -267,7 +286,6 @@
             <SideNav 
                 :className="textSuccess ? textSuccess : 'text-secondary'"
                 :className1="textSuccess1 ? textSuccess1 : 'text-secondary'"
-                
             />
         </div>
          <!-- ============================================================== -->
@@ -285,7 +303,9 @@
                             FieldName="date_of_birth"
                             ErrorName="date_of_birth"
                             type="date"
+                            id="date_of_birth"
                             v-model:input="date_of_birth"
+                            @change="alertChange"
                         />
                     </div>
                     <div class="mb-3 col-12">

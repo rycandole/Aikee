@@ -15,10 +15,11 @@ const props = defineProps({
     FieldName: String,
     ErrorName: String,
     error: String,
-    smallLabel: String
+    smallLabel: String,
+    id: String
 })
 
-const { labelClassName, label, input, type, inputClassName, starClassName, placeholder, error, smallLabel, FieldName, ErrorName } = toRefs(props)
+const { labelClassName, label, input, type, inputClassName, starClassName, placeholder, error, smallLabel, FieldName, ErrorName, id } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
@@ -44,6 +45,7 @@ const inputComputed = computed({
                 :class="inputClassName" 
                 :placeholder="placeholder" 
                 v-model="inputComputed" 
+                :id="id"
             />
             <span class="text-secondary text-s fw-light display-block float-left ml-2">
                 {{ smallLabel }}
