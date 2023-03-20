@@ -940,7 +940,7 @@
   resolved "https://registry.npmjs.org/@babel/regjsgen/-/regjsgen-0.8.0.tgz"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.11.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.11.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.8.4":
   version "7.21.0"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.21.0.tgz"
   integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
@@ -6420,6 +6420,11 @@ pretty-error@^4.0.0:
     lodash "^4.17.20"
     renderkid "^3.0.0"
 
+prismjs@^1.22.0:
+  version "1.29.0"
+  resolved "https://registry.npmjs.org/prismjs/-/prismjs-1.29.0.tgz"
+  integrity sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==
+
 process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz"
@@ -7919,6 +7924,15 @@ vue@*, "vue@^2 || ^3.2.13", "vue@^2.6.14 || ^3.2.0", vue@^3.0.0, "vue@^3.0.0 || 
     "@vue/runtime-dom" "3.2.47"
     "@vue/server-renderer" "3.2.47"
     "@vue/shared" "3.2.47"
+
+vuejs3-datepicker@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.npmjs.org/vuejs3-datepicker/-/vuejs3-datepicker-1.0.16.tgz"
+  integrity sha512-qaalbbyW+X5xRV/sKEy+36PAdViLO9I4EYEMsaBQZ88VaZ2wONZ43vXMYQQ0QYRmuPFnkYn6JcxA2RLMpq/8pg==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    prismjs "^1.22.0"
+    vue "^3.0.0"
 
 watchpack@^2.4.0:
   version "2.4.0"

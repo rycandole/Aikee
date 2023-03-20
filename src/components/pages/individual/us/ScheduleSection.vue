@@ -5,14 +5,37 @@
     import { useUSIndividualSched } from '@/store/us-individual-sched'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
-    import ScheduleDate from '@/components/global/ScheduleDate.vue'
-    // import ScheduleTime from '@/components/global/ScheduleTime.vue'
+    import InlineDatePicker from '@/components/global/InlineDatepicker.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
 
 
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
+
+    // Get the current year
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth() + 1
+    const currentDay = new Date().getDate()
+
+    let currentDate = currentYear+", "+currentMonth+", "+currentDay;
+
+    // =========== Inline Date ==================== //
+    const disableState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(2023, 3, 19), // Disable all dates after specific date
+            
+            dates: [ // Disable an array of dates
+            new Date(2023, 5, 16),
+            new Date(2023, 5, 17),
+            new Date(2023, 5, 18)
+            ],
+            preventDisableDateSelection: true
+        }
+    }
+    // ============ Inline End =================== //
 
     // ============ select options =============== //
     const options = ref([
@@ -91,15 +114,12 @@
                 />
                 <div class="card-body">
                     <div class="mb-4">
-                      
-                      <ScheduleDate 
-                        dateLabel="Preferred Date of Medical examination"
-                        v-model:input="dateInput"
-                      />
-                      <!-- <ScheduleTime 
-                        timeLabel="Preferred Time of Medical examination"
-                        v-model:input="timeInput"
-                      /> -->
+                        <InlineDatePicker 
+                            label="Preferred Date of Medical examination"
+                            :disabledDate="disableState.disabledDates"
+                            :preventDisableDate="preventDisableDateSelection"
+                            v-model:input="dateInput"
+                        />
                        <!-- ====================== Time Input ======================== -->
                         <div class="row mt-3 p-3">
                             <div class="col-12 mt-3">
