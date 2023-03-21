@@ -9,6 +9,7 @@
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import SubFormHeader from '@/components/global/SubFormHeader.vue'
+    import DateField from '@/components/global/DateField.vue'
     import RequiredInputField from '@/components/global/RequiredInputField.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
     import RequiredRadioButton from '@/components/global/RequiredRadioButton.vue'
@@ -38,7 +39,6 @@
     const profileStore = useProfileStore()
     const USIndividualDetails = useUSIndividualDetails()
 
-
     /**
      * For Fetching user data
      */
@@ -51,63 +51,14 @@
     let textSuccess1 = "text-success"
 
     let date_of_birth = ref(null)
-    // let ci_nvc_number = ref(null)
-    // let ci_nvc_confirm = ref(null)
-    // let ci_visa_pref_category = ref(null)
-    // let ci_interview_date = ref(null)
-    // let ci_interview_source = ref(null)
-    // let ad_last_name = ref(null)
-    // let ad_first_name = ref(null)
-    // let ad_middle_name = ref(null)
-    // let ad_gender = ref(null)
-    // let ad_civil_status = ref(null)
-    // let ad_nationality = ref(null)
-    // let ad_birthplace = ref(null)
-    // let ad_birth_country = ref(null)
-    // let ad_mother_last_name = ref(null)
-    // let ad_mother_first_name = ref(null)
-    // let ad_mother_middle_name = ref(null)
-    // let ad_address = ref(null)
-    // let ad_city = ref(null)
-    // let ad_province = ref(null)
-    // let ad_zip_code = ref(null)
-    // let ad_overseas_country = ref(null)
-    // let ad_overseas_street_address = ref(null)
-    // let ad_overseas_city = ref(null)
-    // let ad_overseas_province = ref(null)
-    // let ad_overseas_zipcode = ref(null)
-    // let ad_contact_numbers = ref(null)
-    // let ad_present_residence = ref(null)
-    // let ad_prior_residence = ref(null)
-    // let ad_passport_number = ref(null)
-    // let ad_passport_issued_by = ref(null)
-    // let ad_passport_date = ref(null)
-    // let ad_passport_expiration_date = ref(null)
-    // let ad_has_been_issued_visa = ref(null)
-    // let ad_issuance_date = ref(null)
-    // let ad_expiration_date = ref(null)
-    // let ad_prev_medical_exam_month = ref(null)
-    // let ad_prev_medical_exam_year = ref(null)
-    // let ad_prev_xray_month = ref(null)
-    // let ad_prev_xray_year = ref(null)
-    // let petitioner_fullname = ref(null)
-    // let petitioner_is_alive = ref(null)
-    // let petitioner_relationship = ref(null)
-    // let petitioner_us_street_addr = ref(null)
-    // let petitioner_us_city_addr = ref(null)
-    // let petitioner_us_state_addr = ref(null)
-    // let petitioner_us_postal_code = ref(null)
-    // let petitioner_contact_no = ref(null)
-    // let petitioner_email_addr = ref(null)
-    // let intended_port_of_entry = ref(null)
 
-    
+   
+
     /**
      * Submit US individual form
      * 
      */
      const handleDetails = (values) => {
-
     // let res = JSON.stringify(values)
 
     const jsonDATA = {
@@ -198,7 +149,6 @@
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
     const schema = yup.object().shape({
-        date_of_birth: yup.date().required('Birthdate is required!').min(new Date(1925, 0, 1), "Birthdate must be atleast January 01, 1923").max(new Date(), "Future date not allowed"),
         ci_nvc_number: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         ci_nvc_confirm: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('ci_nvc_number')], 'NVC Case Number do not match'),
         ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
@@ -253,7 +203,7 @@
 
     // const currentDate = new Date(); // current date
 
-    const birthDate = document.getElementById('myDate').value;
+    // const birthDate = document.getElementById('myDate').value;
     // const day = birthDate.getDate()
     // const month = birthDate.getMonth() + 1
     // const year = birthDate.getFullYear()
@@ -265,12 +215,44 @@
     // const ageInYears = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365); // converting milliseconds to years
     // const age = Math.floor(ageInYears);
 
-    const alertChange = () => {
-       alert(`His birthday is ${ birthDate}`)
-    //    alert(formattedDate)
+    // const alertChange = () => {
+    //    alert(`His birthday is ${ birthDate}`)
+    // //    alert(formattedDate)
+    // }
+
+    // Get the current year
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth() + 1
+    const currentDay = new Date().getDate()
+
+    let currentDate = currentYear+", "+currentMonth+", "+currentDay;
+
+    // =========== Inline Date ==================== //
+    const disableBirthdayState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(years[99], currentMonth, currentDay),
+            from: new Date(currentDate),
+        }
     }
 
+    const disableFutureDateState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(years[99], currentMonth, currentDay),
+            from: new Date(currentYear, new Date().getMonth(), currentDay + 1),
+        }
+    }
+    const disablePastDateState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentYear, new Date().getMonth(), currentDay),
+            from: new Date(currentYear + 99, new Date().getMonth(), currentDay + 1),
+        }
+    }
+    // ============ Inline End =================== //
 
+   
 
 </script>
 
@@ -298,15 +280,22 @@
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
                     <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
-                        <RequiredInputField 
+                        <!-- <RequiredInputField 
                             label="Date of Birth"
                             FieldName="date_of_birth"
                             ErrorName="date_of_birth"
                             type="date"
                             id="date_of_birth"
                             v-model:input="date_of_birth"
-                            @change="alertChange"
+                        /> -->
+                        <DateField 
+                            label="Date of Birth"
+                            placeholder="Date of birth"
+                            color="red"
+                            :disabledDate="disableBirthdayState.disabledDates"
+                            v-model:input="date_of_birth"
                         />
+                        <!-- @change="alertChange" -->
                     </div>
                     <div class="mb-3 col-12">
                         <FormHeader
@@ -344,11 +333,19 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <InputField 
+                        <!-- <InputField 
                             label="Interview Date"
                             type="date"
                             FieldName="ci_interview_date"
                             ErrorName="ci_interview_date"
+                            v-model:input="ci_interview_date"
+                            smallLabel="If none, leave blank'"
+                        /> -->
+                        <DateField 
+                            label="Interview Date"
+                            requiredClass="d-none"
+                            placeholder="Interview Date"
+                            color="gray"
                             v-model:input="ci_interview_date"
                             smallLabel="If none, leave blank'"
                         />
@@ -649,20 +646,34 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <RequiredInputField 
+                        <!-- <RequiredInputField 
                             label="Issue Date"
                             type="date"
                             FieldName="ad_passport_date"
                             ErrorName="ad_passport_date"
                             v-model:input="ad_passport_date"
+                        /> -->
+                        <DateField 
+                            label="Interview Date"
+                            placeholder="Interview Date"
+                            color="red"
+                            :disabledDate="disableFutureDateState.disabledDates"
+                            v-model:input="ad_passport_date"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <RequiredInputField 
+                        <!-- <RequiredInputField 
                             label="Expiration Date"
                             type="date"
                             FieldName="ad_passport_expiration_date"
                             ErrorName="ad_passport_expiration_date"
+                            v-model:input="ad_passport_expiration_date"
+                        /> -->
+                        <DateField 
+                            label="Expiration Date"
+                            placeholder="Expiration Date"
+                            color="red"
+                            :disabledDate="disablePastDateState.disabledDates"
                             v-model:input="ad_passport_expiration_date"
                         />
                     </div>
@@ -685,23 +696,37 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <RequiredInputField 
+                        <!-- <RequiredInputField 
                             label="Issuance Date"
                             type="date"
                             FieldName="ad_issuance_date"
                             ErrorName="ad_issuance_date"
                             v-model:input="ad_issuance_date"
+                        /> -->
+                        <DateField 
+                            label="Issuance Date"
+                            requiredClass="d-none"
+                            placeholder="Issuance Date"
+                            color="gray"
+                            :disabledDate="disableFutureDateState.disabledDates"
+                            v-model:input="ad_issuance_date"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <RequiredInputField 
+                        <!-- <RequiredInputField 
                             label="Expiration Date"
                             type="date"
                             FieldName="ad_expiration_date"
                             ErrorName="ad_expiration_date"
                             v-model:input="ad_expiration_date"
+                        /> -->
+                        <DateField 
+                            label="Expiration Date"
+                            requiredClass="d-none"
+                            placeholder="Expiration Date"
+                            color="gray"
+                            v-model:input="ad_expiration_date"
                         />
-                        
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <SelectField 
@@ -891,7 +916,9 @@
 .irc_div {
     background: #f1f1f1;
 }
-
+.cell.day.selected{
+    background: green !important;
+}
 @media only screen and (min-width: 768px) {
     .wrapper_container {
         margin: 0;

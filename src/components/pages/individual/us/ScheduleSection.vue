@@ -8,6 +8,7 @@
     import InlineDatePicker from '@/components/global/InlineDatepicker.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
+    import moment from 'moment'
 
 
     const router = useRouter()
@@ -25,17 +26,28 @@
         // months start's to 0(January) - 11(December) 
         disabledDates: {
             to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(2023, 3, 19), // Disable all dates after specific date
-            
+            from: new Date(2023, 3, 19),
+            days: [0,6],
             dates: [ // Disable an array of dates
-            new Date(2023, 5, 16),
-            new Date(2023, 5, 17),
-            new Date(2023, 5, 18)
+                new Date(2023, 2, 24)
             ],
             preventDisableDateSelection: true
         }
     }
     // ============ Inline End =================== //
+
+    // ============ Highlight Date =============== //
+    const highlightState = {
+        highlighted: {
+            to: new Date(2023, 3, 19),
+            from: new Date(currentDate),
+            dates: [ // Highlight an array of dates
+                new Date(2023, 2, 22)
+            ],
+            includeDisabled: true // Highlight disabled dates
+        }
+    }
+    // =========== End of Highlight Date ========== //
 
     // ============ select options =============== //
     const options = ref([
@@ -74,9 +86,12 @@
 
 
     const handleDateTime = async () => {
+        const date = moment(dateInput.value).format('YYYY-MM-DD')
+
+        // console.log(date)
 
         const jsonDATA = {
-                date: dateInput.value,
+                date: date,
                 time: timeInput.value
         }
 
@@ -117,6 +132,7 @@
                         <InlineDatePicker 
                             label="Preferred Date of Medical examination"
                             :disabledDate="disableState.disabledDates"
+                            :highlightDate="highlightState.highlighted"
                             :preventDisableDate="preventDisableDateSelection"
                             v-model:input="dateInput"
                         />

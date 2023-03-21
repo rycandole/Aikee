@@ -7,22 +7,18 @@ const emit = defineEmits(['update:input'])
 const props = defineProps({
     labelClassName: String,
     label: String,
+    requiredClass: String,
+    inputClass:String,
     input: String,
     placeholder: String,
-    inputClassName: String,
     error: String,
+    color: String,
     smallLabel: String,
     disabledDate: String,
-    preventDisableDate: String,
-    highlightDate: String
+    preventDisableDate: String
 })
 
-const { labelClassName, label, input, inputClassName, error, smallLabel, disabledDate, preventDisableDate, highlightDate } = toRefs(props)
-
-// let date = new Date()
-
-// const 
-
+const { labelClassName, label, requiredClass, inputClass, input, placeholder, error, color, smallLabel, disabledDate, preventDisableDate } = toRefs(props)
 
 
 const inputComputed = computed({
@@ -36,17 +32,19 @@ const inputComputed = computed({
     <div class="row mt-3">
         <div class="col-12">
             <label class="text-capitalize" :class="labelClassName">
-                {{ label }} <b class="text-danger p-3"></b>
+                {{ label }} <b :class="requiredClass" class="text-danger p-1">*</b>
             </label>
         </div>
     </div>
     <div class="col-12 input-group">
         <Datepicker
-            :class="inputClassName" 
-            :inline="true"
-            :disabled-dates="disabledDate"
+            :input-class="inputClass"
+            :placeholder="placeholder"
+            :iconColor="color"
+            iconHeight="18"
+            iconWidth="18"
+            :disabled-dates="disabledDate" 
             :prevent-disable-date-selection="preventDisableDate"
-            :highlighted="highlightDate"
             v-model="inputComputed"
         />
         <span class="text-secondary text-s fw-light display-block float-left ml-2">
