@@ -10,6 +10,7 @@ const props = defineProps({
     requiredClass: String,
     inputClass:String,
     input: String,
+    onChange: String,
     placeholder: String,
     error: String,
     color: String,
@@ -18,7 +19,7 @@ const props = defineProps({
     preventDisableDate: String
 })
 
-const { labelClassName, label, requiredClass, inputClass, input, placeholder, error, color, smallLabel, disabledDate, preventDisableDate } = toRefs(props)
+const { labelClassName, label, requiredClass, inputClass, input, onChange, placeholder, error, color, smallLabel, disabledDate, preventDisableDate } = toRefs(props)
 
 
 const inputComputed = computed({
@@ -46,7 +47,10 @@ const inputComputed = computed({
             :disabled-dates="disabledDate" 
             :prevent-disable-date-selection="preventDisableDate"
             v-model="inputComputed"
+            @input="onChange"
         />
+    </div>
+    <div class="col-12">
         <span class="text-secondary text-s fw-light display-block float-left ml-2">
                 {{ smallLabel }}
         </span>

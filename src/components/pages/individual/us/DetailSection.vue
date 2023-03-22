@@ -49,10 +49,26 @@
     let email = profileStore.email
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
+    let covidHidden = true;
+    
 
     let date_of_birth = ref(null)
 
-   
+    const alertChange = () => {
+        let birthDate = new Date(date_of_birth.value)
+        let today = new Date()
+        let age = today.getFullYear() - birthDate.getFullYear()
+        var month = today.getMonth() - birthDate.getMonth()
+
+        if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) 
+        { age--; }
+
+        if(age <= 4) {
+            covidHidden = true
+        } else {
+            covidHidden = false
+        }
+    }
 
     /**
      * Submit US individual form
@@ -62,7 +78,7 @@
     // let res = JSON.stringify(values)
 
     const jsonDATA = {
-            json_date_of_birth: values.date_of_birth,
+            json_date_of_birth: date_of_birth.value,
             json_ci_nvc_number: values.ci_nvc_number,
             json_ci_nvc_confirm: values.ci_nvc_confirm,
             json_ci_visa_pref_category: values.ci_visa_pref_category,
@@ -142,7 +158,6 @@
         })
     }
 
-
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
     const numOnlyRegex = /^[\p{N}]+$/u;
@@ -215,10 +230,6 @@
     // const ageInYears = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365); // converting milliseconds to years
     // const age = Math.floor(ageInYears);
 
-    // const alertChange = () => {
-    //    alert(`His birthday is ${ birthDate}`)
-    // //    alert(formattedDate)
-    // }
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -233,6 +244,7 @@
         disabledDates: {
             to: new Date(years[99], currentMonth, currentDay),
             from: new Date(currentDate),
+
         }
     }
 
@@ -294,8 +306,14 @@
                             color="red"
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="date_of_birth"
+                            :onChange="alertChange"
                         />
-                        <!-- @change="alertChange" -->
+                        
+                    </div>
+                    <div class="mb-3 col-12" :hidden="covidHidden">
+                        <FormHeader
+                            headerText="COVID-19 VACCINE"
+                        />
                     </div>
                     <div class="mb-3 col-12">
                         <FormHeader

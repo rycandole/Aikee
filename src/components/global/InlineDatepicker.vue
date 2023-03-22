@@ -13,11 +13,10 @@ const props = defineProps({
     error: String,
     smallLabel: String,
     disabledDate: String,
-    preventDisableDate: String,
-    highlightDate: String
+    preventDisableDate: String
 })
 
-const { labelClassName, label, input, inputClassName, error, smallLabel, disabledDate, preventDisableDate, highlightDate } = toRefs(props)
+const { labelClassName, label, input, inputClassName, error, smallLabel, disabledDate, preventDisableDate } = toRefs(props)
 
 // let date = new Date()
 
@@ -46,12 +45,17 @@ const inputComputed = computed({
             :inline="true"
             :disabled-dates="disabledDate"
             :prevent-disable-date-selection="preventDisableDate"
-            :highlighted="highlightDate"
             v-model="inputComputed"
         />
+    </div>
+    <div class="col-12">
         <span class="text-secondary text-s fw-light display-block float-left ml-2">
                 {{ smallLabel }}
         </span>
+    </div>
+    <div class="col-12 pt-3">
+        <span class="date_label date_available p-2 m-1">Available</span>
+        <span class="date_label date_not_available p-2 m-1">Not Available</span>
     </div>
     <div v-if="error" class="col-12">
         <span class="text-danger">
@@ -60,3 +64,32 @@ const inputComputed = computed({
     </div>
      
 </template>
+
+<style lang="scss">
+.weekend {
+    background: none !important;
+}
+
+.vuejs3-datepicker__calendar .cell:not(.blank):not(.disabled).day {
+    background: #d0f3d0;
+}
+.vuejs3-datepicker__calendar .disabled {
+    background: #fdb6b6;
+}
+.date_label {
+    color: #fff;
+    font-weight: bold;
+    border-radius: 2px;
+    cursor: default;
+}
+.date_available {
+    background: #5ab85a;
+    border: 1px solid #5ca75c;
+}
+.date_not_available {
+    background: #eb5454;
+    border: 1px solid #cc4646;
+}
+
+
+</style>

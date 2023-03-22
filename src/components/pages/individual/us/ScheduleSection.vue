@@ -26,28 +26,18 @@
         // months start's to 0(January) - 11(December) 
         disabledDates: {
             to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(2023, 3, 19),
+            from: new Date(2023, 5, 1),
             days: [0,6],
             dates: [ // Disable an array of dates
-                new Date(2023, 2, 24)
+                new Date(2023, 2, 24),
+                new Date(2023, 3, 6),
+                new Date(2023, 3, 7),
+                new Date(2023, 3, 10)
             ],
             preventDisableDateSelection: true
         }
     }
     // ============ Inline End =================== //
-
-    // ============ Highlight Date =============== //
-    const highlightState = {
-        highlighted: {
-            to: new Date(2023, 3, 19),
-            from: new Date(currentDate),
-            dates: [ // Highlight an array of dates
-                new Date(2023, 2, 22)
-            ],
-            includeDisabled: true // Highlight disabled dates
-        }
-    }
-    // =========== End of Highlight Date ========== //
 
     // ============ select options =============== //
     const options = ref([
@@ -132,7 +122,6 @@
                         <InlineDatePicker 
                             label="Preferred Date of Medical examination"
                             :disabledDate="disableState.disabledDates"
-                            :highlightDate="highlightState.highlighted"
                             :preventDisableDate="preventDisableDateSelection"
                             v-model:input="dateInput"
                         />
