@@ -39,7 +39,7 @@ const inputComputed = computed({
             </label>
         </div>
     </div>
-    <div class="col-12 input-group">
+    <div class="col-12 input-group" id="inlineTemplate">
         <Datepicker
             :class="inputClassName" 
             :inline="true"
@@ -65,15 +65,15 @@ const inputComputed = computed({
      
 </template>
 
-<style lang="scss">
-.weekend {
+<style>
+#inlineTemplate .weekend {
     background: none !important;
 }
 
-.vuejs3-datepicker__calendar .cell:not(.blank):not(.disabled).day {
+#inlineTemplate .vuejs3-datepicker__calendar .cell:not(.blank):not(.disabled).day {
     background: #d0f3d0;
 }
-.vuejs3-datepicker__calendar .disabled {
+#inlineTemplate .vuejs3-datepicker__calendar .disabled {
     background: #fdb6b6;
 }
 .date_label {

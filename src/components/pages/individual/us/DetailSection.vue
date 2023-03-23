@@ -6,6 +6,7 @@
     import { useProfileStore } from '@/store/profile-store'
     import { useUSIndividualDetails } from '@/store/us-individual-details'
     import { Form } from 'vee-validate'
+    import CalloutDanger from '@/components/global/CalloutDanger.vue'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import SubFormHeader from '@/components/global/SubFormHeader.vue'
@@ -49,7 +50,9 @@
     let email = profileStore.email
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
+    let isNotVaccinated = true;
     let covidHidden = true;
+
     
 
     let date_of_birth = ref(null)
@@ -68,6 +71,11 @@
         } else {
             covidHidden = false
         }
+    }
+    
+    const handleVaccine = () => {
+        isNotVaccinated = false
+        // alert(this.isNotVaccinated)
     }
 
     /**
@@ -276,7 +284,7 @@
         <div class="col-12 mb-5">
             <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
         </div>
-        <div class="col-lg-3 col-md-12 col-sm-12" @click="checkValidation">
+        <div class="col-lg-3 col-md-12 col-sm-12">
             <SideNav 
                 :className="textSuccess ? textSuccess : 'text-secondary'"
                 :className1="textSuccess1 ? textSuccess1 : 'text-secondary'"
@@ -315,6 +323,82 @@
                             headerText="COVID-19 VACCINE"
                         />
                     </div>
+                    <div class="mb-3 col-12" :hidden="covidHidden">
+                        <ol>
+                            <li>What category do you belong to?</li>
+                            <ul class="covid_categoty">
+                                <li class="mt-3"><h5>Priority Eligible A</h5></li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">A1</b>. Workers in Frontline Health Services
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">A2</b>. All Senior Citizens
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">A3</b>. Persons with Comorbidities
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">A4</b>. Frontline personnel in essential sectors, including uniformed personnel
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">A5</b>. Indigent Population
+                                </li>
+
+                                <li class="mt-3"><h5>Priority Eligible B</h5></li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">B1</b>. Teachers, Social Workers
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">B2</b>. Other Government Workers
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">B3</b>. Other Essential Workers
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">B4</b>. Socio-demographic groups at significantly higher risk other than senior citizens and poor population based on the NHTS-PR
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">B5</b>. Overseas FIlipino Workers
+                                </li>
+                                <li>
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">B6</b>. Other Remaining Workforce
+                                </li>
+
+                                <li class="mt-3"><h5>Priority Eligible C</h5></li>
+                                <li class="mb-3">
+                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <b class="text-secondary">C.</b> Rest of the Filipino population not otherwise included in the above groups
+                                </li>
+                            </ul>
+                            <li>Have you received your COVID-19 vaccine?</li>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <input class="form-check-input mt-2" name="vaccine_receive" @click="isVaccinated" type="radio" value="yes" /><label for="">Yes</label>
+                                    </div>
+                                    <div class="col-10">
+                                        <input class="form-check-input mt-2" name="vaccine_receive" v-on:click="handleVaccine" type="radio" value="no" /><label for="">No</label>
+                                    </div>
+                                    <div class="mb-3 col-12" :hidden="isNotVaccinated">
+                                        <CalloutDanger
+                                            headerTitle="Note"
+                                            description=" Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy."
+                                        />
+                                    </div>
+                                </div>
+                        </ol>
+                    </div>
+                    
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="Case Information"
@@ -926,6 +1010,10 @@
     margin: 0;
     margin-top: 1rem;
     padding: 1rem;
+}
+
+.covid_categoty  li { 
+    list-style: none;
 }
 
 .inputDate {
