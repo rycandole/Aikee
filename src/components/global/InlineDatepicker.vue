@@ -75,6 +75,7 @@ const inputComputed = computed({
 }
 #inlineTemplate .vuejs3-datepicker__calendar .disabled {
     background: #fdb6b6;
+    color: #f7efef;
 }
 .date_label {
     color: #fff;

@@ -29,10 +29,11 @@
             from: new Date(2023, 5, 1),
             days: [0,6],
             dates: [ // Disable an array of dates
-                new Date(2023, 2, 24),
                 new Date(2023, 3, 6),
                 new Date(2023, 3, 7),
-                new Date(2023, 3, 10)
+                new Date(2023, 3, 10),
+                new Date(2023, 3, 21),
+                new Date(2023, 3, 22),
             ],
             preventDisableDateSelection: true
         }
