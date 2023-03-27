@@ -37,6 +37,7 @@ const inputComputed = computed({
             <label class="text-capitalize" :class="labelClassName">
                 {{ label }} <b class="text-danger p-3"></b>
             </label>
+            <br/><hr/>
         </div>
     </div>
     <div class="col-12 input-group" id="inlineTemplate">

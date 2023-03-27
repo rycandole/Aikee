@@ -17,16 +17,20 @@
     // Get the current year
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
-    const currentDay = new Date().getDate()
+    const currentDay = new Date().getDate() + 1
 
     let currentDate = currentYear+", "+currentMonth+", "+currentDay;
+
+    // GET THE DATE 3 MONTHS FROM NOW
+    let d = new Date(new Date().setMonth(new Date().getMonth() + 3))
+    let formatted_d = moment(d).format('YYYY, MM, DD')
 
     // =========== Inline Date ==================== //
     const disableState = {
         // months start's to 0(January) - 11(December) 
         disabledDates: {
             to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(2023, 5, 1),
+            from: new Date(formatted_d),
             days: [0,6],
             dates: [ // Disable an array of dates
                 new Date(2023, 3, 6),
@@ -38,14 +42,15 @@
             preventDisableDateSelection: true
         }
     }
-    // ============ Inline End =================== //
+
+    // ====ew Date.setMonth(new Date).getMonth()======== Inline End =================== //
 
     // ============ select options =============== //
-    const options = ref([
-        { id: 0, name: 'shirt', value: 'shirt'},
-        { id: 1, name: 'jacket', value: 'jacket'},
-        { id: 2, name: 'shoes', value: 'shoes'}
-    ])
+    // const options = ref([
+    //     { id: 0, name: 'shirt', value: 'shirt'},
+    //     { id: 1, name: 'jacket', value: 'jacket'},
+    //     { id: 2, name: 'shoes', value: 'shoes'}
+    // ])
     // ============== select end ================== //
 
     let dateInput = ref(null)
@@ -120,27 +125,39 @@
                 />
                 <div class="card-body">
                     <div class="mb-4">
-                        <InlineDatePicker 
-                            label="Preferred Date of Medical examination"
-                            :disabledDate="disableState.disabledDates"
-                            :preventDisableDate="preventDisableDateSelection"
-                            v-model:input="dateInput"
-                        />
-                       <!-- ====================== Time Input ======================== -->
-                        <div class="row mt-3 p-3">
-                            <div class="col-12 mt-3">
-                                <label class="text-capitalize">Preferred Time of Medical examination</label>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <InlineDatePicker 
+                                    label="Preferred Date Medical examination"
+                                    :disabledDate="disableState.disabledDates"
+                                    :preventDisableDate="preventDisableDateSelection"
+                                    v-model:input="dateInput"
+                                />
                             </div>
-                            <div class="col-12 input-group">
-                                <select class="form-control form-select" v-model="timeInput" aria-label="Default select example">
-                                    <!-- <option selected> Select </option> -->
-                                    <option v-for="option in options" :key="option" :value="option.value">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                            <!-- ====================== Time Input ======================== -->
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <label class="text-capitalize">Preferred Time</label>
+                                    <br/><hr/> 
+                                </div>
+                                <div class="col-6 input-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                        <label class="form-check-label text-uppercase" for="flexRadioDefault1">
+                                            7 am
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6 input-group">
+                                    <span class="text-uppercase text-danger">Fully Booked</span>
+                                </div>
+                            </div>
+                            <!-- =================== End of Time Input ==================== -->
                             </div>
                         </div>
-                        <!-- =================== End of Time Input ==================== -->
+                        
+                      
 
                     </div>
                 </div>
