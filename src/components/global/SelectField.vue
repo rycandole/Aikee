@@ -36,7 +36,7 @@ const inputComputed = computed({
         </div>
         <div class="col-12 input-group">
             <Field :name="FieldName" as="select" class="form-control form-select w-100" :class="className" v-model="inputComputed" aria-label="Default select example">
-                <option :selected="true" value="">Select</option>
+                
                 <option v-for="item in items" :key="item" :value="item">
                     {{ item }}
                 </option>
@@ -51,6 +51,8 @@ const inputComputed = computed({
             </span>
             <ErrorMessage :name="ErrorName" class="text-danger"/>
         </div>
+
+       
     </div>
     
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
@@ -7,6 +7,7 @@
     import FormHeader from '@/components/global/FormHeader.vue'
     import InlineDatePicker from '@/components/global/InlineDatepicker.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
+    import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
     import Swal from '@/sweetalert2'
     import moment from 'moment'
 
@@ -35,7 +36,6 @@
             dates: [ // Disable an array of dates
                 new Date(2023, 3, 6),
                 new Date(2023, 3, 7),
-                new Date(2023, 3, 10),
                 new Date(2023, 3, 21),
                 new Date(2023, 3, 22),
             ],
@@ -43,18 +43,9 @@
         }
     }
 
-    // ====ew Date.setMonth(new Date).getMonth()======== Inline End =================== //
-
-    // ============ select options =============== //
-    // const options = ref([
-    //     { id: 0, name: 'shirt', value: 'shirt'},
-    //     { id: 1, name: 'jacket', value: 'jacket'},
-    //     { id: 2, name: 'shoes', value: 'shoes'}
-    // ])
-    // ============== select end ================== //
-
     let dateInput = ref(null)
     let timeInput = ref(null)
+    let preferredTime = true
 
     let textSuccess = "text-success"
     // let textSuccess1 = "text-success"
@@ -98,6 +89,28 @@
         router.push('/individual/us/applicant-details')
         
     }
+
+
+    // let items = ['aaa', 'bbb', 'ccc']
+    const handleSlots = async () => {
+        const date = moment(dateInput.value).format('YYYY-MM-DD')
+        const JSONdata = { 
+            dateSlots: date,
+            country: 'US'
+         }
+
+        let res = await axios.post("check_slots/", JSONdata )
+
+        if(res.data.status_code === 200 && date !== "") {
+
+            let item = res.data.slot
+
+            preferredTime = false
+        } else {
+            preferredTime = true
+        }
+        
+    }
     
 </script>
 
@@ -128,36 +141,87 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12 col-sm-12">
                                 <InlineDatePicker 
-                                    label="Preferred Date Medical examination"
+                                    label="Preferred Date"
                                     :disabledDate="disableState.disabledDates"
-                                    :preventDisableDate="preventDisableDateSelection"
                                     v-model:input="dateInput"
+                                    @click="handleSlots"
                                 />
                             </div>
                             <div class="col-lg-6 col-md-12 col-sm-12">
-                            <!-- ====================== Time Input ======================== -->
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <label class="text-capitalize">Preferred Time</label>
-                                    <br/><hr/> 
-                                </div>
-                                <div class="col-6 input-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                        <label class="form-check-label text-uppercase" for="flexRadioDefault1">
-                                            7 am
+                                <ul>
+                                    <li v-for="item in items" :key="item" :value="item">
+                                        {{ item }}
+                                    </li>
+                                </ul>
+                                <div class="row">
+                                    <div class="col-12 mt-3">
+                                        <label class="text-capitalize text-dark">
+                                            Preferred Time
                                         </label>
+                                        <br/><hr/> 
+                                    </div>
+                                    <div class="col-12" :hidden="preferredTime">
+                                        <RadioBtnSched 
+                                            RadioLabel="7:00 am"
+                                            StatusLabel="Not available"
+                                            spanClassName="text-danger"
+                                            RadioBtnName="timeInput"
+                                            v-model:input="timeInput"
+                                        />
+                                        <RadioBtnSched 
+                                            RadioLabel="8:00 am"
+                                            StatusLabel="Not available"
+                                            spanClassName="text-danger"
+                                            RadioBtnName="timeInput"
+                                            v-model:input="timeInput"
+                                        />
+                                        <RadioBtnSched 
+                                            RadioLabel="9:00 am"
+                                            StatusLabel="Not available"
+                                            spanClassName="text-success"
+                                            RadioBtnName="timeInput"
+                                            v-model:input="timeInput"
+                                        />
+                                        <RadioBtnSched 
+                                            RadioLabel="10:00 am"
+                                            StatusLabel="Available"
+                                            spanClassName="text-success"
+                                            RadioBtnName="timeInput"
+                                            v-model:input="timeInput"
+                                        />
+                                        <RadioBtnSched 
+                                            RadioLabel="11:00 am"
+                                            StatusLabel="Not available"
+                                            spanClassName="text-danger"
+                                            RadioBtnName="timeInput"
+                                            v-model:input="timeInput"
+                                        />
+                                        <RadioBtnSched 
+                                            RadioLabel="12:00 pm"
+                                            StatusLabel="Not available"
+                                            spanClassName="text-danger"
+                                            RadioBtnName="timeInput"
+                                            v-model:input="timeInput"
+                                        />
+                                        <RadioBtnSched 
+                                            RadioLabel="1:00 pm"
+                                            StatusLabel="Not available"
+                                            spanClassName="text-success"
+                                            RadioBtnName="timeInput"
+                                            v-model:input="timeInput"
+                                        />
+                                        <RadioBtnSched 
+                                            RadioLabel="2:00 pm"
+                                            StatusLabel="Available"
+                                            spanClassName="text-success"
+                                            RadioBtnName="timeInput"
+                                            v-model:input="timeInput"
+                                        />
                                     </div>
                                 </div>
-                                <div class="col-6 input-group">
-                                    <span class="text-uppercase text-danger">Fully Booked</span>
-                                </div>
-                            </div>
-                            <!-- =================== End of Time Input ==================== -->
+                              
                             </div>
                         </div>
-                        
-                      
 
                     </div>
                 </div>
@@ -181,7 +245,7 @@
         </div>
         </form>
     <!-- ============================================================== -->
-                                    <!-- End of Main Container -->
+                            <!-- End of Main Container -->
     <!-- ============================================================== -->
 </template>
 

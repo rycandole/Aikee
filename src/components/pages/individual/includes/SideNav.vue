@@ -15,7 +15,7 @@ const { className, className1, className2 } = toRefs(props)
 
 <template>
     <div class="row">
-        <div class="col-12 bg-primary border-primary pt-2">
+        <div class="col-12 bg-secondary border-primary pt-2">
             <h5>Individual Appointment</h5>
         </div>
         <div class="d-flex flex-lg-column w-100 mb-3 sidenavFlex">

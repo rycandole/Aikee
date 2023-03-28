@@ -47,6 +47,7 @@ const inputComputed = computed({
             :disabled-dates="disabledDate"
             :prevent-disable-date-selection="preventDisableDate"
             v-model="inputComputed"
+            @click="$emit('click')"
         />
     </div>
     <div class="col-12">
