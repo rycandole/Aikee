@@ -42,7 +42,7 @@ const inputComputed = computed({
                 </option>
             </Field>
             <span class="text-secondary text-s fw-light display-block float-left ml-2">
-                {{ smallLabel }}
+                {{ smallLabel }} 
             </span>
         </div>
         <div class="col-12">

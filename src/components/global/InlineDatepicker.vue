@@ -55,7 +55,7 @@ const inputComputed = computed({
                 {{ smallLabel }}
         </span>
     </div>
-    <div class="col-12 pt-3">
+    <div class="col-12 pt-3 ml-5">
         <span class="date_label date_available p-2 m-1">Available</span>
         <span class="date_label date_not_available p-2 m-1">Not Available</span>
     </div>
@@ -84,6 +84,7 @@ const inputComputed = computed({
     font-weight: bold;
     border-radius: 2px;
     cursor: default;
+    cursor: not-allowed;
 }
 .date_available {
     background: #5ab85a;

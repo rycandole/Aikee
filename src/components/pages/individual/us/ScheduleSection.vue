@@ -46,6 +46,7 @@
     let dateInput = ref(null)
     let timeInput = ref(null)
     let preferredTime = true
+    let timeSlots = ref(null)
 
     let textSuccess = "text-success"
     // let textSuccess1 = "text-success"
@@ -90,8 +91,8 @@
         
     }
 
-
-    // let items = ['aaa', 'bbb', 'ccc']
+    
+    
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
         const JSONdata = { 
@@ -100,15 +101,21 @@
          }
 
         let res = await axios.post("check_slots/", JSONdata )
-
-        if(res.data.status_code === 200 && date !== "") {
-
-            let item = res.data.slot
-
+        timeSlots = res.data.slot
+        
+        // console.log(slot.length)
             preferredTime = false
-        } else {
-            preferredTime = true
-        }
+        // if(jsonParse.data.status_code === 200 && date !== "") {
+
+        //     let items = res.data.slot
+
+
+        //     preferredTime = false
+        //     console.log(items)
+
+        // } else {
+        //     preferredTime = true
+        // }
         
     }
     
@@ -118,8 +125,8 @@
     <!-- ============================================================== -->
                         <!-- Main Container -->
     <!-- ============================================================== -->
-    <form @submit.prevent="handleDateTime">
-    <div class="wrapper_container row bg-white border">
+    <form @submit.prevent="handleDateTime" class="wrapper_container row bg-white border">
+       
         <div class="col-lg-12 col-md-12 col-12">
             <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
         </div>
@@ -132,14 +139,14 @@
                 />
             </div>
        
-            <div class="col-lg-9 col-md-12 col-sm-12 mb-3 max-width-75">
+          <div class="col-lg-9 col-md-12 col-sm-12 mb-3 max-width-75">
                 <FormHeader
                     headerText="Medical Examination Schedule"
                 />
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
-                            <div class="col-lg-6 col-md-12 col-sm-12">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
                                 <InlineDatePicker 
                                     label="Preferred Date"
                                     :disabledDate="disableState.disabledDates"
@@ -147,12 +154,7 @@
                                     @click="handleSlots"
                                 />
                             </div>
-                            <div class="col-lg-6 col-md-12 col-sm-12">
-                                <ul>
-                                    <li v-for="item in items" :key="item" :value="item">
-                                        {{ item }}
-                                    </li>
-                                </ul>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="row">
                                     <div class="col-12 mt-3">
                                         <label class="text-capitalize text-dark">
@@ -160,8 +162,18 @@
                                         </label>
                                         <br/><hr/> 
                                     </div>
-                                    <div class="col-12" :hidden="preferredTime">
-                                        <RadioBtnSched 
+                                    <div v-for="(row, index) in timeSlots" :key="index" class="col-12" :hidden="preferredTime">
+                        
+                                            <RadioBtnSched 
+                                                :RadioLabel="row.time_slot"
+                                                :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
+                                                :Slots="`${row.slot_limit}` > 0 ?`${row.slot_limit} slot` : ''" 
+                                                :spanClassName="`${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'"
+                                                :Id="`${row.slot_limit}` > 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
+                                                RadioBtnName="timeInput"
+                                                v-model:input="timeInput"
+                                            />
+                                        <!-- <RadioBtnSched 
                                             RadioLabel="7:00 am"
                                             StatusLabel="Not available"
                                             spanClassName="text-danger"
@@ -216,7 +228,7 @@
                                             spanClassName="text-success"
                                             RadioBtnName="timeInput"
                                             v-model:input="timeInput"
-                                        />
+                                        /> -->
                                     </div>
                                 </div>
                               
@@ -242,7 +254,6 @@
                     btnText="Next"
                 />
             </div>
-        </div>
         </form>
     <!-- ============================================================== -->
                             <!-- End of Main Container -->
@@ -253,11 +264,8 @@
 .wrapper_container {
     margin: 0;
     margin-top: 1rem;
-    padding: 1rem;
-}
-
-.section_header {
-    background-color: #069;
+    width: 100%;
+    padding: 0;
 }
 
 .inputDate {

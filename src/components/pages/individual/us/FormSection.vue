@@ -58,7 +58,7 @@
                 "
             />
         </div>
-        <div class="col-12 d-flex justify-content-center">
+       <div class="col-12 d-flex justify-content-center">
             <RouterButton 
                 btnUrl="/individual"
                 className="btn btn-secondary w-25 mr-5"
@@ -70,7 +70,6 @@
                 btnText="Next"
             />
         </div>
-        
     </div>
     
     <!-- ============================================================== -->
@@ -82,7 +81,7 @@
 .wrapper_container {
     margin: 0;
     margin-top: 1rem;
-    padding: 1rem;
+    width: 100%;
 }
 
 @media only screen and (min-width: 768px) {

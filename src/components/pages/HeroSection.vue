@@ -93,6 +93,10 @@
 
 <style lang="scss">
 
+.wrapper_container {
+        margin: 0;
+        padding: 0;
+}
 
 @media only screen and (min-width: 768px) {
     .wrapper_container {
