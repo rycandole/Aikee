@@ -162,6 +162,7 @@
                                         </label>
                                         <br/><hr/> 
                                     </div>
+                                    
                                     <div v-for="(row, index) in timeSlots" :key="index" class="col-12" :hidden="preferredTime">
                         
                                             <RadioBtnSched 
@@ -169,7 +170,7 @@
                                                 :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
                                                 :Slots="`${row.slot_limit}` > 0 ?`${row.slot_limit} slot` : ''" 
                                                 :spanClassName="`${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'"
-                                                :Id="`${row.slot_limit}` > 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
+                                                :inputId="`${row.slot_limit}` > 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
                                                 RadioBtnName="timeInput"
                                                 v-model:input="timeInput"
                                             />

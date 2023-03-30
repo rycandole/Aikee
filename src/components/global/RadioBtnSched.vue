@@ -10,22 +10,22 @@ const props = defineProps({
     StatusLabel: String,
     spanClassName: String,
     Slots: String,
-    Id: String
+    inputId: String
 })
 
-const { RadioLabel, input, RadioBtnName, StatusLabel, spanClassName, Slots, Id } = toRefs(props)
+const { RadioLabel, input, RadioBtnName, StatusLabel, spanClassName, Slots, inputId } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
     set: (val) => emit('update:input', val)
 })
-id="flexRadioDefault1"
+
 </script>
 <template>
     <div class="row mt-3 ml-3">
         <div class="col-6 input-group">
             <div class="form-check">
-                <input class="form-check-input" v-bind:id="Id"  type="radio" :name="RadioBtnName" v-model="inputComputed">
+                <input class="form-check-input" :id="inputId" type="radio" :name="RadioBtnName" v-model="inputComputed" >
                 <label class="form-check-label text-uppercase" for="flexRadioDefault1">
                     {{ RadioLabel }} 
                 </label>
