@@ -18,12 +18,12 @@
     // Get the current year
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
-    const currentDay = new Date().getDate() + 1
+    const currentDay = new Date().getDate()
 
     let currentDate = currentYear+", "+currentMonth+", "+currentDay;
 
     // GET THE DATE 3 MONTHS FROM NOW
-    let d = new Date(new Date().setMonth(new Date().getMonth() + 3))
+    let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
     // =========== Inline Date ==================== //
@@ -42,7 +42,8 @@
             preventDisableDateSelection: true
         }
     }
-
+    // ============ End of Inline Date =============== //
+ 
     let dateInput = ref(null)
     let timeInput = ref(null)
     let preferredTime = true
@@ -92,7 +93,6 @@
     }
 
     
-    
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
         const JSONdata = { 
@@ -101,21 +101,17 @@
          }
 
         let res = await axios.post("check_slots/", JSONdata )
-        timeSlots = res.data.slot
-        
-        // console.log(slot.length)
+       
+        if(res.data.status_code === 200 && date !== "") {
+
+            timeSlots = res.data.slot
+            // console.log(slot.length)
             preferredTime = false
-        // if(jsonParse.data.status_code === 200 && date !== "") {
-
-        //     let items = res.data.slot
 
 
-        //     preferredTime = false
-        //     console.log(items)
-
-        // } else {
-        //     preferredTime = true
-        // }
+        } else {
+            preferredTime = true
+        }
         
     }
     
@@ -152,6 +148,8 @@
                                     :disabledDate="disableState.disabledDates"
                                     v-model:input="dateInput"
                                     @click="handleSlots"
+                                    :isDisabbled="isDisabbled"
+                                    radioBtnStatus=""
                                 />
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -171,6 +169,7 @@
                                                 :Slots="`${row.slot_limit}` > 0 ?`${row.slot_limit} slot` : ''" 
                                                 :spanClassName="`${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'"
                                                 :inputId="`${row.slot_limit}` > 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
+                                                :radioBtnStatus="`${row.slot_limit}` > 0 ? 'true' : 'false'"
                                                 RadioBtnName="timeInput"
                                                 v-model:input="timeInput"
                                             />
@@ -232,7 +231,6 @@
                                         /> -->
                                     </div>
                                 </div>
-                              
                             </div>
                         </div>
 

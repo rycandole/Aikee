@@ -315,6 +315,7 @@
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="date_of_birth"
                             :onChange="alertChange"
+                            :isDisabled="radioDisabled"
                         />
                         
                     </div>
@@ -578,7 +579,6 @@
                             FieldName="ad_mother_middle_name"
                             ErrorName="ad_mother_middle_name"
                             v-model:input="ad_mother_middle_name"
-                            
                         />
                     </div>
                     <div class="mb-3 mt-5 col-12">
