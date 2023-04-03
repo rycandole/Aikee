@@ -36,8 +36,8 @@
             dates: [ // Disable an array of dates
                 new Date(2023, 3, 6),
                 new Date(2023, 3, 7),
-                new Date(2023, 3, 21),
                 new Date(2023, 3, 22),
+                new Date(2023, 3, 23),
             ],
             preventDisableDateSelection: true
         }
@@ -50,8 +50,6 @@
     let timeSlots = ref(null)
 
     let textSuccess = "text-success"
-    // let textSuccess1 = "text-success"
-    // let textSuccess2 = "text-success"
 
 
     const handleBack = () => {
@@ -130,8 +128,8 @@
             <div class="col-lg-3 col-md-12 col-sm-12">
                 <SideNav 
                     :className="textSuccess ? textSuccess : 'text-secondary'"
-                    :className1="textSuccess1 ? textSuccess1 : 'text-secondary'"
-                    :className2="textSuccess2 ? textSuccess2 : 'text-secondary'"
+                     className1="text-secondary"
+                     className2="text-secondary"
                 />
             </div>
        
@@ -148,8 +146,6 @@
                                     :disabledDate="disableState.disabledDates"
                                     v-model:input="dateInput"
                                     @click="handleSlots"
-                                    :isDisabbled="isDisabbled"
-                                    radioBtnStatus=""
                                 />
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -168,72 +164,16 @@
                                                 :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
                                                 :Slots="`${row.slot_limit}` > 0 ?`${row.slot_limit} slot` : ''" 
                                                 :spanClassName="`${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'"
-                                                :inputId="`${row.slot_limit}` > 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
-                                                :radioBtnStatus="`${row.slot_limit}` > 0 ? 'true' : 'false'"
+                                                :inputId="`${row.slot_limit}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
+                                                :radioBtnStatus="`${row.slot_limit}` > 0 ? false : true"
                                                 RadioBtnName="timeInput"
                                                 v-model:input="timeInput"
+                                                :radioValue="row.time_slot"
                                             />
-                                        <!-- <RadioBtnSched 
-                                            RadioLabel="7:00 am"
-                                            StatusLabel="Not available"
-                                            spanClassName="text-danger"
-                                            RadioBtnName="timeInput"
-                                            v-model:input="timeInput"
-                                        />
-                                        <RadioBtnSched 
-                                            RadioLabel="8:00 am"
-                                            StatusLabel="Not available"
-                                            spanClassName="text-danger"
-                                            RadioBtnName="timeInput"
-                                            v-model:input="timeInput"
-                                        />
-                                        <RadioBtnSched 
-                                            RadioLabel="9:00 am"
-                                            StatusLabel="Not available"
-                                            spanClassName="text-success"
-                                            RadioBtnName="timeInput"
-                                            v-model:input="timeInput"
-                                        />
-                                        <RadioBtnSched 
-                                            RadioLabel="10:00 am"
-                                            StatusLabel="Available"
-                                            spanClassName="text-success"
-                                            RadioBtnName="timeInput"
-                                            v-model:input="timeInput"
-                                        />
-                                        <RadioBtnSched 
-                                            RadioLabel="11:00 am"
-                                            StatusLabel="Not available"
-                                            spanClassName="text-danger"
-                                            RadioBtnName="timeInput"
-                                            v-model:input="timeInput"
-                                        />
-                                        <RadioBtnSched 
-                                            RadioLabel="12:00 pm"
-                                            StatusLabel="Not available"
-                                            spanClassName="text-danger"
-                                            RadioBtnName="timeInput"
-                                            v-model:input="timeInput"
-                                        />
-                                        <RadioBtnSched 
-                                            RadioLabel="1:00 pm"
-                                            StatusLabel="Not available"
-                                            spanClassName="text-success"
-                                            RadioBtnName="timeInput"
-                                            v-model:input="timeInput"
-                                        />
-                                        <RadioBtnSched 
-                                            RadioLabel="2:00 pm"
-                                            StatusLabel="Available"
-                                            spanClassName="text-success"
-                                            RadioBtnName="timeInput"
-                                            v-model:input="timeInput"
-                                        /> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 

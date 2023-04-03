@@ -11,10 +11,11 @@ const props = defineProps({
     spanClassName: String,
     Slots: String,
     inputId: String,
-    radioBtnStatus: String
+    radioBtnStatus: String,
+    radioValue: String
 })
 
-const { RadioLabel, input, RadioBtnName, StatusLabel, spanClassName, Slots, inputId, radioBtnStatus } = toRefs(props)
+const { RadioLabel, input, RadioBtnName, StatusLabel, spanClassName, Slots, inputId, radioBtnStatus, radioValue } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
@@ -26,7 +27,7 @@ const inputComputed = computed({
     <div class="row mt-3 ml-3">
         <div class="col-6 input-group">
             <div class="form-check">
-                <input class="form-check-input flexRadioDisabled" :id="inputId" type="radio" :name="RadioBtnName" v-model="inputComputed" :disabled="radioBtnStatus">
+                <input class="form-check-input flexRadioDisabled" :id="inputId" type="radio" :value="radioValue" :name="RadioBtnName" v-model="inputComputed" :disabled="radioBtnStatus">
                 <label class="form-check-label text-uppercase" for="flexRadioDefault1">
                     {{ RadioLabel }} 
                 </label>

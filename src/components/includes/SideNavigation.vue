@@ -23,7 +23,7 @@
      * For Fetching user data
      */
     onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
+        // await profileStore.fetchProfileById(router.params.id)
     })
 
     let full_name = ucwords(profileStore.firstName +" "+ profileStore.lastName)

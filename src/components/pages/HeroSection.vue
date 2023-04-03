@@ -16,7 +16,6 @@
         await profileStore.fetchProfileById(route.params.id)
     })
 
-
 </script>
 
 <template>
