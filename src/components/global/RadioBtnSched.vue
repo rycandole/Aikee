@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, toRefs, defineEmits, computed } from 'vue'
+import { Field } from 'vee-validate'
 
 const emit = defineEmits(['update:input'])
 
@@ -7,6 +8,7 @@ const props = defineProps({
     input: String,
     RadioBtnName: String,
     RadioLabel: String,
+    RadioLabelClass: String,
     StatusLabel: String,
     spanClassName: String,
     Slots: String,
@@ -15,7 +17,7 @@ const props = defineProps({
     radioValue: String
 })
 
-const { RadioLabel, input, RadioBtnName, StatusLabel, spanClassName, Slots, inputId, radioBtnStatus, radioValue } = toRefs(props)
+const { RadioLabel, RadioLabelClass, input, RadioBtnName, StatusLabel, spanClassName, Slots, inputId, radioBtnStatus, radioValue } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
@@ -27,8 +29,8 @@ const inputComputed = computed({
     <div class="row mt-3 ml-3">
         <div class="col-6 input-group">
             <div class="form-check">
-                <input class="form-check-input flexRadioDisabled" :id="inputId" type="radio" :value="radioValue" :name="RadioBtnName" v-model="inputComputed" :disabled="radioBtnStatus">
-                <label class="form-check-label text-uppercase" for="flexRadioDefault1">
+                <Field class="form-check-input flexRadioDisabled" :id="inputId" type="radio" :value="radioValue" :name="RadioBtnName" v-model="inputComputed" :disabled="radioBtnStatus" />
+                <label class="form-check-label text-uppercase" :class="RadioLabelClass" for="flexRadioDefault1">
                     {{ RadioLabel }} 
                 </label>
             </div>

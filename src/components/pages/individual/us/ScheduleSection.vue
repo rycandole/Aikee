@@ -3,6 +3,8 @@
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
+    import { Form } from 'vee-validate'
+    import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import InlineDatePicker from '@/components/global/InlineDatepicker.vue'
@@ -10,6 +12,8 @@
     import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
     import Swal from '@/sweetalert2'
     import moment from 'moment'
+    import * as yup from 'yup';
+    
 
 
     const router = useRouter()
@@ -18,7 +22,7 @@
     // Get the current year
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
-    const currentDay = new Date().getDate()
+    const currentDay = new Date().getDate() + 1
 
     let currentDate = currentYear+", "+currentMonth+", "+currentDay;
 
@@ -37,7 +41,7 @@
                 new Date(2023, 3, 6),
                 new Date(2023, 3, 7),
                 new Date(2023, 3, 22),
-                new Date(2023, 3, 23),
+                new Date(2023, 3, 21),
             ],
             preventDisableDateSelection: true
         }
@@ -93,6 +97,7 @@
     
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
+        
         const JSONdata = { 
             dateSlots: date,
             country: 'US'
@@ -105,6 +110,7 @@
             timeSlots = res.data.slot
             // console.log(slot.length)
             preferredTime = false
+            
 
 
         } else {
@@ -112,6 +118,10 @@
         }
         
     }
+
+    const schema = yup.object().shape({
+        timeInput: yup.string().required('Selecting time is required!')
+    })
     
 </script>
 
@@ -119,7 +129,7 @@
     <!-- ============================================================== -->
                         <!-- Main Container -->
     <!-- ============================================================== -->
-    <form @submit.prevent="handleDateTime" class="wrapper_container row bg-white border">
+    <Form @submit="handleDateTime" :validation-schema="schema" class="wrapper_container row bg-white border">
        
         <div class="col-lg-12 col-md-12 col-12">
             <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
@@ -158,9 +168,9 @@
                                     </div>
                                     
                                     <div v-for="(row, index) in timeSlots" :key="index" class="col-12" :hidden="preferredTime">
-                        
                                             <RadioBtnSched 
                                                 :RadioLabel="row.time_slot"
+                                                :RadioLabelClass="`${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''"
                                                 :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
                                                 :Slots="`${row.slot_limit}` > 0 ?`${row.slot_limit} slot` : ''" 
                                                 :spanClassName="`${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'"
@@ -170,6 +180,10 @@
                                                 v-model:input="timeInput"
                                                 :radioValue="row.time_slot"
                                             />
+                                           
+                                    </div>
+                                    <div v-if="error" class="col-12">
+                                        <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +207,7 @@
                     btnText="Next"
                 />
             </div>
-        </form>
+        </Form>
     <!-- ============================================================== -->
                             <!-- End of Main Container -->
     <!-- ============================================================== -->
