@@ -8,6 +8,7 @@ const props = defineProps({
     labelClassName: String,
     label: String,
     input: String,
+    onChange: String,
     placeholder: String,
     inputClassName: String,
     error: String,
@@ -16,7 +17,7 @@ const props = defineProps({
     preventDisableDate: String
 })
 
-const { labelClassName, label, input, inputClassName, error, smallLabel, disabledDate, preventDisableDate } = toRefs(props)
+const { labelClassName, label, input, onChange, inputClassName, error, smallLabel, disabledDate, preventDisableDate } = toRefs(props)
 
 // let date = new Date()
 
@@ -47,7 +48,8 @@ const inputComputed = computed({
             :disabled-dates="disabledDate"
             :prevent-disable-date-selection="preventDisableDate"
             v-model="inputComputed"
-            @click="$emit('click')"
+            @input="onChange"
+            
         />
     </div>
     <div class="col-12">
@@ -94,6 +96,5 @@ const inputComputed = computed({
     background: #eb5454;
     border: 1px solid #cc4646;
 }
-
 
 </style>

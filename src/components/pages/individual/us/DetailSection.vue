@@ -75,7 +75,6 @@
     
     const handleVaccine = () => {
         isNotVaccinated = false
-        // alert(this.isNotVaccinated)
     }
 
     /**
@@ -388,7 +387,7 @@
                                         <input class="form-check-input mt-2" name="vaccine_receive" @click="isVaccinated" type="radio" value="yes" /><label for="">Yes</label>
                                     </div>
                                     <div class="col-10">
-                                        <input class="form-check-input mt-2" name="vaccine_receive" v-on:click="handleVaccine" type="radio" value="no" /><label for="">No</label>
+                                        <input class="form-check-input mt-2" name="vaccine_receive" @change="handleVaccine" type="radio" value="no" /><label for="">No</label>
                                     </div>
                                     <div class="mb-3 col-12" :hidden="isNotVaccinated">
                                         <CalloutDanger
