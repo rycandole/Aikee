@@ -309,7 +309,6 @@
                                         </div>
                                     </div>
                                   
-                                    
                                     <!-- <div v-for="(row, index) in timeSlots" :key="index" class="col-12" >
                                             <RadioBtnSched 
                                                 :RadioLabel="row.time_slot"
