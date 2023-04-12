@@ -46,10 +46,9 @@ const inputComputed = computed({
             :class="inputClassName" 
             :inline="true"
             :disabled-dates="disabledDate"
-            :prevent-disable-date-selection="preventDisableDate"
+            :prevent-disable-date-selection="preventDisableDate" 
             v-model="inputComputed"
-            @input="onChange"
-            
+            @input="onChange" 
         />
     </div>
     <div class="col-12">

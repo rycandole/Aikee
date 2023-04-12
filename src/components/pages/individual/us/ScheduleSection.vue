@@ -4,13 +4,14 @@
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
     import { Form } from 'vee-validate'
-    import { Field } from 'vee-validate'
+    // import { Field } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import InlineDatePicker from '@/components/global/InlineDatepicker.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     // import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
     import Swal from '@/sweetalert2'
+    // import Datepicker from '@/datepicker.js'
     import moment from 'moment'
     import * as yup from 'yup';
     
@@ -50,8 +51,9 @@
  
     let dateInput = ref(null)
     let timeInput = ref(null)
-    // let preferredTime = true
-    // let timeSlots = ref(null)
+    let slotHidden = true;
+    let timeSlots = ref(null)
+    let sevenAM = ref(null)
 
     let textSuccess = "text-success"
 
@@ -97,28 +99,40 @@
     
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
+
+        if(date !== "") {
+            slotHidden = false
+        } else {
+            slotHidden = true
+        }
         
         const JSONdata = { 
             dateSlots: date,
             country: 'US'
          }
 
-        //  console.log(JSONdata)
-        await axios.post("check_slots/", JSONdata )
-            .then(function (response) {
-                console.log(response.data.slot.length[0]);
-                console.log(response.status);
-            });
+       let res = await axios.post("check_slots/", JSONdata )
+          
        
-        // if(res.data.status_code === 200 && date !== "") {
+        if(res.data.status_code === 200 && date !== "") { 
             
-        //     timeSlots = res.data.slot
-        //     console.log(timeSlots)
-        //     // console.log(slot.length)
-        //     // preferredTime = false
+            timeSlots = res.data.slot
+            sevenAM = res.data.sevenAM
             
+        }
 
-        // }
+          // .then(function (response) {
+            //     // console.log(response.data.slot.length);
+            //     // console.log(response.status);
+
+            //     let jsonParse  = JSON.parse(response)
+
+            //     for (let i = 0; i < jsonParse.data.slot.length; i++) 
+            //     {
+            //         console.log(jsonParse.data.slot[i].id)
+            //     }
+            
+            // });
 
         // alert('Slots')
         
@@ -127,6 +141,8 @@
     const schema = yup.object().shape({
         timeInput: yup.string().required('Selecting time is required!')
     })
+
+    
     
 </script>
 
@@ -172,7 +188,7 @@
                                         <br/><hr/> 
                                     </div>
                                     
-                                    <div class="col-12">
+                                    <div class="col-12" :hidden="slotHidden">
                                         <div class="row mt-3 ml-3">
                                             <div class="col-6 input-group">
                                                 <div class="form-check">
@@ -184,12 +200,12 @@
                                             </div>
                                             <div class="col-6 input-group">
                                                 <strong class="spanClassName">
-                                                    Available 40 Slots
+                                                    Available {{ sevenAM }} Slots
                                                 </strong>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" :hidden="slotHidden">
                                         <div class="row mt-3 ml-3">
                                             <div class="col-6 input-group">
                                                 <div class="form-check">
@@ -206,7 +222,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" :hidden="slotHidden">
                                         <div class="row mt-3 ml-3">
                                             <div class="col-6 input-group">
                                                 <div class="form-check">
@@ -223,7 +239,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" :hidden="slotHidden">
                                         <div class="row mt-3 ml-3">
                                             <div class="col-6 input-group">
                                                 <div class="form-check">
@@ -240,7 +256,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" :hidden="slotHidden">
                                         <div class="row mt-3 ml-3">
                                             <div class="col-6 input-group">
                                                 <div class="form-check">
@@ -257,7 +273,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" :hidden="slotHidden">
                                         <div class="row mt-3 ml-3">
                                             <div class="col-6 input-group">
                                                 <div class="form-check">
@@ -274,7 +290,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" :hidden="slotHidden">
                                         <div class="row mt-3 ml-3">
                                             <div class="col-6 input-group">
                                                 <div class="form-check">
@@ -291,7 +307,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" :hidden="slotHidden">
                                         <div class="row mt-3 ml-3">
                                             <div class="col-6 input-group">
                                                 <div class="form-check">
@@ -301,9 +317,9 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="col-6 input-group">
-                                                <strong class="spanClassName">
-                                                    Available 40 Slots
+                                            <div v-for="(row, index) in timeSlots" :key="index" class="col-6 input-group">
+                                                <strong v-if="row.time_slot === '2 PM'" class="spanClassName">
+                                                    Available {{ `${row.slot_limit}` }} Slots
                                                 </strong>
                                             </div>
                                         </div>
@@ -327,6 +343,7 @@
                                     <div v-if="error" class="col-12">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div> -->
+
                                 </div>
                             </div>
                         </div>
