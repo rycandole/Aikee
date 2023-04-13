@@ -4,12 +4,12 @@
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
     import { Form } from 'vee-validate'
-    // import { Field } from 'vee-validate'
+    import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import InlineDatePicker from '@/components/global/InlineDatepicker.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
-    // import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
+    import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
     import Swal from '@/sweetalert2'
     // import Datepicker from '@/datepicker.js'
     import moment from 'moment'
@@ -31,6 +31,7 @@
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
+
     // =========== Inline Date ==================== //
     const disableState = {
         // months start's to 0(January) - 11(December) 
@@ -51,11 +52,42 @@
  
     let dateInput = ref(null)
     let timeInput = ref(null)
-    let slotHidden = true;
+    // let slotHidden = true;
     let timeSlots = ref(null)
-    let sevenAM = ref(null)
+    // let sevenAM = ref(null)
 
-    let textSuccess = "text-success"
+    // let textSuccess = "text-success"
+
+
+    const handleSlots = async () => {
+        const date = moment(dateInput.value).format('YYYY-MM-DD')
+        
+        const JSONdata = { 
+            dateSlots: date,
+            country: 'US'
+         }
+
+       axios
+        .post("check_slots/", JSONdata )
+        .then(function (response) {
+
+            timeSlots = response.data.slot
+            console.log(timeSlots)
+
+        })
+        .catch(error => {
+            console.error(error);
+        })
+
+
+        // let res = await axios.post("check_slots/", JSONdata )
+
+        // timeSlots = res
+        // console.log(res.data)
+
+        
+        
+    }
 
 
     const handleBack = () => {
@@ -97,46 +129,7 @@
     }
 
     
-    const handleSlots = async () => {
-        const date = moment(dateInput.value).format('YYYY-MM-DD')
-
-        if(date !== "") {
-            slotHidden = false
-        } else {
-            slotHidden = true
-        }
-        
-        const JSONdata = { 
-            dateSlots: date,
-            country: 'US'
-         }
-
-       let res = await axios.post("check_slots/", JSONdata )
-          
-       
-        if(res.data.status_code === 200 && date !== "") { 
-            
-            timeSlots = res.data.slot
-            sevenAM = res.data.sevenAM
-            
-        }
-
-          // .then(function (response) {
-            //     // console.log(response.data.slot.length);
-            //     // console.log(response.status);
-
-            //     let jsonParse  = JSON.parse(response)
-
-            //     for (let i = 0; i < jsonParse.data.slot.length; i++) 
-            //     {
-            //         console.log(jsonParse.data.slot[i].id)
-            //     }
-            
-            // });
-
-        // alert('Slots')
-        
-    }
+    
 
     const schema = yup.object().shape({
         timeInput: yup.string().required('Selecting time is required!')
@@ -188,145 +181,12 @@
                                         <br/><hr/> 
                                     </div>
                                     
-                                    <div class="col-12" :hidden="slotHidden">
-                                        <div class="row mt-3 ml-3">
-                                            <div class="col-6 input-group">
-                                                <div class="form-check">
-                                                    <Field class="form-check-input flexRadioDisabled" type="radio" value="radioValue" name="timeInput" />
-                                                    <label class="form-check-label text-uppercase"  for="flexRadioDefault1">
-                                                            7 AM
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 input-group">
-                                                <strong class="spanClassName">
-                                                    Available {{ sevenAM }} Slots
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12" :hidden="slotHidden">
-                                        <div class="row mt-3 ml-3">
-                                            <div class="col-6 input-group">
-                                                <div class="form-check">
-                                                    <Field class="form-check-input flexRadioDisabled" type="radio" value="radioValue" name="timeInput" />
-                                                    <label class="form-check-label text-uppercase" for="flexRadioDefault1">
-                                                            8 AM
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 input-group">
-                                                <strong class="spanClassName">
-                                                    Available 40 Slots
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12" :hidden="slotHidden">
-                                        <div class="row mt-3 ml-3">
-                                            <div class="col-6 input-group">
-                                                <div class="form-check">
-                                                    <Field class="form-check-input flexRadioDisabled" type="radio" value="radioValue" name="timeInput" />
-                                                    <label class="form-check-label text-uppercase" for="flexRadioDefault1">
-                                                            9 AM
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 input-group">
-                                                <strong class="spanClassName">
-                                                    Available 10 Slots
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12" :hidden="slotHidden">
-                                        <div class="row mt-3 ml-3">
-                                            <div class="col-6 input-group">
-                                                <div class="form-check">
-                                                    <Field class="form-check-input flexRadioDisabled" type="radio" value="radioValue" name="timeInput" />
-                                                    <label class="form-check-label text-uppercase" for="flexRadioDefault1">
-                                                            10 AM
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 input-group">
-                                                <strong class="spanClassName">
-                                                    Available 40 Slots
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12" :hidden="slotHidden">
-                                        <div class="row mt-3 ml-3">
-                                            <div class="col-6 input-group">
-                                                <div class="form-check">
-                                                    <Field class="form-check-input flexRadioDisabled" type="radio" value="radioValue" name="timeInput" />
-                                                    <label class="form-check-label text-uppercase" for="flexRadioDefault1">
-                                                            11 AM
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 input-group">
-                                                <strong class="spanClassName">
-                                                    Available 40 Slots
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12" :hidden="slotHidden">
-                                        <div class="row mt-3 ml-3">
-                                            <div class="col-6 input-group">
-                                                <div class="form-check">
-                                                    <Field class="form-check-input flexRadioDisabled" type="radio" value="radioValue" name="timeInput" />
-                                                    <label class="form-check-label text-uppercase" for="flexRadioDefault1">
-                                                            12 PM
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 input-group">
-                                                <strong class="spanClassName">
-                                                    Available 40 Slots
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12" :hidden="slotHidden">
-                                        <div class="row mt-3 ml-3">
-                                            <div class="col-6 input-group">
-                                                <div class="form-check">
-                                                    <Field class="form-check-input flexRadioDisabled" type="radio" value="radioValue" name="timeInput" />
-                                                    <label class="form-check-label text-uppercase" for="flexRadioDefault1">
-                                                            1 PM
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 input-group">
-                                                <strong class="spanClassName">
-                                                    Available 30 Slot
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12" :hidden="slotHidden">
-                                        <div class="row mt-3 ml-3">
-                                            <div class="col-6 input-group">
-                                                <div class="form-check">
-                                                    <Field class="form-check-input flexRadioDisabled" type="radio" value="radioValue" name="timeInput" />
-                                                    <label class="form-check-label text-uppercase" for="flexRadioDefault1">
-                                                            2 PM
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div v-for="(row, index) in timeSlots" :key="index" class="col-6 input-group">
-                                                <strong v-if="row.time_slot === '2 PM'" class="spanClassName">
-                                                    Available {{ `${row.slot_limit}` }} Slots
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                  
-                                    <!-- <div v-for="(row, index) in timeSlots" :key="index" class="col-12" >
-                                            <RadioBtnSched 
+                                    <!-- <label class="form-check-label text-uppercase" ref="myTesting" for="flexRadioDefault1">
+                                        {{ timeSlots }}
+                                    </label> -->
+
+                                    <div v-for="(row, index) in timeSlots" :key="index" class="col-12" >
+                                           <RadioBtnSched 
                                                 :RadioLabel="row.time_slot"
                                                 :RadioLabelClass="`${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''"
                                                 :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
@@ -342,7 +202,7 @@
                                     </div>
                                     <div v-if="error" class="col-12">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
-                                    </div> -->
+                                    </div>
 
                                 </div>
                             </div>

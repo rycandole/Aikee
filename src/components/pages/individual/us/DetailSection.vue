@@ -50,9 +50,10 @@
     let email = profileStore.email
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
+    let vaccine_receive = ref(null)
     let isNotVaccinated = true;
     let covidHidden = true;
-
+    // const vaccine_receive = ref(null)
     
 
     let date_of_birth = ref(null)
@@ -73,8 +74,21 @@
         }
     }
     
-    const handleVaccine = () => {
+    function handleVaccine() {
+        
+
         isNotVaccinated = false
+        let radioValue = vaccine_receive.value 
+        
+        console.log(radioValue)
+
+        // if(radioValue == 'yes') {
+        //     alert(radioValue)
+        //     isNotVaccinated = false
+        // } else if(radioValue == 'no') {
+        //     alert(radioValue)
+        //     isNotVaccinated = true
+        // }
     }
 
     /**
@@ -384,10 +398,10 @@
                             <li>Have you received your COVID-19 vaccine?</li>
                                 <div class="row">
                                     <div class="col-2">
-                                        <input class="form-check-input mt-2" name="vaccine_receive" @click="isVaccinated" type="radio" value="yes" /><label for="">Yes</label>
+                                        <input class="form-check-input mt-2" name="vaccine_receive" @click="handleVaccine" type="radio" v-model="vaccine_receive" value="yes" /><label for="">Yes</label>
                                     </div>
                                     <div class="col-10">
-                                        <input class="form-check-input mt-2" name="vaccine_receive" @change="handleVaccine" type="radio" value="no" /><label for="">No</label>
+                                        <input class="form-check-input mt-2" @click="handleVaccine" type="radio" v-model="vaccine_receive" value="no" /><label for="">No</label>
                                     </div>
                                     <div class="mb-3 col-12" :hidden="isNotVaccinated">
                                         <CalloutDanger
