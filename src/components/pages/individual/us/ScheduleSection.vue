@@ -52,7 +52,7 @@
  
     let dateInput = ref(null)
     let timeInput = ref(null)
-    // let slotHidden = true;
+    let timeSched = ref(null)
     let timeSlots = ref(null)
     // let sevenAM = ref(null)
 
@@ -72,7 +72,9 @@
         .then(function (response) {
 
             timeSlots = response.data.slot
-            console.log(timeSlots)
+            timeSched = response.data.sched1
+
+            // console.log(timeSched)
 
         })
         .catch(error => {
@@ -181,9 +183,9 @@
                                         <br/><hr/> 
                                     </div>
                                     
-                                    <!-- <label class="form-check-label text-uppercase" ref="myTesting" for="flexRadioDefault1">
-                                        {{ timeSlots }}
-                                    </label> -->
+                                    <label class="form-check-label text-uppercase" ref="myTesting" for="flexRadioDefault1">
+                                        {{ timeSched }}
+                                    </label>
 
                                     <div v-for="(row, index) in timeSlots" :key="index" class="col-12" >
                                            <RadioBtnSched 
