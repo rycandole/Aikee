@@ -1,8 +1,10 @@
 <script setup>
-    import axios from 'axios'
+    // import axios from 'axios'
+    import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
+    import {  useSlotStore  } from "@/store/slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -15,10 +17,9 @@
     import moment from 'moment'
     import * as yup from 'yup';
     
-
-
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
+    const SlotStore = useSlotStore()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -61,36 +62,26 @@
 
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
+
+        const JSONdata = {
+            country : 'US',
+            prefDate : date
+        }
         
-        const JSONdata = { 
-            dateSlots: date,
-            country: 'US'
-         }
 
-       axios
-        .post("check_slots/", JSONdata )
-        .then(function (response) {
+        let res = JSON.stringify(JSONdata)
+        // console.log(res)
+        SlotStore.setStoreDetails(res)
 
-            timeSlots = response.data.slot
-            timeSched = response.data.sched1
-
-            // console.log(timeSched)
-
+        onMounted(async () => {
+            await SlotStore.fetchSlots(date)
         })
-        .catch(error => {
-            console.error(error);
-        })
+        // await SlotStore.fetchSlots(date)
 
+        console.log(SlotStore)
 
-        // let res = await axios.post("check_slots/", JSONdata )
-
-        // timeSlots = res
-        // console.log(res.data)
-
-        
-        
+        // return false
     }
-
 
     const handleBack = () => {
 
@@ -115,8 +106,6 @@
     const handleDateTime = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
 
-        // console.log(date)
-
         const jsonDATA = {
                 date: date,
                 time: timeInput.value
@@ -129,8 +118,6 @@
         router.push('/individual/us/applicant-details')
         
     }
-
-    
     
 
     const schema = yup.object().shape({
@@ -184,7 +171,7 @@
                                     </div>
                                     
                                     <label class="form-check-label text-uppercase" ref="myTesting" for="flexRadioDefault1">
-                                        {{ timeSched }}
+                                        {{ timeSched }} {{ SlotStore.date }}
                                     </label>
 
                                     <div v-for="(row, index) in timeSlots" :key="index" class="col-12" >

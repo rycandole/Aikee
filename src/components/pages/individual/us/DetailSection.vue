@@ -237,21 +237,6 @@
     })
 
 
-    // const currentDate = new Date(); // current date
-
-    // const birthDate = document.getElementById('myDate').value;
-    // const day = birthDate.getDate()
-    // const month = birthDate.getMonth() + 1
-    // const year = birthDate.getFullYear()
-
-    // const date_to_compare = `${year}-${month}-${day}`
-
-
-    // const ageInMilliseconds = currentDate - date_to_compare;
-    // const ageInYears = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365); // converting milliseconds to years
-    // const age = Math.floor(ageInYears);
-
-
     // Get the current year
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
