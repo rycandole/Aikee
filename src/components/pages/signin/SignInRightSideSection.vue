@@ -61,7 +61,9 @@
             }
 
         } catch (err) {
-            errors.value = err.response.data.errors
+            // errors.value = err.response.data.errors
+
+            console.log(err)
         }
 
         return false;
