@@ -12,7 +12,7 @@
     import FormHeader from '@/components/global/FormHeader.vue'
     import InlineDatePicker from '@/components/global/InlineDatepicker.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
-    // import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
+    import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
     import Swal from '@/sweetalert2'
     // import Datepicker from '@/datepicker.js'
     import moment from 'moment'
@@ -171,7 +171,7 @@
                                 <div class="row">
                                     <div class="col-12 mt-3">
                                         <label class="text-capitalize text-dark">
-                                            Preferred Time {{ timeSched }} 
+                                            Preferred Time {{  timeSched }} 
                                         </label>
                                         <br/><hr/> 
                                     </div>
@@ -179,9 +179,7 @@
                                     <label class="form-check-label text-uppercase" ref="myTesting" for="flexRadioDefault1">
                                         
                                     </label>
-                                    {{ timeSlots }}
-                                    
-                                    <!-- <div v-for="(row, index) in timeSlots" :key="index" class="col-12" >
+                                    <div v-for="(row, index) in timeSlots" :key="index" class="col-12" >
                                            <RadioBtnSched 
                                                 :RadioLabel="row.time_slot"
                                                 :RadioLabelClass="`${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''"
@@ -194,7 +192,7 @@
                                                 v-model:input="timeInput"
                                                 :radioValue="row.time_slot"
                                             />
-                                    </div> -->
+                                    </div>
                                     <div v-if="error" class="col-12">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div>

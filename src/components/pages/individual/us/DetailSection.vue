@@ -33,6 +33,7 @@
     import years from '@/assets/js/arrays/year_list_array'
     import relationship from '@/assets/js/arrays/relationship_array'
     import states from '@/assets/js/arrays/states_array'
+    import vaccine from '@/assets/js/arrays/vaccine_list_array'
     // import YearList from '@/assets/js/arrays/year_list_array'
     
 
@@ -51,7 +52,9 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let vaccine_receive = ref(null)
+    let firstDose = ref(null)
     let isNotVaccinated = true;
+    let isVaccineReceived = true;
     let covidHidden = true;
     // const vaccine_receive = ref(null)
     
@@ -77,18 +80,20 @@
     function handleVaccine() {
         
 
-        isNotVaccinated = false
+        // isNotVaccinated = false
         let radioValue = vaccine_receive.value 
         
-        console.log(radioValue)
+        // console.log(radioValue)
 
-        // if(radioValue == 'yes') {
-        //     alert(radioValue)
-        //     isNotVaccinated = false
-        // } else if(radioValue == 'no') {
-        //     alert(radioValue)
-        //     isNotVaccinated = true
-        // }
+        if(radioValue == 'yes') {
+            alert(radioValue)
+            // isVaccineReceived = false
+            // isNotVaccinated = false
+        } else if(radioValue == 'no') {
+            alert(radioValue)
+            // isVaccineReceived = true
+            // isNotVaccinated = true
+        }
     }
 
     /**
@@ -381,14 +386,44 @@
                                 </li>
                             </ul>
                             <li>Have you received your COVID-19 vaccine?</li>
-                                <div class="row">
-                                    <div class="col-2">
+                                <div class="row mt-4">
+                                    <div class="col-lg-2 col-md-2 col-sm-12">
                                         <input class="form-check-input mt-2" name="vaccine_receive" @click="handleVaccine" type="radio" v-model="vaccine_receive" value="yes" /><label for="">Yes</label>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-lg-10 col-md-10 col-sm-12">
                                         <input class="form-check-input mt-2" @click="handleVaccine" type="radio" v-model="vaccine_receive" value="no" /><label for="">No</label>
                                     </div>
-                                    <div class="mb-3 col-12" :hidden="isNotVaccinated">
+                                    
+                                    <ol class="q" :hidden="isVaccineReceived">
+                                        <li class="col-lg-8 pr-5">
+                                            <RequiredSelectField 
+                                                label="Vaccine Brand Name"
+                                                FieldName="ci_visa_pref_category"
+                                                ErrorName="ci_visa_pref_category"
+                                                v-model:input="ci_visa_pref_category"
+                                                :items="vaccine"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5">
+                                            <DateField 
+                                                label="Vaccine Dose 1 Date Received"
+                                                placeholder="Date of birth"
+                                                color="red"
+                                                :disabledDate="disableBirthdayState.disabledDates"
+                                                v-model:input="firstDose"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5">
+                                            <DateField 
+                                                label="Vaccine Dose 2 Date Received"
+                                                placeholder="Date of birth"
+                                                color="red"
+                                                :disabledDate="disableBirthdayState.disabledDates"
+                                                v-model:input="firstDose"
+                                            />
+                                        </li>
+                                    </ol>
+                                    <div class="mb-3 mt-3 col-12" :hidden="isNotVaccinated">
                                         <CalloutDanger
                                             headerTitle="Note"
                                             description=" Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy."
@@ -1023,6 +1058,8 @@
 .cell.day.selected{
     background: green !important;
 }
+
+
 @media only screen and (min-width: 768px) {
     .wrapper_container {
         margin: 0;
