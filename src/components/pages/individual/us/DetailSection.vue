@@ -16,6 +16,7 @@
     import RequiredRadioButton from '@/components/global/RequiredRadioButton.vue'
     import SelectField from '@/components/global/SelectField.vue'
     import InputField from '@/components/global/InputField.vue'
+    import RadioButton from '@/components/global/RadioButtton.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
     import * as yup from 'yup';
@@ -52,10 +53,16 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let firstDose = ref(null)
-    let isVaccinated = true;
-    let isVaccineReceived = true;
-    let covidHidden = true;
-    const vaccine_receive = ref(null)
+    let secondDose = ref(null)
+    let covidHidden = true
+    let isVaccinated = true
+    let isVaccineReceived = true
+    let vaccine_receive = ref(null)
+    let vaccineHasTwo = true
+    let hideBooster1 = true
+    let hideBooster2 = true
+    let cv_brand_name = ref(null)
+    
     
 
     let date_of_birth = ref(null)
@@ -78,8 +85,38 @@
     
     const handleVaccine = () => {
         isVaccinated = false;
-        alert(vaccine_receive)
+        if(vaccine_receive.value === 'yes') {
+            isVaccineReceived = false
 
+        } else {
+            isVaccineReceived = true
+        }
+
+    }
+
+    const changeVaccine = () => {
+
+        if(cv_brand_name.value === 'Jansen') {
+            vaccineHasTwo = true
+            hideBooster1 = true
+            hideBooster2 = true
+        } else {
+            vaccineHasTwo= false
+        }
+    }
+
+    const showBooster1 = () => {
+        
+        if( cv_brand_name.value === 'Jansen' && firstDose.value !== null) {
+            hideBooster1 = false
+        } if(cv_brand_name.value !== 'Jansen' && firstDose.value !== null && secondDose.value !== null) {
+            hideBooster1 = false
+        } else {
+            hideBooster1 = true
+        }
+    }
+    const showBooster2 = () => {
+        hideBooster2 = false
     }
 
     /**
@@ -271,7 +308,7 @@
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration {{ isVaccinated }} </h1>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12">
             <SideNav 
@@ -289,24 +326,15 @@
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
                     <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
-                        <!-- <RequiredInputField 
-                            label="Date of Birth"
-                            FieldName="date_of_birth"
-                            ErrorName="date_of_birth"
-                            type="date"
-                            id="date_of_birth"
-                            v-model:input="date_of_birth"
-                        /> -->
                         <DateField 
                             label="Date of Birth"
                             placeholder="Date of birth"
                             color="red"
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="date_of_birth"
-                            :onChange="alertChange"
                             :isDisabled="radioDisabled"
+                            :onChange="alertChange"
                         />
-                        
                     </div>
                     <div class="mb-3 col-12" :hidden="covidHidden">
                         <FormHeader
@@ -316,7 +344,7 @@
                     <div class="mb-3 col-12" :hidden="covidHidden">
                         <ol>
                             <li>What category do you belong to?</li>
-                            <ul class="covid_categoty">
+                            <ul class="covid_category">
                                 <li class="mt-3"><h5>Priority Eligible A</h5></li>
                                 <li>
                                     <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
@@ -374,41 +402,98 @@
                             <li>Have you received your COVID-19 vaccine?</li>
                                 <div class="row mt-4">
                                     <div class="col-lg-2 col-md-2 col-sm-12">
-                                        <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model="vaccine_receive" value="yes" /><label for="">Yes</label>
+                                        <RadioButton 
+                                             RadioLabel="Yes"
+                                             RadioBtnName="vaccine_receive"
+                                             RadioValue="yes"
+                                             v-model:input="vaccine_receive"
+                                             :onChange="handleVaccine"
+                                        />
+                                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
                                     </div>
                                     <div class="col-lg-10 col-md-10 col-sm-12">
-                                        <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model="vaccine_receive" value="no" /><label for="">No</label>
+                                        <RadioButton 
+                                             RadioLabel="No"
+                                             RadioBtnName="vaccine_receive"
+                                             RadioValue="no"
+                                             v-model:input="vaccine_receive"
+                                             :onChange="handleVaccine"
+                                        />
+                                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                                     </div>
                                     
-                                    <ol class="q" :hidden="isVaccineReceived">
+                                    <ol type="I" :hidden="isVaccineReceived">
                                         <li class="col-lg-8 pr-5">
                                             <RequiredSelectField 
                                                 label="Vaccine Brand Name"
+                                                FieldName="cv_brand_name"
+                                                ErrorName="cv_brand_name"
+                                                v-model:input="cv_brand_name"
+                                                :items="vaccine"
+                                                @change="changeVaccine"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5">
+                                            <DateField 
+                                                label="Vaccine Dose 1 Date Received"
+                                                color="red"
+                                                :disabledDate="disableBirthdayState.disabledDates"
+                                                v-model:input="firstDose"
+                                                :onChange="showBooster1"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5" :hidden="vaccineHasTwo">
+                                            <DateField 
+                                                label="Vaccine Dose 2 Date Received"
+                                                color="red"
+                                                :disabledDate="disableBirthdayState.disabledDates"
+                                                v-model:input="secondDose"
+                                                :onChange="showBooster1"
+                                            />
+                                           
+                                        </li>
+                                        <li class="col-lg-8 pr-5" :hidden="hideBooster1">
+                                            <hr/>
+                                            <RequiredSelectField 
+                                                label="Vaccine Booster 1 Brand Name"
                                                 FieldName="ci_visa_pref_category"
                                                 ErrorName="ci_visa_pref_category"
                                                 v-model:input="ci_visa_pref_category"
                                                 :items="vaccine"
                                             />
                                         </li>
-                                        <li class="col-lg-8 pr-5">
+                                        <li class="col-lg-8 pr-5" :hidden="hideBooster1">
                                             <DateField 
-                                                label="Vaccine Dose 1 Date Received"
+                                                label="Vaccine Booster 1 Date Received"
                                                 placeholder="Date of birth"
                                                 color="red"
                                                 :disabledDate="disableBirthdayState.disabledDates"
                                                 v-model:input="firstDose"
+                                                :onChange="showBooster2"
                                             />
                                         </li>
-                                        <li class="col-lg-8 pr-5">
+                                        <li class="col-lg-8 pr-5" :hidden="hideBooster2">
+                                            <hr/>
+                                            <RequiredSelectField 
+                                                label="Vaccine Booster 2 Brand Name"
+                                                FieldName="ci_visa_pref_category"
+                                                ErrorName="ci_visa_pref_category"
+                                                v-model:input="ci_visa_pref_category"
+                                                :items="vaccine"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5" :hidden="hideBooster2">
                                             <DateField 
-                                                label="Vaccine Dose 2 Date Received"
+                                                label="Vaccine Booster 2 Date Received"
                                                 placeholder="Date of birth"
                                                 color="red"
                                                 :disabledDate="disableBirthdayState.disabledDates"
                                                 v-model:input="firstDose"
+                                                :onChange="showBooster1"
                                             />
                                         </li>
                                     </ol>
+                                   
                                     <div class="mb-3 mt-3 col-12" :hidden="isVaccinated">
                                         <CalloutDanger
                                             headerTitle="Note"
@@ -857,6 +942,7 @@
                             ErrorName="ad_prev_medical_exam_month"
                             v-model:input="ad_prev_medical_exam_month"
                             :items="months"
+                            @change="handleVaccine"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
@@ -1031,7 +1117,7 @@
     padding: 1rem;
 }
 
-.covid_categoty  li { 
+.covid_category  li { 
     list-style: none;
 }
 

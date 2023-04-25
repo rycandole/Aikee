@@ -1,11 +1,11 @@
 <script setup>
     // import axios from 'axios'
-    import { onMounted } from 'vue'
+    // import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
-    import {  useSlotStore  } from "@/store/slot-store"
-    import {  useSlot_US  } from "@/store/us-slot-store"
+    // import {  useSlotStore  } from "@/store/slot-store"
+    // import {  useSlot_US  } from "@/store/us-slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -20,8 +20,8 @@
     
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
-    const SlotStore = useSlotStore()
-    const US_SlotStore = useSlot_US()
+    // const SlotStore = useSlotStore()
+    // const US_SlotStore = useSlot_US()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -71,20 +71,20 @@
         }
 
         let res = JSON.stringify(JSONdata)
-        // console.log(res)
-        SlotStore.setStoreDetails(res)
-        await US_SlotStore.fetchSlotByDate_US(date)
+        console.log(res)
+        // SlotStore.setStoreDetails(res)
+        // await US_SlotStore.fetchSlotByDate_US(date)
 
          /**
          * For Fetching user data
          */
-        onMounted(async () => {
-            await US_SlotStore.fetchSlotByDate_US(date)
-        })
+        // onMounted(async () => {
+        //     await US_SlotStore.fetchSlotByDate_US(date)
+        // })
 
-        timeSlots = US_SlotStore.slots
+        // timeSlots = US_SlotStore.slots
 
-        timeSched = "testing";
+        timeSched = res;
 
 
     }
@@ -196,7 +196,6 @@
                                     <div v-if="error" class="col-12">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

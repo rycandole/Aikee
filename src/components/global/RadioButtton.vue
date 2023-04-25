@@ -1,0 +1,25 @@
+<script setup>
+import { defineProps, toRefs, defineEmits, computed } from 'vue'
+import { Field } from 'vee-validate'
+
+const emit = defineEmits(['update:input'])
+
+const props = defineProps({
+    input: String,
+    RadioBtnName: String,
+    RadioLabel: String,
+    RadioValue: String,
+    onChange: String
+})
+
+const { input, RadioLabel, RadioBtnName, RadioValue, onChange } = toRefs(props)
+
+const inputComputed = computed({
+    get: () => input.value,
+    set: (val) => emit('update:input', val)
+})
+
+</script>
+<template>
+   <Field class="form-check-input mt-2" @input="onChange" type="radio" :name="RadioBtnName" v-model="inputComputed" :value="RadioValue" /><label for="">{{ RadioLabel }}</label>
+</template>
