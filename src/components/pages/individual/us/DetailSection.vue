@@ -4,7 +4,7 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    import { useUSIndividualDetails } from '@/store/us-individual-details'
+    // import { useUSIndividualDetails } from '@/store/us-individual-details'
     import { Form } from 'vee-validate'
     import CalloutDanger from '@/components/global/CalloutDanger.vue'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -19,6 +19,7 @@
     import RadioButton from '@/components/global/RadioButtton.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
+    import { Field, ErrorMessage } from 'vee-validate'
     import * as yup from 'yup';
 
     // import { ucwords } from '../../../assets/js/string_functions'
@@ -40,7 +41,7 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
-    const USIndividualDetails = useUSIndividualDetails()
+    // const USIndividualDetails = useUSIndividualDetails()
 
     /**
      * For Fetching user data
@@ -62,6 +63,13 @@
     let hideBooster1 = true
     let hideBooster2 = true
     let cv_brand_name = ref(null)
+    let cv_booster1 = ref(null)
+    let first_dose_booster = ref(null)
+    let cv_booster2 = ref(null)
+    let second_dose_booster = ref(null)
+    let callout_message = ref(null)
+    let showVisaDate = true
+    let ad_has_been_issued_visa = ref(null)
     
     
 
@@ -87,16 +95,18 @@
         isVaccinated = false;
         if(vaccine_receive.value === 'yes') {
             isVaccineReceived = false
+            callout_message = 'Applicants who received COVID-19 vaccines, single-dose of Janssen / J&J or 2 doses of Pfizer-Biotech/ Moderna/ Astra Zeneca/ Sinopharm/ Sinovac) COVID -19 vaccines, should present proof of vaccination (i.e. vaccine record or certificate).'
 
         } else {
             isVaccineReceived = true
+            callout_message = 'Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.'
         }
 
     }
 
     const changeVaccine = () => {
 
-        if(cv_brand_name.value === 'Jansen') {
+        if(cv_brand_name.value == 'Janssen / J&J') {
             vaccineHasTwo = true
             hideBooster1 = true
             hideBooster2 = true
@@ -107,16 +117,33 @@
 
     const showBooster1 = () => {
         
-        if( cv_brand_name.value === 'Jansen' && firstDose.value !== null) {
-            hideBooster1 = false
-        } if(cv_brand_name.value !== 'Jansen' && firstDose.value !== null && secondDose.value !== null) {
-            hideBooster1 = false
-        } else {
+        if(cv_brand_name.value == "Janssen / J&J" && firstDose.value == null) {
             hideBooster1 = true
+        } else if(cv_brand_name.value == "Janssen / J&J" && firstDose.value != null) {
+            hideBooster1 = false
+        } else if(cv_brand_name.value != "Janssen / J&J" && firstDose.value == null || secondDose.value == null) {
+            hideBooster1 = true
+        }  else {
+            hideBooster1 = false
         }
     }
     const showBooster2 = () => {
-        hideBooster2 = false
+
+        if(cv_booster1.value == null || first_dose_booster.value == null) {
+            hideBooster2 = true
+        } else {
+            hideBooster2 = false
+        }
+       
+    }
+
+    const hasVisa = () => {
+
+        if(ad_has_been_issued_visa.value == 'yes') {
+            showVisaDate = false
+        } else {
+            showVisaDate = true
+        }
     }
 
     /**
@@ -124,66 +151,67 @@
      * 
      */
      const handleDetails = (values) => {
-    // let res = JSON.stringify(values)
+    let res = JSON.stringify(values)
 
-    const jsonDATA = {
-            json_date_of_birth: date_of_birth.value,
-            json_ci_nvc_number: values.ci_nvc_number,
-            json_ci_nvc_confirm: values.ci_nvc_confirm,
-            json_ci_visa_pref_category: values.ci_visa_pref_category,
-            json_ci_interview_date: values.ci_interview_date,
-            json_ci_interview_source: values.ci_interview_source,
-            json_ad_last_name: values.ad_last_name,
-            json_ad_first_name: values.ad_first_name,
-            json_ad_middle_name: values.ad_middle_name,
-            json_ad_gender: values.ad_gender,
-            json_ad_civil_status: values.ad_civil_status,
-            json_ad_nationality: values.ad_nationality,
-            json_ad_birthplace: values.ad_birthplace,
-            json_ad_birth_country: values.ad_birth_country,
-            json_ad_mother_last_name: values.ad_mother_last_name,
-            json_ad_mother_first_name: values.ad_mother_first_name,
-            json_ad_mother_middle_name: values.ad_mother_middle_name,
-            json_ad_address: values.ad_address,
-            json_ad_city: values.ad_city,
-            json_ad_province: values.ad_province,
-            json_ad_zip_code: values.ad_zip_code,
-            json_ad_overseas_country: values.ad_overseas_country,
-            json_ad_overseas_street_address: values.ad_overseas_street_address,
-            json_ad_overseas_city: values.ad_overseas_city,
-            json_ad_overseas_province: values.ad_overseas_province,
-            json_ad_overseas_zipcode: values.ad_overseas_zipcode,
-            json_ad_contact_numbers: values.ad_contact_numbers,
-            json_ad_present_residence: values.ad_present_residence,
-            json_ad_prior_residence: values.ad_prior_residence,
-            json_ad_passport_number: values.ad_passport_number,
-            json_ad_passport_issued_by: values.ad_passport_issued_by,
-            json_ad_passport_date: values.ad_passport_date,
-            json_ad_passport_expiration_date: values.ad_passport_expiration_date,
-            json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
-            json_ad_issuance_date: values.ad_issuance_date,
-            json_ad_expiration_date: values.ad_expiration_date,
-            json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
-            json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
-            json_ad_prev_xray_month: values.ad_prev_xray_month,
-            json_ad_prev_xray_year: values.ad_prev_xray_year,
-            json_petitioner_fullname: values.petitioner_fullname,
-            json_petitioner_is_alive: values.petitioner_is_alive,
-            json_petitioner_relationship: values.petitioner_relationship,
-            json_petitioner_us_street_addr: values.petitioner_us_street_addr,
-            json_petitioner_us_city_addr: values.petitioner_us_city_addr,
-            json_petitioner_us_state_addr: values.petitioner_us_state_addr,
-            json_petitioner_us_postal_code: values.petitioner_us_postal_code,
-            json_petitioner_contact_no: values.petitioner_contact_no,
-            json_petitioner_email_addr: values.petitioner_email_addr,
-            json_intended_port_of_entry: values.intended_port_of_entry
-    }
+    // const jsonDATA = {
+    //         json_date_of_birth: date_of_birth.value,
+    //         json_covid_vaccine_priority: values.covid_vaccine_priority,
+    //         json_ci_nvc_number: values.ci_nvc_number,
+    //         json_ci_nvc_confirm: values.ci_nvc_confirm,
+    //         json_ci_visa_pref_category: values.ci_visa_pref_category,
+    //         json_ci_interview_date: values.ci_interview_date,
+    //         json_ci_interview_source: values.ci_interview_source,
+    //         json_ad_last_name: values.ad_last_name,
+    //         json_ad_first_name: values.ad_first_name,
+    //         json_ad_middle_name: values.ad_middle_name,
+    //         json_ad_gender: values.ad_gender,
+    //         json_ad_civil_status: values.ad_civil_status,
+    //         json_ad_nationality: values.ad_nationality,
+    //         json_ad_birthplace: values.ad_birthplace,
+    //         json_ad_birth_country: values.ad_birth_country,
+    //         json_ad_mother_last_name: values.ad_mother_last_name,
+    //         json_ad_mother_first_name: values.ad_mother_first_name,
+    //         json_ad_mother_middle_name: values.ad_mother_middle_name,
+    //         json_ad_address: values.ad_address,
+    //         json_ad_city: values.ad_city,
+    //         json_ad_province: values.ad_province,
+    //         json_ad_zip_code: values.ad_zip_code,
+    //         json_ad_overseas_country: values.ad_overseas_country,
+    //         json_ad_overseas_street_address: values.ad_overseas_street_address,
+    //         json_ad_overseas_city: values.ad_overseas_city,
+    //         json_ad_overseas_province: values.ad_overseas_province,
+    //         json_ad_overseas_zipcode: values.ad_overseas_zipcode,
+    //         json_ad_contact_numbers: values.ad_contact_numbers,
+    //         json_ad_present_residence: values.ad_present_residence,
+    //         json_ad_prior_residence: values.ad_prior_residence,
+    //         json_ad_passport_number: values.ad_passport_number,
+    //         json_ad_passport_issued_by: values.ad_passport_issued_by,
+    //         json_ad_passport_date: values.ad_passport_date,
+    //         json_ad_passport_expiration_date: values.ad_passport_expiration_date,
+    //         json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
+    //         json_ad_issuance_date: values.ad_issuance_date,
+    //         json_ad_expiration_date: values.ad_expiration_date,
+    //         json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
+    //         json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
+    //         json_ad_prev_xray_month: values.ad_prev_xray_month,
+    //         json_ad_prev_xray_year: values.ad_prev_xray_year,
+    //         json_petitioner_fullname: values.petitioner_fullname,
+    //         json_petitioner_is_alive: values.petitioner_is_alive,
+    //         json_petitioner_relationship: values.petitioner_relationship,
+    //         json_petitioner_us_street_addr: values.petitioner_us_street_addr,
+    //         json_petitioner_us_city_addr: values.petitioner_us_city_addr,
+    //         json_petitioner_us_state_addr: values.petitioner_us_state_addr,
+    //         json_petitioner_us_postal_code: values.petitioner_us_postal_code,
+    //         json_petitioner_contact_no: values.petitioner_contact_no,
+    //         json_petitioner_email_addr: values.petitioner_email_addr,
+    //         json_intended_port_of_entry: values.intended_port_of_entry
+    // }
 
-    let res = JSON.stringify(jsonDATA)
-    // console.log(res)
+    // let res = JSON.stringify(jsonDATA)
+    console.log(res)
 
-    USIndividualDetails.setUSIndividualDetails(res)
-    router.push('/individual/us/preview')
+    // USIndividualDetails.setUSIndividualDetails(res)
+    // router.push('/individual/us/preview')
 
     
 
@@ -212,7 +240,11 @@
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
+
     const schema = yup.object().shape({
+        covid_vaccine_priority: yup.string().required('This field is required, please choose an option!'),
+        vaccine_receive: yup.string().required('This field is required, please choose an option!'),
+        cv_brand_name: yup.string().required('Please choose vaccine brand name'),
         ci_nvc_number: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         ci_nvc_confirm: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('ci_nvc_number')], 'NVC Case Number do not match'),
         ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
@@ -347,56 +379,59 @@
                             <ul class="covid_category">
                                 <li class="mt-3"><h5>Priority Eligible A</h5></li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">A1</b>. Workers in Frontline Health Services
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">A2</b>. All Senior Citizens
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">A3</b>. Persons with Comorbidities
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">A4</b>. Frontline personnel in essential sectors, including uniformed personnel
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">A5</b>. Indigent Population
                                 </li>
 
                                 <li class="mt-3"><h5>Priority Eligible B</h5></li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">B1</b>. Teachers, Social Workers
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">B2</b>. Other Government Workers
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">B3</b>. Other Essential Workers
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">B4</b>. Socio-demographic groups at significantly higher risk other than senior citizens and poor population based on the NHTS-PR
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">B5</b>. Overseas FIlipino Workers
                                 </li>
                                 <li>
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">B6</b>. Other Remaining Workforce
                                 </li>
 
                                 <li class="mt-3"><h5>Priority Eligible C</h5></li>
                                 <li class="mb-3">
-                                    <input class="form-check-input mt-2" type="radio" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
                                     <b class="text-secondary">C.</b> Rest of the Filipino population not otherwise included in the above groups
+                                </li>
+                                <li>
+                                    <ErrorMessage name="covid_vaccine_priority" class="text-danger"/>
                                 </li>
                             </ul>
                             <li>Have you received your COVID-19 vaccine?</li>
@@ -421,6 +456,9 @@
                                         />
                                         <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                                     </div>
+                                    <div class="col-lg-10 col-md-10 col-sm-12">
+                                        <ErrorMessage name="vaccine_receive" class="text-danger"/>
+                                    </div>
                                     
                                     <ol type="I" :hidden="isVaccineReceived">
                                         <li class="col-lg-8 pr-5">
@@ -437,6 +475,7 @@
                                             <DateField 
                                                 label="Vaccine Dose 1 Date Received"
                                                 color="red"
+                                                placeholder="Date Received"
                                                 :disabledDate="disableBirthdayState.disabledDates"
                                                 v-model:input="firstDose"
                                                 :onChange="showBooster1"
@@ -446,6 +485,7 @@
                                             <DateField 
                                                 label="Vaccine Dose 2 Date Received"
                                                 color="red"
+                                                placeholder="Date Received"
                                                 :disabledDate="disableBirthdayState.disabledDates"
                                                 v-model:input="secondDose"
                                                 :onChange="showBooster1"
@@ -454,41 +494,41 @@
                                         </li>
                                         <li class="col-lg-8 pr-5" :hidden="hideBooster1">
                                             <hr/>
-                                            <RequiredSelectField 
+                                            <SelectField 
                                                 label="Vaccine Booster 1 Brand Name"
-                                                FieldName="ci_visa_pref_category"
-                                                ErrorName="ci_visa_pref_category"
-                                                v-model:input="ci_visa_pref_category"
+                                                FieldName="cv_booster1"
+                                                ErrorName="cv_booster1"
+                                                v-model:input="cv_booster1"
                                                 :items="vaccine"
                                             />
                                         </li>
                                         <li class="col-lg-8 pr-5" :hidden="hideBooster1">
                                             <DateField 
                                                 label="Vaccine Booster 1 Date Received"
-                                                placeholder="Date of birth"
                                                 color="red"
+                                                placeholder="Date Received"
                                                 :disabledDate="disableBirthdayState.disabledDates"
-                                                v-model:input="firstDose"
+                                                v-model:input="first_dose_booster"
                                                 :onChange="showBooster2"
                                             />
                                         </li>
                                         <li class="col-lg-8 pr-5" :hidden="hideBooster2">
                                             <hr/>
-                                            <RequiredSelectField 
+                                            <SelectField 
                                                 label="Vaccine Booster 2 Brand Name"
-                                                FieldName="ci_visa_pref_category"
-                                                ErrorName="ci_visa_pref_category"
-                                                v-model:input="ci_visa_pref_category"
+                                                FieldName="cv_booster2"
+                                                ErrorName="cv_booster2"
+                                                v-model:input="cv_booster2"
                                                 :items="vaccine"
                                             />
                                         </li>
                                         <li class="col-lg-8 pr-5" :hidden="hideBooster2">
                                             <DateField 
                                                 label="Vaccine Booster 2 Date Received"
-                                                placeholder="Date of birth"
+                                                placeholder="Date Received"
                                                 color="red"
                                                 :disabledDate="disableBirthdayState.disabledDates"
-                                                v-model:input="firstDose"
+                                                v-model:input="second_dose_booster"
                                                 :onChange="showBooster1"
                                             />
                                         </li>
@@ -497,7 +537,7 @@
                                     <div class="mb-3 mt-3 col-12" :hidden="isVaccinated">
                                         <CalloutDanger
                                             headerTitle="Note"
-                                            description=" Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy."
+                                            :description="callout_message"
                                         />
                                     </div>
                                 </div>
@@ -889,8 +929,36 @@
                         />
                     </div>
                     <div class="mb-1 col-12">
+                       <div class="row">
+                            <div class="col-12">
+                                <label class="text-capitalize" >
+                                    Have you been issued a U.S. Tourist Visa? <b class="text-danger">*</b>
+                                </label>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-12 pl-4">
+                                <RadioButton 
+                                        RadioLabel="Yes"
+                                        RadioBtnName="ad_has_been_issued_visa"
+                                        RadioValue="yes"
+                                        v-model:input="ad_has_been_issued_visa"
+                                        :onChange="hasVisa"
+                                />
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
+                                <RadioButton 
+                                        RadioLabel="No"
+                                        RadioBtnName="ad_has_been_issued_visa"
+                                        RadioValue="no"
+                                        v-model:input="ad_has_been_issued_visa"
+                                        :onChange="hasVisa"
+                                />
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
+                                <ErrorMessage name="ad_has_been_issued_visa" class="text-danger"/>
+                            </div>
+                       </div>
 
-                        <RequiredRadioButton 
+                        <!-- <RequiredRadioButton 
                             label="Have you been issued a U.S. Tourist Visa?"
                             FieldName1="ad_has_been_issued_visa"
                             FieldName2="ad_has_been_issued_visa"
@@ -899,9 +967,9 @@
                             value1="Yes"
                             value2="No"
                             ErrorName="ad_has_been_issued_visa"
-                        />
+                        /> -->
                     </div>
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
                         <!-- <RequiredInputField 
                             label="Issuance Date"
                             type="date"
@@ -918,7 +986,7 @@
                             v-model:input="ad_issuance_date"
                         />
                     </div>
-                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
                         <!-- <RequiredInputField 
                             label="Expiration Date"
                             type="date"
