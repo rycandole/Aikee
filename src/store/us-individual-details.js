@@ -4,6 +4,14 @@ import { defineStore } from 'pinia'
 export const useUSIndividualDetails = defineStore('us-individual-details', {
   state: () => ({
     date_of_birth: null,
+    covid_vaccine_priority: null,
+    cv_brand_name: null,
+    firstDose: null,
+    secondDose: null,
+    cv_booster1: null,
+    first_doseBooster: null,
+    cv_booster2: null,
+    second_doseBooster: null,
     ci_nvc_number: null,
     ci_confirm_nvc: null,
     ci_visa_pref_category: null,
@@ -59,6 +67,14 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         let jsonPARSE = JSON.parse(res)
         
         this.$state.date_of_birth = jsonPARSE.json_date_of_birth
+        this.$state.covid_vaccine_priority = jsonPARSE.json_covid_vaccine_priority
+        this.$state.cv_brand_name = jsonPARSE.json_cv_brand_name
+        this.$state.firstDose = jsonPARSE.json_firstDose
+        this.$state.secondDose = jsonPARSE.json_secondDose
+        this.$state.cv_booster1 = jsonPARSE.json_cv_booster1
+        this.$state.first_doseBooster = jsonPARSE.json_first_doseBooster
+        this.$state.cv_booster2 = jsonPARSE.json_cv_booster2
+        this.$state.second_doseBooster = jsonPARSE.json_second_doseBooster
         this.$state.ci_nvc_number = jsonPARSE.json_ci_nvc_number
         this.$state.ci_confirm_nvc = jsonPARSE.json_ci_confirm_nvc
         this.$state.ci_visa_pref_category = jsonPARSE.json_ci_visa_pref_category
@@ -111,6 +127,14 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
     },
     clearUSIndividualDetails() {
         this.$state.date_of_birth = null,
+        this.$state.countrycovid_vaccine_priority = null,
+        this.$state.countrycv_brand_name = null,
+        this.$state.countryfirstDose = null,
+        this.$state.countrysecondDose = null,
+        this.$state.countrycv_booster1 = null,
+        this.$state.countryfirst_doseBooster = null,
+        this.$state.countrycv_booster2 = null,
+        this.$state.countrysecond_doseBooster = null,
         this.$state.ci_nvc_number = null,
         this.$state.ci_confirm_nvc = null,
         this.$state.ci_visa_pref_category = null,

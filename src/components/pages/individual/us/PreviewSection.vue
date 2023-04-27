@@ -39,6 +39,15 @@
 
     // Details Store 
     let detail_date_of_birth = moment(details.date_of_birth).format('MMMM DD, YYYY');
+    let detail_covid_vaccine_priority = details.covid_vaccine_priority;
+    let detail_cv_brand_name = details.cv_brand_name;
+    let detail_firstDose = moment(details.firstDose).format('MMMM DD, YYYY');
+    let detail_secondDose = moment(details.secondDose).format('MMMM DD, YYYY');
+    let detail_cv_booster1 = details.cv_booster1;
+    let detail_first_doseBooster = moment(details.first_doseBooster).format('MMMM DD, YYYY');
+    let detail_cv_booster2 = details.cv_booster2;
+    let detail_second_doseBooster = moment(details.second_doseBooster).format('MMMM DD, YYYY');
+
     let detail_ci_nvc_number = details.ci_nvc_number;
     let detail_ci_visa_pref_category = details.ci_visa_pref_category;
     let detail_ci_interview_date = moment(details.ci_interview_date).format('MMMM DD, YYYY');
@@ -159,6 +168,72 @@
                             v-bind:previewText="detail_date_of_birth"
                         />
                     </div>
+                    <div class="mb-3 col-12">
+                        <FormHeader
+                            headerText="COVID-19 VACCINE"
+                        />
+                    </div>
+                    <div class="mb-3 col-12">
+                        <PreviewText 
+                            previewLabel="What category do you belong to?"
+                            v-bind:previewText="detail_covid_vaccine_priority"
+                        />
+                    </div>
+                    <div class="mb-3 col-12">
+                        <PreviewText 
+                            previewLabel="What category do you belong to?"
+                        />
+                        <ol type="I">
+                            <li>
+                                <PreviewText 
+                                    previewLabel="Vaccine Brand Name"
+                                    v-bind:previewText="detail_cv_brand_name"
+                                />
+                            </li>
+                            <li>
+                                <PreviewText 
+                                    previewLabel="Vaccine Dose 1 Date Received "
+                                    v-bind:previewText="detail_firstDose"
+                                />
+                            </li>
+                            <li>
+                                <PreviewText 
+                                    previewLabel="Vaccine Dose 2 Date Received "
+                                    v-bind:previewText="detail_secondDose"
+                                />
+                            </li>
+                            <li>
+                                <hr/>
+                                <PreviewText 
+                                    previewLabel="Vaccine Booster 1 Brand Name"
+                                    v-bind:previewText="detail_cv_booster1"
+                                />
+                            </li>
+                            <li>
+                                <PreviewText 
+                                    previewLabel="Vaccine Booster 1 Date Received"
+                                    v-bind:previewText="detail_first_doseBooster"
+                                />
+                            </li>
+                            <li>
+                                <hr/>
+                                <PreviewText 
+                                    previewLabel="Vaccine Booster 2 Brand Name"
+                                    v-bind:previewText="detail_cv_booster2"
+                                />
+                            </li>
+                            <li>
+                                <PreviewText 
+                                    previewLabel="Vaccine Booster 2 Date Received"
+                                    v-bind:previewText="detail_second_doseBooster"
+                                />
+                            </li>
+                        </ol>
+                    </div>
+                  
+
+
+
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="Case Information"

@@ -8,7 +8,7 @@ const props = defineProps({
     labelClassName: String,
     label: String,
     requiredClass: String,
-    inputClass:String,
+    inputClass: String,
     input: String,
     onChange: String,
     placeholder: String,

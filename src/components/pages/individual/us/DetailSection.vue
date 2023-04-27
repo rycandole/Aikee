@@ -4,7 +4,7 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    // import { useUSIndividualDetails } from '@/store/us-individual-details'
+    import { useUSIndividualDetails } from '@/store/us-individual-details'
     import { Form } from 'vee-validate'
     import CalloutDanger from '@/components/global/CalloutDanger.vue'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -20,6 +20,7 @@
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
     import { Field, ErrorMessage } from 'vee-validate'
+    import moment from 'moment'
     import * as yup from 'yup';
 
     // import { ucwords } from '../../../assets/js/string_functions'
@@ -41,7 +42,7 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
-    // const USIndividualDetails = useUSIndividualDetails()
+    const USIndividualDetails = useUSIndividualDetails()
 
     /**
      * For Fetching user data
@@ -70,10 +71,14 @@
     let callout_message = ref(null)
     let showVisaDate = true
     let ad_has_been_issued_visa = ref(null)
-    
+    let date_of_birth = ref(null)
+    let ci_intervue_date = ref(null)
+    let add_passport_date = ref(null)
+    let add_passport_expiration_date = ref(null)
+    let add_issuance_date = ref(null)
+    let add_expiration_date = ref(null)
     
 
-    let date_of_birth = ref(null)
 
     const alertChange = () => {
         let birthDate = new Date(date_of_birth.value)
@@ -151,69 +156,83 @@
      * 
      */
      const handleDetails = (values) => {
-    let res = JSON.stringify(values)
+        let birthDate = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
+        let first_dose = moment(new Date(firstDose.value)).format('YYYY-MM-DD')
+        let second_dose = moment(new Date(secondDose.value)).format('YYYY-MM-DD')
+        let first_doseBooster = moment(new Date(first_dose_booster.value)).format('YYYY-MM-DD')
+        let second_doseBooster = moment(new Date(second_dose_booster.value)).format('YYYY-MM-DD')
+        let ci_interview_date = moment(new Date(ci_intervue_date.value)).format('YYYY-MM-DD')
+        let ad_passport_date = moment(new Date(add_passport_date.value)).format('YYYY-MM-DD')
+        let ad_passport_expiration_date = moment(new Date(add_passport_expiration_date.value)).format('YYYY-MM-DD')
+        let ad_issuance_date = moment(new Date(add_issuance_date.value)).format('YYYY-MM-DD')
+        let ad_expiration_date = moment(new Date(add_expiration_date.value)).format('YYYY-MM-DD')
+        
 
-    // const jsonDATA = {
-    //         json_date_of_birth: date_of_birth.value,
-    //         json_covid_vaccine_priority: values.covid_vaccine_priority,
-    //         json_ci_nvc_number: values.ci_nvc_number,
-    //         json_ci_nvc_confirm: values.ci_nvc_confirm,
-    //         json_ci_visa_pref_category: values.ci_visa_pref_category,
-    //         json_ci_interview_date: values.ci_interview_date,
-    //         json_ci_interview_source: values.ci_interview_source,
-    //         json_ad_last_name: values.ad_last_name,
-    //         json_ad_first_name: values.ad_first_name,
-    //         json_ad_middle_name: values.ad_middle_name,
-    //         json_ad_gender: values.ad_gender,
-    //         json_ad_civil_status: values.ad_civil_status,
-    //         json_ad_nationality: values.ad_nationality,
-    //         json_ad_birthplace: values.ad_birthplace,
-    //         json_ad_birth_country: values.ad_birth_country,
-    //         json_ad_mother_last_name: values.ad_mother_last_name,
-    //         json_ad_mother_first_name: values.ad_mother_first_name,
-    //         json_ad_mother_middle_name: values.ad_mother_middle_name,
-    //         json_ad_address: values.ad_address,
-    //         json_ad_city: values.ad_city,
-    //         json_ad_province: values.ad_province,
-    //         json_ad_zip_code: values.ad_zip_code,
-    //         json_ad_overseas_country: values.ad_overseas_country,
-    //         json_ad_overseas_street_address: values.ad_overseas_street_address,
-    //         json_ad_overseas_city: values.ad_overseas_city,
-    //         json_ad_overseas_province: values.ad_overseas_province,
-    //         json_ad_overseas_zipcode: values.ad_overseas_zipcode,
-    //         json_ad_contact_numbers: values.ad_contact_numbers,
-    //         json_ad_present_residence: values.ad_present_residence,
-    //         json_ad_prior_residence: values.ad_prior_residence,
-    //         json_ad_passport_number: values.ad_passport_number,
-    //         json_ad_passport_issued_by: values.ad_passport_issued_by,
-    //         json_ad_passport_date: values.ad_passport_date,
-    //         json_ad_passport_expiration_date: values.ad_passport_expiration_date,
-    //         json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
-    //         json_ad_issuance_date: values.ad_issuance_date,
-    //         json_ad_expiration_date: values.ad_expiration_date,
-    //         json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
-    //         json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
-    //         json_ad_prev_xray_month: values.ad_prev_xray_month,
-    //         json_ad_prev_xray_year: values.ad_prev_xray_year,
-    //         json_petitioner_fullname: values.petitioner_fullname,
-    //         json_petitioner_is_alive: values.petitioner_is_alive,
-    //         json_petitioner_relationship: values.petitioner_relationship,
-    //         json_petitioner_us_street_addr: values.petitioner_us_street_addr,
-    //         json_petitioner_us_city_addr: values.petitioner_us_city_addr,
-    //         json_petitioner_us_state_addr: values.petitioner_us_state_addr,
-    //         json_petitioner_us_postal_code: values.petitioner_us_postal_code,
-    //         json_petitioner_contact_no: values.petitioner_contact_no,
-    //         json_petitioner_email_addr: values.petitioner_email_addr,
-    //         json_intended_port_of_entry: values.intended_port_of_entry
-    // }
+    const jsonDATA = {
+            json_date_of_birth: birthDate,
+            json_covid_vaccine_priority: values.covid_vaccine_priority,
+            json_cv_brand_name: values.cv_brand_name,
+            json_firstDose: first_dose,
+            json_secondDose: second_dose,
+            json_cv_booster1: values.cv_booster1,
+            json_first_doseBooster: first_doseBooster,
+            json_cv_booster2: values.cv_booster2,
+            json_second_doseBooster: second_doseBooster,
+            json_ci_nvc_number: values.ci_nvc_number,
+            json_ci_nvc_confirm: values.ci_nvc_confirm,
+            json_ci_visa_pref_category: values.ci_visa_pref_category,
+            json_ci_interview_date: ci_interview_date,
+            json_ci_interview_source: values.ci_interview_source,
+            json_ad_last_name: values.ad_last_name,
+            json_ad_first_name: values.ad_first_name,
+            json_ad_middle_name: values.ad_middle_name,
+            json_ad_gender: values.ad_gender,
+            json_ad_civil_status: values.ad_civil_status,
+            json_ad_nationality: values.ad_nationality,
+            json_ad_birthplace: values.ad_birthplace,
+            json_ad_birth_country: values.ad_birth_country,
+            json_ad_mother_last_name: values.ad_mother_last_name,
+            json_ad_mother_first_name: values.ad_mother_first_name,
+            json_ad_mother_middle_name: values.ad_mother_middle_name,
+            json_ad_address: values.ad_address,
+            json_ad_city: values.ad_city,
+            json_ad_province: values.ad_province,
+            json_ad_zip_code: values.ad_zip_code,
+            json_ad_overseas_country: values.ad_overseas_country,
+            json_ad_overseas_street_address: values.ad_overseas_street_address,
+            json_ad_overseas_city: values.ad_overseas_city,
+            json_ad_overseas_province: values.ad_overseas_province,
+            json_ad_overseas_zipcode: values.ad_overseas_zipcode,
+            json_ad_contact_numbers: values.ad_contact_numbers,
+            json_ad_present_residence: values.ad_present_residence,
+            json_ad_prior_residence: values.ad_prior_residence,
+            json_ad_passport_number: values.ad_passport_number,
+            json_ad_passport_issued_by: values.ad_passport_issued_by,
+            json_ad_passport_date: ad_passport_date,
+            json_ad_passport_expiration_date: ad_passport_expiration_date,
+            json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
+            json_ad_issuance_date: ad_issuance_date,
+            json_ad_expiration_date: ad_expiration_date,
+            json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
+            json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
+            json_ad_prev_xray_month: values.ad_prev_xray_month,
+            json_ad_prev_xray_year: values.ad_prev_xray_year,
+            json_petitioner_fullname: values.petitioner_fullname,
+            json_petitioner_is_alive: values.petitioner_is_alive,
+            json_petitioner_relationship: values.petitioner_relationship,
+            json_petitioner_us_street_addr: values.petitioner_us_street_addr,
+            json_petitioner_us_city_addr: values.petitioner_us_city_addr,
+            json_petitioner_us_state_addr: values.petitioner_us_state_addr,
+            json_petitioner_us_postal_code: values.petitioner_us_postal_code,
+            json_petitioner_contact_no: values.petitioner_contact_no,
+            json_petitioner_email_addr: values.petitioner_email_addr,
+            json_intended_port_of_entry: values.intended_port_of_entry
+    }
 
-    // let res = JSON.stringify(jsonDATA)
-    console.log(res)
+    let res = JSON.stringify(jsonDATA)
 
-    // USIndividualDetails.setUSIndividualDetails(res)
-    // router.push('/individual/us/preview')
-
-    
+    USIndividualDetails.setUSIndividualDetails(res)
+    router.push('/individual/us/preview')
 
     }
 
@@ -240,14 +259,15 @@
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
-
     const schema = yup.object().shape({
         covid_vaccine_priority: yup.string().required('This field is required, please choose an option!'),
         vaccine_receive: yup.string().required('This field is required, please choose an option!'),
         cv_brand_name: yup.string().required('Please choose vaccine brand name'),
+        cv_booster1: yup.string(),
+        cv_booster2: yup.string(),
         ci_nvc_number: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         ci_nvc_confirm: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('ci_nvc_number')], 'NVC Case Number do not match'),
-        ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
+        // ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
         ci_visa_pref_category: yup.string().required('Interview date is required!'),
         ci_interview_source: yup.string().nullable(),
         ad_last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
@@ -275,11 +295,11 @@
         ad_prior_residence: yup.string().required('Prior residence is required!'),
         ad_passport_number: yup.string().required('Passport number is required!').min(9, "Passport number must be at least 9 characters").max(10, "Passport number must be at most 10 characters"),
         ad_passport_issued_by: yup.string().required('Passport issued by is required!'),
-        ad_passport_date: yup.date().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
-        ad_passport_expiration_date: yup.date().required('Passport expiration date is required!').min(yup.ref('ad_passport_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_passport_date')], 'Expiration date must not be equal to the issuance date'),
+        // ad_passport_date: yup.date().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
+        // ad_passport_expiration_date: yup.date().required('Passport expiration date is required!').min(yup.ref('ad_passport_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_passport_date')], 'Expiration date must not be equal to the issuance date'),
         ad_has_been_issued_visa: yup.string().required("This field is required, please choose an option"),
-        ad_issuance_date: yup.date().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
-        ad_expiration_date: yup.date().required("Expiration date is required").min(yup.ref('ad_issuance_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_issuance_date')], 'Expiration date must not be equal to the issuance date'),
+        // ad_issuance_date: yup.date().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
+        // ad_expiration_date: yup.date().required("Expiration date is required").min(yup.ref('ad_issuance_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_issuance_date')], 'Expiration date must not be equal to the issuance date'),
         ad_prev_medical_exam_month: yup.string().nullable().optional(),
         ad_prev_medical_exam_year: yup.string().nullable().optional(),
         ad_prev_xray_month: yup.string().nullable().optional(),
@@ -351,7 +371,8 @@
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-        <Form @submit="handleDetails" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
+        
+        <Form @submit="handleDetails" :validation-schema="schema"  class="col-lg-9 col-md-12 col-sm-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="col-12">
@@ -505,7 +526,8 @@
                                         <li class="col-lg-8 pr-5" :hidden="hideBooster1">
                                             <DateField 
                                                 label="Vaccine Booster 1 Date Received"
-                                                color="red"
+                                                requiredClass="d-none"
+                                                color="gray"
                                                 placeholder="Date Received"
                                                 :disabledDate="disableBirthdayState.disabledDates"
                                                 v-model:input="first_dose_booster"
@@ -525,8 +547,9 @@
                                         <li class="col-lg-8 pr-5" :hidden="hideBooster2">
                                             <DateField 
                                                 label="Vaccine Booster 2 Date Received"
+                                                requiredClass="d-none"
                                                 placeholder="Date Received"
-                                                color="red"
+                                                color="gray"
                                                 :disabledDate="disableBirthdayState.disabledDates"
                                                 v-model:input="second_dose_booster"
                                                 :onChange="showBooster1"
@@ -593,7 +616,7 @@
                             requiredClass="d-none"
                             placeholder="Interview Date"
                             color="gray"
-                            v-model:input="ci_interview_date"
+                            v-model:input="ci_intervue_date"
                             smallLabel="If none, leave blank'"
                         />
                     </div>
@@ -904,7 +927,7 @@
                             placeholder="Interview Date"
                             color="red"
                             :disabledDate="disableFutureDateState.disabledDates"
-                            v-model:input="ad_passport_date"
+                            v-model:input="add_passport_date"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
@@ -920,7 +943,7 @@
                             placeholder="Expiration Date"
                             color="red"
                             :disabledDate="disablePastDateState.disabledDates"
-                            v-model:input="ad_passport_expiration_date"
+                            v-model:input="add_passport_expiration_date"
                         />
                     </div>
                     <div class="mb-3 mt-5 col-12">
@@ -983,7 +1006,7 @@
                             placeholder="Issuance Date"
                             color="gray"
                             :disabledDate="disableFutureDateState.disabledDates"
-                            v-model:input="ad_issuance_date"
+                            v-model:input="add_issuance_date"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
@@ -999,7 +1022,7 @@
                             requiredClass="d-none"
                             placeholder="Expiration Date"
                             color="gray"
-                            v-model:input="ad_expiration_date"
+                            v-model:input="add_expiration_date"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
