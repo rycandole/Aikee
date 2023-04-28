@@ -1,15 +1,20 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
+    import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
+    import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import SubFormHeader from '@/components/global/SubFormHeader.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import PreviewText from '@/components/global/PreviewText.vue'
+    import CheckBox from '@/components/global/CheckBox.vue'
     import Swal from '@/sweetalert2'
     import moment from 'moment'
+    import * as yup from 'yup'
+
     
     // import { ucwords } from '../../../assets/js/string_functions'
 
@@ -28,10 +33,35 @@
     })
 
 
+    let errors = ref([])
     let email = profileStore.email
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let textSuccess2 = "text-success"
+    let isButtonDisabled = true
+    let checkbox1 = ref(null)
+    let checkbox2 = ref(null)
+    const priorityCategory = new Map([
+                                        ['A1', 'Workers in Frontline Health Services'],
+                                        ['A2', 'All Senior Citizens'],
+                                        ['A3', 'Persons with Comorbidities'],
+                                        ['A4', 'Frontline personnel in essential sectors, including uniformed personnel'],
+                                        ['A5', 'Indigent Population'],
+                                        ['B1', 'Teachers, Social Workers'],
+                                        ['B2', 'Other Government Workers'],
+                                        ['B3', 'ther Essential Workers'],
+                                        ['B4', 'Socio-demographic groups at significantly higher risk other than senior citizens and poor population based on the NHTS-PR'],
+                                        ['B5', 'Overseas FIlipino Workers'],
+                                        ['B6', 'Other Remaining Workforce']
+                                    ])
+                
+    const wasChecked = () => {
+        if(checkbox1.value == 'checked' && checkbox2.value == 'checked') {
+            isButtonDisabled = false
+        } else {
+            isButtonDisabled = true
+        }
+    }
 
     // Schedule Store
     let sched_date = moment(schedule.date).format('MMMM DD, YYYY');
@@ -39,7 +69,7 @@
 
     // Details Store 
     let detail_date_of_birth = moment(details.date_of_birth).format('MMMM DD, YYYY');
-    let detail_covid_vaccine_priority = details.covid_vaccine_priority;
+    let detail_covid_vaccine_priority = details.covid_vaccine_priority+". "+priorityCategory.get(details.covid_vaccine_priority);
     let detail_cv_brand_name = details.cv_brand_name;
     let detail_firstDose = moment(details.firstDose).format('MMMM DD, YYYY');
     let detail_secondDose = moment(details.secondDose).format('MMMM DD, YYYY');
@@ -47,7 +77,6 @@
     let detail_first_doseBooster = moment(details.first_doseBooster).format('MMMM DD, YYYY');
     let detail_cv_booster2 = details.cv_booster2;
     let detail_second_doseBooster = moment(details.second_doseBooster).format('MMMM DD, YYYY');
-
     let detail_ci_nvc_number = details.ci_nvc_number;
     let detail_ci_visa_pref_category = details.ci_visa_pref_category;
     let detail_ci_interview_date = moment(details.ci_interview_date).format('MMMM DD, YYYY');
@@ -98,6 +127,97 @@
     let detail_intended_port_of_entry = details.intended_port_of_entry;
 
 
+    const schema = yup.object({
+        checkbox1: yup.string().required('Please check the check box to proceed'),
+        checkbox2: yup.string().required('Please check the check box to proceed'),
+    })
+
+    const handleDetails = async () => {
+
+        errors.value = []
+
+        const JSONdata = {
+            json_sched_date: sched_date,
+            json_sched_time: sched_time,
+            json_detail_date_of_birth: detail_date_of_birth,
+            json_detail_covid_vaccine_priority: detail_covid_vaccine_priority,
+            json_detail_cv_brand_name: detail_cv_brand_name,
+            json_detail_firstDose: detail_firstDose,
+            json_detail_secondDose: detail_secondDose,
+            json_detail_cv_booster1: detail_cv_booster1,
+            json_detail_first_doseBooster: detail_first_doseBooster,
+            json_detail_cv_booster2: detail_cv_booster2,
+            json_detail_second_doseBooster: detail_second_doseBooster,
+            json_detail_ci_nvc_number: detail_ci_nvc_number,
+            json_detail_ci_visa_pref_category: detail_ci_visa_pref_category,
+            json_detail_ci_interview_date: detail_ci_interview_date,
+            json_detail_ci_interview_source: detail_ci_interview_source,
+            json_detail_ad_last_name: detail_ad_last_name,
+            json_detail_ad_first_name: detail_ad_first_name,
+            json_detail_ad_middle_name: detail_ad_middle_name,
+            json_detail_ad_gender: detail_ad_gender,
+            json_detail_ad_civil_status: detail_ad_civil_status,
+            json_detail_ad_nationality: detail_ad_nationality,
+            json_detail_ad_birthplace: detail_ad_birthplace,
+            json_detail_ad_birth_country: detail_ad_birth_country,
+            json_detail_ad_mother_last_name: detail_ad_mother_last_name,
+            json_detail_ad_mother_first_name: detail_ad_mother_first_name,
+            json_detail_ad_mother_middle_name: detail_ad_mother_middle_name,
+            json_detail_ad_address: detail_ad_address,
+            json_detail_ad_city: detail_ad_city,
+            json_detail_ad_province: detail_ad_province,
+            json_detail_ad_zip_code: detail_ad_zip_code,
+            json_detail_ad_overseas_country: detail_ad_overseas_country,
+            json_detail_ad_overseas_street_address: detail_ad_overseas_street_address,
+            json_detail_ad_overseas_city: detail_ad_overseas_city,
+            json_detail_ad_overseas_province: detail_ad_overseas_province,
+            json_detail_ad_overseas_zipcode: detail_ad_overseas_zipcode,
+            json_detail_ad_contact_numbers: detail_ad_contact_numbers,
+            json_detail_ad_present_residence: detail_ad_present_residence,
+            json_detail_ad_prior_residence: detail_ad_prior_residence,
+            json_detail_ad_passport_number: detail_ad_passport_number,
+            json_detail_ad_passport_issued_by: detail_ad_passport_issued_by,
+            json_detail_ad_passport_date: detail_ad_passport_date,
+            json_detail_ad_passport_expiration_date: detail_ad_passport_expiration_date,
+            json_detail_ad_has_been_issued_visa: detail_ad_has_been_issued_visa,
+            json_detail_ad_issuance_date: detail_ad_issuance_date,
+            json_detail_ad_expiration_date: detail_ad_expiration_date,
+            json_detail_ad_prev_medical_exam_month: detail_ad_prev_medical_exam_month,
+            json_detail_ad_prev_medical_exam_year: detail_ad_prev_medical_exam_year,
+            json_detail_ad_prev_xray_month: detail_ad_prev_xray_month,
+            json_detail_ad_prev_xray_year: detail_ad_prev_xray_year,
+            json_detail_petitioner_fullname: detail_petitioner_fullname,
+            json_detail_petitioner_is_alive: detail_petitioner_is_alive,
+            json_detail_petitioner_relationship: detail_petitioner_relationship,
+            json_detail_petitioner_us_street_addr: detail_petitioner_us_street_addr,
+            json_detail_petitioner_us_city_addr: detail_petitioner_us_city_addr,
+            json_detail_petitioner_us_state_addr: detail_petitioner_us_state_addr,
+            json_detail_petitioner_us_postal_code: detail_petitioner_us_postal_code,
+            json_detail_petitioner_contact_no: detail_petitioner_contact_no,
+            json_detail_petitioner_email_addr: detail_petitioner_email_addr,
+            json_detail_intended_port_of_entry: detail_intended_port_of_entry,
+        }
+
+        try {
+
+            let res = await axios.post('us-individual/', JSONdata)
+
+            if (res.data.status_code === 200 ) {
+                alert('success '+ res.data.response +' - '+ res.data.sched)
+            } else {
+                alert('reject '+res.data.response)
+            }
+
+            // console.log(res)
+
+        } catch (err) {
+            // errors.value = err.response.data.errors
+            console.log(err)
+        }
+
+    }
+
+
 
     const handleBack = () => {
 
@@ -138,7 +258,7 @@
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-        <form @submit.prevent="handleDetails" class="col-lg-9 col-md-12 col-sm-12 mb-3">
+        <Form @submit.prevent="handleDetails" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="mb-3 col-12">
@@ -611,13 +731,29 @@
                     <div class="col-12 mt-4 border-top container-fluid p-3 irc_div">
                         <h6 class="text-bold mt-3">Information Registration Consent:</h6>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <ErrorMessage name="checkbox1" class="text-danger"/>
+                        </div>
+                        <div class="form-check">
+                            <CheckBox 
+                                    CheckBoxName="checkbox1"
+                                    CheckBoxValue="checked"
+                                    v-model:input="checkbox1"
+                                    :onChange="wasChecked"
+                            />
                             <label class="form-check-label" for="flexCheckDefault">
                                 I certify that the information provided in my registration is true and correct to the best of my knowledge and understand that any dishonest answer may cause delay in the process of my medical examination.
                             </label>
                         </div>
+                        <div class="form-check">
+                            <ErrorMessage name="checkbox2" class="text-danger"/>
+                        </div>
                         <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                            <CheckBox 
+                                    CheckBoxName="checkbox2"
+                                    CheckBoxValue="checked"
+                                    v-model:input="checkbox2"
+                                    :onChange="wasChecked"
+                            />
                             <label class="form-check-label" for="flexCheckChecked">
                                 I certify that I understand the purpose of the online registration.
                             </label>
@@ -645,9 +781,10 @@
                     btnType="submit"
                     className="btn btn-primary w-25"
                     btnText="Submit"
+                    v-bind:disabled="isButtonDisabled"
                 />
             </div>
-        </form>
+        </Form>
         <!-- ============================================================== -->
                             <!-- End of Main Container -->
         <!-- ============================================================== -->
