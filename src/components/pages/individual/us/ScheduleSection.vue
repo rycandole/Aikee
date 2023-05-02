@@ -1,11 +1,11 @@
 <script setup>
     // import axios from 'axios'
-    // import { onMounted } from 'vue'
+    import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
     // import {  useSlotStore  } from "@/store/slot-store"
-    // import {  useSlot_US  } from "@/store/us-slot-store"
+    import {  useSlot_US  } from "@/store/us-slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -21,7 +21,7 @@
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
     // const SlotStore = useSlotStore()
-    // const US_SlotStore = useSlot_US()
+    const US_SlotStore = useSlot_US()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -61,32 +61,22 @@
 
     // let textSuccess = "text-success"
 
-
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
 
-        const JSONdata = {
-            country : 'US',
-            prefDate : date
-        }
-
-        let res = JSON.stringify(JSONdata)
-        console.log(res)
-        // SlotStore.setStoreDetails(res)
-        // await US_SlotStore.fetchSlotByDate_US(date)
-
+        await US_SlotStore.fetchSlotByDate_US(date)
          /**
          * For Fetching user data
          */
-        // onMounted(async () => {
-        //     await US_SlotStore.fetchSlotByDate_US(date)
-        // })
+         onMounted(async () => {
+            await US_SlotStore.fetchSlotByDate_US(date)
+            
+        })
+       
+        // console.log(US_SlotStore.slots)
+        timeSlots = US_SlotStore.slots
 
-        // timeSlots = US_SlotStore.slots
-
-        timeSched = res;
-
-
+        timeSched = timeSlots
     }
     
 
@@ -122,12 +112,14 @@
 
         USIndividualSched.setUSIndividualSched(res)
 
-        router.push('/individual/us/applicant-details')
+        alert(timeInput.value)
+
+        // router.push('/individual/us/applicant-details')
         
     }
 
     const schema = yup.object().shape({
-        timeInput: yup.string().required('Selecting time is required!')
+        timeInput: yup.string()
     })
 
     
@@ -171,7 +163,7 @@
                                 <div class="row">
                                     <div class="col-12 mt-3">
                                         <label class="text-capitalize text-dark">
-                                            Preferred Time {{  timeSched }} 
+                                            Preferred Time
                                         </label>
                                         <br/><hr/> 
                                     </div>
@@ -179,9 +171,9 @@
                                     <label class="form-check-label text-uppercase" ref="myTesting" for="flexRadioDefault1">
                                         
                                     </label>
-                                    <div v-for="(row, index) in timeSlots" :key="index" class="col-12" >
-                                           <RadioBtnSched 
-                                                :RadioLabel="row.time_slot"
+                                    <div v-for="(row, index) in timeSched" :key="index" class="col-12" >
+                                           <RadioBtnSched
+                                                :RadioLabel="`${row.time_slot}`"
                                                 :RadioLabelClass="`${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''"
                                                 :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
                                                 :Slots="`${row.slot_limit}` > 0 ?`${row.slot_limit} slot` : ''" 
@@ -190,10 +182,10 @@
                                                 :radioBtnStatus="`${row.slot_limit}` > 0 ? false : true"
                                                 RadioBtnName="timeInput"
                                                 v-model:input="timeInput"
-                                                :radioValue="row.time_slot"
+                                                :radioValue="row.timeSched"
                                             />
                                     </div>
-                                    <div v-if="error" class="col-12">
+                                    <div class="col-12">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div>
                                 </div>

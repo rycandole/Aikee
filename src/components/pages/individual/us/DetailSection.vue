@@ -52,6 +52,7 @@
     })
 
     let email = profileStore.email
+    let user_id = profileStore.id
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let firstDose = ref(null)
@@ -169,6 +170,7 @@
         
 
     const jsonDATA = {
+            json_user_id: user_id,
             json_date_of_birth: birthDate,
             json_covid_vaccine_priority: values.covid_vaccine_priority,
             json_cv_brand_name: values.cv_brand_name,
@@ -204,6 +206,7 @@
             json_ad_overseas_province: values.ad_overseas_province,
             json_ad_overseas_zipcode: values.ad_overseas_zipcode,
             json_ad_contact_numbers: values.ad_contact_numbers,
+            json_ad_email_add: email,
             json_ad_present_residence: values.ad_present_residence,
             json_ad_prior_residence: values.ad_prior_residence,
             json_ad_passport_number: values.ad_passport_number,

@@ -10,7 +10,6 @@ export const useSlot_US = defineStore('us-slot-store', {
         let res = await axios.get('check_slots/' + prefDate)
 
         this.$state.slots = res.data.slot
-       
     },
     clearSlot_US() {
         this.$state.slots = []

@@ -5,6 +5,7 @@ export const useSlotStore = defineStore('slots', {
   state: () => ({
     country: null,
     prefDate: null,
+    prefTime: null,
   }),
   actions: {
     setStoreDetails(res) {
@@ -12,10 +13,12 @@ export const useSlotStore = defineStore('slots', {
 
         this.$state.country = jsonPARSE.country
         this.$state.prefDate = jsonPARSE.prefDate
+        this.$state.prefTime = jsonPARSE.prefTime
     },
     clearSlot() {
       this.$state.country = null
       this.$state.prefDate = null
+      this.$state.prefTime = null
     }
   },
   persist: true
