@@ -28,13 +28,14 @@
     /**
      * For Fetching user data
      */
-     onMounted(async () => {
+    onMounted(async () => {
         await profileStore.fetchProfileById(router.params.id)
     })
 
 
     let errors = ref([])
     let email = profileStore.email
+    let user_id = profileStore.id
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let textSuccess2 = "text-success"
@@ -64,22 +65,22 @@
     }
 
     // Schedule Store
-    let sched_date = moment(schedule.date).format('MMMM DD, YYYY');
+    let sched_date = moment(schedule.date).format('YYYY-MM-DD');
     let sched_time = schedule.time;
 
     // Details Store 
-    let detail_date_of_birth = moment(details.date_of_birth).format('MMMM DD, YYYY');
+    let detail_date_of_birth = moment(details.date_of_birth).format('YYYY-MM-DD');
     let detail_covid_vaccine_priority = details.covid_vaccine_priority+". "+priorityCategory.get(details.covid_vaccine_priority);
     let detail_cv_brand_name = details.cv_brand_name;
-    let detail_firstDose = moment(details.firstDose).format('MMMM DD, YYYY');
-    let detail_secondDose = moment(details.secondDose).format('MMMM DD, YYYY');
+    let detail_firstDose = moment(details.firstDose).format('YYYY-MM-DD');
+    let detail_secondDose = moment(details.secondDose).format('YYYY-MM-DD');
     let detail_cv_booster1 = details.cv_booster1;
-    let detail_first_doseBooster = moment(details.first_doseBooster).format('MMMM DD, YYYY');
+    let detail_first_doseBooster = moment(details.first_doseBooster).format('YYYY-MM-DD');
     let detail_cv_booster2 = details.cv_booster2;
-    let detail_second_doseBooster = moment(details.second_doseBooster).format('MMMM DD, YYYY');
+    let detail_second_doseBooster = moment(details.second_doseBooster).format('YYYY-MM-DD');
     let detail_ci_nvc_number = details.ci_nvc_number;
     let detail_ci_visa_pref_category = details.ci_visa_pref_category;
-    let detail_ci_interview_date = moment(details.ci_interview_date).format('MMMM DD, YYYY');
+    let detail_ci_interview_date = moment(details.ci_interview_date).format('YYYY-MM-DD');
     let detail_ci_interview_source = details.ci_interview_source;
     let detail_ad_last_name = details.ad_last_name;
     let detail_ad_first_name = details.ad_first_name;
@@ -106,11 +107,11 @@
     let detail_ad_prior_residence = details.ad_prior_residence;
     let detail_ad_passport_number = details.ad_passport_number;
     let detail_ad_passport_issued_by = details.ad_passport_issued_by;
-    let detail_ad_passport_date = moment(details.ad_passport_date).format('MMMM DD, YYYY');
-    let detail_ad_passport_expiration_date = moment(details.ad_passport_expiration_date).format('MMMM DD, YYYY');
+    let detail_ad_passport_date = moment(details.ad_passport_date).format('YYYY-MM-DD');
+    let detail_ad_passport_expiration_date = moment(details.ad_passport_expiration_date).format('YYYY-MM-DD');
     let detail_ad_has_been_issued_visa = details.ad_has_been_issued_visa;
-    let detail_ad_issuance_date = moment(details.ad_issuance_date).format('MMMM DD, YYYY');
-    let detail_ad_expiration_date = moment(details.ad_expiration_date).format('MMMM DD, YYYY');
+    let detail_ad_issuance_date = moment(details.ad_issuance_date).format('YYYY-MM-DD');
+    let detail_ad_expiration_date = moment(details.ad_expiration_date).format('YYYY-MM-DD');
     let detail_ad_prev_medical_exam_month = details.ad_prev_medical_exam_month;
     let detail_ad_prev_medical_exam_year = details.ad_prev_medical_exam_year;
     let detail_ad_prev_xray_month = details.ad_prev_xray_month;
@@ -137,10 +138,11 @@
         errors.value = []
 
         const JSONdata = {
-            json_sched_date: sched_date,
+            json_sched_date: moment(schedule.date).format('YYYY-MM-DD'),
             json_sched_time: sched_time,
+            json_user_id: user_id,
             json_detail_date_of_birth: detail_date_of_birth,
-            json_detail_covid_vaccine_priority: detail_covid_vaccine_priority,
+            json_detail_covid_vaccine_priority: details.covid_vaccine_priority,
             json_detail_cv_brand_name: detail_cv_brand_name,
             json_detail_firstDose: detail_firstDose,
             json_detail_secondDose: detail_secondDose,
@@ -203,16 +205,17 @@
             let res = await axios.post('us-individual/', JSONdata)
 
             if (res.data.status_code === 200 ) {
-                alert('success '+ res.data.response +' - '+ res.data.sched)
+                alert('Success '+ res.data.response +' - '+ res.data.sched)
             } else {
-                alert('reject '+res.data.response)
+                // alert('Reject, '+ res.data.error +', '+ res.data.message)
+                console.log('Reject, '+ res.data.error +', '+ res.data.message)
             }
 
             // console.log(res)
 
         } catch (err) {
-            // errors.value = err.response.data.errors
-            console.log(err)
+            errors.value = err.response.data.errors
+            console.log(errors.value)
         }
 
     }

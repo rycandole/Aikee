@@ -173,6 +173,7 @@
             json_user_id: user_id,
             json_date_of_birth: birthDate,
             json_covid_vaccine_priority: values.covid_vaccine_priority,
+            json_covid_vaccine_received: values.vaccine_received,
             json_cv_brand_name: values.cv_brand_name,
             json_firstDose: first_dose,
             json_secondDose: second_dose,
