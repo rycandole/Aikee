@@ -70,7 +70,6 @@
          */
          onMounted(async () => {
             await US_SlotStore.fetchSlotByDate_US(date)
-            
         })
        
         // console.log(US_SlotStore.slots)
@@ -112,14 +111,14 @@
 
         USIndividualSched.setUSIndividualSched(res)
 
-        alert(timeInput.value)
+        // alert(timeInput.value)
 
-        // router.push('/individual/us/applicant-details')
+        router.push('/individual/us/applicant-details')
         
     }
 
     const schema = yup.object().shape({
-        timeInput: yup.string()
+        timeInput: yup.string().required('Please select preferred time')
     })
 
     
@@ -167,11 +166,7 @@
                                         </label>
                                         <br/><hr/> 
                                     </div>
-                                    
-                                    <label class="form-check-label text-uppercase" ref="myTesting" for="flexRadioDefault1">
-                                        
-                                    </label>
-                                    <div v-for="(row, index) in timeSched" :key="index" class="col-12" >
+                                    <div v-for="(row, index) in timeSched" :key="index" class="col-12">
                                            <RadioBtnSched
                                                 :RadioLabel="`${row.time_slot}`"
                                                 :RadioLabelClass="`${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''"
@@ -182,9 +177,10 @@
                                                 :radioBtnStatus="`${row.slot_limit}` > 0 ? false : true"
                                                 RadioBtnName="timeInput"
                                                 v-model:input="timeInput"
-                                                :radioValue="row.timeSched"
+                                                :RadioValue="`${row.time_slot}`"
                                             />
                                     </div>
+                                    
                                     <div class="col-12">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div>
