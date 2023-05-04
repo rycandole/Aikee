@@ -147,8 +147,10 @@
 
         if(ad_has_been_issued_visa.value == 'yes') {
             showVisaDate = false
+            ad_has_been_issued_visa.value = 1
         } else {
             showVisaDate = true
+            ad_has_been_issued_visa.value = 0
         }
     }
 
