@@ -104,7 +104,7 @@
 
         const jsonDATA = {
                 date: date,
-                time: timeInput.value
+                time: timeInput.value || ''
         }
 
         let res = JSON.stringify(jsonDATA)
@@ -118,7 +118,7 @@
     }
 
     const schema = yup.object().shape({
-        timeInput: yup.string().required('Please select preferred time')
+        timeInput: yup.string().nullable()
     })
 
     
