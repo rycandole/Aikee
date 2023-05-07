@@ -266,7 +266,12 @@
     // const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
     const schema = yup.object().shape({
-        covid_vaccine_priority: yup.string().required('This field is required, please choose an option!'),
+        // covidHidden: yup.string().boolean(),
+        covid_vaccine_priority: yup.string().when('covidHidden', {
+            is: false,
+            then: yup.required('This field is required, please choose an option!'),
+            otherwise: yup.nullable()
+        }),
         // vaccine_receive: yup.string().required('This field is required, please choose an option!'),
         // cv_brand_name: yup.string().required('Please choose vaccine brand name'),
         // cv_booster1: yup.string(),
@@ -384,6 +389,7 @@
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
                     <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
+                      
                         <DateField 
                             label="Date of Birth"
                             placeholder="Date of birth"
