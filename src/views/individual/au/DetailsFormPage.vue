@@ -2,7 +2,7 @@
     import TopNavBar from '@/components/includes/TopNavBar.vue'
     import SideNavigation from '@/components/includes/SideNavigation.vue'
     import FooterSection from '@/components/includes/FooterSection.vue'
-    import FormSection from '@/components/pages/individual/au/FormSection.vue'
+    import DetailSection from '@/components/pages/individual/au/DetailSection.vue'
 
     
 
@@ -21,10 +21,11 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item "><router-link to="/individual" class="text-secondary">Individual</router-link></li>
-                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">Australia</router-link></li>
+                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">USA</router-link></li>
+                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">Details</router-link></li>
                             </ol>
                         </div><!-- /.col -->
-                            <FormSection />
+                            <DetailSection />
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             <!-- /.content -->
