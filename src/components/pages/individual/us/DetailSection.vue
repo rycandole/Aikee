@@ -388,8 +388,8 @@
                     <div class="col-12">
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
-                    <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
-                      
+                    <!-- <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
+                        <Field type="text" name="covidHidden" v-bind:value="covidHidden" />
                         <DateField 
                             label="Date of Birth"
                             placeholder="Date of birth"
@@ -399,7 +399,7 @@
                             :isDisabled="radioDisabled"
                             :onChange="alertChange"
                         />
-                    </div>
+                    </div> -->
                     <div class="mb-3 col-12" :hidden="covidHidden">
                         <FormHeader
                             headerText="COVID-19 VACCINE"

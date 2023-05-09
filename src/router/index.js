@@ -25,7 +25,17 @@ import US_Ind_SchedulePage from '@/views/individual/us/SchedulePage.vue'
 import US_Ind_DetailsForm from '@/views/individual/us/DetailsFormPage.vue'
 import US_Ind_Preview from '@/views/individual/us/PreviewPage.vue'
 // ------ US END PAGE ---------- //
+
+// ------- AU PAGE ------- //
+import AU_Ind_ApplicationFormPage from '@/views/individual/au/ApplicationFormPage.vue'
+import AU_Ind_SchedulePage from '@/views/individual/au/SchedulePage.vue'
+import AU_Ind_DetailsForm from '@/views/individual/au/DetailsFormPage.vue'
+import AU_Ind_Preview from '@/views/individual/au/PreviewPage.vue'
+// ------ AU END PAGE ---------- //
+
 // ================ INDIVIDUAL END PAGE ========================= //
+
+US_Ind_ApplicationFormPage
 
 // --- Family Child ------- //
 import FamilyCountryPage from '@/views/family/CountryPage.vue'
@@ -103,6 +113,26 @@ const routes = [
         path: '/individual/us/preview',
         name: 'us_preview',
         component: US_Ind_Preview,
+      },
+      {
+        path: '/individual/au',
+        name: 'au_form',
+        component: AU_Ind_ApplicationFormPage,
+      },
+      {
+        path: '/individual/au/schedule',
+        name: 'au_date',
+        component: AU_Ind_SchedulePage,
+      },
+      {
+        path: '/individual/au/applicant-details',
+        name: 'au_details',
+        component: AU_Ind_DetailsForm,
+      },
+      {
+        path: '/individual/au/preview',
+        name: 'au_preview',
+        component: AU_Ind_Preview,
       },
     ]
   },

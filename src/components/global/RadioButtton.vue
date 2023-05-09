@@ -8,11 +8,12 @@ const props = defineProps({
     input: String,
     RadioBtnName: String,
     RadioLabel: String,
+    RadioLabelClass: String,
     RadioValue: String,
     onChange: String
 })
 
-const { input, RadioLabel, RadioBtnName, RadioValue, onChange } = toRefs(props)
+const { input, RadioLabel, RadioLabelClass, RadioBtnName, RadioValue, onChange } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
@@ -21,5 +22,5 @@ const inputComputed = computed({
 
 </script>
 <template>
-   <Field class="form-check-input mt-2" @input="onChange" type="radio" :name="RadioBtnName" v-model="inputComputed" :value="RadioValue" /><label for="">{{ RadioLabel }}</label>
+   <Field class="form-check-input mt-2" @input="onChange" type="radio" :name="RadioBtnName" v-model="inputComputed" :value="RadioValue" /><label for="" :class="RadioLabelClass">{{ RadioLabel }}</label>
 </template>
