@@ -57,14 +57,16 @@
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
+    let country = ref(null)
     // let sevenAM = ref(null)
 
     // let textSuccess = "text-success"
 
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
+        country = 'US'
 
-        await US_SlotStore.fetchSlotByDate_US(date)
+        await US_SlotStore.fetchSlotByDate_US(date, country)
          /**
          * For Fetching user data
          */

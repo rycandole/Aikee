@@ -6,8 +6,8 @@ export const useSlot_US = defineStore('us-slot-store', {
     slots: []
   }),
   actions: {
-    async fetchSlotByDate_US(prefDate) {
-        let res = await axios.get('check_slots/' + prefDate)
+    async fetchSlotByDate_US(prefDate, country) {
+        let res = await axios.get('check_slots/'+ prefDate +'/'+ country)
 
         this.$state.slots = res.data.slot
     },

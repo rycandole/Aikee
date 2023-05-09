@@ -3,9 +3,9 @@
     import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
-    import { useUSIndividualSched } from '@/store/us-individual-sched'
+    import { useAUIndividualSched } from '@/store/au-individual-sched'
     // import {  useSlotStore  } from "@/store/slot-store"
-    import {  useSlot_US  } from "@/store/us-slot-store"
+    import {  useSlot_AU  } from "@/store/au-slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -20,9 +20,8 @@
     import * as yup from 'yup';
     
     const router = useRouter()
-    const USIndividualSched = useUSIndividualSched()
-    // const SlotStore = useSlotStore()
-    const US_SlotStore = useSlot_US()
+    const AUIndividualSched = useAUIndividualSched()
+    const AU_SlotStore = useSlot_AU()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -31,6 +30,11 @@
 
     let currentDate = currentYear+", "+currentMonth+", "+currentDay;
     const clinics = ['Ermita, Manila', 'Bonifacio Global City'] 
+    const clinic_code = new Map([
+                                ['', null],
+                                ['Ermita, Manila', 'MNL'],
+                                ['Bonifacio Global City', 'BGC']
+                                ])
 
     // GET THE DATE 3 MONTHS FROM NOW
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
@@ -54,32 +58,66 @@
         }
     }
     // ============ End of Inline Date =============== //
- 
+    
+    let clinic_location = ref(null)
     let dateInput = ref(null)
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
+    let country = ref(null)
+    let branch = ref(null)
+    let hasBranch = true
     // let sevenAM = ref(null)
 
     // let textSuccess = "text-success"
+    const schema = yup.object().shape({
+        clinic_location: yup.string().required('Please select preferred clinic'),
+        timeInput: yup.string().required('Please select preferred time')
+    })
+
+    const handleBranch = () => {
+        // branch = clinic_code.get(clinic_location.value)
+
+        if(clinic_code.get(clinic_location.value) === null) {
+            hasBranch = true
+        } else {
+            hasBranch = false
+        }
+        
+    }
 
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
+        country = 'AU'
+        branch = clinic_code.get(clinic_location.value)
 
-        await US_SlotStore.fetchSlotByDate_US(date)
-         /**
-         * For Fetching user data
-         */
-         onMounted(async () => {
-            await US_SlotStore.fetchSlotByDate_US(date)
+        await AU_SlotStore.fetchSlotByDate_AU(date, country, branch)
+
+        onMounted(async () => {
+            await AU_SlotStore.fetchSlotByDate_AU(date)
         })
        
-        // console.log(US_SlotStore.slots)
-        timeSlots = US_SlotStore.slots
+        timeSlots = AU_SlotStore.slots
 
         timeSched = timeSlots
     }
-    
+
+    const handleDateTime = async () => {
+        const date = moment(dateInput.value).format('YYYY-MM-DD')
+
+        const jsonDATA = {
+                clinic: clinic_location.value,
+                date: date,
+                time: timeInput.value
+        }
+
+        let res = JSON.stringify(jsonDATA)
+
+        AUIndividualSched.setAUIndividualSched(res)
+
+        router.push('/individual/au/applicant-details')
+        
+    }
 
     const handleBack = () => {
 
@@ -92,7 +130,7 @@
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
 
-                router.push('/individual/us')
+                router.push('/individual/au')
 
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
@@ -100,28 +138,7 @@
         })
     }
 
-
-    const handleDateTime = async () => {
-        const date = moment(dateInput.value).format('YYYY-MM-DD')
-
-        const jsonDATA = {
-                date: date,
-                time: timeInput.value
-        }
-
-        let res = JSON.stringify(jsonDATA)
-
-        USIndividualSched.setUSIndividualSched(res)
-
-        // alert(timeInput.value)
-
-        router.push('/individual/au/applicant-details')
-        
-    }
-
-    const schema = yup.object().shape({
-        timeInput: yup.string().required('Please select preferred time')
-    })
+    
 
     
     
@@ -152,17 +169,18 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 mb-5">
                                 <RequiredSelectField 
                                     label="Please select your preferred St. Luke's Extension Clinic location"
                                     FieldName="clinic_location"
                                     ErrorName="clinic_location"
-                                    className="mb-5 w-75"
+                                    className="w-75"
                                     v-model:input="clinic_location"
                                     :items="clinics"
+                                    :onChange="handleBranch"
                                 />
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
                                 <InlineDatePicker 
                                     label="Preferred Date"
                                     :disabledDate="disableState.disabledDates"
@@ -170,7 +188,7 @@
                                     :onChange="handleSlots"
                                 />
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
                                 <div class="row">
                                     <div class="col-12 mt-3">
                                         <label class="text-capitalize text-dark">

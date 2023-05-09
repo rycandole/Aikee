@@ -30,8 +30,9 @@ import US_Ind_Preview from '@/views/individual/us/PreviewPage.vue'
 import AU_Ind_ApplicationFormPage from '@/views/individual/au/ApplicationFormPage.vue'
 import AU_Ind_SchedulePage from '@/views/individual/au/SchedulePage.vue'
 import AU_Ind_DetailsForm from '@/views/individual/au/DetailsFormPage.vue'
+import AU_Ind_Preview from '@/views/individual/au/PreviewPage.vue'
+// ------ AU END PAGE ---------- //
 
-// ------ US END PAGE ---------- //
 // ================ INDIVIDUAL END PAGE ========================= //
 
 US_Ind_ApplicationFormPage
@@ -127,6 +128,11 @@ const routes = [
         path: '/individual/au/applicant-details',
         name: 'au_details',
         component: AU_Ind_DetailsForm,
+      },
+      {
+        path: '/individual/au/preview',
+        name: 'au_preview',
+        component: AU_Ind_Preview,
       },
     ]
   },
