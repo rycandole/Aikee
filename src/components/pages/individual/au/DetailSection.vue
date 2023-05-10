@@ -20,7 +20,7 @@
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
     import { ErrorMessage } from 'vee-validate'
-    // import moment from 'moment'
+    import moment from 'moment'
     import * as yup from 'yup';
 
     // import { ucwords } from '../../../assets/js/string_functions'
@@ -87,6 +87,7 @@
     let intentToWork = ref(null)
     let intentToStay = ref(null)
     let agencyField = ref(null)
+    
 
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
@@ -139,6 +140,9 @@
      * 
      */
      const handleDetails = (values) => {
+
+        let dob = moment(new Date(dateOfBirth.value)).format('YYYY-MM-DD')
+        let isuedDate = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
       
         const jsonDATA = {
                 json_user_id: user_id,
@@ -149,14 +153,14 @@
                 json_trn: values.trn,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
-                json_issuedDate: values.issuedDate,
+                json_issuedDate: isuedDate,
                 json_ad_lastName:values.ad_lastName,
                 json_ad_firstName:values.ad_firstName,
                 json_ad_middleName:values.ad_middleName,
                 json_mother_lastName:values.mother_lastName,
                 json_mother_firstName:values.mother_firstName,
                 json_mother_middleName:values.mother_middleName,
-                json_dateOfBirth: values.dateOfBirth,
+                json_dateOfBirth: dob,
                 json_gender: values.gender,
                 json_civil_status: values.civil_status,
                 json_nationality: values.nationality,
@@ -174,8 +178,10 @@
         }
 
         let res = JSON.stringify(jsonDATA)
+       
 
         AUIndividualDetails.setAUIndividualDetails(res)
+
         router.push('/individual/au/preview')
 
     }
@@ -196,7 +202,6 @@
         disabledDates: {
             to: new Date(years[99], currentMonth, currentDay),
             from: new Date(currentDate),
-
         }
     }
 
