@@ -5,7 +5,7 @@
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     // import { useAUIndividualSched } from '@/store/au-individual-sched.js'
-    import { useAUIndividualDetails } from '@/store/au-individual-details.js'
+    // import { useAUIndividualDetails } from '@/store/au-individual-details.js'
     // import { useSlot_AU } from '@/store/au-slot-store.js'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -24,9 +24,10 @@
     const router = useRouter()
     const profileStore = useProfileStore()
     // const AU_IndividualSched = useAUIndividualSched()
-    const AU_IndividualDetails = useAUIndividualDetails()
+    // const AU_IndividualDetails = useAUIndividualDetails()
     // const AU_SlotStore = useSlot_AU()
     const schedule = JSON.parse(localStorage.getItem('au-individual-sched'))
+    const details = JSON.parse(localStorage.getItem('au-individual-details'))
 
 
 
@@ -63,35 +64,35 @@
     let sched_time = schedule.time;
     let sched_branch = schedule.clinic
 
-    let subclass = AU_IndividualDetails.subClassKind
-    let wasFirstMedExam = AU_IndividualDetails.wasFirstMedicalExam
-    let prevClinic = AU_IndividualDetails.prevClinicName
-    let prevSubClass = AU_IndividualDetails.trn
-    let trn = AU_IndividualDetails.wasFirstMedicalExam
-    let passportNumber = AU_IndividualDetails.passportNumber
-    let issuedCountry = AU_IndividualDetails.issuedCountry
-    let issuedDate = moment(AU_IndividualDetails.issuedDate).format('LL');
-    let lastName = AU_IndividualDetails.ad_lastName
-    let firstName = AU_IndividualDetails.ad_firstName
-    let middleName = AU_IndividualDetails.ad_middleName
-    let motherLastName = AU_IndividualDetails.mother_lastName
-    let motherFirstName = AU_IndividualDetails.mother_firstName
-    let motherdiddleName = AU_IndividualDetails.mother_middleName
-    let birthDate = moment(AU_IndividualDetails.dateOfBirth).format('LL');
-    let gender = AU_IndividualDetails.gender
-    let civilStatus = AU_IndividualDetails.civil_status
-    let nationality = AU_IndividualDetails.nationality
-    let contactNo = AU_IndividualDetails.contactNumber
-    let emailAdd = AU_IndividualDetails.email
-    let street = AU_IndividualDetails.street
-    let barangay = AU_IndividualDetails.barangay
-    let city = AU_IndividualDetails.city
-    let province = AU_IndividualDetails.provinceField
-    let postalCode = AU_IndividualDetails.postalCode
-    let intentStayDuration = AU_IndividualDetails.intendedStay
-    let intentToWork = AU_IndividualDetails.intentToWork
-    let intentToStay = AU_IndividualDetails.intentToStay
-    let agency = AU_IndividualDetails.agencyField
+    let subclass = details.subClassKind
+    let wasFirstMedExam = details.wasFirstMedicalExam
+    let prevClinic = details.prevClinicName
+    let prevSubClass = details.prevSubClass
+    let trn = details.trn
+    let passportNumber = details.passportNumber
+    let issuedCountry = details.issuedCountry
+    let issuedDate = moment(details.issuedDate).format('LL');
+    let lastName = details.ad_lastName
+    let firstName = details.ad_firstName
+    let middleName = details.ad_middleName
+    let motherLastName = details.mother_lastName
+    let motherFirstName = details.mother_firstName
+    let motherdiddleName = details.mother_middleName
+    let birthDate = moment(details.dateOfBirth).format('LL');
+    let gender = details.gender
+    let civilStatus = details.civil_status
+    let nationality = details.nationality
+    let contactNo = details.contactNumber
+    let emailAdd = details.email
+    let street = details.street
+    let barangay = details.barangay
+    let city = details.city
+    let province = details.provinceField
+    let postalCode = details.postalCode
+    let intentStayDuration = details.intendedStay
+    let intentToWork = details.intentToWork
+    let intentToStay = details.intentToStay
+    let agency = details.agencyField
 
     const schema = yup.object({
         checkbox1: yup.string().required('Please check the check box to proceed'),

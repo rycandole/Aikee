@@ -110,7 +110,7 @@
         wasFirstMedicalExam: yup.string().required('This field is required, please choose an option!'),
         prevClinicName: yup.string().nullable(),
         prevSubClass: yup.string().nullable(),
-        trn: yup.string().required('This field is required!').min(10, 'Minimium of 10 Chararacters').max(25, 'Maximum of 25 characters'),
+        trn: yup.string().required('This field is required!').min(4, 'Minimium of 4 Chararacters').max(19, 'Maximum of 20 characters'),
         passportNumber: yup.string().required('This field is required!').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         issuedCountry: yup.string().required('This field is required, please choose an option!'),
         ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
