@@ -16,15 +16,15 @@
                     btnText="U.S.A."
                 />
                 <CountryLinkBtn 
+                    btnUrl="/individual/ca"
+                    btnText="Canada"
+                />
+                <CountryLinkBtn 
                     btnUrl="/individual/au"
                     btnText="Australia"
                 />
                 <CountryLinkBtn 
-                    btnUrl=""
-                    btnText="Canada"
-                />
-                <CountryLinkBtn 
-                    btnUrl=""
+                    btnUrl="/individual/nz"
                     btnText="New Zealand"
                 />
                 <CountryLinkBtn 

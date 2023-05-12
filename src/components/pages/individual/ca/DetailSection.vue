@@ -18,6 +18,7 @@
     import InputField from '@/components/global/InputField.vue'
     import RadioButton from '@/components/global/RadioButtton.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
+    import CheckBox from '@/components/global/CheckBox.vue'
     import Swal from '@/sweetalert2'
     import { ErrorMessage } from 'vee-validate'
     import moment from 'moment'
@@ -40,7 +41,6 @@
     import subClass from '@/assets/js/arrays/subclass_array'
     // import YearList from '@/assets/js/arrays/year_list_array'
     import province from '@/assets/js/arrays/province_array'
-    import agency from '@/assets/js/arrays/agency_array'
     
 
     const router = useRouter()
@@ -59,11 +59,9 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let hasMedicalExam = true
-    let subClassKind = ref(null)
     let wasFirstMedicalExam = ref(null)
     let prevClinicName = ref(null)
     let prevSubClass = ref(null)
-    let trn = ref(null)
     let passportNumber = ref(null)
     let issuedCountry = ref(null)
     let issuedDate = ref(null)
@@ -83,10 +81,10 @@
     let city = ref(null)
     let provinceField = ref(null)
     let postalCode = ref(null)
-    let intendedStay = ref(null)
-    let intentToWork = ref(null)
-    let intentToStay = ref(null)
-    let agencyField = ref(null)
+
+
+    let checkbox1 = ref(null)
+    let isButtonDisabled = true
     
 
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
@@ -103,6 +101,14 @@
             hasMedicalExam = false
         }
 
+    }
+
+    const hasAlias = () => {
+        if(checkbox1.value == 'checked') {
+            isButtonDisabled = false
+        } else {
+            isButtonDisabled = true
+        }
     }
 
     const schema = yup.object().shape({
@@ -230,7 +236,7 @@
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Australia Online Registration {{ isVaccinated }} </h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >Canada Online Registration {{ isVaccinated }} </h1>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12">
             <SideNav 
@@ -247,15 +253,6 @@
                 <div class="card-body row">
                     <div class="col-12">
                         <span class="text-danger">Fields with asterisks(*) are required</span>
-                    </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
-                        <RequiredSelectField 
-                            label="What subclass did you apply for?"
-                            FieldName="subClassKind"
-                            ErrorName="subClassKind"
-                            v-model:input="subClassKind"
-                            :items="subClass"
-                        />
                     </div>
                     <div class="mb-3 col-12">
                         <strong>Is this your first medical examination for the Australian Embassy?</strong>
@@ -309,15 +306,7 @@
 
                         </div>
                     </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12">
-                        <RequiredInputField 
-                            label="TRN/HAP I.D."
-                            type="text"
-                            FieldName="trn"
-                            ErrorName="trn"
-                            v-model:input="trn"
-                        />
-                    </div>
+
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <InputField 
                             label="Passport Number"
@@ -384,8 +373,49 @@
                                         v-model:input="ad_middleName"
                                     />
                                 </div>
+                                <div class="col-lg-8 col-md-12 col-sm-12 pl-4 pt-3">
+                                    <CheckBox 
+                                            CheckBoxName="checkbox1"
+                                            CheckBoxValue="checked"
+                                            v-model:input="checkbox1"
+                                            :onChange="hasAlias"
+                                    />
+                                    <label class="form-check-label font-weight-bold " for="flexCheckDefault">
+                                        ALIAS/A.K.A. Name on Passport, if any.
+                                    </label>
+                                </div>
+                                <div class="col-lg-8 col-md-12 col-sm-12" :hidden="isButtonDisabled">
+                                    <InputField 
+                                        label="Last Name"
+                                        labelClassName="font-weight-normal"
+                                        type="text"
+                                        FieldName="ad_lastName"
+                                        ErrorName="ad_lastName"
+                                        v-model:input="ad_lastName"
+                                    />
+                                </div>
+                                <div class="col-lg-8 col-md-12 col-sm-12" :hidden="isButtonDisabled">
+                                    <InputField 
+                                        label="First Name"
+                                        labelClassName="font-weight-normal"
+                                        type="text"
+                                        FieldName="ad_firstName"
+                                        ErrorName="ad_firstName"
+                                        v-model:input="ad_firstName"
+                                    />
+                                </div>
+                                <div class="col-lg-8 col-md-12 col-sm-12" :hidden="isButtonDisabled">
+                                    <InputField 
+                                        label="Middle Name"
+                                        labelClassName="font-weight-normal"
+                                        type="text"
+                                        FieldName="ad_middleName"
+                                        ErrorName="ad_middleName"
+                                        v-model:input="ad_middleName"
+                                    />
+                                </div>
                             </div>
-                            <li>Mother's Maiden Name (Last Name, First Name, Middle Name)</li>
+                            <li class="mt-3">Mother's Maiden Name (Last Name, First Name, Middle Name)</li>
                             <div class="row pb-3">
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <InputField 
@@ -550,103 +580,36 @@
                                 </div>
                                 
                             </div>
-                            <li>How long do you intend staying in Australia? </li>
-                            <div class="row">
-                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
-                                    <RadioButton 
-                                            RadioLabel="Temporary"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intendedStay"
-                                            RadioValue="Y"
-                                            v-model:input="intendedStay"
-                                            :onChange="handlePrevMedicalExam"
-                                    />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
-                                </div>
-                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
-                                    <RadioButton 
-                                            RadioLabel="Permanent"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intendedStay"
-                                            RadioValue="N"
-                                            v-model:input="intendedStay"
-                                            :onChange="handlePrevMedicalExam"
-                                    />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
-                                </div>
-                            </div>
-                            <div class="col-12 pb-3">
-                                <ErrorMessage name="intendedStay" class="text-danger"/>
-                            </div>
-                            <li>Do you intent to work as, or study to be, a doctor, dentist, nurse or paramedic during your stay in Australia? </li>
-                            <div class="row">
-                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
-                                    <RadioButton 
-                                            RadioLabel="Yes"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intentToWork"
-                                            RadioValue="Y"
-                                            v-model:input="intentToWork"
-                                            :onChange="handlePrevMedicalExam"
-                                    />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
-                                </div>
-                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
-                                    <RadioButton 
-                                            RadioLabel="No"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intentToWork"
-                                            RadioValue="N"
-                                            v-model:input="intentToWork"
-                                            :onChange="handlePrevMedicalExam"
-                                    />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
-                                </div>
-                            </div>
-                            <div class="col-12 pb-3">
-                                <ErrorMessage name="intentToWork" class="text-danger"/>
-                            </div>
-                            <li>For Temporary Visa: Do you intend to apply for a permanent stay in Australia within the next 6-12 months?</li>
-                            <div class="row pb-3">
-                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
-                                    <RadioButton 
-                                            RadioLabel="Yes"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intentToStay"
-                                            RadioValue="Y"
-                                            v-model:input="intentToStay"
-                                            :onChange="handlePrevMedicalExam"
-                                    />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
-                                </div>
-                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
-                                    <RadioButton 
-                                            RadioLabel="No"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intentToStay"
-                                            RadioValue="N"
-                                            v-model:input="intentToStay"
-                                            :onChange="handlePrevMedicalExam"
-                                    />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
-                                </div>
-                            </div>
-                            <div class="col-12 pb-3">
-                                <ErrorMessage name="intentToStay" class="text-danger"/>
-                            </div>
-                            <li>Agency?</li>
-                            <div class="row">
+                            
+                        </ol>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <FormHeader
+                            headerText="VISA APPLICATION INFORMATION"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <ol>
+                            <li> Category of Applicant </li>
+                            <div class="row pb-3"> 
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <SelectField 
-                                        labelClassName="font-weight-normal"
-                                        FieldName="agencyField"
-                                        ErrorName="agencyField"
-                                        className="agency_select mb-5 w-75"
-                                        v-model:input="agencyField"
-                                        :items="agency"
+                                        className="civil_stat_select"
+                                        FieldName="civil_status"
+                                        ErrorName="civil_status"
+                                        v-model:input="civil_status"
+                                        :items="civilStatus"
                                     />
                                 </div>
                             </div>
+                            <li>File Number/IME </li>
+                            <RequiredInputField 
+                                labelClassName="font-weight-normal"
+                                type="text"
+                                FieldName="street"
+                                ErrorName="street"
+                                v-model:input="street"
+                            />
                         </ol>
                     </div>
 

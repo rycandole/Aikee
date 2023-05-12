@@ -12,21 +12,7 @@
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
-        </div>
-        <div class="col-12">
-            <CalloutDanger 
-                headerTitle="Reminder"
-                description="
-                Applicants for <u>repeat</u> medical examination needs to have a <strong>NEW HEALTHCASE</strong> prior to registering online for their medical examination.
-
-                Please submit a healthcase inquiry first before scheduling your medical appointment.<br/>
-
-                <a href='https://slec.ph/inquiry/healthcase/' target='__blank' class='text-decoration-none text-primary'><strong>CLICK here</strong></a>.<br/>
-
-                If this is your first medical examination, there is <strong>NO</strong></strong> need to do a healthcase inquiry. Proceed directly to registration.
-                "
-            />
+            <h1 class="text-secondary text-center fs-1 fw-bold" >New Zealand Online Registration</h1>
         </div>
         <div class="col-12">
             <p class="text-black fs-5">
@@ -36,9 +22,8 @@
         <div class="col-12">
             <h4 class="fw-bold">INSTRUCTIONS</h4>
             <ol>
-                <li>Complete all fields. Know all details of your application before accomplishing the online registration form.</li>
-                <li>For families, an online registration must be submitted for each family member. Families with incomplete online applications will not be accommodated at the reception area.</li>
-                <li>Please type your complete address. Do not abbreviate any details pertaining to the street, city, or state.</li>
+                <li>Before accomplishing this form, please know your VISA CATEGORY, Visa Subclass Name and Number, and the Lodgement Office where your visa application was filed. Temporary Visa Applicants must also know their Length of stay in New Zealand.</li>
+                <li>Answer all applicable fields.</li>
                 <li>Once all fields have been filled out, Click on the 'Preview' button. The next step will display a preview of all data entered.</li>
                 <li>Review data for errors. Use the form to correct them as needed, click 'Preview', to preview data to be submitted.</li>
                 <li>If all data are correct, click on the 'Register' button to submit your registration.</li>
@@ -65,7 +50,7 @@
                 btnText="Back"
             />
             <RouterButton 
-                btnUrl="/individual/us/schedule"
+                btnUrl="/individual/nz/schedule"
                 className="btn btn-primary w-25"
                 btnText="Next"
             />
