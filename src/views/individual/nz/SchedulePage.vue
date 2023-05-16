@@ -2,7 +2,7 @@
     import TopNavBar from '@/components/includes/TopNavBar.vue'
     import SideNavigation from '@/components/includes/SideNavigation.vue'
     import FooterSection from '@/components/includes/FooterSection.vue'
-    import FormSection from '@/components/pages/individual/ca/FormSection.vue'
+    import ScheduleSection from '@/components/pages/individual/nz/ScheduleSection.vue'
 
     
 
@@ -14,17 +14,18 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
                 <div class="container-md">
-                    <div class="row mb-2 pt-5 pb-5 class_for_padding">
+                    <div class="row mb-2 pt-5 pb-1 class_for_padding">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Individual Canada</h1>
+                            <h1 class="m-0">Individual New Zealand</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item "><router-link to="/individual" class="text-secondary">Individual</router-link></li>
-                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">Canada</router-link></li>
+                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">New Zealand</router-link></li>
+                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">Schedule</router-link></li>
                             </ol>
                         </div><!-- /.col -->
-                            <FormSection />
+                            <ScheduleSection />
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             <!-- /.content -->
@@ -34,6 +35,7 @@
 </template>
 
 <style lang="scss">
+// Small screen size here
 
 .class_for_padding {
     padding: 1rem 0 0 0;

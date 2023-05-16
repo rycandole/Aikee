@@ -26,12 +26,26 @@ import US_Ind_DetailsForm from '@/views/individual/us/DetailsFormPage.vue'
 import US_Ind_Preview from '@/views/individual/us/PreviewPage.vue'
 // ------ US END PAGE ---------- //
 
+// ------- CA PAGE ------- //
+import CA_Ind_ApplicationFormPage from '@/views/individual/ca/ApplicationFormPage.vue'
+import CA_Ind_SchedulePage from '@/views/individual/ca/SchedulePage.vue'
+import CA_Ind_DetailsForm from '@/views/individual/ca/DetailsFormPage.vue'
+import CA_Ind_Preview from '@/views/individual/ca/PreviewPage.vue'
+// ------ CA END PAGE ---------- //
+
 // ------- AU PAGE ------- //
 import AU_Ind_ApplicationFormPage from '@/views/individual/au/ApplicationFormPage.vue'
 import AU_Ind_SchedulePage from '@/views/individual/au/SchedulePage.vue'
 import AU_Ind_DetailsForm from '@/views/individual/au/DetailsFormPage.vue'
 import AU_Ind_Preview from '@/views/individual/au/PreviewPage.vue'
 // ------ AU END PAGE ---------- //
+
+// ------- NZ PAGE ------- //
+import NZ_Ind_ApplicationFormPage from '@/views/individual/nz/ApplicationFormPage.vue'
+import NZ_Ind_SchedulePage from '@/views/individual/nz/SchedulePage.vue'
+import NZ_Ind_DetailsForm from '@/views/individual/nz/DetailsFormPage.vue'
+import NZ_Ind_Preview from '@/views/individual/nz/PreviewPage.vue'
+// ------ NZ END PAGE ---------- //
 
 // ================ INDIVIDUAL END PAGE ========================= //
 
@@ -115,6 +129,26 @@ const routes = [
         component: US_Ind_Preview,
       },
       {
+        path: '/individual/ca',
+        name: 'ca_form',
+        component: CA_Ind_ApplicationFormPage,
+      },
+      {
+        path: '/individual/ca/schedule',
+        name: 'ca_date',
+        component: CA_Ind_SchedulePage,
+      },
+      {
+        path: '/individual/ca/applicant-details',
+        name: 'ca_details',
+        component: CA_Ind_DetailsForm,
+      },
+      {
+        path: '/individual/ca/preview',
+        name: 'ca_preview',
+        component: CA_Ind_Preview,
+      },
+      {
         path: '/individual/au',
         name: 'au_form',
         component: AU_Ind_ApplicationFormPage,
@@ -133,6 +167,27 @@ const routes = [
         path: '/individual/au/preview',
         name: 'au_preview',
         component: AU_Ind_Preview,
+      },
+
+      {
+        path: '/individual/nz',
+        name: 'nz_form',
+        component: NZ_Ind_ApplicationFormPage,
+      },
+      {
+        path: '/individual/nz/schedule',
+        name: 'nz_date',
+        component: NZ_Ind_SchedulePage,
+      },
+      {
+        path: '/individual/nz/applicant-details',
+        name: 'nz_details',
+        component: NZ_Ind_DetailsForm,
+      },
+      {
+        path: '/individual/nz/preview',
+        name: 'nz_preview',
+        component: NZ_Ind_Preview,
       },
     ]
   },

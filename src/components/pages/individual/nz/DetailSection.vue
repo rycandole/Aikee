@@ -4,13 +4,14 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    import { useAUIndividualDetails } from '@/store/au-individual-details'
+    import { useNZIndividualDetails } from '@/store/nz-individual-details'
     import { Form } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
     import DateField from '@/components/global/DateField.vue'
     import RequiredInputField from '@/components/global/RequiredInputField.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
+    // import RequiredRadioButton from '@/components/global/RequiredRadioButton.vue'
     import SelectField from '@/components/global/SelectField.vue'
     import InputField from '@/components/global/InputField.vue'
     import RadioButton from '@/components/global/RadioButtton.vue'
@@ -26,14 +27,15 @@
     import civilStatus from '@/assets/js/arrays/civil_status_array'
     import countries from '@/assets/js/arrays/countries_array'
     import years from '@/assets/js/arrays/year_list_array'
-    import subClass from '@/assets/js/arrays/subclass_array'
     import province from '@/assets/js/arrays/province_array'
     import agency from '@/assets/js/arrays/agency_array'
+    import medicalCertificate from '@/assets/js/arrays/medical_certificate_array'
+    import nzSubclass from '@/assets/js/arrays/nz_subclass_array'
     
 
     const router = useRouter()
     const profileStore = useProfileStore()
-    const AUIndividualDetails = useAUIndividualDetails()
+    const NZIndividualDetails = useNZIndividualDetails()
 
     /**
      * For Fetching user data
@@ -47,11 +49,9 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let hasMedicalExam = true
-    let subClassKind = ref(null)
     let wasFirstMedicalExam = ref(null)
     let prevClinicName = ref(null)
     let prevSubClass = ref(null)
-    let trn = ref(null)
     let passportNumber = ref(null)
     let issuedCountry = ref(null)
     let issuedDate = ref(null)
@@ -71,9 +71,13 @@
     let city = ref(null)
     let provinceField = ref(null)
     let postalCode = ref(null)
+    let isPermanent = true
+    let medCertType = ref(null)
     let intendedStay = ref(null)
-    let intentToWork = ref(null)
-    let intentToStay = ref(null)
+    let intendedOccupation = ref(null)
+    let stayYear = ref(null)
+    let stayMonth = ref(null)
+    let visaCategory = ref(null)
     let agencyField = ref(null)
     
 
@@ -93,33 +97,40 @@
 
     }
 
+    const handleIntendedStay = () => {
+        if(intendedStay.value === 'P') {
+            isPermanent = true
+        } else {
+            isPermanent = false
+        }
+    }
+
     const schema = yup.object().shape({
-        subClassKind: yup.string().required('This field is required, please choose an option!'),
-        wasFirstMedicalExam: yup.string().required('This field is required, please choose an option!'),
-        prevClinicName: yup.string().nullable(),
-        prevSubClass: yup.string().nullable(),
-        trn: yup.string().required('This field is required!').min(4, 'Minimium of 4 Chararacters').max(19, 'Maximum of 20 characters'),
+        medCertType: yup.string().required('This field is required, please choose from options'),
+        wasFirstMedicalExam: yup.string().required('This field is required, please choose from options'),
         passportNumber: yup.string().required('This field is required!').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
-        issuedCountry: yup.string().required('This field is required, please choose an option!'),
-        ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
-        ad_firstName: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
-        ad_middleName: yup.string().optional('Middle name is required!').min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
-        mother_lastName: yup.string().required(),
-        mother_firstName: yup.string().required(),
-        mother_middleName: yup.string().required('Nationality is required!'),
+        issuedCountry: yup.string().required('This field is required, please choose from options'),
+        ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_firstName: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_middleName: yup.string().optional().min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
         gender:yup.string().required('Gender is required!'),
-        civil_status:yup.string().required('This field is required, please choose an option!').nullable(),
-        nationality: yup.string().required('This field is required, please choose an option!').nullable(),
-        contactNumber: yup.string().required('Contact number is required!').min(11, 'Contact number must be exactly 11').max(11, 'Contact number must be exactly 11').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^").nullable(),
+        mother_lastName: yup.string().required("Mother's first name is required").min(2, 'The value of this field must be at least 2 characters').max(25, 'The value must be at most 25 characters'),
+        mother_firstName: yup.string().required("Mother last name is required").min(2, 'The value of this field must be at least 2 characters').max(25, 'The value must be at most 25 characters'),
+        mother_middleName: yup.string().optional().nullable(),
+        civil_status:yup.string().required('This field is required, please choose an option!'),
+        nationality: yup.string().required('This field is required, please choose an option!'),
+        contactNumber: yup.string().required('Contact number is required!').min(11, 'Contact number must be exactly 11').max(11, 'Contact number must be exactly 11').matches(contactNumberRegex, "characters ex: abc!@#$%^").nullable(),
         street: yup.string().required('Street is required').min(1, 'Minimmum of 1 character').max(6, 'maximum of 6 characters').nullable(),
         barangay: yup.string().required('Barangay is required').min(5, 'This field must be atleast 5 characters').max(25, 'This field must be at most 25 characters').nullable(),
-        city: yup.string().required('City is required').min(5, 'City must be atleast 5 characters').max(25,'This field must be at most 25 characters').nullable(),
+        city: yup.string().required('City is required').min(5, 'City must be atleast 5 characters').max(25,'This field must be at most 25 characters'),
         provinceField: yup.string().required('Province is required!').min(4, 'This field atleast 4 characters').max(25, ''),
         postalCode: yup.string().required('Postal code is required!').min(4, 'Postal code must be atleast 4 numbers').max(4, 'Postal code must be atleast 4 numbers').matches(numOnlyRegex, "Postal Code must be number only!"),
-        intendedStay: yup.string().required('This field is required, please choose an option!').nullable(),
-        intentToWork: yup.string().required('This field is required, please choose an option!').nullable(),
-        intentToStay: yup.string().required('This field is required, please choose an option!').nullable(),
-        agencyField: yup.string().required('Agency is required!').nullable(),
+        intendedOccupation: yup.string().required('This field is required').min(4, 'Minimum of 4 characters').max(25, 'Maximum of 25 characters'),
+        intendedStay: yup.string().required('This field is required, please choose from options'),
+        stayYear: yup.string().matches(numOnlyRegex, "Number only!"),
+        stayMonth: yup.string().matches(numOnlyRegex, "Number only!"),
+        visaCategory: yup.string().required('This field is required, please choose from options'),
+        agencyField: yup.string().required('This field is required, please choose from options'),
     })
 
     
@@ -134,22 +145,19 @@
       
         const jsonDATA = {
                 json_user_id: user_id,
-                json_subClassKind: values.subClassKind,
+                json_medCertType: values.medCertType,
                 json_wasFirstMedicalExam: values.wasFirstMedicalExam,
-                json_prevClinicName: values.prevClinicName,
-                json_prevSubClass: values.prevSubClass,
-                json_trn: values.trn,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
                 json_issuedDate: isuedDate,
-                json_ad_lastName:values.ad_lastName,
-                json_ad_firstName:values.ad_firstName,
-                json_ad_middleName:values.ad_middleName,
-                json_mother_lastName:values.mother_lastName,
-                json_mother_firstName:values.mother_firstName,
-                json_mother_middleName:values.mother_middleName,
-                json_dateOfBirth: dob,
+                json_ad_lastName: values.ad_lastName,
+                json_ad_firstName: values.ad_firstName,
+                json_ad_middleName: values.ad_middleName,
                 json_gender: values.gender,
+                json_mother_lastName: values.mother_lastName,
+                json_mother_firstName: values.mother_firstName,
+                json_mother_middleName: values.mother_middleName,
+                json_dateOfBirth: dob,
                 json_civil_status: values.civil_status,
                 json_nationality: values.nationality,
                 json_contactNumber: values.contactNumber,
@@ -159,18 +167,20 @@
                 json_city: values.city,
                 json_provinceField: values.provinceField,
                 json_postalCode: values.postalCode,
+                json_intendedOccupation: values.intendedOccupation,
                 json_intendedStay: values.intendedStay,
-                json_intentToWork: values.intentToWork,
-                json_intentToStay: values.intentToStay,
+                json_stayYear: values.stayYear,
+                json_stayMonth: values.stayMonth,
+                json_visaCategory: values.visaCategory,
                 json_agencyField: values.agencyField,
+
         }
 
         let res = JSON.stringify(jsonDATA)
        
+        NZIndividualDetails.setNZIndividualDetails(res)
 
-        AUIndividualDetails.setAUIndividualDetails(res)
-
-        router.push('/individual/au/preview')
+        // router.push('/individual/nz/preview')
 
     }
 
@@ -218,7 +228,7 @@
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Australia Online Registration {{ isVaccinated }} </h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >New Zealand Online Registration {{ isVaccinated }} </h1>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12">
             <SideNav 
@@ -236,19 +246,19 @@
                     <div class="col-12">
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div class="col-lg-8 col-md-12 col-sm-12 pb-3">
                         <RequiredSelectField 
-                            label="What subclass did you apply for?"
-                            FieldName="subClassKind"
-                            ErrorName="subClassKind"
-                            v-model:input="subClassKind"
-                            :items="subClass"
+                            label="Medical Certificate Type:"
+                            FieldName="medCertType"
+                            ErrorName="medCertType"
+                            v-model:input="medCertType"
+                            :items="medicalCertificate"
                         />
                     </div>
                     <div class="mb-3 col-12">
-                        <strong>Is this your first medical examination for the Australian Embassy?</strong>
+                        <strong>Is this your first medical examination for the Canadian Embassy? <b class="text-danger">*</b></strong>
                     </div>
-                    <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
+                    <div class=" col-lg-2 col-md-3 col-sm-12 examRadioLeft">
                         <RadioButton 
                                 RadioLabel="Yes"
                                 RadioLabelClass="font-weight-normal"
@@ -260,7 +270,7 @@
                         <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
                     </div>
                    
-                    <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
+                    <div class="col-lg-10 col-md-9 col-sm-12 examRadioRight">
                         <RadioButton 
                                 RadioLabel="No"
                                 RadioLabelClass="font-weight-normal"
@@ -287,25 +297,17 @@
                             </div>
                             <div class="col-lg-8 col-md-12 col-sm-12 pb-3">
                                     <SelectField 
-                                        label="What subclass did you apply for?"
+                                        label="What Visa Category and Visa Type did you apply for?"
                                         FieldName="prevSubClass"
                                         ErrorName="prevSubClass"
                                         v-model:input="prevSubClass"
-                                        :items="subClass"
+                                        :items="nzSubclass"
                                     />
                             </div>
 
                         </div>
                     </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12">
-                        <RequiredInputField 
-                            label="TRN/HAP I.D."
-                            type="text"
-                            FieldName="trn"
-                            ErrorName="trn"
-                            v-model:input="trn"
-                        />
-                    </div>
+
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <InputField 
                             label="Passport Number"
@@ -328,6 +330,7 @@
                         <DateField 
                             label="Date of Issue"
                             placeholder="Date Received"
+                            requiredClass="d-none"
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="issuedDate"
                             :onChange="showBooster1"
@@ -343,7 +346,7 @@
                             <li>Applicant's Name</li>
                             <div class="row pb-3">
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
+                                    <RequiredInputField 
                                         label="Last Name"
                                         labelClassName="font-weight-normal"
                                         type="text"
@@ -353,7 +356,7 @@
                                     />
                                 </div>
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
+                                    <RequiredInputField 
                                         label="First Name"
                                         labelClassName="font-weight-normal"
                                         type="text"
@@ -372,11 +375,12 @@
                                         v-model:input="ad_middleName"
                                     />
                                 </div>
+                              
                             </div>
-                            <li>Mother's Maiden Name (Last Name, First Name, Middle Name)</li>
+                            <li class="mt-3">Mother's Maiden Name (Last Name, First Name, Middle Name) <b class="text-danger">*</b></li>
                             <div class="row pb-3">
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
+                                    <RequiredInputField 
                                         label="Last Name"
                                         labelClassName="font-weight-normal"
                                         type="text"
@@ -386,7 +390,7 @@
                                     />
                                 </div>
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
+                                    <RequiredInputField 
                                         label="First Name"
                                         labelClassName="font-weight-normal"
                                         type="text"
@@ -406,11 +410,11 @@
                                     />
                                 </div>
                             </div>
-                            <li>Applicant's Date of Birth</li>
-                            <div class="row pb-3">
+                            <li>Applicant's Date of Birth <b class="text-danger">*</b></li>
+                            <div class="row pb-3 mt-3">
                                 <div class="col-12">
                                     <DateField 
-                                        requiredClass="d-none dateField"
+                                        divLabelClass="d-none"
                                         placeholder="Date of Birth"
                                         :disabledDate="disableBirthdayState.disabledDates"
                                         v-model:input="dateOfBirth"
@@ -418,7 +422,7 @@
                                     />
                                 </div>
                             </div>
-                            <li>Gender </li>
+                            <li>Gender <b class="text-danger">*</b></li>
                             <div class="row">
                                 <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
                                     <RadioButton 
@@ -446,10 +450,10 @@
                              <div class="col-12 pb-3">
                                 <ErrorMessage name="gender" class="text-danger"/>
                             </div>
-                            <li>Civil Status </li>
+                            <li>Civil Status <b class="text-danger">*</b></li>
                             <div class="row pb-3"> 
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <SelectField 
+                                    <SelectField
                                         className="civil_stat_select"
                                         FieldName="civil_status"
                                         ErrorName="civil_status"
@@ -458,7 +462,7 @@
                                     />
                                 </div>
                             </div>
-                            <li>Country of Nationality</li>
+                            <li>Country of Nationality <b class="text-danger">*</b></li>
                             <div class="row pb-3"> 
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <SelectField 
@@ -470,9 +474,9 @@
                                     />
                                 </div>
                             </div>
-                            <li>Contact Number</li>
+                            <li>Contact Number <b class="text-danger">*</b></li>
                             <div class="row pb-3">
-                                <div class="col-12">
+                                <div class="col-8">
                                     <InputField 
                                         inputClassName="contact_num"
                                         type="text"
@@ -538,98 +542,95 @@
                                 </div>
                                 
                             </div>
-                            <li>How long do you intend staying in Australia? </li>
-                            <div class="row">
-                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
+                            
+                        </ol>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <FormHeader
+                            headerText="ADDITIONAL QUESTIONS"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <ol>
+                            <li class="pb-3">What is your intended occupation or activity in New Zealand <b class="text-danger">*</b></li>
+                            <InputField 
+                                divLabelClass="d-none"
+                                type="text"
+                                FieldName="intendedOccupation"
+                                ErrorName="intendedOccupation"
+                                v-model:input="intendedOccupation"
+                            />
+                            <li class="pt-3">How long do you intend staying in New Zealand  <b class="text-danger">*</b></li>
+                            <div class="row pb-3 pt-2"> 
+                                <div class="col-12 pl-5">
                                     <RadioButton 
-                                            RadioLabel="Temporary"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intendedStay"
-                                            RadioValue="Y"
-                                            v-model:input="intendedStay"
-                                            :onChange="handlePrevMedicalExam"
+                                        RadioLabel="Permanent"
+                                        RadioLabelClass="font-weight-normal"
+                                        RadioBtnName="intendedStay"
+                                        RadioValue="P"
+                                        v-model:input="intendedStay"
+                                        :onChange="handleIntendedStay"
                                     />
                                     <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
                                 </div>
-                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
+                                <div class="col-12 pl-5">
                                     <RadioButton 
-                                            RadioLabel="Permanent"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intendedStay"
-                                            RadioValue="N"
-                                            v-model:input="intendedStay"
-                                            :onChange="handlePrevMedicalExam"
+                                        RadioLabel="Temporary"
+                                        RadioLabelClass="font-weight-normal"
+                                        RadioBtnName="intendedStay"
+                                        RadioValue="T"
+                                        v-model:input="intendedStay"
+                                        :onChange="handleIntendedStay"
                                     />
                                     <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                                 </div>
-                            </div>
-                            <div class="col-12 pb-3">
-                                <ErrorMessage name="intendedStay" class="text-danger"/>
-                            </div>
-                            <li>Do you intent to work as, or study to be, a doctor, dentist, nurse or paramedic during your stay in Australia? </li>
-                            <div class="row">
-                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
-                                    <RadioButton 
-                                            RadioLabel="Yes"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intentToWork"
-                                            RadioValue="Y"
-                                            v-model:input="intentToWork"
-                                            :onChange="handlePrevMedicalExam"
-                                    />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
+                                <div class="col-12">
+                                    <ErrorMessage name="intendedStay" class="text-danger pb-3"/>
                                 </div>
-                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
-                                    <RadioButton 
-                                            RadioLabel="No"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intentToWork"
-                                            RadioValue="N"
-                                            v-model:input="intentToWork"
-                                            :onChange="handlePrevMedicalExam"
+                                <div class="col-2">
+                                    <InputField 
+                                        label="year"
+                                        type="text"
+                                        FieldName="stayYear"
+                                        ErrorName="stayYear"
+                                        v-model:input="stayYear"
+                                        :isDisabled="isPermanent"
                                     />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                                 </div>
-                            </div>
-                            <div class="col-12 pb-3">
-                                <ErrorMessage name="intentToWork" class="text-danger"/>
-                            </div>
-                            <li>For Temporary Visa: Do you intend to apply for a permanent stay in Australia within the next 6-12 months?</li>
-                            <div class="row pb-3">
-                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
-                                    <RadioButton 
-                                            RadioLabel="Yes"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intentToStay"
-                                            RadioValue="Y"
-                                            v-model:input="intentToStay"
-                                            :onChange="handlePrevMedicalExam"
+                                <div class="col-2">
+                                    <InputField 
+                                        label="Months"
+                                        type="text"
+                                        FieldName="stayMonth"
+                                        ErrorName="stayMonth"
+                                        v-model:input="stayMonth"
+                                        :isDisabled="isPermanent"
                                     />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
                                 </div>
-                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
-                                    <RadioButton 
-                                            RadioLabel="No"
-                                            RadioLabelClass="font-weight-normal"
-                                            RadioBtnName="intentToStay"
-                                            RadioValue="N"
-                                            v-model:input="intentToStay"
-                                            :onChange="handlePrevMedicalExam"
-                                    />
-                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
+                                <div class="8"></div>
+                                <div class="col-12">
+                                    <ErrorMessage name="radioIntendedStay" class="text-danger"/>
                                 </div>
                             </div>
-                            <div class="col-12 pb-3">
-                                <ErrorMessage name="intentToStay" class="text-danger"/>
-                            </div>
-                            <li>Agency?</li>
-                            <div class="row">
+                            <li>What is the visa category and visa type that you are applying for? <b class="text-danger">*</b></li>
+                            <div class="row pb-3"> 
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <SelectField 
-                                        labelClassName="font-weight-normal"
+                                        className="civil_stat_select"
+                                        FieldName="visaCategory"
+                                        ErrorName="visaCategory"
+                                        v-model:input="visaCategory"
+                                        :items="nzSubclass"
+                                    />
+                                </div>
+                            </div>
+                            <li>Agency? <b class="text-danger">*</b></li>
+                            <div class="row pb-3"> 
+                                <div class="col-lg-8 col-md-12 col-sm-12">
+                                    <SelectField 
+                                        className="civil_stat_select"
                                         FieldName="agencyField"
                                         ErrorName="agencyField"
-                                        className="agency_select mb-5 w-75"
                                         v-model:input="agencyField"
                                         :items="agency"
                                     />

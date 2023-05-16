@@ -2,7 +2,7 @@
     import TopNavBar from '@/components/includes/TopNavBar.vue'
     import SideNavigation from '@/components/includes/SideNavigation.vue'
     import FooterSection from '@/components/includes/FooterSection.vue'
-    import FormSection from '@/components/pages/individual/us/FormSection.vue'
+    import FormSection from '@/components/pages/individual/nz/FormSection.vue'
 
     
 
@@ -16,12 +16,12 @@
                 <div class="container-md">
                     <div class="row mb-2 pt-5 pb-5 class_for_padding">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Individual U.S.A.</h1>
+                            <h1 class="m-0">Individual New Zealand</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item "><router-link to="/individual" class="text-secondary">Individual</router-link></li>
-                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">USA</router-link></li>
+                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">New Zealand</router-link></li>
                             </ol>
                         </div><!-- /.col -->
                             <FormSection />
