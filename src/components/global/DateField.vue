@@ -16,10 +16,11 @@ const props = defineProps({
     color: String,
     smallLabel: String,
     disabledDate: String,
-    preventDisableDate: String
+    preventDisableDate: String,
+    divLabelClass: String
 })
 
-const { labelClassName, label, requiredClass, inputClass, input, onChange, placeholder, error, color, smallLabel, disabledDate, preventDisableDate } = toRefs(props)
+const { labelClassName, label, requiredClass, inputClass, input, onChange, placeholder, error, color, smallLabel, disabledDate, preventDisableDate, divLabelClass } = toRefs(props)
 
 
 const inputComputed = computed({
@@ -30,7 +31,7 @@ const inputComputed = computed({
 
 </script>
 <template>
-    <div class="row mt-3">
+    <div class="row mt-3" :class="divLabelClass">
         <div class="col-12">
             <label class="text-capitalize" :class="labelClassName">
                 {{ label }} <b :class="requiredClass" class="text-danger p-1">*</b>
