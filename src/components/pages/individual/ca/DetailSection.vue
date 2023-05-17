@@ -159,6 +159,9 @@
                 json_alias_lastName: values.alias_lastName,
                 json_alias_firstName: values.alias_firstName,
                 json_alias_middleName: values.alias_middleName,
+                json_mother_lastName: values.mother_lastName,
+                json_mother_firstName: values.mother_firstName,
+                json_mother_middleName: values.mother_middleName,
                 json_dateOfBirth: dob,
                 json_gender: values.gender,
                 json_civil_status: values.civil_status,
@@ -179,7 +182,7 @@
 
         CAIndividualDetails.setCAIndividualDetails(res)
 
-        // router.push('/individual/ca/preview')
+        router.push('/individual/ca/preview')
 
     }
 
@@ -593,11 +596,11 @@
                                     />
                                 </div>
                             </div>
-                            <li class="pb-3">File Number/IME <b class="text-danger">*</b></li>
-                            <div class="row pb-3"> 
+                        <div class="row pb-3"> 
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
-                                        divLabelClass="d-none"
+                                    
+                                   <li class="pb-3">File Number/IME <b class="text-danger">*</b></li>
+                                   <InputField divLabelClass="d-none"
                                         type="text"
                                         FieldName="fileNumber"
                                         ErrorName="fileNumber"

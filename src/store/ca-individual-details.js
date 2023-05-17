@@ -16,6 +16,9 @@ export const useCAIndividualDetails = defineStore('ca-individual-details', {
     alias_lastName: null,
     alias_firstName: null,
     alias_middleName: null,
+    mother_lastName: null,
+    mother_firstName: null,
+    mother_middleName: null,
     dob: null,
     gender: null,
     civil_status: null,
@@ -48,6 +51,9 @@ export const useCAIndividualDetails = defineStore('ca-individual-details', {
         this.$state.alias_lastName = jsonPARSE.json_alias_lastName
         this.$state.alias_firstName = jsonPARSE.json_alias_firstName
         this.$state.alias_middleName = jsonPARSE.json_alias_middleName
+        this.$state.mother_lastName = jsonPARSE.json_mother_lastName
+        this.$state.mother_firstName = jsonPARSE.json_mother_firstName
+        this.$state.mother_middleName = jsonPARSE.json_mother_middleName
         this.$state.dob = jsonPARSE.json_dateOfBirth
         this.$state.gender = jsonPARSE.json_gender
         this.$state.civil_status = jsonPARSE.json_civil_status
@@ -77,6 +83,9 @@ export const useCAIndividualDetails = defineStore('ca-individual-details', {
         this.$state.alias_lastName = null
         this.$state.alias_firstName = null
         this.$state.alias_middleName = null
+        this.$state.mother_lastName = null
+        this.$state.mother_firstName = null
+        this.$state.mother_middleName = null
         this.$state.dob = null
         this.$state.gender = null
         this.$state.civil_status = null
