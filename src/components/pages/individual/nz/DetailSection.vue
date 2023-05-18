@@ -50,8 +50,8 @@
     let textSuccess1 = "text-success"
     let hasMedicalExam = true
     let wasFirstMedicalExam = ref(null)
-    let prevClinicName = ref(null)
-    let prevSubClass = ref(null)
+    let prevClinic = ref(null)
+    let prevCategory = ref(null)
     let passportNumber = ref(null)
     let issuedCountry = ref(null)
     let issuedDate = ref(null)
@@ -108,6 +108,8 @@
     const schema = yup.object().shape({
         medCertType: yup.string().required('This field is required, please choose from options'),
         wasFirstMedicalExam: yup.string().required('This field is required, please choose from options'),
+        prevClinic: yup.string().nullable(),
+        prevCategory: yup.string().nullable(),
         passportNumber: yup.string().required('This field is required!').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         issuedCountry: yup.string().required('This field is required, please choose from options'),
         ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
@@ -147,6 +149,8 @@
                 json_user_id: user_id,
                 json_medCertType: values.medCertType,
                 json_wasFirstMedicalExam: values.wasFirstMedicalExam,
+                json_prevClinic: values.prevClinic,
+                json_prevCategory: values.prevCategory,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
                 json_issuedDate: isuedDate,
@@ -180,7 +184,7 @@
        
         NZIndividualDetails.setNZIndividualDetails(res)
 
-        // router.push('/individual/nz/preview')
+        router.push('/individual/nz/preview')
 
     }
 
@@ -290,17 +294,17 @@
                                 <InputField 
                                     label="Name of Clinic and Year of Visa Medical Examination"
                                     type="text"
-                                    FieldName="prevClinicName"
-                                    ErrorName="prevClinicName"
-                                    v-model:input="prevClinicName"
+                                    FieldName="prevClinic"
+                                    ErrorName="prevClinic"
+                                    v-model:input="prevClinic"
                                 />
                             </div>
                             <div class="col-lg-8 col-md-12 col-sm-12 pb-3">
                                     <SelectField 
                                         label="What Visa Category and Visa Type did you apply for?"
-                                        FieldName="prevSubClass"
-                                        ErrorName="prevSubClass"
-                                        v-model:input="prevSubClass"
+                                        FieldName="prevCategory"
+                                        ErrorName="prevCategory"
+                                        v-model:input="prevCategory"
                                         :items="nzSubclass"
                                     />
                             </div>

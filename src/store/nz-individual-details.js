@@ -6,6 +6,8 @@ export const useNZIndividualDetails = defineStore('nz-individual-details', {
     user_id: null,
     medCertType: null,
     wasFirstMedicalExam: null,
+    prevClinic: null,
+    prevCategory: null,
     passportNumber: null,
     issuedCountry: null,
     isuedDate: null,
@@ -40,6 +42,8 @@ export const useNZIndividualDetails = defineStore('nz-individual-details', {
         this.$state.user_id = jsonPARSE.json_user_id
         this.$state.medCertType = jsonPARSE.json_medCertType
         this.$state.wasFirstMedicalExam = jsonPARSE.json_wasFirstMedicalExam
+        this.$state.prevClinic = jsonPARSE.json_prevClinic
+        this.$state.prevCategory = jsonPARSE.json_prevCategory
         this.$state.passportNumber = jsonPARSE.json_passportNumber
         this.$state.issuedCountry = jsonPARSE.json_issuedCountry
         this.$state.isuedDate = jsonPARSE.json_issuedDate
@@ -71,6 +75,8 @@ export const useNZIndividualDetails = defineStore('nz-individual-details', {
         this.$state.user_id = null
         this.$state.medCertType = null
         this.$state.wasFirstMedicalExam = null
+        this.$state.prevClinic = null
+        this.$state.prevCategory = null
         this.$state.passportNumber = null
         this.$state.issuedCountry = null
         this.$state.isuedDate = null

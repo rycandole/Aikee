@@ -4,9 +4,9 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    import { useAUIndividualSched } from '@/store/au-individual-sched.js'
-    import { useAUIndividualDetails } from '@/store/au-individual-details.js'
-    import { useSlot_AU } from '@/store/au-slot-store.js'
+    // import { useNZIndividualSched } from '@/store/nz-individual-sched.js'
+    // import { useNZIndividualDetails } from '@/store/nz-individual-details.js'
+    // import { useSlot_NZ } from '@/store/nz-slot-store.js'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -23,11 +23,11 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
-    const AU_IndividualSched = useAUIndividualSched()
-    const AU_IndividualDetails = useAUIndividualDetails()
-    const AU_SlotStore = useSlot_AU()
-    const schedule = JSON.parse(localStorage.getItem('au-individual-sched'))
-    const details = JSON.parse(localStorage.getItem('au-individual-details'))
+    // const NZ_IndividualSched = useNZIndividualSched()
+    // const NZ_IndividualDetails = useNZIndividualDetails()
+    // const NZ_SlotStore = useSlot_NZ()
+    const schedule = JSON.parse(localStorage.getItem('nz-individual-sched'))
+    const details = JSON.parse(localStorage.getItem('nz-individual-details'))
 
 
 
@@ -45,7 +45,6 @@
     let textSuccess1 = "text-success"
     let textSuccess2 = "text-success"
     let isButtonDisabled = true
-    let hasMedicalExam = true
     let checkbox1 = ref(null)
     let checkbox2 = ref(null)
     let branch = ref(null)
@@ -65,11 +64,10 @@
     let sched_time = schedule.time
     let sched_branch = schedule.clinic
 
-    let subclass = details.subClassKind
+    let medCertType = details.medCertType
     let wasFirstMedExam = details.wasFirstMedicalExam
-    let prevClinic = details.prevClinicName
-    let prevSubClass = details.prevSubClass
-    let trn = details.trn
+    let prevClinic = details.prevClinic
+    let prevCategory = details.prevCategory
     let passportNumber = details.passportNumber
     let issuedCountry = details.issuedCountry
     let issuedDate = moment(details.issuedDate).format('LL');
@@ -79,7 +77,7 @@
     let motherLastName = details.mother_lastName
     let motherFirstName = details.mother_firstName
     let motherdiddleName = details.mother_middleName
-    let birthDate = moment(details.dateOfBirth).format('LL');
+    let birthDate = moment(details.dob).format('LL');
     let gender = details.gender
     let civilStatus = details.civil_status
     let nationality = details.nationality
@@ -90,10 +88,14 @@
     let city = details.city
     let province = details.provinceField
     let postalCode = details.postalCode
-    let intentStayDuration = details.intendedStay
-    let intentToWork = details.intentToWork
-    let intentToStay = details.intentToStay
-    let agency = details.agencyField
+    let intendedOccupation = details.intendedOccupation
+    let intendedStay = details.intendedStay
+    let stayYear = details.stayYear
+    let stayMonth = details.stayMonth
+    let visaCategory = details.visaCategory
+    let agencyField = details.agencyField
+   
+
 
     const schema = yup.object({
         checkbox1: yup.string().required('Please check the check box to proceed'),
@@ -107,61 +109,64 @@
     }
     
 
-
-    const handleDetails = async () => {
+    const handleStore = async () => {
 
         errors.value = []
 
         const JSONdata = {
-           json_sched_date: schedule.date,
-           json_sched_time: sched_time,
-           json_sched_branch: branch,
-           json_userId: user_id,
-           json_subclass: subclass,
-           json_wasFirstMedExam: wasFirstMedExam,
-           json_prevClinic: prevClinic,
-           json_prevSubClass: prevSubClass,
-           json_trn: trn,
-           json_passportNumber: passportNumber,
-           json_issuedCountry: issuedCountry,
-           json_issuedDate: details.issuedDate,
-           json_lastName: lastName,
-           json_firstName: firstName,
-           json_middleName: middleName,
-           json_motherLastName: motherLastName,
-           json_motherFirstName: motherFirstName,
-           json_motherdiddleName: motherdiddleName,
-           json_birthDate: details.dateOfBirth,
-           json_gender: gender,
-           json_civilStatus: civilStatus,
-           json_nationality: nationality,
-           json_contactNo: contactNo,
-           json_emailAdd: emailAdd,
-           json_street: street,
-           json_barangay: barangay,
-           json_city: city,
-           json_province: province,
-           json_postalCode: postalCode,
-           json_intentStayDuration: intentStayDuration,
-           json_intentToWork: intentToWork,
-           json_intentToStay: intentToStay,
-           json_agency: agency,
+                json_userId: user_id,
+                json_sched_date: schedule.date,
+                json_sched_time: sched_time,
+                json_sched_branch: branch,
+                json_medCertType: medCertType,
+                json_wasFirstMedExam: wasFirstMedExam,
+                json_prevClinic: prevClinic,
+                json_prevCategory: prevCategory,
+                json_passportNumber: passportNumber,
+                json_issuedCountry: issuedCountry,
+                json_issuedDate: details.issuedDate,
+                json_lastName: lastName,
+                json_firstName: firstName,
+                json_middleName: middleName,
+                json_motherLastName: motherLastName,
+                json_motherFirstName: motherFirstName,
+                json_motherdiddleName: motherdiddleName,
+                json_birthDate: details.dob,
+                json_gender: gender,
+                json_civilStatus: civilStatus,
+                json_nationality: nationality,
+                json_contactNo: contactNo,
+                json_emailAdd: emailAdd,
+                json_street: street,
+                json_barangay: barangay,
+                json_city: city,
+                json_province: province,
+                json_postalCode: postalCode,
+                intendedOccupation: intendedOccupation,
+                json_intendedStay: intendedStay,
+                json_stayYear: stayYear,
+                json_stayMonth: stayMonth,
+                json_visaCategory: visaCategory,
+                json_json_agency: agencyField
         }
+
+        console.log(JSONdata)
 
         try {
 
-            let res = await axios.post('au-individual/', JSONdata)
+            let res = await axios.post('nz-store/', JSONdata)
 
             if (res.data.status_code === 200 ) {
 
-                Swal.fire('Applicant successfully registered', '', 'success')
+                // Swal.fire('Applicant successfully registered', '', 'success')
+                Swal.fire(res.data.message +", "+ res.data.name, '', 'Success')
                 // alert('Success '+ res.data.response +' - '+ res.data.sched)
 
-                AU_IndividualSched.clearAUIndividualSched()
-                AU_IndividualDetails.clearAUIndividualDetails()
-                AU_SlotStore.clearSlot_AU()
+                // NZ_IndividualSched.clearNZIndividualSched()
+                // NZ_IndividualDetails.clearNZIndividualDetails()
+                // NZ_SlotStore.clearSlot_NZ()
 
-                router.push(process.env.BASE_URL +"/")
+                // router.push(process.env.BASE_URL +"/")
                 
             } else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
@@ -173,12 +178,10 @@
 
         } catch (err) {
             errors.value = err.response.data.errors
-            // console.log(errors.value)
+            console.log(errors.value)
         }
 
     }
-
-
 
     const handleBack = () => {
 
@@ -190,7 +193,7 @@
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
 
-                router.push('/individual/au/applicant-details')
+                router.push('/individual/nz/applicant-details')
 
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
@@ -219,7 +222,7 @@
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-        <Form @submit.prevent="handleDetails" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
+        <Form @submit.prevent="handleStore" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="mb-3 col-12">
@@ -249,102 +252,89 @@
                         />
                     </div>
                     <div class="col-12"><hr /></div>
+
                     <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
-                            previewLabel="What Subclass Did You Apply For? "
-                            v-bind:previewText="subclass"
+                            previewLabel="Medical Certificate Type"
+                            v-bind:previewText="medCertType"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+
+                    <div class="col-12">
                         <PreviewText 
-                            previewLabel="Is this your first medical examination for the Australian Embassy?"
-                            v-bind:previewText="wasFirstMedExam == 'Y' ? 'Yes' : 'No'"
+                            previewLabel="Is this your first medical examination for the Canadian Embassy? "
+                            v-bind:previewText="wasFirstMedExam == 'N' ? 'No' : 'Yes' "
                         />
                     </div>
-                    <div class="col-12 pl-5" :hidden="wasFirstMedExam == 'yes' ? hasMedicalExam = true : hasMedicalExam = false">
+                    <div class="col-12 pl-5">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-sm-12">
-                                <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
-                                    <PreviewText 
-                                        previewLabel="Name of Clinic and Year of Visa Medical Examination"
-                                        v-bind:previewText="prevClinic"
-                                    />
-                                </div>
+                                <PreviewText 
+                                    previewLabel="Name of Clinic and Year of Visa Medical Examination"
+                                    v-bind:previewText="prevClinic"
+                                />
                             </div>
-                            <div class="col-lg-8 col-md-12 col-sm-12 pb-3">
-                                <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
-                                    <PreviewText 
-                                        previewLabel="What subclass did you apply for?"
-                                        v-bind:previewText="prevSubClass"
-                                    />
-                                </div>
+                            <div class="col-lg-8 col-md-12 col-sm-12">
+                                <PreviewText 
+                                    previewLabel="Category applied for"
+                                    v-bind:previewText="prevCategory"
+                                />
                             </div>
-
                         </div>
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
-                        <PreviewText 
-                            previewLabel="TRN/HAP I.D."
-                            v-bind:previewText="trn"
-                        />
-                    </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div class="col-lg-8 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Passport Number"
                             v-bind:previewText="passportNumber"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div class="col-lg-8 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Country of Issue"
                             v-bind:previewText="issuedCountry"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
                     <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
                             v-bind:previewText="issuedDate"
                         />
                     </div>
-                   
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="APPLICANT DETAILS"
                         />
                     </div>
-                    <div class="mb-3 col-12">
+                    <div class="col-12">
                         <ol>
                             <li>
                                 <PreviewText 
                                     previewLabel="Applicant's Name"
                                 />
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-12 col-sm-12">
-                                        <PreviewSmallText 
-                                            v-bind:previewText="lastName"
-                                            smallLabel="Last Name"
-                                        />
-                                    </div>
-                                    <div class="col-lg-4 col-md-12 col-sm-12">
-                                        <PreviewSmallText 
-                                            v-bind:previewText="firstName"
-                                            smallLabel="First Name"
-                                        />
-                                    </div>
-                                    <div class="col-lg-4 col-md-12 col-sm-12">
-                                        <PreviewSmallText 
-                                            v-bind:previewText="middleName"
-                                            smallLabel="Middle Name"
-                                        />
-                                    </div>
-                                </div>
-                                <hr />
                             </li>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-12 col-sm-12">
+                                    <PreviewSmallText 
+                                        v-bind:previewText="lastName"
+                                        smallLabel="Last Name"
+                                    />
+                                </div>
+                                <div class="col-lg-4 col-md-12 col-sm-12">
+                                    <PreviewSmallText 
+                                        v-bind:previewText="firstName"
+                                        smallLabel="First Name"
+                                    />
+                                </div>
+                                <div class="col-lg-4 col-md-12 col-sm-12">
+                                    <PreviewSmallText 
+                                        v-bind:previewText="middleName"
+                                        smallLabel="Middle Name"
+                                    />
+                                </div>
+                            </div>
+                            <hr />
                             <li>
                                 <PreviewText 
                                     previewLabel="Mother's Maiden Name (Last Name, First Name, Middle Name)"
@@ -379,17 +369,20 @@
                                 <hr/>
                             </li>
                             <li>
-                                <PreviewText 
-                                    previewLabel="Gender"
-                                    v-bind:previewText="gender == 'M' ? 'Male' : 'Female'"
-                                />
-                                <hr/>
-                            </li>
-                            <li>
-                                <PreviewText
-                                    previewLabel="Civil Status"
-                                    v-bind:previewText="civilStatus"
-                                />
+                                <div class="row">
+                                    <div class="col-6">
+                                        <PreviewText 
+                                            previewLabel="Gender"
+                                            v-bind:previewText="gender == 'M' ? 'Male' : 'Female'"
+                                        />
+                                    </div>
+                                    <div class="col-6">
+                                        <PreviewText
+                                            previewLabel="Civil Status"
+                                            v-bind:previewText="civilStatus"
+                                        />
+                                    </div>
+                                </div>
                                 <hr/>
                             </li>
                             <li>
@@ -400,17 +393,20 @@
                                 <hr/>
                             </li>
                             <li>
-                                <PreviewText 
-                                    previewLabel="Contact Number"
-                                    v-bind:previewText="contactNo"
-                                />
-                                <hr/>
-                            </li>
-                            <li>
-                                <PreviewText 
-                                    previewLabel="Email Address"
-                                    v-bind:previewText="emailAdd"
-                                />
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <PreviewText 
+                                            previewLabel="Contact Number"
+                                            v-bind:previewText="contactNo"
+                                        />
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <PreviewText 
+                                            previewLabel="Email Address"
+                                            v-bind:previewText="emailAdd"
+                                        />
+                                    </div>
+                                </div>
                                 <hr/>
                             </li>
                             <li>
@@ -452,34 +448,65 @@
                                 </div>
                                 <hr/>
                             </li>
-                            <li>
-                                <PreviewText 
-                                    previewLabel="How long do you intend staying in Australia?"
-                                    v-bind:previewText="intentStayDuration == 'Y' ? 'Temporary' : 'Permanent'"
-                                />
-                                <hr/>
-                            </li>
-                            <li>
-                                <PreviewText 
-                                    previewLabel="Do you intent to work as, or study to be, a doctor, dentist, nurse or paramedic during your stay in Australia?"
-                                    v-bind:previewText="intentToWork == 'Y' ? 'Yes' : 'No'"
-                                />
-                                <hr/>
-                            </li>
-                            <li>
-                                <PreviewText 
-                                    previewLabel="For Temporary Visa: Do you intend to apply for a permanent stay in Australia within the next 6-12 months?"
-                                    v-bind:previewText="intentToStay == 'Y' ? 'Yes' : 'No'"
-                                />
-                                <hr/>
-                            </li>
-                            <li>
-                                <PreviewText 
-                                    previewLabel="Agency?"
-                                    v-bind:previewText="agency"
-                                />
-                                <hr/>
-                            </li>
+                        </ol>
+                    </div>
+                    
+                    <div class="mb-3 col-12">
+                        <FormHeader
+                            headerText="ADDITIONAL QUESTIONS"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <ol>
+                            <li class="pb-3">What is your intended occupation or activity in New Zealand <b class="text-danger">*</b></li>
+                            <div class="row">
+                                <div class="col-12">
+                                    <PreviewText 
+                                        previewLabelClassName="d-none"
+                                        v-bind:previewText="intendedOccupation"
+                                    />
+                                </div>
+                            </div>
+                            <li class="pt-3">How long do you intend staying in New Zealand  <b class="text-danger">*</b></li>
+                            <div class="row pb-3 pt-2"> 
+                                <div class="col-12 pl">
+                                    <PreviewText 
+                                        previewLabelClassName="d-none"
+                                        v-bind:previewText="intendedStay == 'T' ? 'Temporary' : 'Permanent' "
+                                    />
+                                </div>
+                                <div class="col-2">
+                                    <PreviewText 
+                                        previewLabel="Year"
+                                        v-bind:previewText="stayYear"
+                                    />
+                                </div>
+                                <div class="col-2">
+                                    <PreviewText 
+                                        previewLabel="Months"
+                                        v-bind:previewText="stayMonth"
+                                    />
+                                </div>
+                                <div class="8"></div>
+                            </div>
+                            <li>What is the visa category and visa type that you are applying for? <b class="text-danger">*</b></li>
+                            <div class="row pb-3"> 
+                                <div class="col-lg-8 col-md-12 col-sm-12">
+                                    <PreviewText 
+                                        previewLabelClassName="d-none"
+                                        v-bind:previewText="visaCategory"
+                                    />
+                                </div>
+                            </div>
+                            <li>Agency <b class="text-danger">*</b></li>
+                            <div class="row pb-3"> 
+                                <div class="col-lg-8 col-md-12 col-sm-12">
+                                    <PreviewText 
+                                        previewLabelClassName="d-none"
+                                        v-bind:previewText="agencyField"
+                                    />
+                                </div>
+                            </div>
                         </ol>
                     </div>
                     <div class="col-12 mt-4 border-top container-fluid p-3 irc_div">
