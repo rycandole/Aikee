@@ -4,9 +4,9 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    // import { useNZIndividualSched } from '@/store/nz-individual-sched.js'
-    // import { useNZIndividualDetails } from '@/store/nz-individual-details.js'
-    // import { useSlot_NZ } from '@/store/nz-slot-store.js'
+    import { useNZIndividualSched } from '@/store/nz-individual-sched.js'
+    import { useNZIndividualDetails } from '@/store/nz-individual-details.js'
+    import { useSlot_NZ } from '@/store/nz-slot-store.js'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -23,9 +23,9 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
-    // const NZ_IndividualSched = useNZIndividualSched()
-    // const NZ_IndividualDetails = useNZIndividualDetails()
-    // const NZ_SlotStore = useSlot_NZ()
+    const NZ_IndividualSched = useNZIndividualSched()
+    const NZ_IndividualDetails = useNZIndividualDetails()
+    const NZ_SlotStore = useSlot_NZ()
     const schedule = JSON.parse(localStorage.getItem('nz-individual-sched'))
     const details = JSON.parse(localStorage.getItem('nz-individual-details'))
 
@@ -94,6 +94,12 @@
     let stayMonth = details.stayMonth
     let visaCategory = details.visaCategory
     let agencyField = details.agencyField
+
+    const medicalCertificate = new Map([
+                                            ['Full', 'Full Medical Examination'],
+                                            ['CXR', 'Chest X-ray only'],
+                                            ['Limited', 'Limited Medical Examination']
+                                        ])
    
 
 
@@ -118,7 +124,7 @@
                 json_sched_date: schedule.date,
                 json_sched_time: sched_time,
                 json_sched_branch: branch,
-                json_medCertType: medCertType,
+                json_medCertType: medicalCertificate.get(medCertType),
                 json_wasFirstMedExam: wasFirstMedExam,
                 json_prevClinic: prevClinic,
                 json_prevCategory: prevCategory,
@@ -156,29 +162,31 @@
 
             let res = await axios.post('nz-store/', JSONdata)
 
-            if (res.data.status_code === 200 ) {
+            if (res.data.status_code === 200) {
 
-                // Swal.fire('Applicant successfully registered', '', 'success')
-                Swal.fire(res.data.message +", "+ res.data.name, '', 'Success')
-                // alert('Success '+ res.data.response +' - '+ res.data.sched)
+                Swal.fire(res.data.message, '', 'Success')
 
-                // NZ_IndividualSched.clearNZIndividualSched()
-                // NZ_IndividualDetails.clearNZIndividualDetails()
-                // NZ_SlotStore.clearSlot_NZ()
+                NZ_IndividualSched.clearNZIndividualSched()
+                NZ_IndividualDetails.clearNZIndividualDetails()
+                NZ_SlotStore.clearSlot_NZ()
 
-                // router.push(process.env.BASE_URL +"/")
+                router.push(process.env.BASE_URL +"/")
                 
+            } if (res.data.status_code === 400) {
+                Swal.fire(res.data.message, '', 'info')
             } else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
                 Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
                 console.log('Reject, '+ res.data.error +', '+ res.data.message)
+                console.log()
             }
 
             // console.log(res)
 
         } catch (err) {
             errors.value = err.response.data.errors
-            console.log(errors.value)
+            Swal.fire(err.response.data.message, '', 'info')
+            // console.log(errors.value)
         }
 
     }
