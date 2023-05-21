@@ -1,12 +1,12 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    // import { useCAIndividualSched } from '@/store/ca-individual-sched.js'
-    // import { useCAIndividualDetails } from '@/store/ca-individual-details.js'
-    // import { useSlot_CA } from '@/store/ca-slot-store.js'
+    import { useCAIndividualSched } from '@/store/ca-individual-sched.js'
+    import { useCAIndividualDetails } from '@/store/ca-individual-details.js'
+    import { useSlot_CA } from '@/store/ca-slot-store.js'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -23,9 +23,9 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
-    // const CA_IndividualSched = useCAIndividualSched()
-    // const CA_IndividualDetails = useCAIndividualDetails()
-    // const CA_SlotStore = useSlot_CA()
+    const CA_IndividualSched = useCAIndividualSched()
+    const CA_IndividualDetails = useCAIndividualDetails()
+    const CA_SlotStore = useSlot_CA()
     const schedule = JSON.parse(localStorage.getItem('ca-individual-sched'))
     const details = JSON.parse(localStorage.getItem('ca-individual-details'))
 
@@ -39,7 +39,7 @@
     })
 
 
-    // let errors = ref([])
+    let errors = ref([])
     let user_id = profileStore.id
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
@@ -109,7 +109,7 @@
 
     const handleDetails = async () => {
 
-        // errors.value = []
+        errors.value = []
 
         const JSONdata = {
                 json_userId: user_id,
@@ -149,33 +149,34 @@
 
         console.log(JSONdata)
 
-        // try {
+        try {
 
-        //     let res = await axios.post('ca-individual/', JSONdata)
+            let res = await axios.post('ca-individual/', JSONdata)
 
-        //     if (res.data.status_code === 200 ) {
+            if (res.request.status === 200 ) {
 
-        //         Swal.fire('Applicant successfully registered', '', 'success')
-        //         // alert('Success '+ res.data.response +' - '+ res.data.sched)
+                Swal.fire(res.data.message, '', 'success')
+                // alert('Success '+ res.data.response +' - '+ res.data.sched)
 
-        //         CA_IndividualSched.clearAUIndividualSched()
-        //         CA_IndividualDetails.clearAUIndividualDetails()
-        //         CA_SlotStore.clearSlot_AU()
+                CA_IndividualSched.clearCAIndividualSched()
+                CA_IndividualDetails.clearCAIndividualDetails()
+                CA_SlotStore.clearSlot_CA()
 
-        //         router.push(process.env.BASE_URL +"/")
+                router.push(process.env.BASE_URL +"")
                 
-        //     } else {
-        //         // alert('Reject, '+ res.data.error +', '+ res.data.message)
-        //         Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
-        //         console.log('Reject, '+ res.data.error +', '+ res.data.message)
-        //     }
+            } else {
+                // alert('Reject, '+ res.data.error +', '+ res.data.message)
+                Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
+                console.log('Reject, '+ res.data.error +', '+ res.data.message)
+            }
 
-        //     // console.log(res)
+            // console.log(res)
 
-        // } catch (err) {
-        //     errors.value = err.response.data.errors
-        //     // console.log(errors.value)
-        // }
+        } catch (err) {
+            errors.value = err.response.data.errors
+            Swal.fire(err.response.data.message, '', 'error')
+            console.log(errors.value)
+        }
 
     }
 

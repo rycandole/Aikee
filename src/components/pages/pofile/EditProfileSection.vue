@@ -1,30 +1,58 @@
 <script setup>
     import { onMounted, ref } from 'vue'
-    import { useRouter } from 'vue-router'
+    // import { useRouter } from 'vue-router'
     import { useProfileStore } from '../../../store/profile-store'
     // import { ucwords } from './../../../assets/js/string_functions.js'
-    // import RouterButton  from '../../global/RouterButton.vue'
+    import { Form } from 'vee-validate'
+    import { ErrorMessage } from 'vee-validate'
+
     import TextInput from '../../global/TextInput.vue'
     import DisplayCropperButton from '@/components/global/DisplayCropperButton.vue'
     import CroppedImage from '../../global/CroppedImage.vue'
     import CropperModal from '../../global/CropperModal.vue'
+    import * as yup from 'yup';
 
-    const router = useRouter()
     const profileStore = useProfileStore()
 
 
     let showModal = ref(false)
     let image = ref(null)
+    let firstName = ref(null)
+    let lastName = ref(null)
+    let middleName = ref(null)
+
+    let errors = ref([])
     /**
      * For Fetching user data
      */
-    onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
+
+    onMounted(() => {
+        firstName.value = profileStore.firstName || null
+        middleName.value = profileStore.middleName || null
+        lastName.value = profileStore.lastName || null
     })
 
     const setCroppedImageData = (data) => {
         // imageData = data
         image.value = data.imageUrl
+    }
+    const schema = yup.object().shape({
+        firstName: yup.string().required('This field is required!'),
+        middleName: yup.string().optional().nullable(),
+        lastName: yup.string().required("This field is required!"),
+    })
+
+    const handleUpdate =  (values) => {
+        errors.value = []
+
+        const jsonDATA = {
+                json_firstName: values.firstName,
+                json_middleName: values.middleName,
+                json_lastName: values.lastName,
+        }
+
+
+        console.log(jsonDATA)
     }
 
 </script>
@@ -41,7 +69,7 @@
                 @croppedImageData="setCroppedImageData"
                 @showModal="showModal = false"
             />
-            <div class="row">
+            <Form @submit="handleUpdate"  :validation-schema="schema" class="row">
                 <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
                     <TextInput
                         labelClassName="
@@ -51,12 +79,17 @@
                             text-dark
                             pb-1
                         "
+                        FieldName="firstName"
                         label="First Name"
                         inputType="text"
                         inputClassName="form-control"
                         iconClassName="fas fa-user"
                         placeholder="First Name"
+                        v-model:input="firstName"
                     />
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <ErrorMessage name="firstName" class="text-danger"/>
                 </div>
                 <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
                     <TextInput
@@ -67,12 +100,17 @@
                             text-dark
                             pb-1
                         "
+                        FieldName="middleName"
                         label="Middle Name"
                         inputType="text"
                         inputClassName="form-control"
                         iconClassName="fas fa-user"
                         placeholder="Middle Name"
+                        v-model:input="middleName"
                     />
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <ErrorMessage name="middleName" class="text-danger"/>
                 </div>
                 <div class="col-lg-6 col-md-12 col-sm-12 pt-3">
                     <TextInput
@@ -83,12 +121,17 @@
                             text-dark
                             pb-1
                         "
+                        FieldName="lastName"
                         label="Last Name"
                         inputType="text"
                         inputClassName="form-control"
                         iconClassName="fas fa-user"
                         placeholder="Last Name"
+                        v-model:input="lastName"
                     />
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <ErrorMessage name="lastName" class="text-danger"/>
                 </div>
                 <div class="col-12 pt-3">
                     <DisplayCropperButton 
@@ -180,9 +223,9 @@
                     />
                 </div>
                 <div class="col-12 pt-5">
-                    <button class="btn btn-primary float-right">Update Profile</button>
+                    <button class="btn btn-primary float-right" type="submit">Update Profile</button>
                 </div>
-            </div>
+            </Form>
         </div>
     </div>
 </template>

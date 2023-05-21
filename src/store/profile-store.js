@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 export const useProfileStore = defineStore('profile', {
   state: () => ({
     id: null,
+    image: null,
     firstName: null,
     middleName: null,
     lastName: null,
@@ -16,6 +17,7 @@ export const useProfileStore = defineStore('profile', {
         let res = await axios.get('users/' + id)
 
         this.$state.id = res.data.user.id
+        this.$state.image = res.data.user.image
         this.$state.firstName = res.data.user.first_name
         this.$state.middleName = res.data.user.middle_name
         this.$state.lastName = res.data.user.last_name
@@ -25,6 +27,7 @@ export const useProfileStore = defineStore('profile', {
     },
     clearProfile() {
       this.$state.id = null
+      this.$state.image = null
       this.$state.firstName = null
       this.$state.middleName = null
       this.$state.lastName = null

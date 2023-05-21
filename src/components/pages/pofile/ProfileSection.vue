@@ -1,9 +1,9 @@
 <script setup>
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
-    import ProfileNavigation from './ProfileNavigation.vue'
     import { useProfileStore } from '../../../store/profile-store'
     import { ucwords } from './../../../assets/js/string_functions.js'
+    import ProfileNavigation from './ProfileNavigation.vue'
     import RouterButton  from '../../global/RouterButton.vue'
 
     const router = useRouter()

@@ -156,37 +156,41 @@
                 json_json_agency: agencyField
         }
 
-        console.log(JSONdata)
-
         try {
 
             let res = await axios.post('nz-store/', JSONdata)
 
-            if (res.data.status_code === 200) {
+            if (res.request.status === 200) {
 
-                Swal.fire(res.data.message, '', 'Success')
+                Swal.fire(res.data.message, '', 'success')
 
                 NZ_IndividualSched.clearNZIndividualSched()
                 NZ_IndividualDetails.clearNZIndividualDetails()
                 NZ_SlotStore.clearSlot_NZ()
 
-                router.push(process.env.BASE_URL +"/")
+                router.push(process.env.BASE_URL +"")
                 
-            } if (res.data.status_code === 400) {
+            } else if (res.request.status === 400) {
+
                 Swal.fire(res.data.message, '', 'info')
+
+            } else if (res.request.status === 500) {
+
+                Swal.fire('Internal Server Error', '', 'warning')
+
             } else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
                 Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
                 console.log('Reject, '+ res.data.error +', '+ res.data.message)
-                console.log()
+
             }
 
             // console.log(res)
 
         } catch (err) {
             errors.value = err.response.data.errors
-            Swal.fire(err.response.data.message, '', 'info')
-            // console.log(errors.value)
+            Swal.fire(err.response.data.message, '', 'error')
+            console.log(errors.value)
         }
 
     }
