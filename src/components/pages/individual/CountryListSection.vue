@@ -28,7 +28,7 @@
                     btnText="New Zealand"
                 />
                 <CountryLinkBtn 
-                    btnUrl=""
+                    btnUrl="/individual/ot"
                     btnText="South Korea"
                 />
                 <CountryLinkBtn 

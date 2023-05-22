@@ -107,7 +107,7 @@
     }
     
 
-    const handleDetails = async () => {
+    const handleStore = async () => {
 
         errors.value = []
 
@@ -130,7 +130,7 @@
                 json_alias_middleName: alias_middleName,
                 json_motherLastName: motherLastName,
                 json_motherFirstName: motherFirstName,
-                json_motherdiddleName: motherdiddleName,
+                json_motherMiddleName: motherdiddleName,
                 json_birthDate: details.dob,
                 json_gender: gender,
                 json_civilStatus: civilStatus,
@@ -147,23 +147,28 @@
                 json_agency: agencyField,
         }
 
-        console.log(JSONdata)
-
         try {
 
-            let res = await axios.post('ca-individual/', JSONdata)
+            let res = await axios.post('ca-store/', JSONdata)
 
-            if (res.request.status === 200 ) {
+            if (res.request.status === 200 && res.data.status_code === 200) {
 
                 Swal.fire(res.data.message, '', 'success')
-                // alert('Success '+ res.data.response +' - '+ res.data.sched)
-
+     
                 CA_IndividualSched.clearCAIndividualSched()
                 CA_IndividualDetails.clearCAIndividualDetails()
                 CA_SlotStore.clearSlot_CA()
 
-                router.push(process.env.BASE_URL +"")
+                router.push(process.env.BASE_URL + "")
                 
+            } else if (res.request.status === 400) {
+
+                Swal.fire(res.data.message, '', 'info')
+
+            } else if (res.request.status === 500) {
+
+                Swal.fire('Internal Server Error', '', 'warning')
+
             } else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
                 Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
@@ -174,6 +179,7 @@
 
         } catch (err) {
             errors.value = err.response.data.errors
+
             Swal.fire(err.response.data.message, '', 'error')
             console.log(errors.value)
         }
@@ -221,7 +227,7 @@
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-        <Form @submit.prevent="handleDetails" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
+        <Form @submit.prevent="handleStore" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="mb-3 col-12">

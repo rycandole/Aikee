@@ -47,6 +47,13 @@ import NZ_Ind_DetailsForm from '@/views/individual/nz/DetailsFormPage.vue'
 import NZ_Ind_Preview from '@/views/individual/nz/PreviewPage.vue'
 // ------ NZ END PAGE ---------- //
 
+// ------- OT PAGE ------- //
+import OT_Ind_ApplicationFormPage from '@/views/individual/ot/ApplicationFormPage.vue'
+import OT_Ind_SchedulePage from '@/views/individual/ot/SchedulePage.vue'
+import OT_Ind_DetailsForm from '@/views/individual/ot/DetailsFormPage.vue'
+import OT_Ind_Preview from '@/views/individual/ot/PreviewPage.vue'
+// ------ OT END PAGE ---------- //
+
 // ================ INDIVIDUAL END PAGE ========================= //
 
 US_Ind_ApplicationFormPage
@@ -188,6 +195,27 @@ const routes = [
         path: '/individual/nz/preview',
         name: 'nz_preview',
         component: NZ_Ind_Preview,
+      },
+
+      {
+        path: '/individual/ot',
+        name: 'ot_form',
+        component: OT_Ind_ApplicationFormPage,
+      },
+      {
+        path: '/individual/ot/schedule',
+        name: 'ot_date',
+        component: OT_Ind_SchedulePage,
+      },
+      {
+        path: '/individual/ot/applicant-details',
+        name: 'ot_details',
+        component: OT_Ind_DetailsForm,
+      },
+      {
+        path: '/individual/ot/preview',
+        name: 'ot_preview',
+        component: OT_Ind_Preview,
       },
     ]
   },

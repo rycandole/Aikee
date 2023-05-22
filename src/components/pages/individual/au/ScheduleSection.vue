@@ -169,7 +169,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
-                            <div class="col-12 mb-5">
+                            <div class="col-lg-9 col-md-12 col-sm-12 mb-5">
                                 <RequiredSelectField 
                                     label="Please select your preferred St. Luke's Extension Clinic location"
                                     FieldName="clinic_location"

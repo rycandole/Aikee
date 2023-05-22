@@ -3,9 +3,8 @@
     import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
-    import { useNZIndividualSched } from '@/store/nz-individual-sched'
-    // import {  useSlotStore  } from "@/store/slot-store"
-    import {  useSlot_NZ  } from "@/store/nz-slot-store"
+    import { useOTIndividualSched } from '@/store/ot-individual-sched'
+    import {  useSlot_OT  } from "@/store/ot-slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -20,8 +19,8 @@
     import * as yup from 'yup';
     
     const router = useRouter()
-    const NZIndividualSched = useNZIndividualSched()
-    const NZ_SlotStore = useSlot_NZ()
+    const OTIndividualSched = useOTIndividualSched()
+    const OT_SlotStore = useSlot_OT()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -88,16 +87,16 @@
 
     const handleSlots = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
-        country = 'NZ'
+        country = 'OT'
         branch = clinic_code.get(clinic_location.value)
 
-        await NZ_SlotStore.fetchSlotByDate_NZ(date, country, branch)
+        await OT_SlotStore.fetchSlotByDate_OT(date, country, branch)
 
         onMounted(async () => {
-            await NZ_SlotStore.fetchSlotByDate_NZ(date)
+            await OT_SlotStore.fetchSlotByDate_OT(date)
         })
        
-        timeSlots = NZ_SlotStore.slots
+        timeSlots = OT_SlotStore.slots
 
         timeSched = timeSlots
     }
@@ -113,9 +112,9 @@
 
         let res = JSON.stringify(jsonDATA)
 
-        NZIndividualSched.setNZIndividualSched(res)
+        OTIndividualSched.setOTIndividualSched(res)
 
-        router.push('/individual/nz/applicant-details')
+        router.push('/individual/ot/applicant-details')
         
     }
 
@@ -126,11 +125,12 @@
             text: 'The details you filled up will be gone.',
             showCancelButton: true,
             confirmButtonText: 'Yes',
+            icon: 'question',
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
 
-                router.push('/individual/au')
+                router.push('/individual/ot')
 
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
@@ -138,10 +138,6 @@
         })
     }
 
-    
-
-    
-    
 </script>
 
 <template>
@@ -151,7 +147,7 @@
     <Form @submit="handleDateTime" :validation-schema="schema" class="wrapper_container row bg-white border">
        
         <div class="col-lg-12 col-md-12 col-12">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >New Zealand Online Registration</h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >Online Registration</h1>
         </div>
         
             <div class="col-lg-3 col-md-12 col-sm-12">
@@ -169,7 +165,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
-                            <div class="col-lg-9 col-md-12 col-sm-12 mb-5">
+                            <div class="col-lg-10 col-md-12 col-sm-12 mb-5">
                                 <RequiredSelectField 
                                     label="Please select your preferred St. Luke's Extension Clinic location"
                                     FieldName="clinic_location"
