@@ -38,6 +38,7 @@
                 title: 'Are you sure you want to logout?',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
+                icon: 'question',
             }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
