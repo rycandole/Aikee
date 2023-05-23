@@ -4,7 +4,7 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    // import { useOTIndividualDetails } from '@/store/ot-individual-details'
+    import { useOTIndividualDetails } from '@/store/ot-individual-details'
     import { Form } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -33,7 +33,7 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
-    // const OTIndividualDetails = useOTIndividualDetails()
+    const OTIndividualDetails = useOTIndividualDetails()
 
     /**
      * For Fetching user data
@@ -46,7 +46,7 @@
     let user_id = profileStore.id
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
-    let visaEmbassyField = ref(null)
+    let embassyOfVisa = ref(null)
     let visaCategoryField = ref(null)
     let passportNumber = ref(null)
     let issuedCountry = ref(null)
@@ -76,8 +76,8 @@
     
 
     const schema = yup.object().shape({
-        visaEmbassy: yup.string().required('This field is required, please choose an option!'),
-        visaCategory: yup.string().nullable(),
+        embassyOfVisa: yup.string().required('This field is required, please choose an option!'),
+        visaCategoryField: yup.string().nullable(),
         passportNumber: yup.string().nullable().max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         issuedCountry: yup.string().nullable(),
         ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
@@ -109,8 +109,8 @@
       
         const jsonDATA = {
                 json_user_id: user_id,
-                json_visaEmbassy: values.visaEmbassyField,
-                json_visaCategory: values.visaCategoryField,
+                json_embassyOfVisa: values.embassyOfVisa,
+                json_visaCategoryField: values.visaCategoryField,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
                 json_issuedDate: isuedDate,
@@ -131,16 +131,13 @@
                 json_city: values.city,
                 json_provinceField: values.provinceField,
                 json_postalCode: values.postalCode,
-                json_applicantCategory: values.applicantCategory,
         }
 
         let res = JSON.stringify(jsonDATA)
 
-        // OTIndividualDetails.setOTIndividualDetails(res)
-        console.log(res)
-        alert("Hello World")
+        OTIndividualDetails.setOTIndividualDetails(res)
 
-        // router.push('/individual/ot/preview')
+        router.push('/individual/ot/preview')
 
     }
 
@@ -209,17 +206,17 @@
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Embassy of Visa Application"
-                            FieldName="visaEmbassy"
-                            ErrorName="visaEmbassy"
-                            v-model:input="visaEmbassyField"
+                            FieldName="embassyOfVisa"
+                            ErrorName="embassyOfVisa"
+                            v-model:input="embassyOfVisa"
                             :items="koica"
                         />
                     </div>
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Visa category"
-                            FieldName="visaCategory"
-                            ErrorName="visaCategory"
+                            FieldName="visaCategoryField"
+                            ErrorName="visaCategoryField"
                             v-model:input="visaCategoryField"
                             :items="visaCategory"
                         />

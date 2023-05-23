@@ -32,8 +32,20 @@
                     btnText="South Korea"
                 />
                 <CountryLinkBtn 
-                    btnUrl=""
-                    btnText="Other Country"
+                    btnUrl="/individual/ot"
+                    btnText="Falkland Islands"
+                />
+                <CountryLinkBtn 
+                    btnUrl="/individual/ot"
+                    btnText="Latvia"
+                />
+                <CountryLinkBtn 
+                    btnUrl="/individual/ot"
+                    btnText="Mauritius"
+                />
+                <CountryLinkBtn 
+                    btnUrl="/individual/ot"
+                    btnText="Cook Islands"
                 />
             </div>
         </div>

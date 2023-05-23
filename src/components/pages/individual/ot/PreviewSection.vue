@@ -4,9 +4,9 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    // import { useOTIndividualSched } from '@/store/ot-individual-sched.js'
-    // import { useOTIndividualDetails } from '@/store/ot-individual-details.js'
-    // import { useSlot_OT } from '@/store/ot-slot-store.js'
+    import { useOTIndividualSched } from '@/store/ot-individual-sched.js'
+    import { useOTIndividualDetails } from '@/store/ot-individual-details.js'
+    import { useSlot_OT } from '@/store/ot-slot-store.js'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -23,9 +23,9 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
-    // const OT_IndividualSched = useOTIndividualSched()
-    // const OT_IndividualDetails = useOTIndividualDetails()
-    // const OT_SlotStore = useSlot_OT()
+    const OT_IndividualSched = useOTIndividualSched()
+    const OT_IndividualDetails = useOTIndividualDetails()
+    const OT_SlotStore = useSlot_OT()
     const schedule = JSON.parse(localStorage.getItem('ot-individual-sched'))
     const details = JSON.parse(localStorage.getItem('ot-individual-details'))
 
@@ -64,18 +64,14 @@
     let sched_time = schedule.time
     let sched_branch = schedule.clinic
 
-    let wasFirstMedExam = details.wasFirstMedicalExam
-    let prevClinic = details.prevClinicName
-    let prevCategory = details.prevCategory
+    let embassyOfVisa = details.embassyOfVisa
+    let visaCategoryField = details.visaCategoryField
     let passportNumber = details.passportNumber
     let issuedCountry = details.issuedCountry
     let issuedDate = moment(details.issuedDate).format('LL');
     let lastName = details.ad_lastName
     let firstName = details.ad_firstName
     let middleName = details.ad_middleName
-    let alias_lastName = details.alias_lastName
-    let alias_firstName = details.alias_firstName
-    let alias_middleName = details.alias_middleName
     let motherLastName = details.mother_lastName
     let motherFirstName = details.mother_firstName
     let motherdiddleName = details.mother_middleName
@@ -90,9 +86,6 @@
     let city = details.city
     let province = details.provinceField
     let postalCode = details.postalCode
-    let applicantCategory = details.applicantCategory
-    let fileNumber = details.fileNumber
-    let agencyField = details.agencyField
 
 
     const schema = yup.object({
@@ -116,18 +109,14 @@
                 json_sched_date: schedule.date,
                 json_sched_time: sched_time,
                 json_sched_branch: branch,
-                json_wasFirstMedExam: wasFirstMedExam,
-                json_prevClinic: prevClinic,
-                json_prevCategory: prevCategory,
+                JSON_embassyOfVisa: embassyOfVisa,
+                JSON_visaCategoryField: visaCategoryField,
                 json_passportNumber: passportNumber,
                 json_issuedCountry: issuedCountry,
                 json_issuedDate: details.issuedDate,
                 json_lastName: lastName,
                 json_firstName: firstName,
                 json_middleName: middleName,
-                json_alias_lastName: alias_lastName,
-                json_alias_firstName: alias_firstName,
-                json_alias_middleName: alias_middleName,
                 json_motherLastName: motherLastName,
                 json_motherFirstName: motherFirstName,
                 json_motherMiddleName: motherdiddleName,
@@ -142,9 +131,6 @@
                 json_city: city,
                 json_province: province,
                 json_postalCode: postalCode,
-                json_applicantCategory: applicantCategory,
-                json_fileNumber: fileNumber,
-                json_agency: agencyField,
         }
 
         try {
@@ -155,9 +141,9 @@
 
                 Swal.fire(res.data.message, '', 'success')
      
-                // OT_IndividualSched.clearOTIndividualSched()
-                // OT_IndividualDetails.clearOTIndividualDetails()
-                // OT_SlotStore.clearSlot_OT()
+                OT_IndividualSched.clearOTIndividualSched()
+                OT_IndividualDetails.clearOTIndividualDetails()
+                OT_SlotStore.clearSlot_OT()
 
                 router.push(process.env.BASE_URL + "")
                 
@@ -174,8 +160,6 @@
                 Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
                 console.log('Reject, '+ res.data.error +', '+ res.data.message)
             }
-
-            // console.log(res)
 
         } catch (err) {
             errors.value = err.response.data.errors
@@ -198,7 +182,7 @@
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
 
-                router.push('/individual/ca/applicant-details')
+                router.push('/individual/ot/applicant-details')
 
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
@@ -256,43 +240,44 @@
                             v-bind:previewText="sched_time"
                         />
                     </div>
-
-                    <div class="col-12">
-                        <PreviewText 
-                            previewLabel="Is this your first medical examination for the Canadian Embassy? "
-                            v-bind:previewText="wasFirstMedExam == 'N' ? 'No' : 'Yes' "
+                    <div class="mb-3 col-12">
+                        <FormHeader
+                            headerText="Visa Application Information"
                         />
                     </div>
-                    <div class="col-12 pl-5">
-                        <div class="row">
-                            <div class="col-lg-8 col-md-12 col-sm-12">
-                                <PreviewText 
-                                    previewLabel="Name of Clinic and Year of Visa Medical Examination"
-                                    v-bind:previewText="prevClinic"
-                                />
-                            </div>
-                            <div class="col-lg-8 col-md-12 col-sm-12">
-                                <PreviewText 
-                                    previewLabel="Category applied for"
-                                    v-bind:previewText="prevCategory"
-                                />
-                            </div>
-                        </div>
+                    <div class="col-12">
+                        <PreviewText 
+                            previewLabel="Embassy of Visa Application"
+                            v-bind:previewText="embassyOfVisa"
+                        />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12">
+                    <div class="col-12 pb-3">
+                        <PreviewText 
+                            previewLabel="Visa Category"
+                            v-bind:previewText="visaCategoryField"
+                        />
+                    </div>
+                    <div class="mb-3 col-12">
+                        <FormHeader
+                            headerText="PASSPORT INFORMATION"
+                        />
+                    </div>
+                    <div class="col-12">
                         <PreviewText 
                             previewLabel="Passport Number"
                             v-bind:previewText="passportNumber"
                         />
                     </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12">
+                    <div class="col-12"><hr /></div>
+                    <div class="col-12">
                         <PreviewText 
                             previewLabel="Country of Issue"
                             v-bind:previewText="issuedCountry"
                         />
                     </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div class="col-12"><hr /></div>
+                    <div class="col-12 pb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
                             v-bind:previewText="issuedDate"
@@ -326,32 +311,6 @@
                                 <div class="col-lg-4 col-md-12 col-sm-12">
                                     <PreviewSmallText 
                                         v-bind:previewText="middleName"
-                                        smallLabel="Middle Name"
-                                    />
-                                </div>
-                            </div>
-                            <hr />
-                            <li>
-                                <PreviewText 
-                                    previewLabel="ALIAS/A.K.A. Name on Passport, if any."
-                                />
-                            </li>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-12 col-sm-12">
-                                    <PreviewSmallText 
-                                        v-bind:previewText="alias_lastName"
-                                        smallLabel="Last Name"
-                                    />
-                                </div>
-                                <div class="col-lg-4 col-md-12 col-sm-12">
-                                    <PreviewSmallText 
-                                        v-bind:previewText="alias_firstName"
-                                        smallLabel="First Name"
-                                    />
-                                </div>
-                                <div class="col-lg-4 col-md-12 col-sm-12">
-                                    <PreviewSmallText 
-                                        v-bind:previewText="alias_middleName"
                                         smallLabel="Middle Name"
                                     />
                                 </div>
@@ -472,39 +431,7 @@
                             </li>
                         </ol>
                     </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="VISA APPLICATION INFORMATION"
-                        />
-                    </div>
-                    <div class="col-12">
-                        <div class="row pb-3"> 
-                            <div class="col-lg-8 col-md-12 col-sm-12">
-                                <PreviewText 
-                                    previewLabel="Category of Applicant"
-                                    v-bind:previewText="applicantCategory"
-                            />
-                            </div>
-                            <div class="col-lg-8 col-md-12 col-sm-12">
-                                <PreviewText 
-                                    previewLabel="File Number/IME"
-                                    v-bind:previewText="fileNumber"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="ADDITIONAL QUESTIONS"
-                        />
-                    </div>
-                    <div class="col-12">
-                        <PreviewText 
-                            previewLabel="Agency"
-                            v-bind:previewText="agencyField"
-                        />
-                    </div>
-                
+
                     <div class="col-12 mt-4 border-top container-fluid p-3 irc_div">
                         <h6 class="text-bold mt-3">Information Registration Consent:</h6>
                         <div class="form-check">

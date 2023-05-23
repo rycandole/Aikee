@@ -195,7 +195,7 @@
     })
 
 
-    const handleDetails = async () => {
+    const handleStore = async () => {
 
         errors.value = []
 
@@ -265,7 +265,7 @@
 
         try {
 
-            let res = await axios.post('us-individual/', JSONdata)
+            let res = await axios.post('us-store/', JSONdata)
 
             if (res.data.status_code === 200 ) {
 
@@ -333,7 +333,7 @@
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-        <Form @submit.prevent="handleDetails" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
+        <Form @submit.prevent="handleStore" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="mb-3 col-12">

@@ -4,8 +4,8 @@ import { defineStore } from 'pinia'
 export const useOTIndividualDetails = defineStore('ot-individual-details', {
   state: () => ({
     user_id: null,
-    visaEmbassy: null,
-    visaCategory: null,
+    embassyOfVisa: null,
+    visaCategoryField: null,
     passportNumber: null,
     issuedCountry: null,
     issuedDate: null,
@@ -32,8 +32,8 @@ export const useOTIndividualDetails = defineStore('ot-individual-details', {
         let jsonPARSE = JSON.parse(res)
         
         this.$state.user_id = jsonPARSE.json_user_id
-        this.$state.visaEmbassy = jsonPARSE.json_visaEmbassy
-        this.$state.visaCategory = jsonPARSE.json_visaCategory
+        this.$state.embassyOfVisa = jsonPARSE.json_embassyOfVisa
+        this.$state.visaCategoryField = jsonPARSE.json_visaCategoryField
         this.$state.passportNumber = jsonPARSE.json_passportNumber
         this.$state.issuedCountry = jsonPARSE.json_issuedCountry
         this.$state.issuedDate = jsonPARSE.json_issuedDate
@@ -57,8 +57,8 @@ export const useOTIndividualDetails = defineStore('ot-individual-details', {
     },
     clearOTIndividualDetails() {
         this.$state.user_id = null
-        this.$state.visaEmbassy = null
-        this.$state.visaCategory = null
+        this.$state.embassyOfVisa = null
+        this.$state.visaCategoryField = null
         this.$state.passportNumber = null
         this.$state.issuedCountry = null
         this.$state.issuedDate = null

@@ -21,7 +21,7 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item "><router-link to="/individual" class="text-secondary">Individual</router-link></li>
-                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">Canada</router-link></li>
+                                <li class="breadcrumb-item "><router-link to="" class="text-secondary">OT</router-link></li>
                                 <li class="breadcrumb-item "><router-link to="" class="text-secondary">Preview</router-link></li>
                             </ol>
                         </div><!-- /.col -->
