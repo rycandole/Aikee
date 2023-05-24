@@ -53,7 +53,7 @@ const inputComputed = computed({
         </div>
         <div class="col-12">
             <span v-if="error" class="text-danger">
-                {{ error }}
+                {{ error }} &nbsp;
             </span>
             <ErrorMessage :name="ErrorName" class="text-danger"/>
         </div>

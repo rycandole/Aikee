@@ -140,7 +140,7 @@
             if (res.request.status === 200 && res.data.status_code === 200) {
 
                 Swal.fire(res.data.message, '', 'success')
-     
+    
                 OT_IndividualSched.clearOTIndividualSched()
                 OT_IndividualDetails.clearOTIndividualDetails()
                 OT_SlotStore.clearSlot_OT()

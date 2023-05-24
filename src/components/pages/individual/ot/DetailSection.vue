@@ -1,5 +1,5 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
@@ -67,6 +67,9 @@
     let city = ref(null)
     let provinceField = ref(null)
     let postalCode = ref(null)
+    let errors = ref([])
+    let inputName = ref(null)
+    let inputError = ref(null)
     
 
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
@@ -102,7 +105,9 @@
      * Submit US individual form
      * 
      */
-     const handleDetails = (values) => {
+     const handleDetails = async (values) => {
+
+        errors.value = []
 
         let dob = moment(new Date(dateOfBirth.value)).format('YYYY-MM-DD')
         let isuedDate = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
@@ -133,11 +138,25 @@
                 json_postalCode: values.postalCode,
         }
 
-        let res = JSON.stringify(jsonDATA)
+        try {
+            let validateRequest = await axios.post('ot-validate', jsonDATA)
 
-        OTIndividualDetails.setOTIndividualDetails(res)
+            if (validateRequest.data.status_code === 200) {
 
-        router.push('/individual/ot/preview')
+                let res = JSON.stringify(jsonDATA)
+
+                OTIndividualDetails.setOTIndividualDetails(res)
+
+                router.push('/individual/ot/preview')
+
+            } else {
+                inputName.value = validateRequest.data.name
+                inputError.value = validateRequest.data.error
+            }
+
+        } catch (err) {
+          errors.value = err.response.data.errors
+        }
 
     }
 
@@ -247,6 +266,7 @@
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="issuedDate"
                             :onChange="showBooster1"
+                            :error="(errors.json_issuedDate) ? (errors.json_issuedDate[0]) : ((inputName == 'json_issuedDate') ? (inputError) : '')"
                         />
                     </div>
                     <div class="mb-3 col-12">
@@ -266,6 +286,7 @@
                                         FieldName="ad_lastName"
                                         ErrorName="ad_lastName"
                                         v-model:input="ad_lastName"
+                                        :error="errors.json_ad_lastName ? errors.json_ad_lastName[0] : ''"
                                     />
                                 </div>
                                 <div class="col-lg-8 col-md-12 col-sm-12">
@@ -276,6 +297,7 @@
                                         FieldName="ad_firstName"
                                         ErrorName="ad_firstName"
                                         v-model:input="ad_firstName"
+                                        :error="errors.json_firstName ? errors.json_firstName[0] : ''"
                                     />
                                 </div>
                                 <div class="col-lg-8 col-md-12 col-sm-12">
@@ -331,6 +353,7 @@
                                         :disabledDate="disableBirthdayState.disabledDates"
                                         v-model:input="dateOfBirth"
                                         :onChange="showBooster1"
+                                        :error="(errors.json_dateOfBirth) ? (errors.json_dateOfBirth[0]) : ((inputName == 'json_dateOfBirth') ? (inputError) : '')"
                                     />
                                 </div>
                             </div>
