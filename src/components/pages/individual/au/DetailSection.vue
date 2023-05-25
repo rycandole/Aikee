@@ -1,5 +1,5 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
@@ -75,6 +75,9 @@
     let intentToWork = ref(null)
     let intentToStay = ref(null)
     let agencyField = ref(null)
+    let errors = ref([])
+    let inputName = ref(null)
+    let inputError = ref(null)
     
 
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
@@ -127,7 +130,9 @@
      * Submit US individual form
      * 
      */
-     const handleDetails = (values) => {
+     const handleDetails = async (values) => {
+
+        errors.value = []
 
         let dob = moment(new Date(dateOfBirth.value)).format('YYYY-MM-DD')
         let isuedDate = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
@@ -165,12 +170,26 @@
                 json_agencyField: values.agencyField,
         }
 
-        let res = JSON.stringify(jsonDATA)
+        
+
+        try {
+            let validateRequest = await axios.post('au-validate', jsonDATA)
+
+            if (validateRequest.data.status_code === 200) {
+
+                let res = JSON.stringify(jsonDATA)
        
+                AUIndividualDetails.setAUIndividualDetails(res)
 
-        AUIndividualDetails.setAUIndividualDetails(res)
+                router.push('/individual/au/preview')
+            } else {
+                inputName.value = validateRequest.data.name
+                inputError.value = validateRequest.data.error
+            }
 
-        router.push('/individual/au/preview')
+        } catch (err) {
+          errors.value = err.response.data.errors
+        }
 
     }
 
@@ -331,6 +350,7 @@
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="issuedDate"
                             :onChange="showBooster1"
+                            :error="(errors.json_issuedDate) ? (errors.json_issuedDate[0]) : ((inputName == 'json_issuedDate') ? (inputError) : '')"
                         />
                     </div>
                     <div class="mb-3 col-12">
@@ -415,6 +435,7 @@
                                         :disabledDate="disableBirthdayState.disabledDates"
                                         v-model:input="dateOfBirth"
                                         :onChange="showBooster1"
+                                        :error="(errors.json_dateOfBirth) ? (errors.json_dateOfBirth[0]) : ((inputName == 'json_dateOfBirth') ? (inputError) : '')"
                                     />
                                 </div>
                             </div>

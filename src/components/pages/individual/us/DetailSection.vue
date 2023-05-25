@@ -1,5 +1,5 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
@@ -78,7 +78,9 @@
     let add_passport_expiration_date = ref(null)
     let add_issuance_date = ref(null)
     let add_expiration_date = ref(null)
-    
+    let errors = ref([])
+    let inputName = ref(null)
+    let inputError = ref(null)
 
 
     const alertChange = () => {
@@ -158,7 +160,10 @@
      * Submit US individual form
      * 
      */
-     const handleDetails = (values) => {
+     const handleDetails = async (values) => {
+
+        errors.value = []
+
         let birthDate = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
         let first_dose = moment(new Date(firstDose.value)).format('YYYY-MM-DD')
         let second_dose = moment(new Date(secondDose.value)).format('YYYY-MM-DD')
@@ -235,10 +240,24 @@
             json_intended_port_of_entry: values.intended_port_of_entry
     }
 
-    let res = JSON.stringify(jsonDATA)
+        try {
+            let validateRequest = await axios.post('us-validate', jsonDATA)
 
-    USIndividualDetails.setUSIndividualDetails(res)
-    router.push('/individual/us/preview')
+            if (validateRequest.data.status_code === 200) {
+
+                let res = JSON.stringify(jsonDATA)
+
+                USIndividualDetails.setUSIndividualDetails(res)
+                router.push('/individual/us/preview')
+
+            } else {
+                inputName.value = validateRequest.data.name
+                inputError.value = validateRequest.data.error
+            }
+
+        } catch (err) {
+            errors.value = err.response.data.errors
+        }
 
     }
 
@@ -385,7 +404,6 @@
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
                     <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
-                        <Field type="text" name="covidHidden" v-bind:value="covidHidden" />
                         <DateField 
                             label="Date of Birth"
                             placeholder="Date of birth"
@@ -394,6 +412,7 @@
                             v-model:input="date_of_birth"
                             :isDisabled="radioDisabled"
                             :onChange="alertChange"
+                            :error="(errors.json_date_of_birth) ? (errors.json_date_of_birth[0]) : ((inputName == 'json_date_of_birth') ? (inputError) : '')"
                         />
                     </div>
                     <div class="mb-3 col-12" :hidden="covidHidden">
@@ -935,6 +954,7 @@
                             color="red"
                             :disabledDate="disableFutureDateState.disabledDates"
                             v-model:input="add_passport_date"
+                            :error="(errors.json_ad_passport_date) ? (errors.json_ad_passport_date[0]) : ((inputName == 'json_ad_passport_date') ? (inputError) : '')"
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
@@ -951,6 +971,7 @@
                             color="red"
                             :disabledDate="disablePastDateState.disabledDates"
                             v-model:input="add_passport_expiration_date"
+                            :error="(errors.json_ad_passport_expiration_date) ? (errors.json_ad_passport_expiration_date[0]) : ((inputName == 'json_ad_passport_expiration_date') ? (inputError) : '')"
                         />
                     </div>
                     <div class="mb-3 mt-5 col-12">

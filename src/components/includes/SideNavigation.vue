@@ -165,7 +165,7 @@
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="" class="nav-link">
+                        <router-link to="/application" class="nav-link">
                             <i class="nav-icon fas fa-edit"></i>
                             <p>
                                 Application

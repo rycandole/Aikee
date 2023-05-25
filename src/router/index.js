@@ -3,6 +3,7 @@ import { useUserStore } from '@/store/user-store'
 
 // =============== Parent - View Import ==================== //
 import HomeView from '@/views/HomeView.vue'
+import ApplicationView from '@/views/ApplicationView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import SignInView from '@/views/SignInView.vue'
@@ -11,14 +12,20 @@ import IndividualView from '@/views/IndividualView.vue'
 import FamilyView from '@/views/FamilyView.vue'
 
 // =============== Child - Page Import ==================== //
+
 // --- Sign In Child ---- //
 import SignInPage from '@/views/signin/SignInPage.vue'
 import ForgotPasswordPage from '@/views/signin/ForgotPasswordPage.vue'
 // --- Profile Child ------ //
 import ProfilePage from '@/views/profile/ProfilePage.vue'
 import EditProfilePage from '@/views/profile/EditProfilePage.vue'
+// ------- APPLICATION PAGE ------- //
+import ApplicationPage from '@/views/application/ApplicationPage.vue'
+
 // ================== INDIVIDUAL CHILD =========================== //
 import IndividualCountryPage from '@/views/individual/CountryPage.vue'
+
+
 // ------- US PAGE ------- //
 import US_Ind_ApplicationFormPage from '@/views/individual/us/ApplicationFormPage.vue'
 import US_Ind_SchedulePage from '@/views/individual/us/SchedulePage.vue'
@@ -83,6 +90,20 @@ const routes = [
     },
     name: 'home',
     component: HomeView,
+  },
+  {
+    path: '/application',
+    beforeEnter: (to, from, next) => {
+      useUserStore().id ? next() : next('/signin')
+    },
+    component: ApplicationView,
+    children: [
+      {
+        path: '',
+        name: 'application',
+        component: ApplicationPage,
+      },
+    ]
   },
   {
     path: '/profile',
