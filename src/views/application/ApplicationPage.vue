@@ -2,7 +2,7 @@
     import TopNavBar from '@/components/includes/TopNavBar.vue'
     import SideNavigation from '@/components/includes/SideNavigation.vue'
     import FooterSection from '@/components/includes/FooterSection.vue'
-    import CountryListSection from '@/components/pages/individual/CountryListSection.vue'
+    import ListSection from '@/components/pages/application/ListSection.vue'
     
 
 </script>
@@ -24,7 +24,7 @@
                                 <li class="breadcrumb-item "><router-link to="/" class="text-secondary"> Application </router-link></li>
                             </ol>
                         </div><!-- /.col -->
-                            <CountryListSection />
+                            <ListSection />
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
 
