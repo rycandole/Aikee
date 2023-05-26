@@ -1,13 +1,41 @@
 <script setup>
+// import axios from 'axios'
+import { ref } from 'vue'
+import { onMounted } from 'vue'
+import {  registerList  } from "@/store/registration-list-store"
+import { useProfileStore } from '@/store/profile-store'
+
+
+const profileStore = useProfileStore()
+const registeredList_SlotStore = registerList()
+let user_id = profileStore.id
+
+
+let showApplications = ref([])
+let registrationList = ref(null)
+
+onMounted(async () => {
+
+    await registeredList_SlotStore.fetchRegisteredList(user_id)
+})
+
+showApplications = registeredList_SlotStore.list
+registrationList = showApplications
+
+
+
+
+
+
 
 </script>
 <template>
     <div class="col-12">
-        <div class="row mt-3 justify-content-center">
-            <div class="tableDiv col-12 bg-white border ">
+        <div class="row tableDiv mt-3 justify-content-center">
+            <div class="col-12 bg-white border ">
                 
-                <table class="table table-hover">
-                    <thead>
+                <table class="table table-striped">
+                    <thead align="center">
                         <tr>
                             <th class="border-top-0">Name</th>
                             <th class="border-top-0">Country</th>
@@ -17,22 +45,26 @@
                             <th class="border-top-0">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody align="center">
                         <tr>
                             <td>Sample Example</td>
                             <td>U.S.A.</td>
                             <td>sample@example.com</td>
                             <td>May 05, 2023</td>
-                            <td>Paid</td>
+                            <td align="right">
+                                <b>Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
+                            </td>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                      Dropdown button
+                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                      <li><a class="dropdown-item" href="#">Action</a></li>
-                                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                                      <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-envelope mr-2 text-primary"></i>  Re-send email</router-link></li>
                                     </ul>
                                   </div>
                             </td>
@@ -42,19 +74,97 @@
                             <td>U.S.A.</td>
                             <td>sample@example.com</td>
                             <td>May 05, 2023</td>
-                            <td>Paid</td>
-                            <td>Edit</td>
+                            <td align="right">
+                                <b>Paid <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-envelope mr-2 text-primary"></i>  Re-send email</router-link></li>
+                                      </ul>
+                                  </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>Sample Example</td>
                             <td>U.S.A.</td>
                             <td>sample@example.com</td>
                             <td>May 05, 2023</td>
-                            <td>Paid</td>
-                            <td>Edit</td>
+                            <td align="right">
+                                <b>Awaiting payment <i class="fas fa-minus-circle fa-lg text-info ml-2"></i></b>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-envelope mr-2 text-primary"></i>  Re-send email</router-link></li>
+                                      </ul>
+                                  </div>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="p-5" colspan="6"></td>
+                            <td>Sample Example</td>
+                            <td>U.S.A.</td>
+                            <td>sample@example.com</td>
+                            <td>May 05, 2023</td>
+                            <td align="right">
+                                <b>Re-scheduled <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
+                                        <li><router-link to="/" class="dropdown-item"><i class="fas fa-envelope mr-2 text-primary"></i>  Re-send email</router-link></li>
+                                      </ul>
+                                  </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <h3 class="text-secondary p-5">No Records</h3>
+                            </td>
+                        </tr>
+                        <tr v-for="(row, index) in registrationList" :key="index">
+                            <td>{{ `${row.FirstName}` + " " +  `${row.LastName}`}}</td>
+                            <td>U.S.A.</td>
+                            <td>{{ `${row.EmailAdd}` }}</td>
+                            <td>May 05, 2023</td>
+                            <td align="right">
+                                <b>Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-envelope mr-2 text-primary"></i>  Re-send email</router-link></li>
+                                    </ul>
+                                  </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -68,5 +178,6 @@
     min-height: 40rem;
     margin: 0;
     padding: 0;
+    
 }
 </style>
