@@ -25,6 +25,8 @@
     import { useOTIndividualSched } from '@/store/ot-individual-sched.js'
     import { useOTIndividualDetails } from '@/store/ot-individual-details.js'
 
+    import { registerList } from '@/store/registration-list-store.js'
+
     import { ucwords } from '@/assets/js/string_functions.js'
     import Swal from '@/sweetalert2'
     // import slecLogo from '@/assets/img/icons/favicon.ico'
@@ -52,6 +54,8 @@
     const OT_SlotStore = useSlot_OT()
     const OT_IndividualSched = useOTIndividualSched()
     const OT_IndividualDetails = useOTIndividualDetails()
+
+    const RegisterList = registerList()
 
 
 
@@ -108,6 +112,8 @@
                             OT_SlotStore.clearSlot_OT()
                             OT_IndividualSched.clearOTIndividualSched()
                             OT_IndividualDetails.clearOTIndividualDetails()
+
+                            RegisterList.clearRegisteredList()
 
                             router.push(process.env.BASE_URL +"signin")
                         } else {

@@ -1,31 +1,33 @@
 <script setup>
-// import axios from 'axios'
+import axios from 'axios'
 import { ref } from 'vue'
 import { onMounted } from 'vue'
-import {  registerList  } from "@/store/registration-list-store"
+// import {  registerList  } from "@/store/registration-list-store"
 import { useProfileStore } from '@/store/profile-store'
 
 
 const profileStore = useProfileStore()
-const registeredList_SlotStore = registerList()
+// const registeredList_SlotStore = registerList()
 let user_id = profileStore.id
 
 
-let showApplications = ref([])
-let registrationList = ref(null)
+let showApplication = ref([])
+let showApplication1 = ref([])
+let USList = ref(null)
+let TripletsList = ref(null)
 
 onMounted(async () => {
-
-    await registeredList_SlotStore.fetchRegisteredList(user_id)
+    showList()
 })
 
-showApplications = registeredList_SlotStore.list
-registrationList = showApplications
+const showList = async () => {
+    let res = await axios.get('registration-list/' + user_id)
+    showApplication = res.data.result
+    USList.value = showApplication
 
-
-
-
-
+    showApplication1 = res.data.result1
+    TripletsList.value = showApplication1
+}
 
 
 </script>
@@ -45,7 +47,53 @@ registrationList = showApplications
                             <th class="border-top-0">Action</th>
                         </tr>
                     </thead>
-                    <tbody align="center">
+                    <tbody align="center" v-if="USList || TripletsList">
+                        <tr v-for="(row, index) in USList" :key="index">
+                            <td>{{ `${row.FirstName}` + " " +  `${row.LastName}`}}</td>
+                            <td>{{ `${row.Country}` }}</td>
+                            <td>{{ `${row.EmailAdd}` }}</td>
+                            <td>May 05, 2023</td>
+                            <td align="right">
+                                <b>Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-envelope mr-2 text-primary"></i>  Re-send email</router-link></li>
+                                    </ul>
+                                  </div>
+                            </td>
+                        </tr>
+                        <tr v-for="(row, index) in TripletsList" :key="index">
+                            <td>{{ `${row.FirstName}` + " " +  `${row.LastName}`}}</td>
+                            <td>{{ `${row.Country}` }}</td>
+                            <td>{{ `${row.EmailAdd}` }}</td>
+                            <td>May 05, 2023</td>
+                            <td align="right">
+                                <b>Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
+                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-envelope mr-2 text-primary"></i>  Re-send email</router-link></li>
+                                    </ul>
+                                  </div>
+                            </td>
+                        </tr>
                         <tr>
                             <td>Sample Example</td>
                             <td>U.S.A.</td>
@@ -138,32 +186,12 @@ registrationList = showApplications
                                   </div>
                             </td>
                         </tr>
+                        
+                    </tbody>
+                    <tbody align="center" v-else>
                         <tr>
                             <td colspan="6">
                                 <h3 class="text-secondary p-5">No Records</h3>
-                            </td>
-                        </tr>
-                        <tr v-for="(row, index) in registrationList" :key="index">
-                            <td>{{ `${row.FirstName}` + " " +  `${row.LastName}`}}</td>
-                            <td>U.S.A.</td>
-                            <td>{{ `${row.EmailAdd}` }}</td>
-                            <td>May 05, 2023</td>
-                            <td align="right">
-                                <b>Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
-                            </td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
-                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
-                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
-                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
-                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-envelope mr-2 text-primary"></i>  Re-send email</router-link></li>
-                                    </ul>
-                                  </div>
                             </td>
                         </tr>
                     </tbody>
@@ -176,8 +204,9 @@ registrationList = showApplications
 .tableDiv {
     height: auto;
     min-height: 40rem;
+    max-height: 50rem;
     margin: 0;
     padding: 0;
-    
+    overflow-x: scroll;
 }
 </style>
