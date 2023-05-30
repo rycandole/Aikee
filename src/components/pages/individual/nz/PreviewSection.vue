@@ -6,7 +6,6 @@
     import { useProfileStore } from '@/store/profile-store'
     import { useNZIndividualSched } from '@/store/nz-individual-sched.js'
     import { useNZIndividualDetails } from '@/store/nz-individual-details.js'
-    import { useSlot_NZ } from '@/store/nz-slot-store.js'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -25,7 +24,6 @@
     const profileStore = useProfileStore()
     const NZ_IndividualSched = useNZIndividualSched()
     const NZ_IndividualDetails = useNZIndividualDetails()
-    const NZ_SlotStore = useSlot_NZ()
     const schedule = JSON.parse(localStorage.getItem('nz-individual-sched'))
     const details = JSON.parse(localStorage.getItem('nz-individual-details'))
 
@@ -166,7 +164,6 @@
 
                 NZ_IndividualSched.clearNZIndividualSched()
                 NZ_IndividualDetails.clearNZIndividualDetails()
-                NZ_SlotStore.clearSlot_NZ()
 
                 router.push(process.env.BASE_URL + "")
                 

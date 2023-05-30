@@ -21,6 +21,7 @@ import ProfilePage from '@/views/profile/ProfilePage.vue'
 import EditProfilePage from '@/views/profile/EditProfilePage.vue'
 // ------- APPLICATION PAGE ------- //
 import ApplicationPage from '@/views/application/ApplicationPage.vue'
+import ApplicationShow from '@/views/application/ApplicationShow.vue'
 
 // ================== INDIVIDUAL CHILD =========================== //
 import IndividualCountryPage from '@/views/individual/CountryPage.vue'
@@ -63,7 +64,6 @@ import OT_Ind_Preview from '@/views/individual/ot/PreviewPage.vue'
 
 // ================ INDIVIDUAL END PAGE ========================= //
 
-US_Ind_ApplicationFormPage
 
 // --- Family Child ------- //
 import FamilyCountryPage from '@/views/family/CountryPage.vue'
@@ -102,6 +102,11 @@ const routes = [
         path: '',
         name: 'application',
         component: ApplicationPage,
+      },
+      {
+        path: '/application/:country/:id',
+        name: 'applicationShow',
+        component: ApplicationShow,
       },
     ]
   },

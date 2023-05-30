@@ -2,12 +2,11 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import { onMounted } from 'vue'
-// import {  registerList  } from "@/store/registration-list-store"
 import { useProfileStore } from '@/store/profile-store'
 
 
 const profileStore = useProfileStore()
-// const registeredList_SlotStore = registerList()
+
 let user_id = profileStore.id
 
 
@@ -54,7 +53,7 @@ const showList = async () => {
                             <td>{{ `${row.EmailAdd}` }}</td>
                             <td>May 05, 2023</td>
                             <td align="right">
-                                <b>Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
+                                <b>Cancelled<i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
                             </td>
                             <td>
                                 <div class="dropdown">
@@ -62,7 +61,7 @@ const showList = async () => {
                                         <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                      <li><router-link :to="'application/'+ `${row.Country}` +'/' + `${row.ID}`" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
                                       <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
                                       <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
                                       <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>
@@ -85,7 +84,7 @@ const showList = async () => {
                                         <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                      <li><router-link to="/" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
+                                      <li><router-link :to="'application/'+ `${row.Country}` +'/' + `${row.Id}`" class="dropdown-item"><i class="fas fa-eye mr-2 text-info"></i>  View</router-link></li>
                                       <li><router-link to="/" class="dropdown-item"><i class="fas fa-edit mr-2 text-warning"></i>  Edit</router-link></li>
                                       <li><router-link to="/" class="dropdown-item"><i class="fas fa-window-close mr-2 text-danger"></i>  Cancel</router-link></li>
                                       <li><router-link to="/" class="dropdown-item"><i class="fas fa-calendar mr-2 text-success"></i>  Re-schedule</router-link></li>

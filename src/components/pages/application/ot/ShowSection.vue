@@ -1,192 +1,30 @@
 <script setup>
-    import axios from 'axios'
-    import { ref } from 'vue'
-    import { onMounted } from 'vue'
-    import { useRouter } from 'vue-router'
-    import { useProfileStore } from '@/store/profile-store'
-    import { useOTIndividualSched } from '@/store/ot-individual-sched.js'
-    import { useOTIndividualDetails } from '@/store/ot-individual-details.js'
-    import { ErrorMessage } from 'vee-validate'
-    import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
-    import FormHeader from '@/components/global/FormHeader.vue'
-    import SideNav from '@/components/pages/individual/includes/SideNav.vue'
-    import PreviewText from '@/components/global/PreviewText.vue'
-    import PreviewSmallText from '@/components/global/PreviewSmallText.vue'
-    import CheckBox from '@/components/global/CheckBox.vue'
-    import Swal from '@/sweetalert2'
-    import moment from 'moment'
-    import * as yup from 'yup'
+import axios from 'axios'
+import { ref } from 'vue'
+import { onMounted } from 'vue'
+import {useRoute} from "vue-router"
+import FormHeader from '@/components/global/FormHeader.vue'
+// import SubFormHeader from '@/components/global/SubFormHeader.vue'
+import PreviewText from '@/components/global/PreviewText.vue'
+import moment from 'moment'
 
-    
-    // import { ucwords } from '../../../assets/js/string_functions'
+const route = useRoute();
+const regId = route.params.id;
 
-    const router = useRouter()
-    const profileStore = useProfileStore()
-    const OT_IndividualSched = useOTIndividualSched()
-    const OT_IndividualDetails = useOTIndividualDetails()
-    const schedule = JSON.parse(localStorage.getItem('ot-individual-sched'))
-    const details = JSON.parse(localStorage.getItem('ot-individual-details'))
+let showApplication = ref([])
+let OT_Information = ref(null)
 
+onMounted(async () => {
+    showInformation()
+})
 
+const showInformation = async () => {
+    let res = await axios.get('ot-show/' + regId)
 
-    /**
-     * For Fetching user data
-     */
-    onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
-    })
+    showApplication = res.data.result
+    OT_Information.value = showApplication
 
-
-    let errors = ref([])
-    let user_id = profileStore.id
-    let textSuccess = "text-success"
-    let textSuccess1 = "text-success"
-    let textSuccess2 = "text-success"
-    let isButtonDisabled = true
-    let checkbox1 = ref(null)
-    let checkbox2 = ref(null)
-    let branch = ref(null)
-    
-
-    const wasChecked = () => {
-        if(checkbox1.value == 'checked' && checkbox2.value == 'checked') {
-            isButtonDisabled = false
-        } else {
-            isButtonDisabled = true
-        }
-    }
-
-
-    // Schedule Store
-    let sched_date = moment(schedule.date).format('LL');
-    let sched_time = schedule.time
-    let sched_branch = schedule.clinic
-
-    let embassyOfVisa = details.embassyOfVisa
-    let visaCategoryField = details.visaCategoryField
-    let passportNumber = details.passportNumber
-    let issuedCountry = details.issuedCountry
-    let issuedDate = moment(details.issuedDate).format('LL');
-    let lastName = details.ad_lastName
-    let firstName = details.ad_firstName
-    let middleName = details.ad_middleName
-    let motherLastName = details.mother_lastName
-    let motherFirstName = details.mother_firstName
-    let motherdiddleName = details.mother_middleName
-    let birthDate = moment(details.dob).format('LL');
-    let gender = details.gender
-    let civilStatus = details.civil_status
-    let nationality = details.nationality
-    let contactNo = details.contactNumber
-    let emailAdd = details.email
-    let street = details.street
-    let barangay = details.barangay
-    let city = details.city
-    let province = details.provinceField
-    let postalCode = details.postalCode
-
-
-    const schema = yup.object({
-        checkbox1: yup.string().required('Please check the check box to proceed'),
-        checkbox2: yup.string().required('Please check the check box to proceed')
-    })
-
-    if(sched_branch === 'Ermita, Manila') {
-        branch = 'MNL'
-    } else {
-        branch = 'BGC'
-    }
-    
-
-    const handleStore = async () => {
-
-        errors.value = []
-
-        const JSONdata = {
-                json_userId: user_id,
-                json_sched_date: schedule.date,
-                json_sched_time: sched_time,
-                json_sched_branch: branch,
-                JSON_embassyOfVisa: embassyOfVisa,
-                JSON_visaCategoryField: visaCategoryField,
-                json_passportNumber: passportNumber,
-                json_issuedCountry: issuedCountry,
-                json_issuedDate: details.issuedDate,
-                json_lastName: lastName,
-                json_firstName: firstName,
-                json_middleName: middleName,
-                json_motherLastName: motherLastName,
-                json_motherFirstName: motherFirstName,
-                json_motherMiddleName: motherdiddleName,
-                json_birthDate: details.dob,
-                json_gender: gender,
-                json_civilStatus: civilStatus,
-                json_nationality: nationality,
-                json_contactNo: contactNo,
-                json_emailAdd: emailAdd,
-                json_street: street,
-                json_barangay: barangay,
-                json_city: city,
-                json_province: province,
-                json_postalCode: postalCode,
-        }
-
-        try {
-
-            let res = await axios.post('ot-store/', JSONdata)
-
-            if (res.request.status === 200 && res.data.status_code === 200) {
-
-                Swal.fire(res.data.message, '', 'success')
-    
-                OT_IndividualSched.clearOTIndividualSched()
-                OT_IndividualDetails.clearOTIndividualDetails()
-
-                router.push(process.env.BASE_URL + "")
-                
-            } else if (res.request.status === 400) {
-
-                Swal.fire(res.data.message, '', 'info')
-
-            } else if (res.request.status === 500) {
-
-                Swal.fire('Internal Server Error', '', 'warning')
-
-            } else {
-                // alert('Reject, '+ res.data.error +', '+ res.data.message)
-                Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
-                console.log('Reject, '+ res.data.error +', '+ res.data.message)
-            }
-
-        } catch (err) {
-            errors.value = err.response.data.errors
-
-            Swal.fire(err.response.data.message, '', 'error')
-            console.log(errors.value)
-        }
-
-    }
-
-
-
-    const handleBack = () => {
-
-        Swal.fire({
-            title: 'Are you sure you want to edit?',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-
-                router.push('/individual/ot/applicant-details')
-
-            } else if (result.isDenied) {
-                Swal.fire('Changes are not saved', '', 'info')
-            }
-        })
-    }
-
+}
 
 </script>
 
@@ -194,21 +32,15 @@
     <!-- ============================================================== -->
                         <!-- Main Container -->
     <!-- ============================================================== -->
-    <div class="wrapper_container row bg-white border">
+    <div v-if="OT_Information" class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Review all the details</h1>
-        </div>
-        <div class="col-lg-3 col-md-12 col-sm-12">
-            <SideNav 
-                :className="textSuccess ? textSuccess : 'text-secondary'"
-                :className1="textSuccess1 ? textSuccess1 : 'text-secondary'"
-                :className2="textSuccess2 ? textSuccess2 : 'text-secondary'"
-            />
+            <h1 class="text-secondary text-center fs-1 fw-bold" >Application Details</h1>
         </div>
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-        <Form @submit.prevent="handleStore" :validation-schema="schema" class="col-lg-9 col-md-12 col-sm-12 mb-3">
+
+        <form v-for="(row, index) in OT_Information" :key="index" class="col-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="mb-3 col-12">
@@ -219,14 +51,14 @@
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Preferred Clinic Location"
-                            v-bind:previewText="sched_branch"
+                            v-bind:previewText="`${row.branch}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Preferred Date of Medical examination"
-                            v-bind:previewText="sched_date"
+                            v-bind:previewText="moment(`${row.PreferredMedicalExamDate}`).format('LL')"
                         />
                         
                     </div>
@@ -234,7 +66,7 @@
                     <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Preferred Time of Medical examination"
-                            v-bind:previewText="sched_time"
+                            v-bind:previewText="`${row.priorityTime}`"
                         />
                     </div>
                     <div class="mb-3 col-12">
@@ -245,14 +77,14 @@
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Embassy of Visa Application"
-                            v-bind:previewText="embassyOfVisa"
+                            v-bind:previewText="`${row.priorityTime}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-12 pb-3">
                         <PreviewText 
                             previewLabel="Visa Category"
-                            v-bind:previewText="visaCategoryField"
+                            v-bind:previewText="`${row.SubClass}`"
                         />
                     </div>
                     <div class="mb-3 col-12">
@@ -263,21 +95,21 @@
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Passport Number"
-                            v-bind:previewText="passportNumber"
+                            v-bind:previewText="`${row.PassNo}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Country of Issue"
-                            v-bind:previewText="issuedCountry"
+                            v-bind:previewText="`${row.issuedCountry}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-12 pb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
-                            v-bind:previewText="issuedDate"
+                            v-bind:previewText="moment(`${row.issuedDate}`).format('LL')"
                         />
                     </div>
                     <div class="mb-3 col-12">
@@ -428,69 +260,17 @@
                             </li>
                         </ol>
                     </div>
-
-                    <div class="col-12 mt-4 border-top container-fluid p-3 irc_div">
-                        <h6 class="text-bold mt-3">Information Registration Consent:</h6>
-                        <div class="form-check">
-                            <ErrorMessage name="checkbox1" class="text-danger"/>
-                        </div>
-                        <div class="form-check">
-                            <CheckBox 
-                                    CheckBoxName="checkbox1"
-                                    CheckBoxValue="checked"
-                                    v-model:input="checkbox1"
-                                    :onChange="wasChecked"
-                            />
-                            <label class="form-check-label" for="flexCheckDefault">
-                                I certify that the information provided in my registration is true and correct to the best of my knowledge and understand that any dishonest answer may cause delay in the process of my medical examination.
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <ErrorMessage name="checkbox2" class="text-danger"/>
-                        </div>
-                        <div class="form-check mt-2">
-                            <CheckBox 
-                                    CheckBoxName="checkbox2"
-                                    CheckBoxValue="checked"
-                                    v-model:input="checkbox2"
-                                    :onChange="wasChecked"
-                            />
-                            <label class="form-check-label" for="flexCheckChecked">
-                                I certify that I understand the purpose of the online registration.
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <p class="mt-3">
-                                I understand that ST. LUKE'S MEDICAL CENTER EXTENSION CLINIC needs to collect my personal information for the conduct of my medical examination required for my Australia Visa Application. For this purpose, the information will be shared to Immigration, Refugees and Citizenship Australia. The information provided shall be processed and retained in accordance with the Data Privacy Act of 2012.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    
                 </div>        
             </div>
-
-            <!-- <div class="col-lg-3 col-md-12 col-sm-12"></div> -->
-            <div class="col-12 d-flex justify-content-center">
-                <SubmitFormButton 
-                    btnType="button"
-                    className="btn btn-secondary w-25 mr-5"
-                    btnText="Edit"
-                    @click="handleBack"
-                />
-                <SubmitFormButton 
-                    btnType="submit"
-                    className="btn btn-primary w-25"
-                    btnText="Submit"
-                    v-bind:disabled="isButtonDisabled"
-                />
-            </div>
-        </Form>
+        </form>    
         <!-- ============================================================== -->
                             <!-- End of Main Container -->
         <!-- ============================================================== -->
-        
-        
+    </div>
+    <div v-else class="row">
+        <div class="col-12 m-5 p-5">
+            <h2 class="text-secondary text-center fs-1 fw-bold">Please wait...</h2>
+        </div>
     </div>
     
     <!-- ============================================================== -->

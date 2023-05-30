@@ -1,11 +1,9 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useNZIndividualSched } from '@/store/nz-individual-sched'
-    // import {  useSlotStore  } from "@/store/slot-store"
-    import {  useSlot_NZ  } from "@/store/nz-slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -21,7 +19,6 @@
     
     const router = useRouter()
     const NZIndividualSched = useNZIndividualSched()
-    const NZ_SlotStore = useSlot_NZ()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -64,8 +61,8 @@
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
-    let country = ref(null)
-    let branch = ref(null)
+    let countryValue = ref(null)
+    let branchValue = ref(null)
     let hasBranch = true
     // let sevenAM = ref(null)
 
@@ -77,7 +74,6 @@
 
     const handleBranch = () => {
         // branch = clinic_code.get(clinic_location.value)
-
         if(clinic_code.get(clinic_location.value) === null) {
             hasBranch = true
         } else {
@@ -86,21 +82,42 @@
         
     }
 
+    onMounted(async () => {
+        handleSlots()
+    })
+
     const handleSlots = async () => {
-        const date = moment(dateInput.value).format('YYYY-MM-DD')
-        country = 'NZ'
-        branch = clinic_code.get(clinic_location.value)
+        const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
+        countryValue = 'NZ'
+        branchValue = clinic_code.get(clinic_location.value)
 
-        await NZ_SlotStore.fetchSlotByDate_NZ(date, country, branch)
+        const JSONdata = {
+            date: prefDate,
+            country: countryValue,
+            branch: branchValue
+        }
 
-        onMounted(async () => {
-            await NZ_SlotStore.fetchSlotByDate_NZ(date)
-        })
-       
-        timeSlots = NZ_SlotStore.slots
+        let res = await axios.post('check_slots/', JSONdata)
 
-        timeSched = timeSlots
+        timeSlots = res.data.slot
+        timeSched.value = timeSlots
     }
+
+    // const handleSlots = async () => {
+    //     const date = moment(dateInput.value).format('YYYY-MM-DD')
+    //     country = 'NZ'
+    //     branch = clinic_code.get(clinic_location.value)
+
+    //     await NZ_SlotStore.fetchSlotByDate_NZ(date, country, branch)
+
+    //     onMounted(async () => {
+    //         await NZ_SlotStore.fetchSlotByDate_NZ(date)
+    //     })
+       
+    //     timeSlots = NZ_SlotStore.slots
+
+    //     timeSched = timeSlots
+    // }
 
     const handleDateTime = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')

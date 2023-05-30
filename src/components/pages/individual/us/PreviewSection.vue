@@ -6,7 +6,6 @@
     import { useProfileStore } from '@/store/profile-store'
     import { useUSIndividualSched } from '@/store/us-individual-sched.js'
     import { useUSIndividualDetails } from '@/store/us-individual-details.js'
-    import { useSlot_US } from '@/store/us-slot-store.js'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -25,7 +24,6 @@
     const profileStore = useProfileStore()
     const US_IndividualSched = useUSIndividualSched()
     const US_IndividualDetails = useUSIndividualDetails()
-    const US_SlotStore = useSlot_US()
     const schedule = JSON.parse(localStorage.getItem('us-individual-sched'))
     const details = JSON.parse(localStorage.getItem('us-individual-details'))
 
@@ -274,7 +272,6 @@
 
                 US_IndividualSched.clearUSIndividualSched()
                 US_IndividualDetails.clearUSIndividualDetails()
-                US_SlotStore.clearSlot_US()
 
                 router.push(process.env.BASE_URL +"/")
                 

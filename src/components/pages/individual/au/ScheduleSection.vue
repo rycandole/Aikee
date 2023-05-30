@@ -1,11 +1,9 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useAUIndividualSched } from '@/store/au-individual-sched'
-    // import {  useSlotStore  } from "@/store/slot-store"
-    import {  useSlot_AU  } from "@/store/au-slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -21,7 +19,6 @@
     
     const router = useRouter()
     const AUIndividualSched = useAUIndividualSched()
-    const AU_SlotStore = useSlot_AU()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -64,16 +61,36 @@
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
-    let country = ref(null)
-    let branch = ref(null)
+    let countryValue = ref(null)
+    let branchValue = ref(null)
     let hasBranch = true
-    // let sevenAM = ref(null)
 
     // let textSuccess = "text-success"
     const schema = yup.object().shape({
         clinic_location: yup.string().required('Please select preferred clinic'),
         timeInput: yup.string().required('Please select preferred time')
     })
+
+    onMounted(async () => {
+        handleSlots()
+    })
+
+    const handleSlots = async () => {
+        const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
+        countryValue = 'AU'
+        branchValue = clinic_code.get(clinic_location.value)
+
+        const JSONdata = {
+            date: prefDate,
+            country: countryValue,
+            branch: branchValue
+        }
+
+        let res = await axios.post('check_slots/', JSONdata)
+
+        timeSlots = res.data.slot
+        timeSched.value = timeSlots
+    }
 
     const handleBranch = () => {
         // branch = clinic_code.get(clinic_location.value)
@@ -84,22 +101,6 @@
             hasBranch = false
         }
         
-    }
-
-    const handleSlots = async () => {
-        const date = moment(dateInput.value).format('YYYY-MM-DD')
-        country = 'AU'
-        branch = clinic_code.get(clinic_location.value)
-
-        await AU_SlotStore.fetchSlotByDate_AU(date, country, branch)
-
-        onMounted(async () => {
-            await AU_SlotStore.fetchSlotByDate_AU(date)
-        })
-       
-        timeSlots = AU_SlotStore.slots
-
-        timeSched = timeSlots
     }
 
     const handleDateTime = async () => {

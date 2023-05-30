@@ -1,11 +1,9 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
-    // import {  useSlotStore  } from "@/store/slot-store"
-    import {  useSlot_US  } from "@/store/us-slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -20,8 +18,6 @@
     
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
-    // const SlotStore = useSlotStore()
-    const US_SlotStore = useSlot_US()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -57,29 +53,26 @@
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
-    let country = ref(null)
-    // let sevenAM = ref(null)
 
     // let textSuccess = "text-success"
 
+    onMounted(async () => {
+        handleSlots()
+    })
+
     const handleSlots = async () => {
-        const date = moment(dateInput.value).format('YYYY-MM-DD')
-        country = 'US'
+        const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
 
-        await US_SlotStore.fetchSlotByDate_US(date, country)
-         /**
-         * For Fetching user data
-         */
-         onMounted(async () => {
-            await US_SlotStore.fetchSlotByDate_US(date)
-        })
-       
-        // console.log(US_SlotStore.slots)
-        timeSlots = US_SlotStore.slots
+        const JSONdata = {
+            date: prefDate,
+            country: 'US'
+        }
 
-        timeSched = timeSlots
+        let res = await axios.post('check_slots/', JSONdata)
+
+        timeSlots = res.data.slot
+        timeSched.value = timeSlots
     }
-    
 
     const handleBack = () => {
 

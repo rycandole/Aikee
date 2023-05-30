@@ -1,11 +1,9 @@
 <script setup>
-    // import axios from 'axios'
+    import axios from 'axios'
     import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useCAIndividualSched } from '@/store/ca-individual-sched'
-    // import {  useSlotStore  } from "@/store/slot-store"
-    import {  useSlot_CA  } from "@/store/ca-slot-store"
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -21,7 +19,6 @@
     
     const router = useRouter()
     const CAIndividualSched = useCAIndividualSched()
-    const CA_SlotStore = useSlot_CA()
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -64,8 +61,8 @@
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
-    let country = ref(null)
-    let branch = ref(null)
+    let countryValue = ref(null)
+    let branchValue = ref(null)
     let hasBranch = true
     // let sevenAM = ref(null)
 
@@ -86,20 +83,25 @@
         
     }
 
+    onMounted(async () => {
+        handleSlots()
+    })
+
     const handleSlots = async () => {
-        const date = moment(dateInput.value).format('YYYY-MM-DD')
-        country = 'CA'
-        branch = clinic_code.get(clinic_location.value)
+        const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
+        countryValue = 'CA'
+        branchValue = clinic_code.get(clinic_location.value)
 
-        await CA_SlotStore.fetchSlotByDate_CA(date, country, branch)
+        const JSONdata = {
+            date: prefDate,
+            country: countryValue,
+            branch: branchValue
+        }
 
-        onMounted(async () => {
-            await CA_SlotStore.fetchSlotByDate_AU(date)
-        })
-       
-        timeSlots = CA_SlotStore.slots
+        let res = await axios.post('check_slots/', JSONdata)
 
-        timeSched = timeSlots
+        timeSlots = res.data.slot
+        timeSched.value = timeSlots
     }
 
     const handleDateTime = async () => {
