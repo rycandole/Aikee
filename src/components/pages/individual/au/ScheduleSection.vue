@@ -20,12 +20,19 @@
     const router = useRouter()
     const AUIndividualSched = useAUIndividualSched()
 
+    let currentDate = ref(null)
+
     // Get the current year
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
     const currentDay = new Date().getDate() + 1
+    const currentMonthIfDayIsThirtyTwo = new Date().getMonth() + 2
 
-    let currentDate = currentYear+", "+currentMonth+", "+currentDay;
+    if (currentDay === 32) {
+        currentDate = currentYear+", "+currentMonthIfDayIsThirtyTwo+", "+ 1;
+    } else {
+        currentDate = currentYear+", "+currentMonth+", "+currentDay;
+    }
     const clinics = ['Ermita, Manila', 'Bonifacio Global City'] 
     const clinic_code = new Map([
                                 ['', null],
@@ -37,23 +44,6 @@
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
-
-    // =========== Inline Date ==================== //
-    const disableState = {
-        // months start's to 0(January) - 11(December) 
-        disabledDates: {
-            to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(formatted_d),
-            days: [0,6],
-            dates: [ // Disable an array of dates
-                new Date(2023, 3, 6),
-                new Date(2023, 3, 7),
-                new Date(2023, 3, 22),
-                new Date(2023, 3, 21),
-            ],
-            preventDisableDateSelection: true
-        }
-    }
     // ============ End of Inline Date =============== //
     
     let clinic_location = ref(null)
@@ -64,8 +54,9 @@
     let countryValue = ref(null)
     let branchValue = ref(null)
     let hasBranch = true
+    let textSuccess = "text-success"
 
-    // let textSuccess = "text-success"
+    
     const schema = yup.object().shape({
         clinic_location: yup.string().required('Please select preferred clinic'),
         timeInput: yup.string().required('Please select preferred time')
@@ -139,6 +130,23 @@
         })
     }
 
+    // =========== Inline Date ==================== //
+    const disableState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(formatted_d),
+            days: [0,6],
+            dates: [ // Disable an array of dates
+                new Date(2023, 3, 6),
+                new Date(2023, 3, 7),
+                new Date(2023, 3, 22),
+                new Date(2023, 3, 21),
+            ],
+            preventDisableDateSelection: true
+        }
+    }
+
     
 
     
@@ -170,7 +178,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
-                            <div class="col-lg-9 col-md-12 col-sm-12 mb-5">
+                            <div class="col-lg-10 col-md-12 col-sm-12 mb-5">
                                 <RequiredSelectField 
                                     label="Please select your preferred St. Luke's Extension Clinic location"
                                     FieldName="clinic_location"

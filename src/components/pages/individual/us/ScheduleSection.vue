@@ -19,45 +19,37 @@
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
 
+    let currentDate = ref(null)
+
     // Get the current year
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
     const currentDay = new Date().getDate() + 1
+    const currentMonthIfDayIsThirtyTwo = new Date().getMonth() + 2
 
-    let currentDate = currentYear+", "+currentMonth+", "+currentDay;
+    if (currentDay === 32) {
+        currentDate = currentYear+", "+currentMonthIfDayIsThirtyTwo+", "+ 1;
+    } else {
+        currentDate = currentYear+", "+currentMonth+", "+currentDay;
+    }
 
     // GET THE DATE 3 MONTHS FROM NOW
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
-
-    // =========== Inline Date ==================== //
-    const disableState = {
-        // months start's to 0(January) - 11(December) 
-        disabledDates: {
-            to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(formatted_d),
-            days: [0,6],
-            dates: [ // Disable an array of dates
-                new Date(2023, 3, 6),
-                new Date(2023, 3, 7),
-                new Date(2023, 3, 22),
-                new Date(2023, 3, 21),
-            ],
-            preventDisableDateSelection: true
-        }
-    }
-    // ============ End of Inline Date =============== //
- 
     let dateInput = ref(null)
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
+    let textSuccess = "text-success"
 
-    // let textSuccess = "text-success"
 
     onMounted(async () => {
         handleSlots()
+    })
+
+    const schema = yup.object().shape({
+        timeInput: yup.string().nullable()
     })
 
     const handleSlots = async () => {
@@ -73,6 +65,38 @@
         timeSlots = res.data.slot
         timeSched.value = timeSlots
     }
+
+    const handleDateTime = async () => {
+        const date = moment(dateInput.value).format('YYYY-MM-DD')
+
+        const jsonDATA = {
+                date: date,
+                time: timeInput.value || ''
+        }
+
+        let res = JSON.stringify(jsonDATA)
+
+        USIndividualSched.setUSIndividualSched(res)
+
+        router.push('/individual/us/applicant-details')
+    }
+    // =========== Inline Date ==================== //
+    const disableState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(formatted_d),
+            days: [0,6],
+            dates: [ // Disable an array of dates
+                new Date(2023, 7, 6),
+                new Date(2023, 7, 7),
+                new Date(2023, 5, 22),
+                new Date(2023, 5, 21),
+            ],
+            preventDisableDateSelection: true
+        }
+    }
+    // ============ End of Inline Date =============== //
 
     const handleBack = () => {
 
@@ -92,31 +116,6 @@
             }
         })
     }
-
-
-    const handleDateTime = async () => {
-        const date = moment(dateInput.value).format('YYYY-MM-DD')
-
-        const jsonDATA = {
-                date: date,
-                time: timeInput.value || ''
-        }
-
-        let res = JSON.stringify(jsonDATA)
-
-        USIndividualSched.setUSIndividualSched(res)
-
-        // alert(timeInput.value)
-
-        router.push('/individual/us/applicant-details')
-        
-    }
-
-    const schema = yup.object().shape({
-        timeInput: yup.string().nullable()
-    })
-
-    
     
 </script>
 

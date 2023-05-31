@@ -20,8 +20,8 @@ onMounted(async () => {
 })
 
 const showInformation = async () => {
-    let res = await axios.get('ot-show/' + regId)
-
+    let res = await axios.get('nz-show/' + regId)
+    
     showApplication = res.data.result
     OT_Information.value = showApplication
 
@@ -70,6 +70,61 @@ const showInformation = async () => {
                             v-bind:previewText="`${row.priorityTime}`"
                         />
                     </div>
+                    <div class="col-12"><hr /></div>
+                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                        <PreviewText 
+                            previewLabel="Medical Certificate Type"
+                            v-bind:previewText="`${row.ExamType_NZ}`"
+                        />
+                    </div>
+                    <div class="col-12"><hr /></div>
+                    <div class="col-12">
+                        <PreviewText 
+                            previewLabel="Is this your first medical examination for the Canadian Embassy? "
+                            v-bind:previewText="`${row.Prev_AUMed}` == 'N' ? 'No' : 'Yes' "
+                        />
+                    </div>
+                    <div class="col-12 pl-5">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-12 col-sm-12">
+                                <PreviewText 
+                                    previewLabel="Name of Clinic and Year of Visa Medical Examination"
+                                    v-bind:previewText="`${row.PrevMedDetail1}`"
+                                />
+                            </div>
+                            <div class="col-lg-8 col-md-12 col-sm-12">
+                                <PreviewText 
+                                    previewLabel="Category applied for"
+                                    v-bind:previewText="`${row.PrevMedDetail2}`"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <FormHeader
+                            headerText="PASSPORT INFORMATION"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <PreviewText 
+                            previewLabel="Passport Number"
+                            v-bind:previewText="`${row.PassNo}`"
+                        />
+                    </div>
+                    <div class="col-12"><hr /></div>
+                    <div class="col-12">
+                        <PreviewText 
+                            previewLabel="Country of Issue"
+                            v-bind:previewText="`${row.IssuedCountry}`"
+                        />
+                    </div>
+                    <div class="col-12"><hr /></div>
+                    <div class="col-12 pb-3">
+                        <PreviewText 
+                            previewLabel="Date of Issue"
+                            v-bind:previewText="`${row.IssuedDate}`"
+                        />
+                    </div>
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="Visa Application Information"
@@ -88,31 +143,7 @@ const showInformation = async () => {
                             v-bind:previewText="`${row.SubClass}`"
                         />
                     </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="PASSPORT INFORMATION"
-                        />
-                    </div>
-                    <div class="col-12">
-                        <PreviewText 
-                            previewLabel="Passport Number"
-                            v-bind:previewText="`${row.PassNo}`"
-                        />
-                    </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-12">
-                        <PreviewText 
-                            previewLabel="Country of Issue"
-                            v-bind:previewText="`${row.issuedCountry}`"
-                        />
-                    </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-12 pb-3">
-                        <PreviewText 
-                            previewLabel="Date of Issue"
-                            v-bind:previewText="moment(`${row.issuedDate}`).format('LL')"
-                        />
-                    </div>
+                    
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="APPLICANT DETAILS"

@@ -20,18 +20,28 @@
     const router = useRouter()
     const OTIndividualSched = useOTIndividualSched()
 
+    let currentDate = ref(null)
+
     // Get the current year
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
     const currentDay = new Date().getDate() + 1
+    const currentMonthIfDayIsThirtyTwo = new Date().getMonth() + 2
 
-    let currentDate = currentYear+", "+currentMonth+", "+currentDay;
+    if (currentDay === 32) {
+        currentDate = currentYear+", "+currentMonthIfDayIsThirtyTwo+", "+ 1;
+    } else {
+        currentDate = currentYear+", "+currentMonth+", "+currentDay;
+    }
+
     const clinics = ['Ermita, Manila', 'Bonifacio Global City'] 
     const clinic_code = new Map([
                                 ['', null],
                                 ['Ermita, Manila', 'MNL'],
                                 ['Bonifacio Global City', 'BGC']
                                 ])
+
+    
 
     // GET THE DATE 3 MONTHS FROM NOW
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
@@ -64,12 +74,12 @@
     let countryValue = ref(null)
     let branchValue = ref(null)
     let hasBranch = true
+    let textSuccess = "text-success"
     // let sevenAM = ref(null)
 
-    // let textSuccess = "text-success"
-    const schema = yup.object().shape({
-        clinic_location: yup.string().required('Please select preferred clinic'),
-        timeInput: yup.string().required('Please select preferred time')
+
+    onMounted(async () => {
+        handleSlots()
     })
 
     const handleBranch = () => {
@@ -82,10 +92,6 @@
         }
         
     }
-
-    onMounted(async () => {
-        handleSlots()
-    })
 
     const handleSlots = async () => {
         const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
@@ -140,6 +146,12 @@
             }
         })
     }
+
+    const schema = yup.object().shape({
+        clinic_location: yup.string().required('Please select preferred clinic'),
+        timeInput: yup.string().required('Please select preferred time')
+    })
+
 
 </script>
 
