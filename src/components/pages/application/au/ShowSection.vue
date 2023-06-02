@@ -13,17 +13,17 @@ const route = useRoute();
 const regId = route.params.id;
 
 let showApplication = ref([])
-let NZ_Information = ref(null)
+let AU_Information = ref(null)
 
 onMounted(async () => {
     showInformation()
 })
 
 const showInformation = async () => {
-    let res = await axios.get('nz-show/' + regId)
+    let res = await axios.get('au-show/' + regId)
     
     showApplication = res.data.result
-    NZ_Information.value = showApplication
+    AU_Information.value = showApplication
 
 }
 
@@ -33,7 +33,7 @@ const showInformation = async () => {
     <!-- ============================================================== -->
                         <!-- Main Container -->
     <!-- ============================================================== -->
-    <div v-if="NZ_Information" class="wrapper_container row bg-white border">
+    <div v-if="AU_Information" class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
             <h1 class="text-secondary text-center fs-1 fw-bold" >Application Details</h1>
         </div>
@@ -41,7 +41,7 @@ const showInformation = async () => {
                             <!-- Main Container -->
         <!-- ============================================================== -->
 
-        <form v-for="(row, index) in NZ_Information" :key="index" class="col-12 mb-3">
+        <form v-for="(row, index) in AU_Information" :key="index" class="col-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="mb-3 col-12">
@@ -73,8 +73,8 @@ const showInformation = async () => {
                     <div class="col-12"><hr /></div>
                     <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
-                            previewLabel="Medical Certificate Type"
-                            v-bind:previewText="`${row.ExamType_NZ}`"
+                            previewLabel="What Subclass Did You Apply For? "
+                            v-bind:previewText="`${row.SubClass}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
@@ -100,6 +100,13 @@ const showInformation = async () => {
                             </div>
                         </div>
                     </div>
+                    <div class="col-12"><hr /></div>
+                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                        <PreviewText 
+                            previewLabel="RN/HAP I.D."
+                            v-bind:previewText="`${row.App_TRN}`"
+                        />
+                    </div>
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="PASSPORT INFORMATION"
@@ -122,28 +129,9 @@ const showInformation = async () => {
                     <div class="col-12 pb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
-                            v-bind:previewText="`${row.IssuedDate}`"
+                            v-bind:previewText="moment(`${row.IssuedDate}`).format('LL')"
                         />
                     </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="Visa Application Information"
-                        />
-                    </div>
-                    <div class="col-12">
-                        <PreviewText 
-                            previewLabel="Embassy of Visa Application"
-                            v-bind:previewText="`${row.priorityTime}`"
-                        />
-                    </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-12 pb-3">
-                        <PreviewText 
-                            previewLabel="Visa Category"
-                            v-bind:previewText="`${row.SubClass}`"
-                        />
-                    </div>
-                    
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="APPLICANT DETAILS"
@@ -271,66 +259,37 @@ const showInformation = async () => {
                                 </div>
                                 <hr/>
                             </li>
+                            <li>
+                                <PreviewText 
+                                    previewLabel="How long do you intend staying in Australia?"
+                                    v-bind:previewText="`${row.Stay}` == 'Y' ? 'Temporary' : 'Permanent'"
+                                />
+                                <hr/>
+                            </li>
+                            <li>
+                                <PreviewText 
+                                    previewLabel="Do you intent to work as, or study to be, a doctor, dentist, nurse or paramedic during your stay in Australia?"
+                                    v-bind:previewText="`${row.intent_work}` == 'Y' ? 'Yes' : 'No'"
+                                />
+                                <hr/>
+                            </li>
+                            <li>
+                                <PreviewText 
+                                    previewLabel="For Temporary Visa: Do you intend to apply for a permanent stay in Australia within the next 6-12 months?"
+                                    v-bind:previewText="`${row.intend_apply}` == 'Y' ? 'Yes' : 'No'"
+                                />
+                                <hr/>
+                            </li>
+                            <li>
+                                <PreviewText 
+                                    previewLabel="Agency?"
+                                    v-bind:previewText="`${row.agency}`"
+                                />
+                                <hr/>
+                            </li>
                         </ol>
                     </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="ADDITIONAL QUESTIONS"
-                        />
-                    </div>
-                    <div class="col-12">
-                        <ol>
-                            <li class="pb-3">What is your intended occupation or activity in New Zealand <b class="text-danger">*</b></li>
-                            <div class="row">
-                                <div class="col-12">
-                                    <PreviewText 
-                                        previewLabelClassName="d-none"
-                                        v-bind:previewText="`${row.Intended}`"
-                                    />
-                                </div>
-                            </div>
-                            <li class="pt-3">How long do you intend staying in New Zealand  <b class="text-danger">*</b></li>
-                            <div class="row pb-3 pt-2"> 
-                                <div class="col-12 pl">
-                                    <PreviewText 
-                                        previewLabelClassName="d-none"
-                                        v-bind:previewText="`${row.Stay}` == 'T' ? 'Temporary' : 'Permanent' "
-                                    />
-                                </div>
-                                <div class="col-2">
-                                    <PreviewText 
-                                        previewLabel="Year"
-                                        v-bind:previewText="`${row.StayYr}`"
-                                    />
-                                </div>
-                                <div class="col-2">
-                                    <PreviewText 
-                                        previewLabel="Months"
-                                        v-bind:previewText="`${row.StayMt}`"
-                                    />
-                                </div>
-                                <div class="8"></div>
-                            </div>
-                            <li>What is the visa category and visa type that you are applying for? <b class="text-danger">*</b></li>
-                            <div class="row pb-3"> 
-                                <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <PreviewText 
-                                        previewLabelClassName="d-none"
-                                        v-bind:previewText="`${row.SubClass}`"
-                                    />
-                                </div>
-                            </div>
-                            <li>Agency <b class="text-danger">*</b></li>
-                            <div class="row pb-3"> 
-                                <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <PreviewText 
-                                        previewLabelClassName="d-none"
-                                        v-bind:previewText="`${row.agency}`"
-                                    />
-                                </div>
-                            </div>
-                        </ol>
-                    </div>
+                 
                 </div>        
             </div>
         </form>    
@@ -343,7 +302,6 @@ const showInformation = async () => {
             <h2 class="text-secondary text-center fs-1 fw-bold">Please wait...</h2>
         </div>
     </div>
-    
     <!-- ============================================================== -->
                             <!-- End of Main Container -->
     <!-- ============================================================== -->

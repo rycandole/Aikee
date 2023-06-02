@@ -5,6 +5,7 @@ import SideNavigation from '@/components/includes/SideNavigation.vue'
 import FooterSection from '@/components/includes/FooterSection.vue'
 import ShowSection_US from '@/components/pages/application/us/ShowSection.vue'
 import ShowSection_CA from '@/components/pages/application/ca/ShowSection.vue'
+import ShowSection_AU from '@/components/pages/application/au/ShowSection.vue'
 import ShowSection_NZ from '@/components/pages/application/nz/ShowSection.vue'
 import ShowSection_OT from '@/components/pages/application/ot/ShowSection.vue'
 
@@ -39,7 +40,7 @@ const country = route.params.country;
                             <ShowSection_CA />
                         </div>
                         <div v-else-if="country === 'AU'" class="col-12">
-                            Show AU
+                            <ShowSection_AU />
                         </div>
                         <div v-else-if="country === 'NZ'" class="col-12">
                             <ShowSection_NZ />

@@ -28,7 +28,6 @@ const showList = async () => {
     TripletsList.value = showApplication1
 }
 
-
 </script>
 <template>
     <div class="col-12">

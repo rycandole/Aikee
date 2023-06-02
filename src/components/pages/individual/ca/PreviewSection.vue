@@ -62,6 +62,7 @@
     let sched_time = schedule.time
     let sched_branch = schedule.clinic
 
+    let trn = details.trn
     let wasFirstMedExam = details.wasFirstMedicalExam
     let prevClinic = details.prevClinicName
     let prevCategory = details.prevCategory
@@ -114,6 +115,7 @@
                 json_sched_date: schedule.date,
                 json_sched_time: sched_time,
                 json_sched_branch: branch,
+                json_trn: trn,
                 json_wasFirstMedExam: wasFirstMedExam,
                 json_prevClinic: prevClinic,
                 json_prevCategory: prevCategory,
