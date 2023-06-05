@@ -49,6 +49,7 @@ import AU_Ind_Preview from '@/views/individual/au/PreviewPage.vue'
 // ------ AU END PAGE ---------- //
 
 // ------- NZ PAGE ------- //
+import { useNZIndividualSched } from '@/store/nz-individual-sched'
 import NZ_Ind_ApplicationFormPage from '@/views/individual/nz/ApplicationFormPage.vue'
 import NZ_Ind_SchedulePage from '@/views/individual/nz/SchedulePage.vue'
 import NZ_Ind_DetailsForm from '@/views/individual/nz/DetailsFormPage.vue'
@@ -56,6 +57,8 @@ import NZ_Ind_Preview from '@/views/individual/nz/PreviewPage.vue'
 // ------ NZ END PAGE ---------- //
 
 // ------- OT PAGE ------- //
+import { useOTIndividualSched } from '@/store/ot-individual-sched'
+import { useOTIndividualDetails } from '@/store/ot-individual-details'
 import OT_Ind_ApplicationFormPage from '@/views/individual/ot/ApplicationFormPage.vue'
 import OT_Ind_SchedulePage from '@/views/individual/ot/SchedulePage.vue'
 import OT_Ind_DetailsForm from '@/views/individual/ot/DetailsFormPage.vue'
@@ -214,6 +217,9 @@ const routes = [
       },
       {
         path: '/individual/nz/applicant-details',
+        beforeEnter: (to, from, next) => {
+          useNZIndividualSched().date && useNZIndividualSched().time ? next() : next('/individual/nz/schedule')
+        },
         name: 'nz_details',
         component: NZ_Ind_DetailsForm,
       },
@@ -235,11 +241,17 @@ const routes = [
       },
       {
         path: '/individual/ot/applicant-details',
+        beforeEnter: (to, from, next) => {
+          useOTIndividualSched().date && useOTIndividualSched().time ? next() : next('/individual/ot/schedule')
+        },
         name: 'ot_details',
         component: OT_Ind_DetailsForm,
       },
       {
         path: '/individual/ot/preview',
+        beforeEnter: (to, from, next) => {
+          useOTIndividualDetails().user_id && useOTIndividualDetails().embassyOfVisa ? next() : next('/individual/ot/applicant-details')
+        },
         name: 'ot_preview',
         component: OT_Ind_Preview,
       },

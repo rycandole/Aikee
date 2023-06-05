@@ -58,6 +58,8 @@ const disableState = {
       new Date(2023, 3, 7),
       new Date(2023, 3, 22),
       new Date(2023, 3, 21),
+      new Date(2023, 5, 28),
+      new Date(2023, 5, 29),
     ],
     preventDisableDateSelection: true,
   },
@@ -87,6 +89,7 @@ const handleBranch = () => {
     hasBranch = true;
   } else {
     hasBranch = false;
+    timeSched.value = ""
   }
 };
 
@@ -115,7 +118,7 @@ const handleDateTime = async () => {
     country: "OT",
     date: date,
     time: timeInput.value,
-  };
+  }
 
   let save_slot = await axios.post("save_slot/", jsonDATA);
 
@@ -230,7 +233,7 @@ const schema = yup.object().shape({
                   />
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 pt-3">
                   <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3" />
                 </div>
               </div>

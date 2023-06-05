@@ -3,22 +3,22 @@ import { defineStore } from 'pinia'
 
 export const useOTIndividualSched = defineStore('ot-individual-sched', {
   state: () => ({
-    clinic: null,
+    branch: null,
     country: null,
     date: null,
     time: null
   }),
   actions: {
-    async setOTIndividualSched(res) {
+    setOTIndividualSched(res) {
         let jsonPARSE = JSON.parse(res)
         
-        this.$state.clinic = jsonPARSE.actionsclinic
-        this.$state.country = jsonPARSE.actionscountry
-        this.$state.date = jsonPARSE.actionsdate
-        this.$state.time = jsonPARSE.actionstime
+        this.$state.branch = jsonPARSE.branch
+        this.$state.country = jsonPARSE.country
+        this.$state.date = jsonPARSE.date
+        this.$state.time = jsonPARSE.time
     },
     clearOTIndividualSched() {
-        this.$state.clinic = null,
+        this.$state.branch = null,
         this.$state.country = null,
         this.$state.date = null,
         this.$state.time = null

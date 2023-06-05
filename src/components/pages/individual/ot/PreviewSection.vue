@@ -26,16 +26,11 @@
     const OT_IndividualDetails = useOTIndividualDetails()
     const schedule = JSON.parse(localStorage.getItem('ot-individual-sched'))
     const details = JSON.parse(localStorage.getItem('ot-individual-details'))
-
-
-
-    /**
-     * For Fetching user data
-     */
-    onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
-    })
-
+    const clinic_code = new Map([
+                ["", null],
+                ["MNL", "Ermita, Manila"],
+                ["BGC", "Bonifacio Global City(BGC)"],
+            ]);
 
     let errors = ref([])
     let user_id = profileStore.id
@@ -47,6 +42,12 @@
     let checkbox2 = ref(null)
     let branch = ref(null)
     
+     /**
+     * For Fetching user data
+     */
+     onMounted(async () => {
+        await profileStore.fetchProfileById(router.params.id)
+    })
 
     const wasChecked = () => {
         if(checkbox1.value == 'checked' && checkbox2.value == 'checked') {
@@ -60,7 +61,7 @@
     // Schedule Store
     let sched_date = moment(schedule.date).format('LL');
     let sched_time = schedule.time
-    let sched_branch = schedule.clinic
+    let sched_branch = clinic_code.get(schedule.branch)
 
     let embassyOfVisa = details.embassyOfVisa
     let visaCategoryField = details.visaCategoryField
@@ -141,8 +142,8 @@
     
                 OT_IndividualSched.clearOTIndividualSched()
                 OT_IndividualDetails.clearOTIndividualDetails()
-
-                router.push(process.env.BASE_URL + "")
+                
+                router.push("/application")
                 
             } else if (res.request.status === 400) {
 
@@ -169,9 +170,10 @@
 
 
 
-    const handleBack = () => {
+    const handleEdit = () => {
 
         Swal.fire({
+            icon: 'question',
             title: 'Are you sure you want to edit?',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -476,7 +478,7 @@
                     btnType="button"
                     className="btn btn-secondary w-25 mr-5"
                     btnText="Edit"
-                    @click="handleBack"
+                    @click="handleEdit"
                 />
                 <SubmitFormButton 
                     btnType="submit"

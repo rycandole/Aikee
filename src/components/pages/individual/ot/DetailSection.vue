@@ -5,6 +5,7 @@
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useOTIndividualDetails } from '@/store/ot-individual-details'
+    import { useOTIndividualSched } from '@/store/ot-individual-sched'
     import { Form } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -33,14 +34,9 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
+    const OT_IndividualSched = useOTIndividualSched()
     const OTIndividualDetails = useOTIndividualDetails()
-
-    /**
-     * For Fetching user data
-     */
-     onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
-    })
+    const details = JSON.parse(localStorage.getItem('ot-individual-details'))
 
     let email = profileStore.email
     let user_id = profileStore.id
@@ -72,17 +68,41 @@
     let inputError = ref(null)
     
 
+    // Display informaion for edit
+    onMounted(() => {
+        embassyOfVisa.value = details.embassyOfVisa || ''
+        visaCategoryField.value = details.visaCategoryField || ''
+        passportNumber.value = details.passportNumber || ''
+        issuedCountry.value = details.issuedCountry || ''
+        issuedDate.value = details.issuedDate || ''
+        ad_lastName.value = details.ad_lastName || ''
+        ad_firstName.value = details.ad_firstName || ''
+        ad_middleName.value = details.ad_middleName || ''
+        mother_lastName.value = details.mother_lastName || ''
+        mother_firstName.value = details.mother_firstName || ''
+        mother_middleName.value = details.mother_middleName || ''
+        dateOfBirth.value = details.dob || ''
+        gender.value = details.gender || ''
+        civil_status.value = details.civil_status || ''
+        nationality.value = details.nationality || ''
+        contactNumber.value = details.contactNumber || ''
+        street.value = details.street || ''
+        barangay.value = details.barangay || ''
+        city.value = details.city || ''
+        provinceField.value = details.provinceField || ''
+        postalCode.value = details.postalCode || ''
+    })
+
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
-    
 
     const schema = yup.object().shape({
         embassyOfVisa: yup.string().required('This field is required, please choose an option!'),
-        visaCategoryField: yup.string().nullable(),
+        visaCategoryField: yup.string().required('This field is required, please choose an option!'),
         passportNumber: yup.string().nullable().max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
-        issuedCountry: yup.string().nullable(),
+        issuedCountry: yup.string().required('This field is required, please choose an option!'),
         ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         ad_firstName: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         ad_middleName: yup.string().optional('Middle name is required!').min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
@@ -181,20 +201,38 @@
 
     const handleBack = () => {
         Swal.fire({
+            icon: 'warning',
             title: 'Are you sure you want to go back?',
-            text: 'The details you filled up will be gone.',
+            text: 'The slot you saved and the details you filled up will be gone.',
             showCancelButton: true,
             confirmButtonText: 'Yes',
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-
-                router.push('/individual/ca/schedule')
-
+                moveBackSlot();
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
             }
         })
+    }
+
+    const moveBackSlot = async () => {
+        const jsonDATA = {
+            branch: useOTIndividualSched().branch,
+            country: useOTIndividualSched().country,
+            date: useOTIndividualSched().date,
+            time: useOTIndividualSched().time,
+        }
+
+        let remove_slot = await axios.post("remove_slot/", jsonDATA);
+
+        if (remove_slot.data.status_code === 200) {
+
+            OT_IndividualSched.clearOTIndividualSched()
+            OTIndividualDetails.clearOTIndividualDetails()
+            router.push('/individual/ot/schedule')
+
+        }
     }
 </script>
 
@@ -241,7 +279,7 @@
                         />
                     </div>
                     <div class="col-lg-8 col-md-12 col-sm-12">
-                        <InputField 
+                        <RequiredInputField 
                             label="Passport Number"
                             type="text"
                             FieldName="passportNumber"
@@ -250,7 +288,7 @@
                         />
                     </div>
                     <div class="col-lg-8 col-md-12 col-sm-12">
-                        <SelectField 
+                        <RequiredSelectField 
                             label="Country of Issue"
                             FieldName="issuedCountry"
                             ErrorName="issuedCountry"

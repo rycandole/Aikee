@@ -5,6 +5,7 @@
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useNZIndividualDetails } from '@/store/nz-individual-details'
+    import { useNZIndividualSched } from '@/store/nz-individual-sched'
     import { Form } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -35,6 +36,7 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
+    const NZ_IndividualSched = useNZIndividualSched()
     const NZIndividualDetails = useNZIndividualDetails()
 
     /**
@@ -228,20 +230,38 @@
 
     const handleBack = () => {
         Swal.fire({
+            icon: 'warning',
             title: 'Are you sure you want to go back?',
-            text: 'The details you filled up will be gone.',
+            text: 'The slot you saved and the details you filled up will be gone.',
             showCancelButton: true,
             confirmButtonText: 'Yes',
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-
-                router.push('/individual/nz/schedule')
-
+                moveBackSlot();
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
             }
         })
+    }
+
+    const moveBackSlot = async () => {
+        const jsonDATA = {
+            branch: useNZIndividualSched().branch,
+            country: useNZIndividualSched().country,
+            date: useNZIndividualSched().date,
+            time: useNZIndividualSched().time,
+        }
+
+        let remove_slot = await axios.post("remove_slot/", jsonDATA);
+
+        if (remove_slot.data.status_code === 200) {
+
+            NZ_IndividualSched.clearNZIndividualSched()
+            NZIndividualDetails.clearNZIndividualDetails()
+            router.push('/individual/nz/schedule')
+
+        }
     }
 </script>
 
