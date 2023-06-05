@@ -124,9 +124,13 @@ const handleDateTime = async () => {
   OTIndividualSched.setOTIndividualSched(res);
 
   if (save_slot.data.status_code === 200) {
-    router.push("/individual/ot/applicant-details");
+    router.push("/individual/ot/applicant-details")
+  } else if(save_slot.data.status_code === 400) {
+    Swal.fire("Changes are not saved", save_slot.data.message, "error");
+  } else {
+    Swal.fire(save_slot.data.message, save_slot.data.error, "error");
   }
-};
+}
 
 const handleBack = () => {
   Swal.fire({

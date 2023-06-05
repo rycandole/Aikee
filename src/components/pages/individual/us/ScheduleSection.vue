@@ -46,6 +46,7 @@
 
     onMounted(async () => {
         handleSlots()
+        handleDateTime();
     })
 
     const schema = yup.object().shape({
@@ -70,15 +71,25 @@
         const date = moment(dateInput.value).format('YYYY-MM-DD')
 
         const jsonDATA = {
+                branch: 'MNL',
+                country: 'US',
                 date: date,
                 time: timeInput.value || ''
         }
+
+        let save_slot = await axios.post("save_slot/", jsonDATA);
 
         let res = JSON.stringify(jsonDATA)
 
         USIndividualSched.setUSIndividualSched(res)
 
-        router.push('/individual/us/applicant-details')
+        if (save_slot.data.status_code === 200) {
+            router.push('/individual/us/applicant-details')
+        } else if(save_slot.data.status_code === 400) {
+            Swal.fire("Changes are not saved", save_slot.data.message, "error");
+        } else {
+            Swal.fire(save_slot.data.message, save_slot.data.error, "error");
+        }
     }
     // =========== Inline Date ==================== //
     const disableState = {
