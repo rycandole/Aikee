@@ -1,7 +1,7 @@
 <script setup>
     import axios from 'axios'
     import { ref } from 'vue'
-    import { onMounted } from 'vue'
+    // import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useOTIndividualDetails } from '@/store/ot-individual-details'
@@ -36,7 +36,7 @@
     const profileStore = useProfileStore()
     const OT_IndividualSched = useOTIndividualSched()
     const OTIndividualDetails = useOTIndividualDetails()
-    const details = JSON.parse(localStorage.getItem('ot-individual-details'))
+    // const details = JSON.parse(localStorage.getItem('ot-individual-details'))
 
     let email = profileStore.email
     let user_id = profileStore.id
@@ -66,37 +66,40 @@
     let errors = ref([])
     let inputName = ref(null)
     let inputError = ref(null)
-    
-
-    // Display informaion for edit
-    onMounted(() => {
-        embassyOfVisa.value = details.embassyOfVisa || ''
-        visaCategoryField.value = details.visaCategoryField || ''
-        passportNumber.value = details.passportNumber || ''
-        issuedCountry.value = details.issuedCountry || ''
-        issuedDate.value = details.issuedDate || ''
-        ad_lastName.value = details.ad_lastName || ''
-        ad_firstName.value = details.ad_firstName || ''
-        ad_middleName.value = details.ad_middleName || ''
-        mother_lastName.value = details.mother_lastName || ''
-        mother_firstName.value = details.mother_firstName || ''
-        mother_middleName.value = details.mother_middleName || ''
-        dateOfBirth.value = details.dob || ''
-        gender.value = details.gender || ''
-        civil_status.value = details.civil_status || ''
-        nationality.value = details.nationality || ''
-        contactNumber.value = details.contactNumber || ''
-        street.value = details.street || ''
-        barangay.value = details.barangay || ''
-        city.value = details.city || ''
-        provinceField.value = details.provinceField || ''
-        postalCode.value = details.postalCode || ''
-    })
 
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
+    
+
+    // Display informaion for edit
+    // onMounted(() => {
+    //     embassyOfVisa.value = details.embassyOfVisa || ''
+    //     visaCategoryField.value = details.visaCategoryField || ''
+    //     passportNumber.value = details.passportNumber || ''
+    //     issuedCountry.value = details.issuedCountry || ''
+    //     issuedDate.value = details.issuedDate || ''
+    //     ad_lastName.value = details.ad_lastName || ''
+    //     ad_firstName.value = details.ad_firstName || ''
+    //     ad_middleName.value = details.ad_middleName || ''
+    //     mother_lastName.value = details.mother_lastName || ''
+    //     mother_firstName.value = details.mother_firstName || ''
+    //     mother_middleName.value = details.mother_middleName || ''
+    //     dateOfBirth.value = details.dob || ''
+    //     gender.value = details.gender || ''
+    //     civil_status.value = details.civil_status || ''
+    //     nationality.value = details.nationality || ''
+    //     contactNumber.value = details.contactNumber || ''
+    //     street.value = details.street || ''
+    //     barangay.value = details.barangay || ''
+    //     city.value = details.city || ''
+    //     provinceField.value = details.provinceField || ''
+    //     postalCode.value = details.postalCode || ''
+        
+    // })
+
+    
 
     const schema = yup.object().shape({
         embassyOfVisa: yup.string().required('This field is required, please choose an option!'),
@@ -180,24 +183,6 @@
 
     }
 
-    
-
-
-    // Get the current year
-    const currentYear = new Date().getFullYear()
-    const currentMonth = new Date().getMonth() + 1
-    const currentDay = new Date().getDate()
-
-    let currentDate = currentYear+", "+currentMonth+", "+currentDay;
-
-    // =========== Inline Date ==================== //
-    const disableBirthdayState = {
-        // months start's to 0(January) - 11(December) 
-        disabledDates: {
-            to: new Date(years[99], currentMonth, currentDay),
-            from: new Date(currentDate),
-        }
-    }
 
     const handleBack = () => {
         Swal.fire({
@@ -232,6 +217,22 @@
             OTIndividualDetails.clearOTIndividualDetails()
             router.push('/individual/ot/schedule')
 
+        }
+    }
+
+    // Get the current year
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth() + 1
+    const currentDay = new Date().getDate()
+
+    let currentDate = currentYear+", "+currentMonth+", "+currentDay;
+
+    // =========== Inline Date ==================== //
+    const disableBirthdayState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(years[99], currentMonth, currentDay),
+            from: new Date(currentDate),
         }
     }
 </script>

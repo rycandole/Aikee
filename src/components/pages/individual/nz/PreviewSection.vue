@@ -26,7 +26,11 @@
     const NZ_IndividualDetails = useNZIndividualDetails()
     const schedule = JSON.parse(localStorage.getItem('nz-individual-sched'))
     const details = JSON.parse(localStorage.getItem('nz-individual-details'))
-
+    const clinic_code = new Map([
+                ["", null],
+                ["MNL", "Ermita, Manila"],
+                ["BGC", "Bonifacio Global City(BGC)"],
+            ]);
 
 
     /**
@@ -60,7 +64,7 @@
     // Schedule Store
     let sched_date = moment(schedule.date).format('LL');
     let sched_time = schedule.time
-    let sched_branch = schedule.clinic
+    let sched_branch = clinic_code.get(schedule.branch)
 
     let medCertType = details.medCertType
     let wasFirstMedExam = details.wasFirstMedicalExam
@@ -165,7 +169,7 @@
                 NZ_IndividualSched.clearNZIndividualSched()
                 NZ_IndividualDetails.clearNZIndividualDetails()
 
-                router.push(process.env.BASE_URL + "")
+                router.push("/application")
                 
             } else if (res.request.status === 400) {
 
@@ -195,6 +199,7 @@
     const handleBack = () => {
 
         Swal.fire({
+            icon: 'question',
             title: 'Are you sure you want to edit?',
             showCancelButton: true,
             confirmButtonText: 'Yes',

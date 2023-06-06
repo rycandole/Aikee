@@ -38,13 +38,7 @@
     const profileStore = useProfileStore()
     const NZ_IndividualSched = useNZIndividualSched()
     const NZIndividualDetails = useNZIndividualDetails()
-
-    /**
-     * For Fetching user data
-     */
-     onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
-    })
+    const details = JSON.parse(localStorage.getItem('nz-individual-details'))
 
     let email = profileStore.email
     let user_id = profileStore.id
@@ -90,12 +84,55 @@
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
-    
+
+    /**
+     * For Fetching user data
+     */
+     onMounted( async () => {
+        // await profileStore.fetchProfileById(router.params.id)
+        medCertType.value = details.medCertType || ''
+        wasFirstMedicalExam.value = details.wasFirstMedicalExam || ''
+        prevClinic.value = details.prevClinic || ''
+        prevCategory.value = details.prevCategory || ''
+        issuedCountry.value = details.issuedCountry || ''
+        passportNumber.value = details.passportNumber || ''
+        issuedDate.value = details.issuedDate || ''
+        ad_lastName.value = details.ad_lastName || ''
+        ad_firstName.value = details.ad_firstName || ''
+        ad_middleName.value = details.ad_middleName || ''
+        mother_lastName.value = details.mother_lastName || ''
+        mother_firstName.value = details.mother_firstName || ''
+        mother_middleName.value = details.mother_middleName || ''
+        dateOfBirth.value = details.dob || ''
+        gender.value = details.gender || ''
+        civil_status.value = details.civil_status || ''
+        nationality.value = details.nationality || ''
+        contactNumber.value = details.contactNumber || ''
+        street.value = details.street || ''
+        barangay.value = details.barangay || ''
+        city.value = details.city || ''
+        provinceField.value = details.provinceField || ''
+        postalCode.value = details.postalCode || ''
+        intendedOccupation.value = details.intendedOccupation || ''
+        stayYear.value = details.stayYear || ''
+        stayMonth.value = details.stayMonth || ''
+        visaCategory.value = details.visaCategory || ''
+        agencyField.value = details.agencyField || ''
+        intendedStay.value = details.intendedStay || ''
+
+        wasFirstMedicalExam.value === 'Y' ? hasMedicalExam = true : hasMedicalExam = false
+        wasFirstMedicalExam.value === 'Y' ? prevClinic.value = "" : prevClinic.value = details.prevClinic
+        wasFirstMedicalExam.value === 'Y' ? prevCategory.value = "" : prevCategory.value = details.prevCategory
+        intendedStay.value === 'P' ? isPermanent = true : isPermanent = false
+        intendedStay.value === 'P' ? stayYear.value = "" : stayYear.value = details.stayYear
+        intendedStay.value === 'P' ? stayMonth.value = "" : stayMonth.value = details.stayMonth
+    })
     
     const handlePrevMedicalExam = () => {
         if(wasFirstMedicalExam.value === 'Y') {
             hasMedicalExam = true
-
+            prevClinic.value = ""
+            prevCategory.value = ""
         } else {
             hasMedicalExam = false
         }
@@ -105,6 +142,9 @@
     const handleIntendedStay = () => {
         if(intendedStay.value === 'P') {
             isPermanent = true
+            stayYear.value = ""
+            stayMonth.value = ""
+
         } else {
             isPermanent = false
         }
@@ -608,7 +648,7 @@
                             <li class="pt-3">How long do you intend staying in New Zealand  <b class="text-danger">*</b></li>
                             <div class="row pb-3 pt-2"> 
                                 <div class="col-12 pl-5">
-                                    <RadioButton 
+                                    <RadioButton
                                         RadioLabel="Permanent"
                                         RadioLabelClass="font-weight-normal"
                                         RadioBtnName="intendedStay"

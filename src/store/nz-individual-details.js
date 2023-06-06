@@ -10,7 +10,7 @@ export const useNZIndividualDetails = defineStore('nz-individual-details', {
     prevCategory: null,
     passportNumber: null,
     issuedCountry: null,
-    isuedDate: null,
+    issuedDate: null,
     ad_lastName: null,
     ad_firstName: null,
     ad_middleName: null,
@@ -46,7 +46,7 @@ export const useNZIndividualDetails = defineStore('nz-individual-details', {
         this.$state.prevCategory = jsonPARSE.json_prevCategory
         this.$state.passportNumber = jsonPARSE.json_passportNumber
         this.$state.issuedCountry = jsonPARSE.json_issuedCountry
-        this.$state.isuedDate = jsonPARSE.json_issuedDate
+        this.$state.issuedDate = jsonPARSE.json_issuedDate
         this.$state.ad_lastName = jsonPARSE.json_ad_lastName
         this.$state.ad_firstName = jsonPARSE.json_ad_firstName
         this.$state.ad_middleName = jsonPARSE.json_ad_middleName
@@ -79,7 +79,7 @@ export const useNZIndividualDetails = defineStore('nz-individual-details', {
         this.$state.prevCategory = null
         this.$state.passportNumber = null
         this.$state.issuedCountry = null
-        this.$state.isuedDate = null
+        this.$state.issuedDate = null
         this.$state.ad_lastName = null
         this.$state.ad_firstName = null
         this.$state.ad_middleName = null

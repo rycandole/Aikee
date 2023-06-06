@@ -50,6 +50,7 @@ import AU_Ind_Preview from '@/views/individual/au/PreviewPage.vue'
 
 // ------- NZ PAGE ------- //
 import { useNZIndividualSched } from '@/store/nz-individual-sched'
+import { useNZIndividualDetails } from '@/store/nz-individual-details'
 import NZ_Ind_ApplicationFormPage from '@/views/individual/nz/ApplicationFormPage.vue'
 import NZ_Ind_SchedulePage from '@/views/individual/nz/SchedulePage.vue'
 import NZ_Ind_DetailsForm from '@/views/individual/nz/DetailsFormPage.vue'
@@ -225,6 +226,9 @@ const routes = [
       },
       {
         path: '/individual/nz/preview',
+        beforeEnter: (to, from, next) => {
+          useNZIndividualDetails().user_id && useNZIndividualDetails().medCertType ? next() : next('/individual/nz/applicant-details')
+        },
         name: 'nz_preview',
         component: NZ_Ind_Preview,
       },
