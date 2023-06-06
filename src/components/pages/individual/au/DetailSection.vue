@@ -5,6 +5,7 @@
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useAUIndividualDetails } from '@/store/au-individual-details'
+    import { useAUIndividualSched } from '@/store/au-individual-sched'
     import { Form } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -33,14 +34,9 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
+    const AU_IndividualSched = useAUIndividualSched()
     const AUIndividualDetails = useAUIndividualDetails()
-
-    /**
-     * For Fetching user data
-     */
-     onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
-    })
+    const details = JSON.parse(localStorage.getItem('au-individual-details'))
 
     let email = profileStore.email
     let user_id = profileStore.id
@@ -84,12 +80,46 @@
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
+
+    /**
+     * For Fetching user data
+     */
+     onMounted(async () => {
+        // await profileStore.fetchProfileById(router.params.id)
+        subClassKind.value = details.subClassKind || ''
+        wasFirstMedicalExam.value = details.wasFirstMedicalExam || ''
+        prevClinicName.value = details.prevClinicName || ''
+        prevSubClass.value = details.prevSubClass || ''
+        trn.value = details.trn || ''
+        passportNumber.value = details.passportNumber || ''
+        issuedCountry.value = details.issuedCountry || ''
+        issuedDate.value = details.issuedDate || ''
+        ad_lastName.value = details.ad_lastName || ''
+        ad_firstName.value = details.ad_firstName || ''
+        ad_middleName.value = details.ad_middleName || ''
+        mother_lastName.value = details.mother_lastName || ''
+        mother_firstName.value = details.mother_firstName || ''
+        mother_middleName.value = details.mother_middleName || ''
+        dateOfBirth.value = details.dateOfBirth || ''
+        gender.value = details.gender || ''
+        civil_status.value = details.civil_status || ''
+        nationality.value = details.nationality || ''
+        contactNumber.value = details.contactNumber || ''
+        street.value = details.street || ''
+        barangay.value = details.barangay || ''
+        city.value = details.city || ''
+        provinceField.value = details.provinceField || ''
+        postalCode.value = details.postalCode || ''
+        intendedStay.value = details.intendedStay || ''
+        intentToWork.value = details.intentToWork || ''
+        intentToStay.value = details.intentToStay || ''
+        agencyField.value = details.agencyField || ''
+    })
     
     
     const handlePrevMedicalExam = () => {
         if(wasFirstMedicalExam.value === 'Y') {
             hasMedicalExam = true
-
         } else {
             hasMedicalExam = false
         }
@@ -211,20 +241,38 @@
 
     const handleBack = () => {
         Swal.fire({
+            icon: 'warning',
             title: 'Are you sure you want to go back?',
-            text: 'The details you filled up will be gone.',
+            text: 'The slot you saved and the details you filled up will be gone.',
             showCancelButton: true,
             confirmButtonText: 'Yes',
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-
-                router.push('/individual/us/schedule')
-
+                moveBackSlot();
+                
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
             }
         })
+    }
+
+    const moveBackSlot = async () => {
+        const jsonDATA = {
+            branch: useAUIndividualSched().branch,
+            country: useAUIndividualSched().country,
+            date: useAUIndividualSched().date,
+            time: useAUIndividualSched().time,
+        }
+
+        let remove_slot = await axios.post("remove_slot/", jsonDATA);
+
+        if (remove_slot.data.status_code === 200) {
+
+            AU_IndividualSched.clearAUIndividualSched()
+            AUIndividualDetails.clearAUIndividualDetails()
+            router.push('/individual/au/schedule')
+        }
     }
 </script>
 

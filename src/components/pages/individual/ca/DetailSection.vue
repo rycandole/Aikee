@@ -80,7 +80,6 @@
     let inputName = ref(null)
     let inputError = ref(null)
 
-
     let checkbox1 = ref(null)
     let isButtonDisabled = true
     

@@ -42,6 +42,8 @@ import CA_Ind_Preview from '@/views/individual/ca/PreviewPage.vue'
 // ------ CA END PAGE ---------- //
 
 // ------- AU PAGE ------- //
+import { useAUIndividualSched } from '@/store/au-individual-sched'
+import { useAUIndividualDetails } from '@/store/au-individual-details'
 import AU_Ind_ApplicationFormPage from '@/views/individual/au/ApplicationFormPage.vue'
 import AU_Ind_SchedulePage from '@/views/individual/au/SchedulePage.vue'
 import AU_Ind_DetailsForm from '@/views/individual/au/DetailsFormPage.vue'
@@ -197,11 +199,17 @@ const routes = [
       },
       {
         path: '/individual/au/applicant-details',
+        beforeEnter: (to, from, next) => {
+          useAUIndividualSched().date && useAUIndividualSched().time ? next() : next('/individual/au/schedule')
+        },
         name: 'au_details',
         component: AU_Ind_DetailsForm,
       },
       {
         path: '/individual/au/preview',
+        beforeEnter: (to, from, next) => {
+          useAUIndividualDetails().user_id && useAUIndividualDetails().subClassKind ? next() : next('/individual/au/applicant-details')
+        },
         name: 'au_preview',
         component: AU_Ind_Preview,
       },

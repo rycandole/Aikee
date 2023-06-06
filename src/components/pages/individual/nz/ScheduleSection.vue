@@ -227,7 +227,7 @@
                                             />
                                     </div>
                                     
-                                    <div class="col-12">
+                                    <div class="col-12 pt-3">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div>
                                 </div>

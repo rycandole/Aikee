@@ -180,6 +180,7 @@
     const handleBack = () => {
 
         Swal.fire({
+            icon: 'question',
             title: 'Are you sure you want to edit?',
             showCancelButton: true,
             confirmButtonText: 'Yes',
