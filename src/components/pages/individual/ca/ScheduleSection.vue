@@ -45,6 +45,24 @@
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
+    // =========== Inline Date ==================== //
+    const disableState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(formatted_d),
+            days: [0,6],
+            dates: [ // Disable an array of dates
+                new Date(2023, 3, 6),
+                new Date(2023, 3, 7),
+                new Date(2023, 3, 22),
+                new Date(2023, 3, 21),
+            ],
+            preventDisableDateSelection: true
+        }
+    }
+    // ============ End of Inline Date =============== //
+
     let clinic_location = ref(null)
     let dateInput = ref(null)
     let timeInput = ref(null)
@@ -57,21 +75,17 @@
     let textSuccess = "text-success"
 
     onMounted(async () => {
-        handleSlots()
-    })
-
-    const schema = yup.object().shape({
-        clinic_location: yup.string().required('Please select preferred clinic'),
-        timeInput: yup.string().required('Please select preferred time')
+        handleSlots();
+        handleDateTime();
     })
 
     const handleBranch = () => {
         // branch = clinic_code.get(clinic_location.value)
-
         if(clinic_code.get(clinic_location.value) === null) {
             hasBranch = true
         } else {
             hasBranch = false
+            timeSched.value = ""
         }
         
     }
@@ -104,7 +118,6 @@
         }
 
         let save_slot = await axios.post("save_slot/", jsonDATA);
-
         let res = JSON.stringify(jsonDATA)
 
         CAIndividualSched.setCAIndividualSched(res)
@@ -126,11 +139,12 @@
             text: 'The details you filled up will be gone.',
             showCancelButton: true,
             confirmButtonText: 'Yes',
+            icon: "question",
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
 
-                router.push('/individual/au')
+                router.push('/individual/ca')
 
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
@@ -138,23 +152,10 @@
         })
     }
 
-    // =========== Inline Date ==================== //
-    const disableState = {
-        // months start's to 0(January) - 11(December) 
-        disabledDates: {
-            to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(formatted_d),
-            days: [0,6],
-            dates: [ // Disable an array of dates
-                new Date(2023, 3, 6),
-                new Date(2023, 3, 7),
-                new Date(2023, 3, 22),
-                new Date(2023, 3, 21),
-            ],
-            preventDisableDateSelection: true
-        }
-    }
-    // ============ End of Inline Date =============== //
+    const schema = yup.object().shape({
+        clinic_location: yup.string().required('Please select preferred clinic'),
+        timeInput: yup.string().required('Please select preferred time')
+    })
 
 </script>
 
@@ -225,7 +226,7 @@
                                             />
                                     </div>
                                     
-                                    <div class="col-12">
+                                    <div class="col-12 pt-3">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div>
                                 </div>

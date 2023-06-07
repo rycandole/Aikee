@@ -114,16 +114,21 @@
         intentToWork.value = details.intentToWork || ''
         intentToStay.value = details.intentToStay || ''
         agencyField.value = details.agencyField || ''
+
+        wasFirstMedicalExam.value === 'Y' ? hasMedicalExam = true : hasMedicalExam = false
+        wasFirstMedicalExam.value === 'Y' ? prevClinicName.value = "" : prevClinicName.value = details.prevClinicName
+        wasFirstMedicalExam.value === 'Y' ? prevSubClass.value = "" : prevSubClass.value = details.prevSubClass
     })
     
     
     const handlePrevMedicalExam = () => {
         if(wasFirstMedicalExam.value === 'Y') {
             hasMedicalExam = true
+            prevClinicName.value = ""
+            prevSubClass.value = ""
         } else {
             hasMedicalExam = false
         }
-
     }
 
     const schema = yup.object().shape({
@@ -310,7 +315,7 @@
                         />
                     </div>
                     <div class="mb-3 col-12">
-                        <strong>Is this your first medical examination for the Australian Embassy?</strong>
+                        <strong>Is this your first medical examination for the Australian Embassy? <b class="text-danger">*</b></strong>
                     </div>
                     <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
                         <RadioButton 
@@ -408,7 +413,7 @@
                             <li>Applicant's Name</li>
                             <div class="row pb-3">
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
+                                    <RequiredInputField 
                                         label="Last Name"
                                         labelClassName="font-weight-normal"
                                         type="text"
@@ -418,7 +423,7 @@
                                     />
                                 </div>
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
+                                    <RequiredInputField 
                                         label="First Name"
                                         labelClassName="font-weight-normal"
                                         type="text"
@@ -441,7 +446,7 @@
                             <li>Mother's Maiden Name (Last Name, First Name, Middle Name)</li>
                             <div class="row pb-3">
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
+                                    <RequiredInputField 
                                         label="Last Name"
                                         labelClassName="font-weight-normal"
                                         type="text"
@@ -451,7 +456,7 @@
                                     />
                                 </div>
                                 <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <InputField 
+                                    <RequiredInputField 
                                         label="First Name"
                                         labelClassName="font-weight-normal"
                                         type="text"
@@ -471,11 +476,12 @@
                                     />
                                 </div>
                             </div>
-                            <li>Applicant's Date of Birth</li>
-                            <div class="row pb-3">
+                            <li>Applicant's Date of Birth <b class="text-danger">*</b></li>
+                            <div class="row pb-3 mt-3">
                                 <div class="col-12">
                                     <DateField 
-                                        requiredClass="d-none dateField"
+                                        divLabelClass="d-none"
+                                        requiredClass="d-none p-0 dateField"
                                         placeholder="Date of Birth"
                                         :disabledDate="disableBirthdayState.disabledDates"
                                         v-model:input="dateOfBirth"
@@ -484,7 +490,7 @@
                                     />
                                 </div>
                             </div>
-                            <li>Gender </li>
+                            <li>Gender <b class="text-danger">*</b></li>
                             <div class="row">
                                 <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
                                     <RadioButton 
@@ -512,7 +518,7 @@
                              <div class="col-12 pb-3">
                                 <ErrorMessage name="gender" class="text-danger"/>
                             </div>
-                            <li>Civil Status </li>
+                            <li>Civil Status <b class="text-danger">*</b></li>
                             <div class="row pb-3"> 
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <SelectField 
@@ -524,7 +530,7 @@
                                     />
                                 </div>
                             </div>
-                            <li>Country of Nationality</li>
+                            <li>Country of Nationality <b class="text-danger">*</b></li>
                             <div class="row pb-3"> 
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <SelectField 
@@ -536,7 +542,7 @@
                                     />
                                 </div>
                             </div>
-                            <li>Contact Number</li>
+                            <li>Contact Number <b class="text-danger">*</b></li>
                             <div class="row pb-3">
                                 <div class="col-12">
                                     <InputField 
@@ -604,7 +610,7 @@
                                 </div>
                                 
                             </div>
-                            <li>How long do you intend staying in Australia? </li>
+                            <li>How long do you intend staying in Australia? <b class="text-danger">*</b></li>
                             <div class="row">
                                 <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
                                     <RadioButton 
@@ -632,7 +638,7 @@
                             <div class="col-12 pb-3">
                                 <ErrorMessage name="intendedStay" class="text-danger"/>
                             </div>
-                            <li>Do you intent to work as, or study to be, a doctor, dentist, nurse or paramedic during your stay in Australia? </li>
+                            <li>Do you intent to work as, or study to be, a doctor, dentist, nurse or paramedic during your stay in Australia? <b class="text-danger">*</b></li>
                             <div class="row">
                                 <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
                                     <RadioButton 
@@ -660,7 +666,7 @@
                             <div class="col-12 pb-3">
                                 <ErrorMessage name="intentToWork" class="text-danger"/>
                             </div>
-                            <li>For Temporary Visa: Do you intend to apply for a permanent stay in Australia within the next 6-12 months?</li>
+                            <li>For Temporary Visa: Do you intend to apply for a permanent stay in Australia within the next 6-12 months? <b class="text-danger">*</b></li>
                             <div class="row pb-3">
                                 <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
                                     <RadioButton 
@@ -688,7 +694,7 @@
                             <div class="col-12 pb-3">
                                 <ErrorMessage name="intentToStay" class="text-danger"/>
                             </div>
-                            <li>Agency?</li>
+                            <li>Agency? <b class="text-danger">*</b></li>
                             <div class="row">
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <SelectField 

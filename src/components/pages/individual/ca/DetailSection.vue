@@ -4,6 +4,7 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
+    import { useCAIndividualSched } from '@/store/ca-individual-sched'
     import { useCAIndividualDetails } from '@/store/ca-individual-details'
     import { Form } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -34,14 +35,9 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
+    const CA_IndividualSched = useCAIndividualSched()
     const CAIndividualDetails = useCAIndividualDetails()
-
-    /**
-     * For Fetching user data
-     */
-     onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
-    })
+    const details = JSON.parse(localStorage.getItem('ca-individual-details'))
 
     let email = profileStore.email
     let user_id = profileStore.id
@@ -80,31 +76,76 @@
     let inputName = ref(null)
     let inputError = ref(null)
 
-    let checkbox1 = ref(null)
+    let check_alias = ref(null)
     let isButtonDisabled = true
     
-
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
+
+     /**
+     * For Fetching user data
+     */
+     onMounted(async () => {
+        // await profileStore.fetchProfileById(router.params.id)
+        wasFirstMedicalExam.value = details.wasFirstMedicalExam || ''
+        prevCategory.value = details.prevCategory || ''
+        issuedCountry.value = details.issuedCountry || ''
+        passportNumber.value = details.passportNumber || ''
+        issuedDate.value = details.issuedDate || ''
+        ad_lastName.value = details.ad_lastName || ''
+        ad_firstName.value = details.ad_firstName || ''
+        ad_middleName.value = details.ad_middleName || ''
+        mother_lastName.value = details.mother_lastName || ''
+        mother_firstName.value = details.mother_firstName || ''
+        mother_middleName.value = details.mother_middleName || ''
+        dateOfBirth.value = details.dob || ''
+        gender.value = details.gender || ''
+        civil_status.value = details.civil_status || ''
+        nationality.value = details.nationality || ''
+        contactNumber.value = details.contactNumber || ''
+        street.value = details.street || ''
+        barangay.value = details.barangay || ''
+        city.value = details.city || ''
+        provinceField.value = details.provinceField || ''
+        postalCode.value = details.postalCode || ''
+        check_alias.value = details.check_alias || ''
+        alias_lastName.value = details.alias_lastName || ''
+        alias_firstName.value = details.alias_firstName || ''
+        alias_middleName.value = details.alias_middleName || ''
+        applicantCategory.value = details.applicantCategory || ''
+        fileNumber.value = details.fileNumber || ''
+        agencyField.value = details.agencyField || ''
+
+        wasFirstMedicalExam.value === 'Y' ? hasMedicalExam = true : hasMedicalExam = false
+        wasFirstMedicalExam.value === 'Y' ? prevClinicName.value = "" : prevClinicName.value = details.prevClinicName
+        wasFirstMedicalExam.value === 'Y' ? prevCategory.value = "" : prevCategory.value = details.prevCategory
+        check_alias.value === 'checked' ? isButtonDisabled = false : isButtonDisabled = true
+        check_alias.value === 'checked' ? alias_lastName.value = details.alias_lastName : alias_lastName.value = ""
+        check_alias.value === 'checked' ? alias_firstName.value = details.alias_firstName : alias_firstName.value = ""
+        check_alias.value === 'checked' ? alias_middleName.value = details.alias_middleName : alias_middleName.value = ""
+    })
     
     
     const handlePrevMedicalExam = () => {
         if(wasFirstMedicalExam.value === 'Y') {
             hasMedicalExam = true
-
+            prevClinicName.value = ""
+            prevCategory.value = ""
         } else {
             hasMedicalExam = false
         }
-
     }
 
     const hasAlias = () => {
-        if(checkbox1.value == 'checked') {
+        if(check_alias.value == 'checked') {
             isButtonDisabled = false
         } else {
             isButtonDisabled = true
+            alias_lastName.value = ""
+            alias_firstName.value = ""
+            alias_middleName.value = ""
         }
     }
 
@@ -160,6 +201,7 @@
                 json_ad_lastName: values.ad_lastName,
                 json_ad_firstName: values.ad_firstName,
                 json_ad_middleName: values.ad_middleName,
+                json_check_alias: values.check_alias,
                 json_alias_lastName: values.alias_lastName,
                 json_alias_firstName: values.alias_firstName,
                 json_alias_middleName: values.alias_middleName,
@@ -204,8 +246,6 @@
 
     }
 
-    
-
 
     // Get the current year
     const currentYear = new Date().getFullYear()
@@ -225,20 +265,38 @@
 
     const handleBack = () => {
         Swal.fire({
+            icon: 'warning',
             title: 'Are you sure you want to go back?',
-            text: 'The details you filled up will be gone.',
+            text: 'The slot you saved and the details you filled up will be gone.',
             showCancelButton: true,
             confirmButtonText: 'Yes',
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-
-                router.push('/individual/ca/schedule')
-
+                moveBackSlot();
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
             }
         })
+    }
+
+    const moveBackSlot = async () => {
+        const jsonDATA = {
+            branch: useCAIndividualSched().branch,
+            country: useCAIndividualSched().country,
+            date: useCAIndividualSched().date,
+            time: useCAIndividualSched().time,
+        }
+
+        let remove_slot = await axios.post("remove_slot/", jsonDATA);
+
+        if (remove_slot.data.status_code === 200) {
+
+            CA_IndividualSched.clearCAIndividualSched()
+            CAIndividualDetails.clearCAIndividualDetails()
+            router.push('/individual/ca/schedule')
+
+        }
     }
 </script>
 
@@ -388,9 +446,9 @@
                                 </div>
                                 <div class="col-lg-8 col-md-12 col-sm-12 pl-4 pt-3">
                                     <CheckBox 
-                                            CheckBoxName="checkbox1"
+                                            CheckBoxName="check_alias"
                                             CheckBoxValue="checked"
-                                            v-model:input="checkbox1"
+                                            v-model:input="check_alias"
                                             :onChange="hasAlias"
                                     />
                                     <label class="form-check-label font-weight-bold " for="flexCheckDefault">

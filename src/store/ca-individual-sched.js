@@ -3,7 +3,8 @@ import { defineStore } from 'pinia'
 
 export const useCAIndividualSched = defineStore('ca-individual-sched', {
   state: () => ({
-    clinic: null,
+    branch: null,
+    country: null,
     date: null,
     time: null
   }),
@@ -11,12 +12,14 @@ export const useCAIndividualSched = defineStore('ca-individual-sched', {
     setCAIndividualSched(res) {
         let jsonPARSE = JSON.parse(res)
         
-        this.$state.clinic = jsonPARSE.clinic
+        this.$state.branch = jsonPARSE.branch
+        this.$state.country = jsonPARSE.country
         this.$state.date = jsonPARSE.date
         this.$state.time = jsonPARSE.time
     },
     clearCAIndividualSched() {
-        this.$state.clinic = null,
+        this.$state.branch = null,
+        this.$state.country = null,
         this.$state.date = null,
         this.$state.time = null
     }

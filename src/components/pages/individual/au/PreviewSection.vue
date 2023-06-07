@@ -26,6 +26,11 @@
     const AU_IndividualDetails = useAUIndividualDetails()
     const schedule = JSON.parse(localStorage.getItem('au-individual-sched'))
     const details = JSON.parse(localStorage.getItem('au-individual-details'))
+    const clinic_code = new Map([
+                ["", null],
+                ["MNL", "Ermita, Manila"],
+                ["BGC", "Bonifacio Global City(BGC)"],
+            ]);
 
 
 
@@ -61,7 +66,7 @@
     // Schedule Store
     let sched_date = moment(schedule.date).format('LL');
     let sched_time = schedule.time
-    let sched_branch = schedule.clinic
+    let sched_branch = clinic_code.get(schedule.branch)
 
     let subclass = details.subClassKind
     let wasFirstMedExam = details.wasFirstMedicalExam
@@ -158,9 +163,17 @@
                 AU_IndividualSched.clearAUIndividualSched()
                 AU_IndividualDetails.clearAUIndividualDetails()
 
-                router.push(process.env.BASE_URL +"/")
+                router.push("/application")
                 
-            } else {
+            } else if (res.request.status === 400) {
+
+                Swal.fire(res.data.message, '', 'info')
+
+            } else if (res.request.status === 500) {
+
+                Swal.fire('Internal Server Error', '', 'warning')
+
+            }else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
                 Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
                 console.log('Reject, '+ res.data.error +', '+ res.data.message)
@@ -169,7 +182,8 @@
             // console.log(res)
 
         } catch (err) {
-            errors.value = err.response.data.errors
+            errors.value = err.response.data.
+            Swal.fire(err.response.data.message, '', 'error')
             // console.log(errors.value)
         }
 

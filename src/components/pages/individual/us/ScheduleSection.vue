@@ -37,6 +37,24 @@
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
+    // =========== Inline Date ==================== //
+    const disableState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(formatted_d),
+            days: [0,6],
+            dates: [ // Disable an array of dates
+                new Date(2023, 7, 6),
+                new Date(2023, 7, 7),
+                new Date(2023, 5, 22),
+                new Date(2023, 5, 21),
+            ],
+            preventDisableDateSelection: true
+        }
+    }
+    // ============ End of Inline Date =============== //
+
     let dateInput = ref(null)
     let timeInput = ref(null)
     let timeSched = ref(null)
@@ -47,10 +65,6 @@
     onMounted(async () => {
         handleSlots()
         handleDateTime();
-    })
-
-    const schema = yup.object().shape({
-        timeInput: yup.string().nullable()
     })
 
     const handleSlots = async () => {
@@ -74,7 +88,7 @@
                 branch: 'MNL',
                 country: 'US',
                 date: date,
-                time: timeInput.value || ''
+                time: timeInput.value
         }
 
         let save_slot = await axios.post("save_slot/", jsonDATA);
@@ -91,23 +105,7 @@
             Swal.fire(save_slot.data.message, save_slot.data.error, "error");
         }
     }
-    // =========== Inline Date ==================== //
-    const disableState = {
-        // months start's to 0(January) - 11(December) 
-        disabledDates: {
-            to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(formatted_d),
-            days: [0,6],
-            dates: [ // Disable an array of dates
-                new Date(2023, 7, 6),
-                new Date(2023, 7, 7),
-                new Date(2023, 5, 22),
-                new Date(2023, 5, 21),
-            ],
-            preventDisableDateSelection: true
-        }
-    }
-    // ============ End of Inline Date =============== //
+    
 
     const handleBack = () => {
 
@@ -116,6 +114,7 @@
             text: 'The details you filled up will be gone.',
             showCancelButton: true,
             confirmButtonText: 'Yes',
+            icon: "question",
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
@@ -127,6 +126,11 @@
             }
         })
     }
+    
+    const schema = yup.object().shape({
+        timeInput: yup.string().required('Please select preferred time')
+    })
+
     
 </script>
 
@@ -186,7 +190,7 @@
                                             />
                                     </div>
                                     
-                                    <div class="col-12">
+                                    <div class="col-12 pt-3">
                                         <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
                                     </div>
                                 </div>

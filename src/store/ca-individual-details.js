@@ -13,6 +13,7 @@ export const useCAIndividualDetails = defineStore('ca-individual-details', {
     ad_lastName: null,
     ad_firstName: null,
     ad_middleName: null,
+    check_alias: null,
     alias_lastName: null,
     alias_firstName: null,
     alias_middleName: null,
@@ -48,6 +49,7 @@ export const useCAIndividualDetails = defineStore('ca-individual-details', {
         this.$state.ad_lastName = jsonPARSE.json_ad_lastName
         this.$state.ad_firstName = jsonPARSE.json_ad_firstName
         this.$state.ad_middleName = jsonPARSE.json_ad_middleName
+        this.$state.check_alias = jsonPARSE.json_check_alias
         this.$state.alias_lastName = jsonPARSE.json_alias_lastName
         this.$state.alias_firstName = jsonPARSE.json_alias_firstName
         this.$state.alias_middleName = jsonPARSE.json_alias_middleName
@@ -80,6 +82,7 @@ export const useCAIndividualDetails = defineStore('ca-individual-details', {
         this.$state.ad_lastName = null
         this.$state.ad_firstName = null
         this.$state.ad_middleName = null
+        this.$state.check_alias = null
         this.$state.alias_lastName = null
         this.$state.alias_firstName = null
         this.$state.alias_middleName = null

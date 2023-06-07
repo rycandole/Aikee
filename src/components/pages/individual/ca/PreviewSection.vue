@@ -26,7 +26,11 @@
     const CA_IndividualDetails = useCAIndividualDetails()
     const schedule = JSON.parse(localStorage.getItem('ca-individual-sched'))
     const details = JSON.parse(localStorage.getItem('ca-individual-details'))
-
+    const clinic_code = new Map([
+                ["", null],
+                ["MNL", "Ermita, Manila"],
+                ["BGC", "Bonifacio Global City(BGC)"],
+            ]);
 
 
     /**
@@ -60,7 +64,7 @@
     // Schedule Store
     let sched_date = moment(schedule.date).format('LL');
     let sched_time = schedule.time
-    let sched_branch = schedule.clinic
+    let sched_branch = clinic_code.get(schedule.branch)
 
     let trn = details.trn
     let wasFirstMedExam = details.wasFirstMedicalExam
@@ -158,7 +162,7 @@
                 CA_IndividualSched.clearCAIndividualSched()
                 CA_IndividualDetails.clearCAIndividualDetails()
 
-                router.push(process.env.BASE_URL + "")
+                router.push("/application")
                 
             } else if (res.request.status === 400) {
 
@@ -178,18 +182,16 @@
 
         } catch (err) {
             errors.value = err.response.data.errors
-
             Swal.fire(err.response.data.message, '', 'error')
             console.log(errors.value)
         }
 
     }
 
-
-
     const handleBack = () => {
 
         Swal.fire({
+            icon: 'question',
             title: 'Are you sure you want to edit?',
             showCancelButton: true,
             confirmButtonText: 'Yes',

@@ -4,8 +4,8 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
-    import { useNZIndividualDetails } from '@/store/nz-individual-details'
     import { useNZIndividualSched } from '@/store/nz-individual-sched'
+    import { useNZIndividualDetails } from '@/store/nz-individual-details'
     import { Form } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import FormHeader from '@/components/global/FormHeader.vue'
@@ -248,8 +248,6 @@
         }
 
     }
-
-    
 
 
     // Get the current year

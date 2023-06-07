@@ -31,7 +31,11 @@
                 ["MNL", "Ermita, Manila"],
                 ["BGC", "Bonifacio Global City(BGC)"],
             ]);
-
+    const medicalCertificate = new Map([
+                                    ['Full', 'Full Medical Examination'],
+                                    ['CXR', 'Chest X-ray only'],
+                                    ['Limited', 'Limited Medical Examination']
+                                ])
 
     /**
      * For Fetching user data
@@ -96,14 +100,6 @@
     let stayMonth = details.stayMonth
     let visaCategory = details.visaCategory
     let agencyField = details.agencyField
-
-    const medicalCertificate = new Map([
-                                            ['Full', 'Full Medical Examination'],
-                                            ['CXR', 'Chest X-ray only'],
-                                            ['Limited', 'Limited Medical Examination']
-                                        ])
-   
-
 
     const schema = yup.object({
         checkbox1: yup.string().required('Please check the check box to proceed'),
@@ -183,11 +179,8 @@
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
                 Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
                 console.log('Reject, '+ res.data.error +', '+ res.data.message)
-
             }
-
             // console.log(res)
-
         } catch (err) {
             errors.value = err.response.data.errors
             Swal.fire(err.response.data.message, '', 'error')

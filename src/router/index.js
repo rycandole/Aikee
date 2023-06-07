@@ -28,6 +28,8 @@ import IndividualCountryPage from '@/views/individual/CountryPage.vue'
 
 
 // ------- US PAGE ------- //
+import { useUSIndividualSched } from '@/store/us-individual-sched'
+import { useUSIndividualDetails } from '@/store/us-individual-details'
 import US_Ind_ApplicationFormPage from '@/views/individual/us/ApplicationFormPage.vue'
 import US_Ind_SchedulePage from '@/views/individual/us/SchedulePage.vue'
 import US_Ind_DetailsForm from '@/views/individual/us/DetailsFormPage.vue'
@@ -35,6 +37,8 @@ import US_Ind_Preview from '@/views/individual/us/PreviewPage.vue'
 // ------ US END PAGE ---------- //
 
 // ------- CA PAGE ------- //
+import { useCAIndividualSched } from '@/store/ca-individual-sched'
+import { useCAIndividualDetails } from '@/store/ca-individual-details'
 import CA_Ind_ApplicationFormPage from '@/views/individual/ca/ApplicationFormPage.vue'
 import CA_Ind_SchedulePage from '@/views/individual/ca/SchedulePage.vue'
 import CA_Ind_DetailsForm from '@/views/individual/ca/DetailsFormPage.vue'
@@ -159,11 +163,17 @@ const routes = [
       },
       {
         path: '/individual/us/applicant-details',
+        beforeEnter: (to, from, next) => {
+          useUSIndividualSched().date && useUSIndividualSched().time ? next() : next('/individual/ca/schedule')
+        },
         name: 'us_details',
         component: US_Ind_DetailsForm,
       },
       {
         path: '/individual/us/preview',
+        beforeEnter: (to, from, next) => {
+          useUSIndividualDetails().user_id && useUSIndividualDetails().email ? next() : next('/individual/ca/applicant-details')
+        },
         name: 'us_preview',
         component: US_Ind_Preview,
       },
@@ -179,11 +189,17 @@ const routes = [
       },
       {
         path: '/individual/ca/applicant-details',
+        beforeEnter: (to, from, next) => {
+          useCAIndividualSched().date && useCAIndividualSched().time ? next() : next('/individual/ca/schedule')
+        },
         name: 'ca_details',
         component: CA_Ind_DetailsForm,
       },
       {
         path: '/individual/ca/preview',
+         beforeEnter: (to, from, next) => {
+          useCAIndividualDetails().user_id && useCAIndividualDetails().email ? next() : next('/individual/ca/applicant-details')
+        },
         name: 'ca_preview',
         component: CA_Ind_Preview,
       },
