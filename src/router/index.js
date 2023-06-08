@@ -164,7 +164,7 @@ const routes = [
       {
         path: '/individual/us/applicant-details',
         beforeEnter: (to, from, next) => {
-          useUSIndividualSched().date && useUSIndividualSched().time ? next() : next('/individual/ca/schedule')
+          useUSIndividualSched().date && useUSIndividualSched().time ? next() : next('/individual/us/schedule')
         },
         name: 'us_details',
         component: US_Ind_DetailsForm,
@@ -172,7 +172,7 @@ const routes = [
       {
         path: '/individual/us/preview',
         beforeEnter: (to, from, next) => {
-          useUSIndividualDetails().user_id && useUSIndividualDetails().email ? next() : next('/individual/ca/applicant-details')
+          useUSIndividualDetails().user_id && useUSIndividualDetails().email ? next() : next('/individual/us/applicant-details')
         },
         name: 'us_preview',
         component: US_Ind_Preview,

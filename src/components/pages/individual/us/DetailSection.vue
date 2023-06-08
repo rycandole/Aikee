@@ -4,6 +4,7 @@
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
+    import { useUSIndividualSched } from '@/store/us-individual-sched'
     import { useUSIndividualDetails } from '@/store/us-individual-details'
     import { Form } from 'vee-validate'
     import CalloutDanger from '@/components/global/CalloutDanger.vue'
@@ -13,7 +14,6 @@
     import DateField from '@/components/global/DateField.vue'
     import RequiredInputField from '@/components/global/RequiredInputField.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
-    import RequiredRadioButton from '@/components/global/RequiredRadioButton.vue'
     import SelectField from '@/components/global/SelectField.vue'
     import InputField from '@/components/global/InputField.vue'
     import RadioButton from '@/components/global/RadioButtton.vue'
@@ -42,25 +42,25 @@
 
     const router = useRouter()
     const profileStore = useProfileStore()
+    const US_IndividualSched = useUSIndividualSched()
     const USIndividualDetails = useUSIndividualDetails()
+    const details = JSON.parse(localStorage.getItem('us-individual-details'))
 
-    /**
-     * For Fetching user data
-     */
-     onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
-    })
+    
 
     let email = profileStore.email
     let user_id = profileStore.id
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
+
+    let date_of_birth = ref(null)
+    let cv_category = ref(null)
+    let is_cv_received = true
+    let cv_received = ref(null)
     let firstDose = ref(null)
     let secondDose = ref(null)
     let covidHidden = true
     let isVaccinated = true
-    let isVaccineReceived = true
-    let vaccine_receive = ref(null)
     let vaccineHasTwo = true
     let hideBooster1 = true
     let hideBooster2 = true
@@ -71,17 +71,143 @@
     let second_dose_booster = ref(null)
     let callout_message = ref(null)
     let showVisaDate = true
-    let ad_has_been_issued_visa = ref(null)
-    let date_of_birth = ref(null)
+    let ci_nvc_number = ref(null)
+    let ci_nvc_confirm = ref(null)
+    let ci_visa_pref_category = ref(null)
+    let ci_interview_source = ref(null)
     let ci_intervue_date = ref(null)
+    let ad_last_name = ref(null)
+    let ad_first_name = ref(null)
+    let ad_middle_name = ref(null)
+    let ad_gender = ref(null)
+    let ad_civil_status = ref(null)
+    let ad_nationality = ref(null)
+    let ad_birthplace = ref(null)
+    let ad_birth_country = ref(null)
+    let ad_mother_last_name = ref(null)
+    let ad_mother_first_name = ref(null)
+    let ad_mother_middle_name = ref(null)
+    let ad_address = ref(null)
+    let ad_city = ref(null)
+    let ad_province = ref(null)
+    let ad_zip_code = ref(null)
+    let ad_overseas_country = ref(null)
+    let ad_overseas_street_address = ref(null)
+    let ad_overseas_city = ref(null)
+    let ad_overseas_province = ref(null)
+    let ad_overseas_zipcode = ref(null)
+    let ad_contact_numbers = ref(null)
+    let ad_present_residence = ref(null)
+    let ad_prior_residence = ref(null)
+    let ad_passport_number = ref(null)
+    let ad_passport_issued_by = ref(null)
     let add_passport_date = ref(null)
     let add_passport_expiration_date = ref(null)
     let add_issuance_date = ref(null)
     let add_expiration_date = ref(null)
+    let ad_has_been_issued_visa = ref(null)
+    let ad_prev_medical_exam_month = ref(null)
+    let ad_prev_medical_exam_year = ref(null)
+    let ad_prev_xray_month = ref(null)
+    let ad_prev_xray_year = ref(null)
+    let petitioner_fullname = ref(null)
+    let petitioner_is_alive = ref(null)
+    let petitioner_relationship = ref(null)
+    let petitioner_us_street_addr = ref(null)
+    let petitioner_us_city_addr = ref(null)
+    let petitioner_us_state_addr = ref(null)
+    let petitioner_us_postal_code = ref(null)
+    let petitioner_contact_no = ref(null)
+    let petitioner_email_addr = ref(null)
+    let intended_port_of_entry = ref(null)
+
     let errors = ref([])
     let inputName = ref(null)
     let inputError = ref(null)
 
+    const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
+    const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
+    const numOnlyRegex = /^[\p{N}]+$/u;
+    const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
+
+    /**
+     * For Fetching user data
+     */
+     onMounted(async () => {
+        // await profileStore.fetchProfileById(router.params.id)
+        alertChange()
+
+        date_of_birth.value = details.date_of_birth || ''
+        cv_category.value = details.cv_category || ''
+        cv_received.value = details.cv_received || ''
+        cv_brand_name.value = details.cv_brand_name || ''
+        firstDose.value = details.firstDose || ''
+        secondDose.value = details.secondDose || ''
+        cv_booster1.value = details.cv_booster1 || ''
+        first_dose_booster.value = details.first_doseBooster || ''
+        cv_booster2.value = details.cv_booster2 || ''
+        second_dose_booster.value = details.second_doseBooster || ''
+        ci_nvc_number.value = details.ci_nvc_number || ''
+        ci_nvc_confirm.value = details.ci_nvc_number || ''
+        ci_visa_pref_category.value = details.ci_visa_pref_category || ''
+        ci_intervue_date.value = details.ci_interview_date || ''
+        ci_interview_source.value = details.ci_interview_source || ''
+        ad_last_name.value = details.ad_last_name || ''
+        ad_first_name.value = details.ad_first_name || ''
+        ad_middle_name.value = details.ad_middle_name || ''
+        ad_gender.value = details.ad_gender || ''
+        ad_civil_status.value = details.ad_civil_status || ''
+        ad_nationality.value = details.ad_nationality || ''
+        ad_birthplace.value = details.ad_birthplace || ''
+        ad_birth_country.value = details.ad_birth_country || ''
+        ad_mother_last_name.value = details.ad_mother_last_name || ''
+        ad_mother_first_name.value = details.ad_mother_first_name || ''
+        ad_mother_middle_name.value = details.ad_mother_middle_name || ''
+        ad_address.value = details.ad_address || ''
+        ad_city.value = details.ad_city || ''
+        ad_province.value = details.ad_province || ''
+        ad_zip_code.value = details.ad_zip_code || ''
+        ad_overseas_country.value = details.ad_overseas_country || ''
+        ad_overseas_street_address.value = details.ad_overseas_street_address || ''
+        ad_overseas_city.value = details.ad_overseas_city || ''
+        ad_overseas_province.value = details.ad_overseas_province || ''
+        ad_overseas_zipcode.value = details.ad_overseas_zipcode || ''
+        ad_contact_numbers.value = details.ad_contact_numbers || ''
+        ad_present_residence.value = details.ad_present_residence || ''
+        ad_prior_residence.value = details.ad_prior_residence || ''
+        ad_passport_number.value = details.ad_passport_number || ''
+        ad_passport_issued_by.value = details.ad_passport_issued_by || ''
+        add_passport_date.value = details.ad_passport_date || ''
+        add_passport_expiration_date.value = details.ad_passport_expiration_date || ''
+        ad_has_been_issued_visa.value = details.ad_has_been_issued_visa || ''
+        add_issuance_date.value = details.ad_issuance_date || ''
+        add_expiration_date.value = details.ad_expiration_date || ''
+        ad_prev_medical_exam_month.value = details.ad_prev_medical_exam_month || ''
+        ad_prev_medical_exam_year.value = details.ad_prev_medical_exam_year || ''
+        ad_prev_xray_month.value = details.ad_prev_xray_month || ''
+        ad_prev_xray_year.value = details.ad_prev_xray_year || ''
+        petitioner_fullname.value = details.petitioner_fullname || ''
+        petitioner_is_alive.value = details.petitioner_is_alive || ''
+        petitioner_relationship.value = details.petitioner_relationship || ''
+        petitioner_us_street_addr.value = details.petitioner_us_street_addr || ''
+        petitioner_us_city_addr.value = details.petitioner_us_city_addr || ''
+        petitioner_us_state_addr.value = details.petitioner_us_state_addr || ''
+        petitioner_us_postal_code.value = details.petitioner_us_postal_code || ''
+        petitioner_contact_no.value = details.petitioner_contact_no || ''
+        petitioner_email_addr.value = details.petitioner_email_addr || ''
+        intended_port_of_entry.value = details.intended_port_of_entry || ''
+
+        
+        cv_received.value === 'yes' ? is_cv_received = false : is_cv_received = true
+        cv_received.value === 'yes' ? isVaccinated = false : isVaccinated = true
+        cv_received.value === 'yes' ? callout_message = 'Applicants who received COVID-19 vaccines, single-dose of Janssen / J&J or 2 doses of Pfizer-Biotech/ Moderna/ Astra Zeneca/ Sinopharm/ Sinovac) COVID -19 vaccines, should present proof of vaccination (i.e. vaccine record or certificate).' : callout_message = 'Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.'
+        secondDose.value !== '' ? vaccineHasTwo = false : vaccineHasTwo = true
+        cv_booster1.value !== '' ? hideBooster1 = false : hideBooster1 = true
+        cv_booster2.value !== '' ? hideBooster2 = false : hideBooster2 = true
+        ad_has_been_issued_visa.value === 'yes' ? showVisaDate = false : showVisaDate = true
+    })
+
+    
 
     const alertChange = () => {
         let birthDate = new Date(date_of_birth.value)
@@ -101,12 +227,12 @@
     
     const handleVaccine = () => {
         isVaccinated = false;
-        if(vaccine_receive.value === 'yes') {
-            isVaccineReceived = false
+        if(cv_received.value === 'yes') {
+            is_cv_received = false
             callout_message = 'Applicants who received COVID-19 vaccines, single-dose of Janssen / J&J or 2 doses of Pfizer-Biotech/ Moderna/ Astra Zeneca/ Sinopharm/ Sinovac) COVID -19 vaccines, should present proof of vaccination (i.e. vaccine record or certificate).'
 
         } else {
-            isVaccineReceived = true
+            is_cv_received = true
             callout_message = 'Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.'
         }
 
@@ -156,6 +282,63 @@
         }
     }
 
+    const schema = yup.object().shape({
+        cv_category: yup.string().required('This field is required, please choose an option!'),
+        cv_received: yup.string().required('This field is required, please choose an option!'),
+        cv_brand_name: yup.string().required('Please choose vaccine brand name'),
+        cv_booster1: yup.string(),
+        cv_booster2: yup.string(),
+        ci_nvc_number: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
+        ci_nvc_confirm: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('ci_nvc_number')], 'NVC Case Number do not match'),
+        // ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
+        ci_visa_pref_category: yup.string().required('Interview date is required!'),
+        ci_interview_source: yup.string().nullable(),
+        ad_last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_middle_name: yup.string().nullable().optional(),
+        ad_gender: yup.string().required('Gender is required!'),
+        ad_civil_status: yup.string().required('Civil status is required!'),
+        ad_nationality: yup.string().required('Nationality is required!'),
+        ad_birthplace:yup.string().required('Birthplace is required!').min(2, 'Birthplace must be atleast 4 characters').max(25, 'Birthplace must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_birth_country:yup.string().required('Birth country is required!').min(4, 'Birth country must be atleast 4 characters').max(25, 'Birth country must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_mother_last_name: yup.string().required('Last name is required!').min(4, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_mother_first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        ad_mother_middle_name: yup.string().nullable().optional(),
+        ad_address: yup.string().nullable().optional().min(5, 'Address must be atleast 5 characters'),
+        ad_city: yup.string().nullable().optional().min(5, 'City must be atleast 5 characters'),
+        ad_province: yup.string().nullable().optional(),
+        ad_zip_code: yup.string().nullable().optional().min(4, 'Zip code must be exactly 4 numbers').max(4, 'Zip code must be exactly 4 numbers').matches(numOnlyRegex, "Zip Code must be number only!"),
+        ad_overseas_country: yup.string().nullable().optional(),
+        ad_overseas_street_address: yup.string().nullable().optional().min(5, 'Street address must be atleast 5 characters'),
+        ad_overseas_city: yup.string().nullable().optional().min(5, 'City must be atleast 5 characters'),
+        ad_overseas_province: yup.string().nullable().optional().min(5, 'Province must be atleast 5 characters'),
+        ad_overseas_zipcode: yup.string().nullable().optional().min(5, 'Zip code must be exactly 5 characters').max(5, 'Zip code must be exactly 5 numbers').matches(numOnlyRegex, "Zip Code must be number only!"),
+        ad_contact_numbers: yup.string().required('Contact number is required!').min(7, 'Contact number must be atleast 7 characters').max(39, 'Contact number at most 39 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
+        ad_present_residence: yup.string().required('Present residence is required!'),
+        ad_prior_residence: yup.string().required('Prior residence is required!'),
+        ad_passport_number: yup.string().required('Passport number is required!').min(9, "Passport number must be at least 9 characters").max(10, "Passport number must be at most 10 characters"),
+        ad_passport_issued_by: yup.string().required('Passport issued by is required!'),
+        // ad_passport_date: yup.date().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
+        // ad_passport_expiration_date: yup.date().required('Passport expiration date is required!').min(yup.ref('ad_passport_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_passport_date')], 'Expiration date must not be equal to the issuance date'),
+        ad_has_been_issued_visa: yup.string().required("This field is required, please choose an option"),
+        // ad_issuance_date: yup.date().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
+        // ad_expiration_date: yup.date().required("Expiration date is required").min(yup.ref('ad_issuance_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_issuance_date')], 'Expiration date must not be equal to the issuance date'),
+        ad_prev_medical_exam_month: yup.string().nullable().optional(),
+        ad_prev_medical_exam_year: yup.string().nullable().optional(),
+        ad_prev_xray_month: yup.string().nullable().optional(),
+        ad_prev_xray_year: yup.string().nullable().optional(),
+        petitioner_fullname: yup.string().required("Petitioner name is required").min(6, "Petitioner name must be atleast 6 characters").max(50, "Petitioner name must be at most 50 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        petitioner_is_alive: yup.string().required("This field is required, please choose an option"),
+        petitioner_relationship: yup.string().required("Petitioner relationship is required!"),
+        petitioner_us_street_addr: yup.string().required("Street address is required!").min(5, "Street Address must be atleast 5 characters").max(100, "Street Address must be most 100 characters"),
+        petitioner_us_city_addr: yup.string().required("City is required!").min(5, "City must be atleast 5 characters").max(25, "City must be most 25 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        petitioner_us_state_addr: yup.string().required("State is required!"),
+        petitioner_us_postal_code: yup.string().required("Postal code is required!").min(5, 'Postal code must be exactly 5 numbers').max(5, 'Postal code must be exactly 5 numbers').matches(numOnlyRegex, "Postal Code must be number only!"),
+        petitioner_contact_no: yup.string().required("Petitioner contact no. is required!").min(11, 'Contact number must be atleast 11 characters').max(11, 'Contact number must be at most 11 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
+        petitioner_email_addr: yup.string().required("Petitioner email address is required!").min(10, "Email must be atleast 10 characters").max(30, "Email must be at most 30 characters").email("Enter a valid email"),
+        intended_port_of_entry: yup.string().required("Port of entry is required!"),
+    })
+
     /**
      * Submit US individual form
      * 
@@ -178,9 +361,11 @@
 
     const jsonDATA = {
             json_user_id: user_id,
+            json_email: email,
             json_date_of_birth: birthDate,
-            json_covid_vaccine_priority: values.covid_vaccine_priority,
-            json_covid_vaccine_received: values.vaccine_received,
+            json_cv_category: values.cv_category,
+            json_cv_received: values.cv_received,
+            json_is_cv_received: is_cv_received,
             json_cv_brand_name: values.cv_brand_name,
             json_firstDose: first_dose,
             json_secondDose: second_dose,
@@ -261,87 +446,6 @@
 
     }
 
-    const handleBack = () => {
-        Swal.fire({
-            title: 'Are you sure you want to go back?',
-            text: 'The details you filled up will be gone.',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-
-                router.push('/individual/us/schedule')
-
-            } else if (result.isDenied) {
-                Swal.fire('Changes are not saved', '', 'info')
-            }
-        })
-    }
-
-    const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
-    const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
-    const numOnlyRegex = /^[\p{N}]+$/u;
-    const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
-
-    const schema = yup.object().shape({
-        covid_vaccine_priority: yup.string().required('This field is required, please choose an option!'),
-        vaccine_receive: yup.string().required('This field is required, please choose an option!'),
-        cv_brand_name: yup.string().required('Please choose vaccine brand name'),
-        cv_booster1: yup.string(),
-        cv_booster2: yup.string(),
-        ci_nvc_number: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
-        ci_nvc_confirm: yup.string().required('NVC Case Number is required!').min(13, 'NVC Case Number must be exactly 13 characters').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^").oneOf([yup.ref('ci_nvc_number')], 'NVC Case Number do not match'),
-        // ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
-        ci_visa_pref_category: yup.string().required('Interview date is required!'),
-        ci_interview_source: yup.string().nullable(),
-        ad_last_name: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_middle_name: yup.string().nullable().optional(),
-        ad_gender: yup.string().required('Gender is required!'),
-        ad_civil_status: yup.string().required('Civil status is required!'),
-        ad_nationality: yup.string().required('Nationality is required!'),
-        ad_birthplace:yup.string().required('Birthplace is required!').min(2, 'Birthplace must be atleast 4 characters').max(25, 'Birthplace must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_birth_country:yup.string().required('Birth country is required!').min(4, 'Birth country must be atleast 4 characters').max(25, 'Birth country must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_mother_last_name: yup.string().required('Last name is required!').min(4, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_mother_first_name: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_mother_middle_name: yup.string().nullable().optional(),
-        ad_address: yup.string().nullable().optional().min(5, 'Address must be atleast 5 characters'),
-        ad_city: yup.string().nullable().optional().min(5, 'City must be atleast 5 characters'),
-        ad_province: yup.string().nullable().optional(),
-        ad_zip_code: yup.string().nullable().optional().min(4, 'Zip code must be exactly 4 numbers').max(4, 'Zip code must be exactly 4 numbers').matches(numOnlyRegex, "Zip Code must be number only!"),
-        ad_overseas_country: yup.string().nullable().optional(),
-        ad_overseas_street_address: yup.string().nullable().optional().min(5, 'Street address must be atleast 5 characters'),
-        ad_overseas_city: yup.string().nullable().optional().min(5, 'City must be atleast 5 characters'),
-        ad_overseas_province: yup.string().nullable().optional().min(5, 'Province must be atleast 5 characters'),
-        ad_overseas_zipcode: yup.string().nullable().optional().min(5, 'Zip code must be exactly 5 characters').max(5, 'Zip code must be exactly 5 numbers').matches(numOnlyRegex, "Zip Code must be number only!"),
-        ad_contact_numbers: yup.string().required('Contact number is required!').min(7, 'Contact number must be atleast 7 characters').max(39, 'Contact number at most 39 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
-        ad_present_residence: yup.string().required('Present residence is required!'),
-        ad_prior_residence: yup.string().required('Prior residence is required!'),
-        ad_passport_number: yup.string().required('Passport number is required!').min(9, "Passport number must be at least 9 characters").max(10, "Passport number must be at most 10 characters"),
-        ad_passport_issued_by: yup.string().required('Passport issued by is required!'),
-        // ad_passport_date: yup.date().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
-        // ad_passport_expiration_date: yup.date().required('Passport expiration date is required!').min(yup.ref('ad_passport_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_passport_date')], 'Expiration date must not be equal to the issuance date'),
-        ad_has_been_issued_visa: yup.string().required("This field is required, please choose an option"),
-        // ad_issuance_date: yup.date().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
-        // ad_expiration_date: yup.date().required("Expiration date is required").min(yup.ref('ad_issuance_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_issuance_date')], 'Expiration date must not be equal to the issuance date'),
-        ad_prev_medical_exam_month: yup.string().nullable().optional(),
-        ad_prev_medical_exam_year: yup.string().nullable().optional(),
-        ad_prev_xray_month: yup.string().nullable().optional(),
-        ad_prev_xray_year: yup.string().nullable().optional(),
-        petitioner_fullname: yup.string().required("Petitioner name is required").min(6, "Petitioner name must be atleast 6 characters").max(50, "Petitioner name must be at most 50 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        petitioner_is_alive: yup.string().required("This field is required, please choose an option"),
-        petitioner_relationship: yup.string().required("Petitioner relationship is required!"),
-        petitioner_us_street_addr: yup.string().required("Street address is required!").min(5, "Street Address must be atleast 5 characters").max(100, "Street Address must be most 100 characters"),
-        petitioner_us_city_addr: yup.string().required("City is required!").min(5, "City must be atleast 5 characters").max(25, "City must be most 25 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        petitioner_us_state_addr: yup.string().required("State is required!"),
-        petitioner_us_postal_code: yup.string().required("Postal code is required!").min(5, 'Postal code must be exactly 5 numbers').max(5, 'Postal code must be exactly 5 numbers').matches(numOnlyRegex, "Postal Code must be number only!"),
-        petitioner_contact_no: yup.string().required("Petitioner contact no. is required!").min(11, 'Contact number must be atleast 11 characters').max(11, 'Contact number must be at most 11 characters').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
-        petitioner_email_addr: yup.string().required("Petitioner email address is required!").min(10, "Email must be atleast 10 characters").max(30, "Email must be at most 30 characters").email("Enter a valid email"),
-        intended_port_of_entry: yup.string().required("Port of entry is required!"),
-    })
-
-
     // Get the current year
     const currentYear = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
@@ -375,7 +479,41 @@
     }
     // ============ Inline End =================== //
 
-   
+    const handleBack = () => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure you want to go back?',
+            text: 'The slot you saved and the details you filled up will be gone.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                moveBackSlot();
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    const moveBackSlot = async () => {
+        const jsonDATA = {
+            branch: useUSIndividualSched().branch,
+            country: useUSIndividualSched().country,
+            date: useUSIndividualSched().date,
+            time: useUSIndividualSched().time,
+        }
+
+        let remove_slot = await axios.post("remove_slot/", jsonDATA);
+
+        if (remove_slot.data.status_code === 200) {
+
+            US_IndividualSched.clearUSIndividualSched()
+            USIndividualDetails.clearUSIndividualDetails()
+            router.push('/individual/us/schedule')
+
+        }
+    }
 
 </script>
 
@@ -426,59 +564,59 @@
                             <ul class="covid_category">
                                 <li class="mt-3"><h5>Priority Eligible A</h5></li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">A1</b>. Workers in Frontline Health Services
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">A2</b>. All Senior Citizens
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">A3</b>. Persons with Comorbidities
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">A4</b>. Frontline personnel in essential sectors, including uniformed personnel
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">A5</b>. Indigent Population
                                 </li>
 
                                 <li class="mt-3"><h5>Priority Eligible B</h5></li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">B1</b>. Teachers, Social Workers
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">B2</b>. Other Government Workers
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">B3</b>. Other Essential Workers
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">B4</b>. Socio-demographic groups at significantly higher risk other than senior citizens and poor population based on the NHTS-PR
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">B5</b>. Overseas FIlipino Workers
                                 </li>
                                 <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">B6</b>. Other Remaining Workforce
                                 </li>
 
                                 <li class="mt-3"><h5>Priority Eligible C</h5></li>
                                 <li class="mb-3">
-                                    <Field class="form-check-input mt-2" type="radio" v-model="covid_vaccine_priority" name="covid_vaccine_priority" value="B4" id="covid_vaccine_priority_b4" />
+                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
                                     <b class="text-secondary">C.</b> Rest of the Filipino population not otherwise included in the above groups
                                 </li>
                                 <li>
-                                    <ErrorMessage name="covid_vaccine_priority" class="text-danger"/>
+                                    <ErrorMessage name="cv_category" class="text-danger"/>
                                 </li>
                             </ul>
                             <li>Have you received your COVID-19 vaccine?</li>
@@ -486,28 +624,28 @@
                                     <div class="col-lg-2 col-md-2 col-sm-12">
                                         <RadioButton 
                                              RadioLabel="Yes"
-                                             RadioBtnName="vaccine_receive"
+                                             RadioBtnName="cv_received"
                                              RadioValue="yes"
-                                             v-model:input="vaccine_receive"
+                                             v-model:input="cv_received"
                                              :onChange="handleVaccine"
                                         />
-                                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
+                                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="cv_received" v-model.lazy="cv_received" value="yes" /><label for="">Yes</label> -->
                                     </div>
                                     <div class="col-lg-10 col-md-10 col-sm-12">
                                         <RadioButton 
                                              RadioLabel="No"
-                                             RadioBtnName="vaccine_receive"
+                                             RadioBtnName="cv_received"
                                              RadioValue="no"
-                                             v-model:input="vaccine_receive"
+                                             v-model:input="cv_received"
                                              :onChange="handleVaccine"
                                         />
-                                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
+                                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="cv_received" v-model.lazy="cv_received" value="no" /><label for="">No</label> -->
                                     </div>
                                     <div class="col-lg-10 col-md-10 col-sm-12">
-                                        <ErrorMessage name="vaccine_receive" class="text-danger"/>
+                                        <ErrorMessage name="cv_received" class="text-danger"/>
                                     </div>
                                     
-                                    <ol type="I" :hidden="isVaccineReceived">
+                                    <ol type="I" :hidden="is_cv_received">
                                         <li class="col-lg-8 pr-5">
                                             <RequiredSelectField 
                                                 label="Vaccine Brand Name"
@@ -629,14 +767,6 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <InputField 
-                            label="Interview Date"
-                            type="date"
-                            FieldName="ci_interview_date"
-                            ErrorName="ci_interview_date"
-                            v-model:input="ci_interview_date"
-                            smallLabel="If none, leave blank'"
-                        /> -->
                         <DateField 
                             label="Interview Date"
                             requiredClass="d-none"
@@ -941,13 +1071,6 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <RequiredInputField 
-                            label="Issue Date"
-                            type="date"
-                            FieldName="ad_passport_date"
-                            ErrorName="ad_passport_date"
-                            v-model:input="ad_passport_date"
-                        /> -->
                         <DateField 
                             label="Interview Date"
                             placeholder="Interview Date"
@@ -958,13 +1081,6 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-                        <!-- <RequiredInputField 
-                            label="Expiration Date"
-                            type="date"
-                            FieldName="ad_passport_expiration_date"
-                            ErrorName="ad_passport_expiration_date"
-                            v-model:input="ad_passport_expiration_date"
-                        /> -->
                         <DateField 
                             label="Expiration Date"
                             placeholder="Expiration Date"
@@ -1008,26 +1124,8 @@
                                 <ErrorMessage name="ad_has_been_issued_visa" class="text-danger"/>
                             </div>
                        </div>
-
-                        <!-- <RequiredRadioButton 
-                            label="Have you been issued a U.S. Tourist Visa?"
-                            FieldName1="ad_has_been_issued_visa"
-                            FieldName2="ad_has_been_issued_visa"
-                            radioLabel1="Yes"
-                            radioLabel2="No"
-                            value1="Yes"
-                            value2="No"
-                            ErrorName="ad_has_been_issued_visa"
-                        /> -->
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
-                        <!-- <RequiredInputField 
-                            label="Issuance Date"
-                            type="date"
-                            FieldName="ad_issuance_date"
-                            ErrorName="ad_issuance_date"
-                            v-model:input="ad_issuance_date"
-                        /> -->
                         <DateField 
                             label="Issuance Date"
                             requiredClass="d-none"
@@ -1038,13 +1136,6 @@
                         />
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
-                        <!-- <RequiredInputField 
-                            label="Expiration Date"
-                            type="date"
-                            FieldName="ad_expiration_date"
-                            ErrorName="ad_expiration_date"
-                            v-model:input="ad_expiration_date"
-                        /> -->
                         <DateField 
                             label="Expiration Date"
                             requiredClass="d-none"
@@ -1109,17 +1200,33 @@
                         />
                     </div>
 
-                    <div class="mb-1 col-12">
-                        <RequiredRadioButton 
-                            label="Is the petitioner still alive?"
-                            FieldName1="petitioner_is_alive"
-                            FieldName2="petitioner_is_alive"
-                            radioLabel1="Yes"
-                            radioLabel2="No"
-                            value1="Yes"
-                            value2="No"
-                            ErrorName="petitioner_is_alive"
-                        />
+                    <div class="mb-1 col-12 pt-3 pb-2">
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="text-capitalize" >
+                                    Is the petitioner still alive? <b class="text-danger">*</b>
+                                </label>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-12 pl-4">
+                                <RadioButton 
+                                        RadioLabel="Yes"
+                                        RadioBtnName="petitioner_is_alive"
+                                        RadioValue="yes"
+                                        v-model:input="petitioner_is_alive"
+                                />
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
+                                <RadioButton 
+                                        RadioLabel="No"
+                                        RadioBtnName="petitioner_is_alive"
+                                        RadioValue="no"
+                                        v-model:input="petitioner_is_alive"
+                                />
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
+                                <ErrorMessage name="petitioner_is_alive" class="text-danger"/>
+                            </div>
+                       </div>
                     </div>
                     
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">

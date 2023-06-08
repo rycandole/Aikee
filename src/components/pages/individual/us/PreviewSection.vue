@@ -128,7 +128,7 @@
 
     // Details Store 
     let detail_date_of_birth = moment(details.date_of_birth).format('LL');
-    let detail_covid_vaccine_priority = details.covid_vaccine_priority+". "+priorityCategory.get(details.covid_vaccine_priority);
+    let detail_covid_vaccine_priority = details.cv_category+". "+priorityCategory.get(details.cv_category);
     let detail_cv_brand_name = details.cv_brand_name;
     let detail_firstDose = moment(details.firstDose).format('LL');
     let detail_secondDose = moment(details.secondDose).format('LL');
@@ -294,6 +294,7 @@
     const handleBack = () => {
 
         Swal.fire({
+            icon: 'question',
             title: 'Are you sure you want to edit?',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -372,9 +373,6 @@
                         />
                     </div>
                     <div class="mb-3 col-12">
-                        <PreviewText 
-                            previewLabel="What category do you belong to?"
-                        />
                         <ol type="I">
                             <li>
                                 <PreviewText 

@@ -3,8 +3,12 @@ import { defineStore } from 'pinia'
 
 export const useUSIndividualDetails = defineStore('us-individual-details', {
   state: () => ({
+    user_id: null,
+    email: null,
     date_of_birth: null,
-    covid_vaccine_priority: null,
+    cv_category: null,
+    cv_received: null,
+    is_cv_received: null,
     cv_brand_name: null,
     firstDose: null,
     secondDose: null,
@@ -66,8 +70,13 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
     setUSIndividualDetails(res) {
         let jsonPARSE = JSON.parse(res)
         
+        this.$state.user_id = jsonPARSE.json_user_id
+        this.$state.email = jsonPARSE.json_email
         this.$state.date_of_birth = jsonPARSE.json_date_of_birth
-        this.$state.covid_vaccine_priority = jsonPARSE.json_covid_vaccine_priority
+        this.$state.cv_category = jsonPARSE.json_cv_category
+        this.$state.cv_received = jsonPARSE.json_cv_received
+        this.$state.is_cv_received = jsonPARSE.json_is_cv_received
+        this.$state.vaccine_receive = jsonPARSE.json_vaccine_receive
         this.$state.cv_brand_name = jsonPARSE.json_cv_brand_name
         this.$state.firstDose = jsonPARSE.json_firstDose
         this.$state.secondDose = jsonPARSE.json_secondDose
@@ -126,15 +135,19 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.intended_port_of_entry = jsonPARSE.json_intended_port_of_entry
     },
     clearUSIndividualDetails() {
+        this.$state.user_id = null,
+        this.$state.email = null,
         this.$state.date_of_birth = null,
-        this.$state.countrycovid_vaccine_priority = null,
-        this.$state.countrycv_brand_name = null,
-        this.$state.countryfirstDose = null,
-        this.$state.countrysecondDose = null,
-        this.$state.countrycv_booster1 = null,
-        this.$state.countryfirst_doseBooster = null,
-        this.$state.countrycv_booster2 = null,
-        this.$state.countrysecond_doseBooster = null,
+        this.$state.cv_category = null,
+        this.$state.cv_received = null,
+        this.$state.is_cv_received = null,
+        this.$state.cv_brand_name = null,
+        this.$state.firstDose = null,
+        this.$state.secondDose = null,
+        this.$state.cv_booster1 = null,
+        this.$state.first_doseBooster = null,
+        this.$state.cv_booster2 = null,
+        this.$state.second_doseBooster = null,
         this.$state.ci_nvc_number = null,
         this.$state.ci_confirm_nvc = null,
         this.$state.ci_visa_pref_category = null,
