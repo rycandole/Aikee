@@ -47,8 +47,8 @@
             dates: [ // Disable an array of dates
                 new Date(2023, 7, 6),
                 new Date(2023, 7, 7),
-                new Date(2023, 5, 22),
-                new Date(2023, 5, 21),
+                new Date(2023, 5, 28),
+                new Date(2023, 5, 29),
             ],
             preventDisableDateSelection: true
         }

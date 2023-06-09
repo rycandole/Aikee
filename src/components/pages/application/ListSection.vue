@@ -3,6 +3,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { useProfileStore } from '@/store/profile-store'
+import moment from 'moment'
 
 
 const profileStore = useProfileStore()
@@ -50,7 +51,7 @@ const showList = async () => {
                             <td>{{ `${row.FirstName}` + " " +  `${row.LastName}`}}</td>
                             <td>{{ `${row.Country}` }}</td>
                             <td>{{ `${row.EmailAdd}` }}</td>
-                            <td>May 05, 2023</td>
+                            <td>{{ moment(`${row.PreferredMedicalExamDate}`).format('LL') }}</td>
                             <td align="right">
                                 <b>Cancelled<i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
                             </td>
@@ -73,7 +74,7 @@ const showList = async () => {
                             <td>{{ `${row.FirstName}` + " " +  `${row.LastName}`}}</td>
                             <td>{{ `${row.Country}` }}</td>
                             <td>{{ `${row.EmailAdd}` }}</td>
-                            <td>May 05, 2023</td>
+                            <td>{{ moment(`${row.PreferredMedicalExamDate}`).format('LL') }}</td>
                             <td align="right">
                                 <b>Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
                             </td>

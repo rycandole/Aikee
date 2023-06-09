@@ -48,7 +48,7 @@
     let checkbox2 = ref(null)
     const priorityCategory = new Map([
                                         ['A1', 'Workers in Frontline Health Services'],
-                                        ['All Senior Citizens', 'A2'],
+                                        ['A2', 'All Senior Citizens'],
                                         ['A3', 'Persons with Comorbidities'],
                                         ['A4', 'Frontline personnel in essential sectors, including uniformed personnel'],
                                         ['A5', 'Indigent Population'],
@@ -57,7 +57,8 @@
                                         ['B3', 'ther Essential Workers'],
                                         ['B4', 'Socio-demographic groups at significantly higher risk other than senior citizens and poor population based on the NHTS-PR'],
                                         ['B5', 'Overseas FIlipino Workers'],
-                                        ['B6', 'Other Remaining Workforce']
+                                        ['B6', 'Other Remaining Workforce'],
+                                        ['C', 'Rest of the Filipino population not otherwise included in the above groups']
                                     ])
     
     const visaPrefCategory = new Map([
@@ -273,7 +274,7 @@
                 US_IndividualSched.clearUSIndividualSched()
                 US_IndividualDetails.clearUSIndividualDetails()
 
-                router.push(process.env.BASE_URL +"/")
+                router.push("/application")
                 
             } else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)

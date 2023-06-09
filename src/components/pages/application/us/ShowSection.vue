@@ -60,7 +60,7 @@ const showInformation = async () => {
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Preferred Time of Medical examination"
-                            v-bind:previewText="`${row.PreferredMedicalExamTime}`"
+                            v-bind:previewText="`${row.priorityTime}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
@@ -78,7 +78,7 @@ const showInformation = async () => {
                     <div class="mb-3 col-12">
                         <PreviewText 
                             previewLabel="What category do you belong to?"
-                            v-bind:previewText="`${row.PreferredMedicalExamTime}`"
+                            v-bind:previewText="`${row.covid_vaccine_priority}`"
                         />
                     </div>
                     <div class="mb-3 col-12">
