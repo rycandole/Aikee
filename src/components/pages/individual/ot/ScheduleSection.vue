@@ -20,6 +20,24 @@ import * as yup from "yup";
 const router = useRouter();
 const OTIndividualSched = useOTIndividualSched();
 
+let clinic_location = ref(null);
+let dateInput = ref(null);
+let timeInput = ref(null);
+let timeSched = ref(null);
+let timeSlots = ref([]);
+let countryValue = ref(null);
+let branchValue = ref(null);
+let hasBranch = true;
+// let holiDates = ref([]);
+let textSuccess = "text-success";
+
+// let sevenAM = ref(null)
+
+onMounted(async () => {
+  handleSlots();
+  handleDateTime();
+});
+
 let currentDate = ref(null);
 
 // Get the current year
@@ -45,51 +63,40 @@ const clinic_code = new Map([
 let d = new Date(new Date().setMonth(new Date().getMonth() + 2));
 let formatted_d = moment(d).format("YYYY, MM, DD");
 
-// =========== Inline Date ==================== //
-const disableState = {
-  // months start's to 0(January) - 11(December)
-  disabledDates: {
-    to: new Date(currentDate), // Disable all dates up to specific date
-    from: new Date(formatted_d),
-    days: [0, 6],
-    dates: [
-      // Disable an array of dates
-      new Date(2023, 3, 6),
-      new Date(2023, 3, 7),
-      new Date(2023, 3, 22),
-      new Date(2023, 3, 21),
-      new Date(2023, 5, 28),
-      new Date(2023, 5, 29),
-    ],
-    preventDisableDateSelection: true,
-  },
-};
-// ============ End of Inline Date =============== //
+// let text = null;
+let lockedDates = [new Date("2023-06-29")];
 
-let clinic_location = ref(null);
-let dateInput = ref(null);
-let timeInput = ref(null);
-let timeSched = ref(null);
-let timeSlots = ref([]);
-let countryValue = ref(null);
-let branchValue = ref(null);
-let hasBranch = true;
-let textSuccess = "text-success";
-// let sevenAM = ref(null)
+const dateList = ["2023-06-30", "2023-06-31"];
+dateList.forEach(fetchArray);
 
-onMounted(async () => {
-  handleSlots();
-  handleDateTime();
-});
+function fetchArray(item) {
+  lockedDates.push(new Date(item));
+}
 
-const handleBranch = () => {
+const handleBranch = async () => {
   // branch = clinic_code.get(clinic_location.value)
 
   if (clinic_code.get(clinic_location.value) === null) {
     hasBranch = true;
   } else {
     hasBranch = false;
-    timeSched.value = ""
+    timeSched.value = "";
+
+    countryValue = "OT";
+    branchValue = clinic_code.get(clinic_location.value);
+
+    const JSONdata = {
+      country: countryValue,
+      branch: branchValue,
+    };
+
+    let res = await axios.post("get_holidays/", JSONdata);
+
+    let jsonParse = res.data.records;
+
+    for (var i = 0; i < jsonParse.length; i++) {
+      lockedDates.push(new Date(jsonParse[i].preferred_date));
+    }
   }
 };
 
@@ -118,7 +125,7 @@ const handleDateTime = async () => {
     country: "OT",
     date: date,
     time: timeInput.value,
-  }
+  };
 
   let save_slot = await axios.post("save_slot/", jsonDATA);
 
@@ -127,13 +134,13 @@ const handleDateTime = async () => {
   OTIndividualSched.setOTIndividualSched(res);
 
   if (save_slot.data.status_code === 200) {
-    router.push("/individual/ot/applicant-details")
-  } else if(save_slot.data.status_code === 400) {
+    router.push("/individual/ot/applicant-details");
+  } else if (save_slot.data.status_code === 400) {
     Swal.fire("Changes are not saved", save_slot.data.message, "error");
   } else {
     Swal.fire(save_slot.data.message, save_slot.data.error, "error");
   }
-}
+};
 
 const handleBack = () => {
   Swal.fire({
@@ -156,6 +163,19 @@ const schema = yup.object().shape({
   clinic_location: yup.string().required("Please select preferred clinic"),
   timeInput: yup.string().required("Please select preferred time"),
 });
+
+// =========== Inline Date ==================== //
+const disableState = {
+  // months start's to 0(January) - 11(December)
+  disabledDates: {
+    to: new Date(currentDate), // Disable all dates up to specific date
+    from: new Date(formatted_d),
+    days: [0, 6],
+    dates: lockedDates,
+    preventDisableDateSelection: true,
+  },
+};
+// ============ End of Inline Date =============== //
 </script>
 
 <template>
