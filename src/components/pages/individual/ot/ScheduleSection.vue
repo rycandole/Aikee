@@ -34,6 +34,7 @@ let textSuccess = "text-success";
 // let sevenAM = ref(null)
 
 onMounted(async () => {
+  handleBranch();
   handleSlots();
   handleDateTime();
 });
@@ -59,46 +60,73 @@ const clinic_code = new Map([
   ["Bonifacio Global City", "BGC"],
 ]);
 
+
 // GET THE DATE 3 MONTHS FROM NOW
 let d = new Date(new Date().setMonth(new Date().getMonth() + 2));
 let formatted_d = moment(d).format("YYYY, MM, DD");
 
-// let text = null;
-let lockedDates = [new Date("2023-06-29")];
+const datePicker = (boolean) => {
+  if (boolean == true) {
+    hasBranch = boolean;
+  } else {
+    hasBranch = boolean;
+    timeSched.value = "";
+  }
+}
 
-const dateList = ["2023-06-30", "2023-06-31"];
-dateList.forEach(fetchArray);
+const lockedDates = [];
+// let holidays = [];
+let dateList = ["2023-06-28", "2023-06-29", "2023-06-30"];
+
+const handleBranch = async () => {
+  datePicker(false)
+  const JSONdata = {
+    country: 'OT',
+    branch: clinic_code.get(clinic_location.value),
+  };
+  dateList = []
+  // for(var a = 0; a <= dateList.length; a++) {
+  //   delete dateList[a];
+  // }
+
+  // countryValue = "OT";
+  // branchValue = clinic_code.get(clinic_location.value);
+
+  if (clinic_location.value == "" || clinic_location.value == null) {
+   
+    datePicker(true)
+   
+  } else {
+    // dateList.forEach(fetchArray)
+    let res = await axios.post("get_holidays/", JSONdata);
+
+    let jsonParse = res.data.records;
+    
+    for (var i = 0; i < jsonParse.length; i++) {
+      dateList.push(jsonParse[i].preferred_date);
+    }
+
+    dateList.forEach(fetchArray)
+
+    
+    // alert(dateList.concat(holidays))
+
+    datePicker(false)
+
+  }
+  
+};
+
+
+
+
 
 function fetchArray(item) {
   lockedDates.push(new Date(item));
 }
 
-const handleBranch = async () => {
-  // branch = clinic_code.get(clinic_location.value)
-
-  if (clinic_code.get(clinic_location.value) === null) {
-    hasBranch = true;
-  } else {
-    hasBranch = false;
-    timeSched.value = "";
-
-    countryValue = "OT";
-    branchValue = clinic_code.get(clinic_location.value);
-
-    const JSONdata = {
-      country: countryValue,
-      branch: branchValue,
-    };
-
-    let res = await axios.post("get_holidays/", JSONdata);
-
-    let jsonParse = res.data.records;
-
-    for (var i = 0; i < jsonParse.length; i++) {
-      lockedDates.push(new Date(jsonParse[i].preferred_date));
-    }
-  }
-};
+// Nag loload agad pag sa labas ng function
+dateList.forEach(fetchArray)
 
 const handleSlots = async () => {
   const prefDate = moment(dateInput.value).format("YYYY-MM-DD");

@@ -37,23 +37,7 @@
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
-    // =========== Inline Date ==================== //
-    const disableState = {
-        // months start's to 0(January) - 11(December) 
-        disabledDates: {
-            to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(formatted_d),
-            days: [0,6],
-            dates: [ // Disable an array of dates
-                new Date(2023, 7, 6),
-                new Date(2023, 7, 7),
-                new Date(2023, 5, 28),
-                new Date(2023, 5, 29),
-            ],
-            preventDisableDateSelection: true
-        }
-    }
-    // ============ End of Inline Date =============== //
+   
 
     let dateInput = ref(null)
     let timeInput = ref(null)
@@ -61,11 +45,52 @@
     let timeSlots = ref([])
     let textSuccess = "text-success"
 
+    const lockedDates = [];
+    // const dateList = [];
+
 
     onMounted(async () => {
-        handleSlots()
+        handleSlots();
         handleDateTime();
+        holiDates();
+        
     })
+
+    // dateList.forEach(fetchArray)
+
+    function fetchArray(item) {
+        lockedDates.push(new Date(item));
+    }
+
+    const holiDates = async () => {
+        const JSONdata = {
+            country: 'US',
+            branch: 'MNL',
+        };
+
+        let res = await axios.post("get_holidays/", JSONdata);
+        let jsonParse = res.data.records;
+
+        for (var i = 0; i < jsonParse.length; i++) {
+            jsonParse[i].preferred_date.forEach(fetchArray);
+        }
+
+    }
+    // alert(dateList)
+    
+
+     // =========== Inline Date ==================== //
+     const disableState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(formatted_d),
+            days: [0,6],
+            dates: lockedDates,
+            preventDisableDateSelection: true
+        }
+    }
+    // ============ End of Inline Date =============== //
 
     const handleSlots = async () => {
         const prefDate = moment(dateInput.value).format('YYYY-MM-DD')

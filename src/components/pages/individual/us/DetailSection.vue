@@ -511,7 +511,6 @@
             US_IndividualSched.clearUSIndividualSched()
             USIndividualDetails.clearUSIndividualDetails()
             router.push('/individual/us/schedule')
-
         }
     }
 
