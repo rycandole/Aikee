@@ -130,6 +130,7 @@
     // Details Store 
     let detail_date_of_birth = moment(details.date_of_birth).format('LL');
     let detail_covid_vaccine_priority = details.cv_category+". "+priorityCategory.get(details.cv_category);
+    let detail_cv_received = details.cv_received;
     let detail_cv_brand_name = details.cv_brand_name;
     let detail_firstDose = moment(details.firstDose).format('LL');
     let detail_secondDose = moment(details.secondDose).format('LL');
@@ -203,7 +204,8 @@
             json_sched_time: sched_time,
             json_user_id: user_id,
             json_detail_date_of_birth: moment(details.date_of_birth).format('YYYY-MM-DD'),
-            json_detail_covid_vaccine_priority: details.covid_vaccine_priority,
+            json_detail_covid_vaccine_priority: details.cv_category,
+            json_is_cv_received: details.cv_received,
             json_detail_cv_brand_name: detail_cv_brand_name,
             json_detail_firstDose: moment(details.firstDose).format('YYYY-MM-DD'),
             json_detail_secondDose: moment(details.secondDose).format('YYYY-MM-DD'),
@@ -213,7 +215,7 @@
             json_detail_second_doseBooster: moment(details.second_doseBooster).format('YYYY-MM-DD'),
             json_detail_ci_nvc_number: detail_ci_nvc_number,
             json_detail_ci_visa_pref_category: visaPrefCategory.get(detail_ci_visa_pref_category),
-            json_detail_ci_interview_date: moment(details.ci_interview_date).format('YYYY-MM-DD'),
+            json_detail_ci_interview_date: details.ci_interview_date,
             json_detail_ci_interview_source: detail_ci_interview_source,
             json_detail_ad_last_name: detail_ad_last_name,
             json_detail_ad_first_name: detail_ad_first_name,
@@ -371,6 +373,12 @@
                         <PreviewText 
                             previewLabel="What category do you belong to?"
                             v-bind:previewText="detail_covid_vaccine_priority"
+                        />
+                    </div>
+                    <div class="mb-3 col-12">
+                        <PreviewText 
+                            previewLabel="Have you received your COVID-19 vaccine?"
+                            v-bind:previewText="detail_cv_received"
                         />
                     </div>
                     <div class="mb-3 col-12">
