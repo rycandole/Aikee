@@ -84,7 +84,7 @@
      */
 
     onMounted( () => {
-        embassyOfVisa.value = details.embassyOfVisa || ''
+        // embassyOfVisa.value = details.embassyOfVisa || ''
         visaCategoryField.value = details.visaCategoryField || ''
         passportNumber.value = details.passportNumber || ''
         issuedCountry.value = details.issuedCountry || ''
