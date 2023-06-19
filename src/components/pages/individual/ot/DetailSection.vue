@@ -3,6 +3,7 @@
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
+    // import {useRoute} from "vue-router"
     import { useProfileStore } from '@/store/profile-store'
     import { useOTIndividualDetails } from '@/store/ot-individual-details'
     import { useOTIndividualSched } from '@/store/ot-individual-sched'
@@ -31,12 +32,16 @@
     import visaCategory from '@/assets/js/arrays/visa_category_array'
     import koica from '@/assets/js/arrays/koica_array'
     
-
     const router = useRouter()
     const profileStore = useProfileStore()
     const OT_IndividualSched = useOTIndividualSched()
     const OTIndividualDetails = useOTIndividualDetails()
     const details = JSON.parse(localStorage.getItem('ot-individual-details'))
+    // const route = useRoute()
+    // const regCountry = route.params.country
+
+    // alert(regCountry)
+    
 
     let email = profileStore.email
     let user_id = profileStore.id
@@ -179,7 +184,7 @@
 
                 OTIndividualDetails.setOTIndividualDetails(res)
 
-                router.push('/individual/ot/preview')
+                router.push('/individual/ot/preview/')
 
             } else {
                 inputName.value = validateRequest.data.name
@@ -224,7 +229,7 @@
 
             OT_IndividualSched.clearOTIndividualSched()
             OTIndividualDetails.clearOTIndividualDetails()
-            router.push('/individual/ot/schedule')
+            router.push('/individual/ot/schedule/')
 
         }
     }

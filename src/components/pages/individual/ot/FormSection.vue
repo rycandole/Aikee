@@ -1,6 +1,10 @@
 <script setup>
+    import {useRoute} from "vue-router"
     import CalloutDanger from '@/components/global/CalloutDanger.vue'
     import RouterButton from '@/components/global/RouterButton.vue'
+
+    const route = useRoute();
+    const regCountry = route.params.country;
 
 
 
@@ -50,7 +54,7 @@
                 btnText="Back"
             />
             <RouterButton 
-                btnUrl="/individual/ot/schedule"
+                :btnUrl="'/individual/ot/schedule/'+ regCountry"
                 className="btn btn-primary w-25"
                 btnText="Next"
             />

@@ -3,6 +3,7 @@ import axios from "axios";
 import { onMounted } from "vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import {useRoute} from "vue-router"
 import { useOTIndividualSched } from "@/store/ot-individual-sched";
 import { Form } from "vee-validate";
 import { ErrorMessage } from "vee-validate";
@@ -18,7 +19,10 @@ import moment from "moment";
 import * as yup from "yup";
 
 const router = useRouter();
+const route = useRoute();
 const OTIndividualSched = useOTIndividualSched();
+const regCountry = route.params.country;
+
 
 let clinic_location = ref(null);
 let dateInput = ref(null);
@@ -180,7 +184,7 @@ const handleBack = () => {
   }).then((result) => {
     /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
-      router.push("/individual/ot");
+      router.push("/individual/ot/"+ regCountry);
     } else if (result.isDenied) {
       Swal.fire("Changes are not saved", "", "info");
     }
