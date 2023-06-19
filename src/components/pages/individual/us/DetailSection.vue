@@ -433,7 +433,7 @@
                 let res = JSON.stringify(jsonDATA)
 
                 USIndividualDetails.setUSIndividualDetails(res)
-                router.push('/individual/us/preview')
+                router.push("/individual/us/preview/")
 
             } else {
                 inputName.value = validateRequest.data.name
@@ -510,7 +510,7 @@
 
             US_IndividualSched.clearUSIndividualSched()
             USIndividualDetails.clearUSIndividualDetails()
-            router.push('/individual/us/schedule')
+            router.push("/individual/us/schedule")
         }
     }
 

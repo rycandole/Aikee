@@ -6,6 +6,15 @@
     const route = useRoute();
     const regCountry = route.params.country;
 
+    const countryCode = new Map([
+                ["sk", "South Korea"],
+                ["fi", "Falkland Islands"],
+                ["lv", "Latvia"],
+                ["mr", "Mauritius"],
+                ["ci", "Cook Islands"],
+            ]);
+
+    let countryName = countryCode.get(regCountry)
 
 
 </script>
@@ -16,7 +25,7 @@
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Online Registration</h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >{{ countryName }} Online Registration</h1>
         </div>
         
         <div class="col-12">
@@ -54,7 +63,7 @@
                 btnText="Back"
             />
             <RouterButton 
-                :btnUrl="'/individual/ot/schedule/'+ regCountry"
+                :btnUrl="'/individual/ot/schedule/'+regCountry"
                 className="btn btn-primary w-25"
                 btnText="Next"
             />

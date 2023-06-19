@@ -268,7 +268,7 @@ const routes = [
         component: OT_Ind_SchedulePage,
       },
       {
-        path: '/individual/ot/applicant-details/:id',
+        path: '/individual/ot/applicant-details/:country',
         beforeEnter: (to, from, next) => {
           useOTIndividualSched().date && useOTIndividualSched().time ? next() : next('/individual/ot/schedule/:country')
         },
@@ -276,9 +276,9 @@ const routes = [
         component: OT_Ind_DetailsForm,
       },
       {
-        path: '/individual/ot/preview',
+        path: '/individual/ot/preview/:country',
         beforeEnter: (to, from, next) => {
-          useOTIndividualDetails().user_id && useOTIndividualDetails().embassyOfVisa ? next() : next('/individual/ot/applicant-details')
+          useOTIndividualDetails().user_id && useOTIndividualDetails().embassyOfVisa ? next() : next('/individual/ot/applicant-details/:country')
         },
         name: 'ot_preview',
         component: OT_Ind_Preview,
