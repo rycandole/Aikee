@@ -3,7 +3,8 @@ import {useRoute} from "vue-router"
 import TopNavBar from '@/components/includes/TopNavBar.vue'
 import SideNavigation from '@/components/includes/SideNavigation.vue'
 import FooterSection from '@/components/includes/FooterSection.vue'
-import ShowSection_US from '@/components/pages/application/us/ShowSection.vue'
+import Confirmation_US from '@/components/pages/application/us/ConfirmationSection.vue'
+// import ShowSection_US from '@/components/pages/application/us/ShowSection.vue'
 import ShowSection_CA from '@/components/pages/application/ca/ShowSection.vue'
 import ShowSection_AU from '@/components/pages/application/au/ShowSection.vue'
 import ShowSection_NZ from '@/components/pages/application/nz/ShowSection.vue'
@@ -34,7 +35,7 @@ const country = route.params.country;
                             </ol>
                         </div><!-- /.col -->
                         <div v-if="country === 'US'" class="col-12">
-                            <ShowSection_US />
+                            <Confirmation_US />
                         </div>
                         <div v-else-if="country === 'CA'" class="col-12">
                             <ShowSection_CA />

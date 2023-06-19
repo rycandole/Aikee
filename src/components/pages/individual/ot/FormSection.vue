@@ -7,11 +7,10 @@
     const regCountry = route.params.country;
 
     const countryCode = new Map([
-                ["sk", "South Korea"],
-                ["fi", "Falkland Islands"],
+                ["kr", "South Korea"],
+                ["fk", "Falkland Islands"],
                 ["lv", "Latvia"],
-                ["mr", "Mauritius"],
-                ["ci", "Cook Islands"],
+                ["mu", "Mauritius"],
             ]);
 
     let countryName = countryCode.get(regCountry)

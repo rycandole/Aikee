@@ -28,11 +28,11 @@
                     btnText="New Zealand"
                 />
                 <CountryLinkBtn 
-                    btnUrl="/individual/ot/sk"
+                    btnUrl="/individual/ot/kr"
                     btnText="South Korea"
                 />
                 <CountryLinkBtn 
-                    btnUrl="/individual/ot/fi"
+                    btnUrl="/individual/ot/fk"
                     btnText="Falkland Islands"
                 />
                 <CountryLinkBtn 
@@ -40,11 +40,11 @@
                     btnText="Latvia"
                 />
                 <CountryLinkBtn 
-                    btnUrl="/individual/ot/mr"
+                    btnUrl="/individual/ot/mu"
                     btnText="Mauritius"
                 />
                 <CountryLinkBtn 
-                    btnUrl="/individual/ot/ci"
+                    btnUrl="/individual/nz"
                     btnText="Cook Islands"
                 />
             </div>
