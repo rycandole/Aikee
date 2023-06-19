@@ -258,27 +258,27 @@ const routes = [
       },
 
       {
-        path: '/individual/ot',
+        path: '/individual/ot/:country',
         name: 'ot_form',
         component: OT_Ind_ApplicationFormPage,
       },
       {
-        path: '/individual/ot/schedule',
+        path: '/individual/ot/schedule/:country',
         name: 'ot_date',
         component: OT_Ind_SchedulePage,
       },
       {
-        path: '/individual/ot/applicant-details',
+        path: '/individual/ot/applicant-details/:country',
         beforeEnter: (to, from, next) => {
-          useOTIndividualSched().date && useOTIndividualSched().time ? next() : next('/individual/ot/schedule')
+          useOTIndividualSched().date && useOTIndividualSched().time ? next() : next('/individual/ot/schedule/:country')
         },
         name: 'ot_details',
         component: OT_Ind_DetailsForm,
       },
       {
-        path: '/individual/ot/preview',
+        path: '/individual/ot/preview/:country',
         beforeEnter: (to, from, next) => {
-          useOTIndividualDetails().user_id && useOTIndividualDetails().embassyOfVisa ? next() : next('/individual/ot/applicant-details')
+          useOTIndividualDetails().user_id && useOTIndividualDetails().embassyOfVisa ? next() : next('/individual/ot/applicant-details/:country')
         },
         name: 'ot_preview',
         component: OT_Ind_Preview,

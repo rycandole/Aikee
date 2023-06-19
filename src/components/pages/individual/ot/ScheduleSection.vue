@@ -3,6 +3,7 @@ import axios from "axios";
 import { onMounted } from "vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import {useRoute} from "vue-router"
 import { useOTIndividualSched } from "@/store/ot-individual-sched";
 import { Form } from "vee-validate";
 import { ErrorMessage } from "vee-validate";
@@ -19,6 +20,20 @@ import * as yup from "yup";
 
 const router = useRouter();
 const OTIndividualSched = useOTIndividualSched();
+
+const route = useRoute();
+const regCountry = route.params.country;
+
+const countryCode = new Map([
+            ["sk", "South Korea"],
+            ["fi", "Falkland Islands"],
+            ["lv", "Latvia"],
+            ["mr", "Mauritius"],
+            ["ci", "Cook Islands"],
+        ]);
+
+let countryName = countryCode.get(regCountry)
+
 
 let clinic_location = ref(null);
 let dateInput = ref(null);
@@ -162,7 +177,7 @@ const handleDateTime = async () => {
   OTIndividualSched.setOTIndividualSched(res);
 
   if (save_slot.data.status_code === 200) {
-    router.push("/individual/ot/applicant-details");
+    router.push("/individual/ot/applicant-details/" + regCountry);
   } else if (save_slot.data.status_code === 400) {
     Swal.fire("Changes are not saved", save_slot.data.message, "error");
   } else {
@@ -180,7 +195,7 @@ const handleBack = () => {
   }).then((result) => {
     /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
-      router.push("/individual/ot");
+      router.push("/individual/ot/" + regCountry);
     } else if (result.isDenied) {
       Swal.fire("Changes are not saved", "", "info");
     }
@@ -216,7 +231,7 @@ const disableState = {
     class="wrapper_container row bg-white border"
   >
     <div class="col-lg-12 col-md-12 col-12">
-      <h1 class="text-secondary text-center fs-1 fw-bold">Online Registration</h1>
+      <h1 class="text-secondary text-center fs-1 fw-bold">{{ countryName }} Online Registration</h1>
     </div>
 
     <div class="col-lg-3 col-md-12 col-sm-12">

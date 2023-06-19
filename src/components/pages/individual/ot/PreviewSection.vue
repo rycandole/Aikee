@@ -3,6 +3,7 @@
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
+    import {useRoute} from "vue-router"
     import { useProfileStore } from '@/store/profile-store'
     import { useOTIndividualSched } from '@/store/ot-individual-sched.js'
     import { useOTIndividualDetails } from '@/store/ot-individual-details.js'
@@ -31,6 +32,10 @@
                 ["MNL", "Ermita, Manila"],
                 ["BGC", "Bonifacio Global City(BGC)"],
             ]);
+
+    const route = useRoute();
+    const regCountry = route.params.country;
+    
 
     let errors = ref([])
     let user_id = profileStore.id
@@ -181,7 +186,7 @@
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
 
-                router.push('/individual/ot/applicant-details')
+                router.push("/individual/ot/applicant-details/"+ regCountry)
 
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')

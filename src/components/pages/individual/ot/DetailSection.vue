@@ -3,6 +3,7 @@
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { useRouter } from 'vue-router'
+    import {useRoute} from "vue-router"
     import { useProfileStore } from '@/store/profile-store'
     import { useOTIndividualDetails } from '@/store/ot-individual-details'
     import { useOTIndividualSched } from '@/store/ot-individual-sched'
@@ -21,7 +22,7 @@
     import moment from 'moment'
     import * as yup from 'yup';
 
-    // import { ucwords } from '../../../assets/js/string_functions'
+    // import { ucwords } from "@/assets/js/string_functions"
 
     // ================= Select Option Array ===================== //
     import civilStatus from '@/assets/js/arrays/civil_status_array'
@@ -29,7 +30,6 @@
     import years from '@/assets/js/arrays/year_list_array'
     import province from '@/assets/js/arrays/province_array'
     import visaCategory from '@/assets/js/arrays/visa_category_array'
-    import koica from '@/assets/js/arrays/koica_array'
     
 
     const router = useRouter()
@@ -38,11 +38,24 @@
     const OTIndividualDetails = useOTIndividualDetails()
     const details = JSON.parse(localStorage.getItem('ot-individual-details'))
 
+    const route = useRoute();
+    const regCountry = route.params.country;
+
+    const countryCode = new Map([
+                ["sk", "South Korea"],
+                ["fi", "Falkland Islands"],
+                ["lv", "Latvia"],
+                ["mr", "Mauritius"],
+                ["ci", "Cook Islands"],
+            ]);
+
+    let countryName = countryCode.get(regCountry)
+
     let email = profileStore.email
     let user_id = profileStore.id
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
-    let embassyOfVisa = ref(null)
+    let embassyOfVisa = regCountry
     let visaCategoryField = ref(null)
     let passportNumber = ref(null)
     let issuedCountry = ref(null)
@@ -75,16 +88,37 @@
     /**
      * For Fetching user data
      */
-     onMounted(async () => {
-        await profileStore.fetchProfileById(router.params.id)
-    })
+    //  onMounted(async () => {
+    //     await profileStore.fetchProfileById(router.params.id)
+
+    //     embassyOfVisa.value = details.embassyOfVisa || ''
+    //     visaCategoryField.value = details.visaCategoryField || ''
+    //     passportNumber.value = details.passportNumber || ''
+    //     issuedCountry.value = details.issuedCountry || ''
+    //     issuedDate.value = details.issuedDate || ''
+    //     ad_lastName.value = details.ad_lastName || ''
+    //     ad_firstName.value = details.ad_firstName || ''
+    //     ad_middleName.value = details.ad_middleName || ''
+    //     mother_lastName.value = details.mother_lastName || ''
+    //     mother_firstName.value = details.mother_firstName || ''
+    //     mother_middleName.value = details.mother_middleName || ''
+    //     dateOfBirth.value = details.dob || ''
+    //     gender.value = details.gender || ''
+    //     civil_status.value = details.civil_status || ''
+    //     nationality.value = details.nationality || ''
+    //     contactNumber.value = details.contactNumber || ''
+    //     street.value = details.street || ''
+    //     barangay.value = details.barangay || ''
+    //     city.value = details.city || ''
+    //     provinceField.value = details.provinceField || ''
+    //     postalCode.value = details.postalCode || ''
+    // })
 
     /**
      * Display informaion for edit
      */
 
     onMounted( () => {
-        // embassyOfVisa.value = details.embassyOfVisa || ''
         visaCategoryField.value = details.visaCategoryField || ''
         passportNumber.value = details.passportNumber || ''
         issuedCountry.value = details.issuedCountry || ''
@@ -105,13 +139,11 @@
         city.value = details.city || ''
         provinceField.value = details.provinceField || ''
         postalCode.value = details.postalCode || ''
-        
     })
 
     
 
     const schema = yup.object().shape({
-        embassyOfVisa: yup.string().required('This field is required, please choose an option!'),
         visaCategoryField: yup.string().required('This field is required, please choose an option!'),
         passportNumber: yup.string().required('This field is required!').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         issuedCountry: yup.string().required('This field is required, please choose an option!'),
@@ -146,7 +178,7 @@
       
         const jsonDATA = {
                 json_user_id: user_id,
-                json_embassyOfVisa: values.embassyOfVisa,
+                json_embassyOfVisa: embassyOfVisa,
                 json_visaCategoryField: values.visaCategoryField,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
@@ -179,7 +211,7 @@
 
                 OTIndividualDetails.setOTIndividualDetails(res)
 
-                router.push('/individual/ot/preview')
+                router.push("/individual/ot/preview/"+ regCountry)
 
             } else {
                 inputName.value = validateRequest.data.name
@@ -224,7 +256,7 @@
 
             OT_IndividualSched.clearOTIndividualSched()
             OTIndividualDetails.clearOTIndividualDetails()
-            router.push('/individual/ot/schedule')
+            router.push("/individual/ot/schedule/"+ regCountry)
 
         }
     }
@@ -252,7 +284,7 @@
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Online Registration {{ isVaccinated }} </h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >{{ countryName }} Online Registration</h1>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12">
             <SideNav 
@@ -270,7 +302,7 @@
                     <div class="col-12">
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12">
+                    <!-- <div class="col-lg-8 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Embassy of Visa Application"
                             FieldName="embassyOfVisa"
@@ -278,7 +310,7 @@
                             v-model:input="embassyOfVisa"
                             :items="koica"
                         />
-                    </div>
+                    </div> -->
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Visa category"
@@ -316,6 +348,7 @@
                             :onChange="showBooster1"
                             :error="(errors.json_issuedDate) ? (errors.json_issuedDate[0]) : ((inputName == 'json_issuedDate') ? (inputError) : '')"
                         />
+                            
                     </div>
                     <div class="mb-3 col-12">
                         <FormHeader
