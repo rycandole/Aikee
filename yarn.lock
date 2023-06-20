@@ -7885,6 +7885,11 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.npmjs.org/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
   integrity sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==
 
+vue-html-to-paper@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npmjs.org/vue-html-to-paper/-/vue-html-to-paper-2.0.3.tgz"
+  integrity sha512-2Kbud/3yZNw1oho05vJgkYfqoXkHlpB7C06BdF89OkQgzKRLYeatVhJgPwXHnH+HskmhNWjSKzJyay9HnN4QvQ==
+
 vue-loader@^17.0.0:
   version "17.0.1"
   resolved "https://registry.npmjs.org/vue-loader/-/vue-loader-17.0.1.tgz"
