@@ -29,11 +29,12 @@ const print = () => {
                 Print <i class="fas fa-print pl-2"></i>
             </button>
         </div>
-    </div>
-    <div id="printable-content" class="wrapper_container row bg-white border">
-        <div class="col-12 mb-5">
-            <h4 class="text-secondary text-center fs-1 fw-bold" style="font-family:Arial;" >SLEC Online Registration Confirmation - US230618U74DF7</h4>
+        <div class="col-12 mt-5">
+            <h4 class="text-secondary fs-1 fw-bold" style="font-family:Arial;" >SLEC Online Registration Confirmation - US230618U74DF7</h4>
         </div>
+    </div>
+    
+    <div id="printable-content" class="wrapper_container row bg-white border">
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
@@ -44,14 +45,14 @@ const print = () => {
                 </td>
             </tr>
             <tr>
-                <td align="center">
-                   <p style="font-sze: 15px;"> 1177 JORGE BOCOBO ST., ERMITA, MANILA 1000    |   (02) 8521-0020    |   <a href="https://slec.ph/"  target="_blank">https://slec.ph</a>   |   slec@slec.ph</p>
+                <td style="font-size: 13px;" class="pt-3" align="center">
+                   <p> 1177 JORGE BOCOBO ST., ERMITA, MANILA 1000    |   (02) 8521-0020    |   <a href="https://slec.ph/"  target="_blank">https://slec.ph</a>   |   slec@slec.ph</p>
                     <hr>
                 </td>
             </tr>
             <tr>
                 <td align="center" class="pt-3">
-                    <h4>Monday, June 26, 2023</h4>
+                    <h3>Monday, June 26, 2023</h3>
                 </td>
             </tr>
             <tr>
@@ -61,13 +62,7 @@ const print = () => {
             </tr>
             <tr>
                 <td align="center">
-                    <h3>Bar Code</h3>
-                </td>
-            </tr>
-            <tr>
-                <td align="center">
-                    <h2>US230618U74DF7</h2>
-                    <a>US230618U74DF7</a>
+                    <h1 style="font-family: C39T36L; font-size: 50pt;">*US230618U74DF7*</h1>
                 </td>
             </tr>
             <tr>
@@ -125,11 +120,204 @@ const print = () => {
                     </ul>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <p style="font-size: 13px">
+                        For more information, please visit: <a href="https://slec.ph/registration/us/visa-applicant.php" target="_blank">Medical Examination Guide for U.S. Immigrant Visa Applicants</a>
+                    </p>
+                    <p style="font-size: 13px">
+                        Should you have any inquiries, you may send us an email at slec@slec.ph.
+                    </p>
+                </td>
+            </tr>
+            <tr><td><hr></td></tr>
+            <tr>
+                <td class="pt-5 pb-2">
+                    <h5>ERMITA, MANILA</h5>
+                    <h6 class="mt-5 ml-3">CONTACT DETAILS</h6>
+                </td>
+            </tr>
+            <tr>
+                <td class="pl-3">
+                    <p style="font-size: 13px">
+                    <strong>Clinic Address:</strong><br>
+                    1177 Jorge Bocobo St., Ermita, Manila</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="pl-3">
+                    <p style="font-size: 13px">
+                    <strong>Contact Numbers:</strong><br>
+                    1177 Jorge Bocobo St., Ermita, Manila</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="pl-3">
+                    <p style="font-size: 13px">
+                    <strong>Clinic Hours:</strong><br>
+                    Mondays to Fridays from 7:00AM to 4:30PM (We are closed on declared Philippine holidays) 
+                </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <hr>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h6>Mode of Payment:</h6>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ol style="font-size: 14px;">
+                        <li>Cash payment at the Clinic Cashier on the day of your medical exam.</li>
+                        <li>Security Bank.</li>
+                        <ul>
+                            <li>Over the counter at any Security Bank Branch</li>
+                            <li>Security Bank online payment (with existing SBC online bank account)</li>
+                            <li>Security Bank mobile app (with existing SBC online bank account)</li>
+                            <li>see attached payment guide for Security Bank Bills Payment.</li>
+                        </ul>
+                        <li>Credit Card (Visa and Master card only)</li>
+                        <ul>
+                            <li>Credit card must only be used and signed by the owner of the card.</li>
+                            <li>Authorization to use credit card is not accepted.</li>
+                            <li>Debit card is not accepted.</li>
+                            <li> Credit card downtime may happen due to system update/maintenance by the provider.</li>
+                        </ul>
+
+                    </ol>
+                </td>
+            </tr>
         </table> 
+       
+        <div class="col-12">
+            <table border="2" width="100%" height="auto">
+                <tr>
+                    <td class="p-2" align="center">
+                        <h5>PLEASE PRINT AND PRESENT THIS FORM WHEN PAYING AT THE BANK</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="p-2" align="center">
+                        <h6>PAYMENT INSTRUCTIONS</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="p-3">
+                        <ol style="font-size: 14px; line-height: 25px;">
+                            <li>Only the initial medical examination may be paid via bank transaction. Additional tests must be paid at the clinic cashier.</li>
+                            <li>Should there be an adjustment in medical fees prior to medical examination, the new medical fee will prevail. The applicant must pay the difference between the old and new fees at the clinic cashier on the day of medical exam.</li>
+                            <li>For Over-the-Counter Payments, the Universal transaction slip shall serve as your proof of payment.</li>
+                            <li>You must present the Original Universal Transaction Slip or the printed Transaction Notification slip on the day of your Visa Medical Exam.</li>
+                            <li>If your payment thru SBC encounters an error and could not produce a machine validated transaction slip, please email us before you proceed to your medical examination, this is for us to validate your payment status with the bank.</li>
+                            <li>For instructions on how to pay, please see attached Bills Payment Guide (PDF).</li>
+                        </ol>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="p-2" align="center">
+                        <h6>PAYMENT DETAILS (for Initial Medical)</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table width="100%" height="auto" class="m-2">
+                            <tr>
+                                <td class="pb-5">
+                                    <strong>
+                                        SECURITY BANK
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;">
+                                    BILLER NAME:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;">
+                                    <strong>
+                                        ST. LUKE'S EXTENSION CLINIC
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;" class="pt-3">
+                                    SUBSCRIBER NUMBER:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h1>US230620TZI0DG</h1>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;" class="pt-3">
+                                    APPLICANT NAME:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;">
+                                    <strong>
+                                        ARGEL, CHRISTIAN KARL ALCODIA
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;" class="pt-3">
+                                    APPLICANT AGE:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;">
+                                    <strong>
+                                        22 years old
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;" class="pt-3">
+                                    AMOUNT TO BE PAID:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;">
+                                    <strong>
+                                        PHP 18540.00 - US Adult Medical Fee (15 years and older)
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px;" class="p-5" align="center">
+                                    <strong>
+                                        (PLEASE PAY THE EXACT AMOUNT)
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-12">
+            <a>ONCE PAYMENT HAS BEEN MADE, PLEASE ATTACH THE <strong>PROOF OF PAYMENT WITH YOUR ONLINE REGISTRATION CONFIRMATION</strong> AND PRESENT AT THE CLINIC ON THE DAY OF YOUR MEDICAL EXAMINATION.</a>
+        </div>
+        <div class="col-12 pt-3">
+            <p style="font-size:13px; font-style: italic;">Confidentiality Notice: The contents of this email and any attachments are confidential and/or legally privileged and are intended solely for the addressee. If you received this email message in error, please immediately notify the sender by reply email and delete this message and its attachments. Any use, reproduction, or dissemination of this transmission by persons or entities other than the intended recipient is strictly prohibited.</p>
+            <br>
+            <p style="font-size:13px;">Confidentiality Notice:</p>
+            <p style="font-size:13px;">
+                The contents of this email and any attachments are confidential and/or legally privileged and are intended solely for the addressee. If you received this email message in error, please immediately notify the sender by reply email and delete this message and its attachments. Any use, reproduction, or dissemination of this transmission by persons or entities other than the intended recipient is strictly prohibited.
+            </p>
+        </div>
         <!-- ============================================================== -->
                             <!-- End of Main Container -->
         <!-- ============================================================== -->
     </div>
+    
     <div class="row">
         <div class="col-12 m-5 p-5">
             <h2 class="text-secondary text-center fs-1 fw-bold">Please wait...</h2>
@@ -148,7 +336,10 @@ const print = () => {
     padding: 1rem;
     font-family: arial;
 }
-
+@font-face {
+    font-family: C39T36L;
+    src: url('../../../../assets/fonts/C39T36L.woff');
+}
 .section_header {
     background-color: #069;
 }
