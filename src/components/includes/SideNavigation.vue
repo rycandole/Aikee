@@ -126,7 +126,7 @@
         <!-- Brand Logo -->
         <router-link to="/" class="brand-link">
             <!-- :src="slecLogo" -->
-            <img  src="img/icons/favicon.ico" alt="" class="img-circle elevation-2 m-2" style="opacity: .8" />
+            <img  :src="'img/icons/favicon.ico'" alt="" class="img-circle elevation-2 m-2" style="opacity: .8" />
             <span class="brand-text font-weight-light">SLEC</span>
         </router-link>
 
