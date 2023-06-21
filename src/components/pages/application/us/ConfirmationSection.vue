@@ -5,7 +5,7 @@
 // import {useRoute} from "vue-router"
 // import FormHeader from '@/components/global/FormHeader.vue'
 
-// import SubFormHeader from '@/components/global/SubFormHeader.vue'
+import QrCode from '@/components/global/QrCode.vue'
 // import PreviewText from '@/components/global/PreviewText.vue'
 // import moment from 'moment'
 
@@ -40,8 +40,8 @@ const print = () => {
         <!-- ============================================================== -->
         <table width="100%" height="auto" align="center">
             <tr>
-                <td align="center">
-                    <img src="@/../public/img/partials/slec-email-logo.png" width="300px" height="auto" alt="SLEC LOGO">
+                <td align="center" class="p-5">
+                    <img src="./../../../../../public/img/partials/slec-email-logo.png" width="300px" height="auto" alt="SLEC LOGO">
                 </td>
             </tr>
             <tr>
@@ -58,6 +58,14 @@ const print = () => {
             <tr>
                 <td align="center">
                     <h5><u>Time: 11:00 AM</u></h5>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" class="p-3">
+                    <QrCode 
+                        stringValue="US230618U74DF7"
+                        sizeImage="200"
+                    />
                 </td>
             </tr>
             <tr>
@@ -339,6 +347,10 @@ const print = () => {
 @font-face {
     font-family: C39T36L;
     src: url('../../../../assets/fonts/C39T36L.woff');
+}
+@font-face {
+    font-family: QR_CODE;
+    src: url('../../../../assets/fonts/QR_CODE.woff');
 }
 .section_header {
     background-color: #069;
