@@ -74,6 +74,11 @@ const print = () => {
                 </td>
             </tr>
             <tr>
+                <td align="center" class="p-5">
+                    <img src="./../../../../../public/img/partials/slec-email-logo.png" width="300px" height="auto" alt="SLEC LOGO">
+                </td>
+            </tr>
+            <tr>
                 <td>
                     <p style="font-size: 13px">Dear Ma'am/Sir:</p>
 
