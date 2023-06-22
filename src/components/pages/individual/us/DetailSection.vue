@@ -261,6 +261,9 @@
             hideBooster1 = false
         }
     }
+
+
+
     const showBooster2 = () => {
 
         if(cv_booster1.value == null || first_dose_booster.value == null) {
