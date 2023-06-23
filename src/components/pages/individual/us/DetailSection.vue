@@ -130,12 +130,13 @@
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
+
     /**
      * For Fetching user data
      */
      onMounted(async () => {
         // await profileStore.fetchProfileById(router.params.id)
-        alertChange()
+        // alertChange()
 
         date_of_birth.value = details.date_of_birth || ''
         cv_category.value = details.cv_category || ''
@@ -220,8 +221,10 @@
 
         if(age <= 4) {
             covidHidden = true
-        } else {
+        } else if(age > 4) {
             covidHidden = false
+        } else {
+            covidHidden = true
         }
     }
     
@@ -284,6 +287,8 @@
             ad_has_been_issued_visa.value = 0
         }
     }
+
+    // required('Please choose vaccine brand name')
 
     const schema = yup.object().shape({
         cv_category: yup.string().required('This field is required, please choose an option!'),
@@ -516,6 +521,8 @@
             router.push("/individual/us/schedule")
         }
     }
+
+    // alert(covidHidden);
 
 </script>
 
