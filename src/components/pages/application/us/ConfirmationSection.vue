@@ -1,14 +1,36 @@
 <script setup>
-// import axios from 'axios'
-// import { ref } from 'vue'
-// import { onMounted } from 'vue'
-// import {useRoute} from "vue-router"
+import axios from 'axios'
+import { ref } from 'vue'
+import { onMounted } from 'vue'
+import {useRoute} from "vue-router"
 // import FormHeader from '@/components/global/FormHeader.vue'
 
-import QrCode from '@/components/global/QrCode.vue'
+// import QrCode from '@/components/global/QrCode.vue'
 // import PreviewText from '@/components/global/PreviewText.vue'
 // import moment from 'moment'
 
+const route = useRoute();
+const regID = route.params.id;
+
+let sched_date = ref(null)
+let sched_time = ref(null)
+let payCode = ref(null)
+let name = ref(null)
+let age = ref(null)
+
+onMounted(async () => {
+  showList();
+});
+
+const showList = async () => {
+  let res = await axios.get("us-application/" + regID);
+  sched_date.value = res.data.result.sched_date
+  sched_time.value = res.data.result.sched_time
+  payCode.value = res.data.result.payCode
+  name.value = res.data.result.name
+  age.value = res.data.result.age
+
+};
 
 const print = () => {
           const printableContent = document.getElementById('printable-content')
@@ -35,13 +57,15 @@ const print = () => {
     </div>
     
     <div id="printable-content" class="wrapper_container row bg-white border">
+        
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
         <table width="100%" height="auto" align="center">
             <tr>
-                <td align="center" class="p-5">
-                    <img src="./../../../../../public/img/partials/slec-email-logo.png" width="300px" height="auto" alt="SLEC LOGO">
+                <td align="center" class="p-2">
+                    <!-- ./../../../../../public/img/partials/slec-email-logo.png -->
+                    <img src="./../../../../../public/img/partials/slec-email-logo.png" width="300px" height="auto" alt="SLEC LOGO" />
                 </td>
             </tr>
             <tr>
@@ -52,37 +76,32 @@ const print = () => {
             </tr>
             <tr>
                 <td align="center" class="pt-3">
-                    <h3>Monday, June 26, 2023</h3>
+                    <h3>{{ sched_date }}</h3>
                 </td>
             </tr>
             <tr>
                 <td align="center">
-                    <h5><u>Time: 11:00 AM</u></h5>
+                    <h5><u>{{ sched_time }}</u></h5>
                 </td>
             </tr>
-            <tr>
+            <!-- <tr>
                 <td align="center" class="p-3">
                     <QrCode 
                         stringValue="US230618U74DF7"
                         sizeImage="200"
                     />
                 </td>
-            </tr>
+            </tr> -->
             <tr>
                 <td align="center">
-                    <h1 style="font-family: C39T36L; font-size: 50pt;">*US230618U74DF7*</h1>
-                </td>
-            </tr>
-            <tr>
-                <td align="center" class="p-5">
-                    <img src="./../../../../../public/img/partials/slec-email-logo.png" width="300px" height="auto" alt="SLEC LOGO">
+                    <h1 style="font-family: C39T36L; font-size: 50pt;">*{{ payCode }}*</h1>
                 </td>
             </tr>
             <tr>
                 <td>
                     <p style="font-size: 13px">Dear Ma'am/Sir:</p>
 
-                    <p style="font-size: 13px">This confirms the medical examination appointment of U.S. visa applicant ACOSTA, MARITA HEDREYDA at St. Luke's Medical Center Extension Clinic (SLEC), on Monday, June 26, 2023 at 11:00 AM. Please be at the clinic at least 30 minutes before your scheduled appointment.</p>
+                    <p style="font-size: 13px">This confirms the medical examination appointment of U.S. visa applicant ACOSTA, MARITA HEDREYDA at St. Luke's Medical Center Extension Clinic (SLEC), on {{ sched_date }} at {{ sched_time }}. Please be at the clinic at least 30 minutes before your scheduled appointment.</p>
 
                     <p style="font-size: 13px">SLEC strictly observes the schedule for the visa medical examination. Visa applicants who arrive on time shall be given priority over those who arrive late and miss their appointment.</p>
                 </td>
@@ -264,7 +283,7 @@ const print = () => {
                             </tr>
                             <tr>
                                 <td>
-                                    <h1>US230620TZI0DG</h1>
+                                    <h1>{{ payCode }}</h1>
                                 </td>
                             </tr>
                             <tr>
@@ -275,7 +294,7 @@ const print = () => {
                             <tr>
                                 <td style="font-size: 14px;">
                                     <strong>
-                                        ARGEL, CHRISTIAN KARL ALCODIA
+                                        {{ name }}
                                     </strong>
                                 </td>
                             </tr>
@@ -287,7 +306,7 @@ const print = () => {
                             <tr>
                                 <td style="font-size: 14px;">
                                     <strong>
-                                        22 years old
+                                        {{ age }} years old
                                     </strong>
                                 </td>
                             </tr>
