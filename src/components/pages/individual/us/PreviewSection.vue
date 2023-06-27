@@ -276,6 +276,7 @@ const handleStore = async () => {
   };
 
   try {
+    
     let res = await axios.post("us-store/", JSONdata);
 
     if (res.data.status_code === 200) {

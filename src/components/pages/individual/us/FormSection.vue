@@ -82,6 +82,7 @@
     margin: 0;
     margin-top: 1rem;
     width: 100%;
+    color: #7486b8;
 }
 
 @media only screen and (min-width: 768px) {

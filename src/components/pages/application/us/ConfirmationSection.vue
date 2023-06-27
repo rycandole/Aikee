@@ -17,18 +17,25 @@ let sched_time = ref(null)
 let payCode = ref(null)
 let name = ref(null)
 let age = ref(null)
+let medicalFee = ref(null)
+let Package = ref(null)
+let yrsold = ref(null)
 
 onMounted(async () => {
   showList();
 });
 
 const showList = async () => {
-  let res = await axios.get("us-application/" + regID);
-  sched_date.value = res.data.result.sched_date
-  sched_time.value = res.data.result.sched_time
-  payCode.value = res.data.result.payCode
-  name.value = res.data.result.name
-  age.value = res.data.result.age
+    let res = await axios.get("us-application/" + regID);
+
+    sched_date.value = res.data.result.sched_date
+    sched_time.value = res.data.result.sched_time
+    payCode.value = res.data.result.payCode
+    name.value = res.data.result.name
+    age.value = res.data.result.age
+    medicalFee.value = res.data.result.medicalFee
+    Package.value = res.data.result.Package
+    yrsold.value = res.data.result.yrsold
 
 };
 
@@ -81,7 +88,7 @@ const print = () => {
             </tr>
             <tr>
                 <td align="center">
-                    <h5><u>{{ sched_time }}</u></h5>
+                    <h5><u>Time: {{ sched_time }}</u></h5>
                 </td>
             </tr>
             <!-- <tr>
@@ -101,21 +108,21 @@ const print = () => {
                 <td>
                     <p style="font-size: 13px">Dear Ma'am/Sir:</p>
 
-                    <p style="font-size: 13px">This confirms the medical examination appointment of U.S. visa applicant ACOSTA, MARITA HEDREYDA at St. Luke's Medical Center Extension Clinic (SLEC), on {{ sched_date }} at {{ sched_time }}. Please be at the clinic at least 30 minutes before your scheduled appointment.</p>
+                    <p style="font-size: 13px">This confirms the medical examination appointment of U.S. visa applicant <strong>{{ name }}</strong> at St. Luke's Medical Center Extension Clinic (SLEC), on <strong>{{ sched_date }}</strong> at <strong>{{ sched_time }}</strong>. Please be at the clinic at least 30 minutes before your scheduled appointment.</p>
 
                     <p style="font-size: 13px">SLEC strictly observes the schedule for the visa medical examination. Visa applicants who arrive on time shall be given priority over those who arrive late and miss their appointment.</p>
                 </td>
             </tr>
             <tr>
-                <td align="center">
-                    <strong style="font-size: 15px;">IMPORTANT REMINDERS</strong>
+                <td align="center" class="p-4">
+                    <strong style="font-size: 15px;"><u>IMPORTANT REMINDERS</u></strong>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <ul style="font-size: 14px;">
+                    <ul style="font-size: 14px;" class="listed_items_1">
                         <li>Prepare the following required documents inside a short brown envelope in this exact order:</li>
-                        <ul>
+                        <ul class="listed_items_2">
                             <li>Four (4) pieces recent 2x2 visa pictures</li>
                             <li>Proof of payment (if payment has been made)</li>
                             <li>Printed copy of this email</li>
@@ -124,19 +131,18 @@ const print = () => {
                         </ul>
                             <br>
                             <p>Minors (i.e., ages 17 years and below) who will not be accompanied by their parents during the medical examination must also present the following:</p>
-                        <ul>
+                        <ul class="listed_items_2">
                             <li>Letter of Authorization or Special power of attorney stating that the companion is authorized to sign on behalf of the parent (companion must be knowledgeable of the minor's medical history)</li>
                             <li>Parent's government-issued ID – two (2) photocopies</li>
                             <li>Authorized companion's government-issued ID – original and two (2) photocopies</li>
                         </ul>
                         
                         <li>Bring the following documents:</li>
-                        <ul>
+                        <ul class="listed_items_2">
                             <li>Vaccination records – original and two (2) photocopies, including the COVID-19 vaccine certificate, if vaccinated</li>
                             <li>Visa Interview Appointment Letter – one (1) photocopy</li>
                             <li>Letter with Case Number – one (1) photocopy</li>
                             <li>DS 260 Confirmation</li>
-                            <li></li>
                         </ul>
                         <br>
                         <strong>Each person who will undergo a visa medical examination must have one envelope that contains his/her documents. Please do not staple the documents.</strong>
@@ -203,17 +209,17 @@ const print = () => {
             </tr>
             <tr>
                 <td>
-                    <ol style="font-size: 14px;">
+                    <ol style="font-size: 14px;" class="listed_items_1">
                         <li>Cash payment at the Clinic Cashier on the day of your medical exam.</li>
                         <li>Security Bank.</li>
-                        <ul>
+                        <ul class="listed_items_2">
                             <li>Over the counter at any Security Bank Branch</li>
                             <li>Security Bank online payment (with existing SBC online bank account)</li>
                             <li>Security Bank mobile app (with existing SBC online bank account)</li>
                             <li>see attached payment guide for Security Bank Bills Payment.</li>
                         </ul>
                         <li>Credit Card (Visa and Master card only)</li>
-                        <ul>
+                        <ul class="listed_items_2">
                             <li>Credit card must only be used and signed by the owner of the card.</li>
                             <li>Authorization to use credit card is not accepted.</li>
                             <li>Debit card is not accepted.</li>
@@ -224,26 +230,28 @@ const print = () => {
                 </td>
             </tr>
         </table> 
-       
+       <div class="col-12 pt-5 pb-3">
+            <h5 class="text-center">( 1 /1 )</h5>
+       </div>
         <div class="col-12">
             <table border="2" width="100%" height="auto">
                 <tr>
                     <td class="p-2" align="center">
-                        <h5>PLEASE PRINT AND PRESENT THIS FORM WHEN PAYING AT THE BANK</h5>
+                        <h5 class="fw-bold">PLEASE PRINT AND PRESENT THIS FORM WHEN PAYING AT THE BANK</h5>
                     </td>
                 </tr>
                 <tr>
                     <td class="p-2" align="center">
-                        <h6>PAYMENT INSTRUCTIONS</h6>
+                        <h6 class="fw-bold">PAYMENT INSTRUCTIONS</h6>
                     </td>
                 </tr>
                 <tr>
                     <td class="p-3">
-                        <ol style="font-size: 14px; line-height: 25px;">
-                            <li>Only the initial medical examination may be paid via bank transaction. Additional tests must be paid at the clinic cashier.</li>
-                            <li>Should there be an adjustment in medical fees prior to medical examination, the new medical fee will prevail. The applicant must pay the difference between the old and new fees at the clinic cashier on the day of medical exam.</li>
-                            <li>For Over-the-Counter Payments, the Universal transaction slip shall serve as your proof of payment.</li>
-                            <li>You must present the Original Universal Transaction Slip or the printed Transaction Notification slip on the day of your Visa Medical Exam.</li>
+                        <ol style="font-size: 14px; line-height: 25px;" class="listed_items_1">
+                            <li>Only the <strong>initial medical examination</strong> may be paid via bank transaction. Additional tests must be paid at the clinic cashier.</li>
+                            <li><strong>Should there be an adjustment in medical fees prior to medical examination, the new medical fee will prevail. The applicant must pay the difference between the old and new fees at the clinic cashier on the day of medical exam.</strong></li>
+                            <li><strong>For Over-the-Counter Payments, the Universal transaction slip shall serve as your proof of payment.</strong></li>
+                            <li><strong>You must present the Original Universal Transaction Slip or the printed Transaction Notification slip on the day of your Visa Medical Exam.</strong></li>
                             <li>If your payment thru SBC encounters an error and could not produce a machine validated transaction slip, please email us before you proceed to your medical examination, this is for us to validate your payment status with the bank.</li>
                             <li>For instructions on how to pay, please see attached Bills Payment Guide (PDF).</li>
                         </ol>
@@ -251,7 +259,7 @@ const print = () => {
                 </tr>
                 <tr>
                     <td class="p-2" align="center">
-                        <h6>PAYMENT DETAILS (for Initial Medical)</h6>
+                        <h6 class="fw-bold">PAYMENT DETAILS (for Initial Medical)</h6>
                     </td>
                 </tr>
                 <tr>
@@ -306,7 +314,7 @@ const print = () => {
                             <tr>
                                 <td style="font-size: 14px;">
                                     <strong>
-                                        {{ age }} years old
+                                        {{ age +" "+ yrsold }}
                                     </strong>
                                 </td>
                             </tr>
@@ -318,7 +326,7 @@ const print = () => {
                             <tr>
                                 <td style="font-size: 14px;">
                                     <strong>
-                                        PHP 18540.00 - US Adult Medical Fee (15 years and older)
+                                        PHP {{ medicalFee +" - "+Package }}
                                     </strong>
                                 </td>
                             </tr>
@@ -367,6 +375,14 @@ const print = () => {
     margin-top: 1rem;
     padding: 1rem;
     font-family: arial;
+}
+.listed_items_1 li {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+.listed_items_2 li {
+    margin-bottom: 5px;
+    margin-top: 10px;
 }
 @font-face {
     font-family: C39T36L;

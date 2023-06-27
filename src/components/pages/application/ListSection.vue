@@ -14,6 +14,7 @@ let showApplication = ref([]);
 let showApplication1 = ref([]);
 let USList = ref(null);
 let TripletsList = ref(null);
+let status_code = ref(null);
 
 onMounted(async () => {
   showList();
@@ -27,8 +28,9 @@ const showList = async () => {
   showApplication1 = res.data.result1;
   TripletsList.value = showApplication1;
 };
-
-const re_sendEmail = (id) => {
+// id
+const re_sendEmail = async (id) => {
+  
   Swal.fire({
     title: "Are you sure you want to Re-send email?",
     text: "Confirm your action",
@@ -36,19 +38,41 @@ const re_sendEmail = (id) => {
     confirmButtonText: "Yes",
     icon: "question",
   }).then((result) => {
-    const JSONdata = {
-      regId: id,
-    };
-    /* Read more about isConfirmed, isDenied below */
-    let res = axios.post("re-send-email-us/", JSONdata);
+    
 
     if (result.isConfirmed) {
-      console.log(res);
-      Swal.fire("Email send " + id, "Please check your email", "success");
+
+      const JSONdata = {
+        regId: id,
+      };
+          /* Read more about isConfirmed, isDenied below */
+          let res = axios.post("re-send-email-us/", JSONdata);
+          
+
+          const results = async () => {
+            const a = await res;
+
+            status_code.value = a.status
+          };
+
+          Swal.fire("Email send ", "Please check your email", "success");
+          // if (results() == 200) {
+           
+          // }
+
+          console.log(results())
+
     } else if (result.isDenied) {
       Swal.fire("Email not Send", "Check your internet connection", "error");
     }
   });
+
+  // const JSONdata = {
+  //           date: '2023-06-29',
+  //           country: 'US'
+  //       }
+
+  // let res = await axios.post('check_slots/', JSONdata)
 };
 </script>
 <template>
