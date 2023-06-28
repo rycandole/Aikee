@@ -16,12 +16,19 @@ import FamilyView from '@/views/FamilyView.vue'
 // --- Sign In Child ---- //
 import SignInPage from '@/views/signin/SignInPage.vue'
 import ForgotPasswordPage from '@/views/signin/ForgotPasswordPage.vue'
+
+
 // --- Profile Child ------ //
 import ProfilePage from '@/views/profile/ProfilePage.vue'
 import EditProfilePage from '@/views/profile/EditProfilePage.vue'
+
+
 // ------- APPLICATION PAGE ------- //
 import ApplicationPage from '@/views/application/ApplicationPage.vue'
 import ApplicationShow from '@/views/application/ApplicationShow.vue'
+import ConfirmationPage from '@/views/application/ConfirmationPage.vue'
+import EditApplication from '@/views/application/EditApplication.vue'
+
 
 // ================== INDIVIDUAL CHILD =========================== //
 import IndividualCountryPage from '@/views/individual/CountryPage.vue'
@@ -114,9 +121,19 @@ const routes = [
         component: ApplicationPage,
       },
       {
-        path: '/application/:country/:id',
+        path: '/application/confirmation/:country/:id',
+        name: 'ConfirmationPage',
+        component: ConfirmationPage,
+      },
+      {
+        path: '/application/show/:country/:id',
         name: 'applicationShow',
         component: ApplicationShow,
+      },
+      {
+        path: '/application/edit/:country/:id',
+        name: 'editApplication',
+        component: EditApplication,
       },
     ]
   },
