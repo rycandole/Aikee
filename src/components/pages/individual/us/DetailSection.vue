@@ -768,7 +768,7 @@
                     </div>
                     <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
                         <RequiredSelectField 
-                            label="Visa Preferemce Category"
+                            label="Visa Preference Category"
                             FieldName="ci_visa_pref_category"
                             ErrorName="ci_visa_pref_category"
                             v-model:input="ci_visa_pref_category"

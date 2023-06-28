@@ -15,6 +15,7 @@ let showApplication1 = ref([]);
 let USList = ref(null);
 let TripletsList = ref(null);
 let status_code = ref(null);
+let listCount = ref(null);
 
 onMounted(async () => {
   showList();
@@ -27,10 +28,11 @@ const showList = async () => {
 
   showApplication1 = res.data.result1;
   TripletsList.value = showApplication1;
+
+  listCount.value = res.data.listCount;
 };
 // id
 const re_sendEmail = async (id) => {
-  
   Swal.fire({
     title: "Are you sure you want to Re-send email?",
     text: "Confirm your action",
@@ -38,30 +40,25 @@ const re_sendEmail = async (id) => {
     confirmButtonText: "Yes",
     icon: "question",
   }).then((result) => {
-    
-
     if (result.isConfirmed) {
-
       const JSONdata = {
         regId: id,
       };
-          /* Read more about isConfirmed, isDenied below */
-          let res = axios.post("re-send-email-us/", JSONdata);
-          
+      /* Read more about isConfirmed, isDenied below */
+      let res = axios.post("re-send-email-us/", JSONdata);
 
-          const results = async () => {
-            const a = await res;
+      const results = async () => {
+        const a = await res;
 
-            status_code.value = a.status
-          };
+        status_code.value = a.status;
+      };
 
-          Swal.fire("Email send ", "Please check your email", "success");
-          // if (results() == 200) {
-           
-          // }
+      Swal.fire("Email send ", "Please check your email", "success");
+      // if (results() == 200) {
 
-          console.log(results())
+      // }
 
+      console.log(results());
     } else if (result.isDenied) {
       Swal.fire("Email not Send", "Check your internet connection", "error");
     }
@@ -90,7 +87,7 @@ const re_sendEmail = async (id) => {
               <th class="border-top-0">Action</th>
             </tr>
           </thead>
-          <tbody align="center" v-if="USList || TripletsList">
+          <tbody align="center" v-if="listCount > 0">
             <tr v-for="(row, index) in USList" :key="index">
               <td>{{ `${row.FirstName}` + " " + `${row.LastName}` }}</td>
               <td>{{ `${row.Country}` }}</td>
@@ -112,7 +109,12 @@ const re_sendEmail = async (id) => {
                   <ul class="dropdown-menu">
                     <li>
                       <router-link
-                        :to="'application/' + `${row.Country}` + '/' + `${row.ID}`"
+                        :to="
+                          'application/confirmation/' +
+                          `${row.Country}` +
+                          '/' +
+                          `${row.ID}`
+                        "
                         class="dropdown-item"
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
                       >
@@ -410,10 +412,17 @@ const re_sendEmail = async (id) => {
               </td>
             </tr>
           </tbody>
-          <tbody align="center" v-else>
+          <tbody align="center" v-else-if="listCount <= 0">
             <tr>
               <td colspan="6">
                 <h3 class="text-secondary p-5">No Records</h3>
+              </td>
+            </tr>
+          </tbody>
+          <tbody align="center" v-else>
+            <tr>
+              <td colspan="6">
+                <h3 class="text-secondary p-5">Please wait...</h3>
               </td>
             </tr>
           </tbody>
