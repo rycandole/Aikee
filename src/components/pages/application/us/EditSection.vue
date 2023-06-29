@@ -43,6 +43,7 @@ import vaccine from "@/assets/js/arrays/vaccine_list_array";
 const router = useRouter();
 const route = useRoute();
 const regId = route.params.id;
+const country = route.params.country;
 const profileStore = useProfileStore();
 const US_IndividualSched = useUSIndividualSched();
 const USIndividualDetails = useUSIndividualDetails();
@@ -51,6 +52,7 @@ const USIndividualDetails = useUSIndividualDetails();
 let email = profileStore.email;
 let user_id = profileStore.id;
 
+let registrationID = ref(null);
 let date_of_birth = ref(null);
 let cv_category = ref(null);
 let is_cv_received = true;
@@ -82,9 +84,7 @@ let ad_civil_status = ref(null);
 let ad_nationality = ref(null);
 let ad_birthplace = ref(null);
 let ad_birth_country = ref(null);
-let ad_mother_last_name = ref(null);
-let ad_mother_first_name = ref(null);
-let ad_mother_middle_name = ref(null);
+let ad_mother_name = ref(null);
 let ad_address = ref(null);
 let ad_city = ref(null);
 let ad_province = ref(null);
@@ -128,87 +128,121 @@ const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
 const numOnlyRegex = /^[\p{N}]+$/u;
 const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
+const visaPrefCategory = new Map([
+  ["NONE", "NONE"],
+  ["AM-VTNM", "AM-VTNM (VIETNAMESE AMERASIAN)"],
+  ["CR1", "CR1 (SPOUSE OF U.S. CITIZEN UNDER TWO YEARS OF MARRIAGE)"],
+  ["CR2", "CR2 (CHILD OF U.S. CITIZEN UNDER TWO YEARS OF MARRIAGE)"],
+  ["DV", "DV (DIVERSITY VISA)"],
+  ["E1", "E1 (ALIEN WITH EXTRAORDINARY ABILITY)"],
+  ["E2", "E2 (PROFESSIONAL HOLDING ADVANCED DEGREE)"],
+  ["E3", "E3 (SKILLED WORKER)"],
+  ["E4", "E4 (SD1 MINISTER OF RELIGION)"],
+  ["E5", "E5 (IMMIGRANT INVESTORS)"],
+  ["EW", "EW (OTHER WORKER (UNSKILLED WORKERS))"],
+  ["EX", "EX (SCHEDULE WORKERS)"],
+  ["F1-F11", "F1-F11 (UNMARRIED SON/DAUGHTER OF U.S. CITIZEN)"],
+  ["F1-F12", "F1-F12 (CHILD OF F11)"],
+  ["F2A-F21", "F2A-F21 (SPOUSE OF LAWFUL PERMANENT RESIDENT)"],
+  ["F2A-F22", "F2A-F22 (CHILD OF LAWFUL PERMANENT RESIDENT)"],
+  ["F2A-F23", "F2A-F23 (DERIVATIVE CHILD OF F21 OR F22)"],
+  ["F2B-F24", "F2B-F24 (UNMARRIED SON/DAUGHTER OF LAWFUL PER. ADDRESS)"],
+  ["F2B-F25", "F2B-F25 (DERIVATIVE CHILD OF F24)"],
+  ["F3-F31", "F3-F31 (MARRIED SON/DAUGHTER OF U.S. CITIZEN)"],
+  ["F3-F32", "F3-F32 (DERIVATIVE SPOUSE OF F31)"],
+  ["F3-F33", "F3-F33 (DERIVATIVE CHILD OF F31)"],
+  ["F4-F41", "F4-F41 (BROTHER/SISTER OF U.S. CITIZEN)"],
+  ["F4-F42", "F4-F42 (DERIVATIVE SPOUSE OF F41)"],
+  ["F4-F43", "F4-F43 (DERIVATIVE CHILD OF F41)"],
+  ["FX-F21", "FX-F21 (SPOUSE OF LAWFUL PERMANENT RESIDENT)"],
+  ["FX-F22", "FX-F22 (CHILD OF LAWFUL PERMANENT RESIDENT)"],
+  ["FX-F23", "FX-F23 (DERIVATIVE CHILD OF F-21 OR F22)"],
+  ["FP1", "FP1 (PAROLEE)"],
+  ["IB1", "IB1 (SELF PETITIONING SPOUSE OF A U.S. CITIZEN)"],
+  ["IH3", "IH3 (ADOPTION CASE)"],
+  ["IH4", "IH4 (ADOPTION CASE APPROVE AFTER APR. 2008)"],
+  ["IH4", "IH4 (ADOPTION CASE APPROVED AFTER APR. 2008)"],
+  ["IR1", "IR1 (SPOUSE OF A U.S. CITIZEN)"],
+  ["IR2", "IR2 (CHILDREN OF A U.S. CITIZEN PARENTS UNDER 21 YRS. OLD)"],
+  ["IR3", "IR3 (ORPHAN ADOPTED ABROAD BY U.S. CITIZEN)"],
+  ["IR4", "IR4 (ORPHAN TO BE ADOPTED ABROAD BY U.S. CITIZEN)"],
+  ["IR5", "IR5 (PARENT OF U.S. CITIZEN (18 YEARS OLD ABOVE))"],
+  ["IW1", "IW1 (SPOUSE OF A DECEASED U.S.CITIZEN)"],
+  ["IW2", "IW2 (DERIVATIVE CHILD OF IW1)"],
+  ["K1", "K1 (FIANCEE)"],
+  ["K2", "K2 (DERIVATIVE CHILD OF K1)"],
+  ["K3", "K3 (K3 VISA)"],
+  ["K4", "K4 (K4 VISA)"],
+  ["SB1", "SB1 (RETURNING RESIDENT)"],
+  ["SD", "SD (CERTAIN RELIGIOUS WORKER)"],
+  ["SE", "SE (SPECIAL IMMIGRANT)"],
+  ["SM1", "SM1 (SPECIAL IMMIGRANT OR ARMED FORCES GROUP)"],
+  ["SR", "SR (CERTAIN RELIGIOUS WORKER)"],
+  ["SQ", "SQ (CERTAIN IRAQIS OR AFGHANS EMPLOYED BY THE U.S. GOVERNMENT)"],
+  ["VISA-93", "VISA-93 (REFUGEE FOLLOW-TO-JOIN)"],
+  ["YY", "YY (ASYLEE)"],
+]);
+
+const visaPrefCategoryCode = new Map([
+  ["NONE", "NONE"],
+  ["AM-VTNM (VIETNAMESE AMERASIAN)", "AM-VTNM"],
+  ["CR1 (SPOUSE OF U.S. CITIZEN UNDER TWO YEARS OF MARRIAGE)", "CR1"],
+  ["CR2 (CHILD OF U.S. CITIZEN UNDER TWO YEARS OF MARRIAGE)", "CR2"],
+  ["DV (DIVERSITY VISA)", "DV"],
+  ["E1 (ALIEN WITH EXTRAORDINARY ABILITY)", "E1"],
+  ["E2 (PROFESSIONAL HOLDING ADVANCED DEGREE)", "E2"],
+  ["E3 (SKILLED WORKER)", "E3"],
+  ["E4 (SD1 MINISTER OF RELIGION)", "E4"],
+  ["E5 (IMMIGRANT INVESTORS)", "E5"],
+  ["EW (OTHER WORKER (UNSKILLED WORKERS))", "EW"],
+  ["EX (SCHEDULE WORKERS)", "EX"],
+  ["F1-F11 (UNMARRIED SON/DAUGHTER OF U.S. CITIZEN)", "F1-F11"],
+  ["F1-F12 (CHILD OF F11)", "F1-F12"],
+  ["F2A-F21 (SPOUSE OF LAWFUL PERMANENT RESIDENT)", "F2A-F21"],
+  ["F2A-F22 (CHILD OF LAWFUL PERMANENT RESIDENT)", "F2A-F22"],
+  ["F2A-F23 (DERIVATIVE CHILD OF F21 OR F22)", "F2A-F23"],
+  ["F2B-F24 (UNMARRIED SON/DAUGHTER OF LAWFUL PER. ADDRESS)", "F2B-F24"],
+  ["F2B-F25 (DERIVATIVE CHILD OF F24)", "F2B-F25"],
+  ["F3-F31 (MARRIED SON/DAUGHTER OF U.S. CITIZEN)", "F3-F31"],
+  ["F3-F32 (DERIVATIVE SPOUSE OF F31)", "F3-F32"],
+  ["F3-F33 (DERIVATIVE CHILD OF F31)", "F3-F33"],
+  ["F4-F41 (BROTHER/SISTER OF U.S. CITIZEN)", "F4-F41"],
+  ["F4-F42 (DERIVATIVE SPOUSE OF F41)", "F4-F42"],
+  ["F4-F43 (DERIVATIVE CHILD OF F41)", "F4-F43"],
+  ["FX-F21 (SPOUSE OF LAWFUL PERMANENT RESIDENT)", "FX-F21"],
+  ["FX-F22 (CHILD OF LAWFUL PERMANENT RESIDENT)", "FX-F22"],
+  ["FX-F23 (DERIVATIVE CHILD OF F-21 OR F22)", "FX-F23"],
+  ["FP1 (PAROLEE)", "FP1"],
+  ["IB1 (SELF PETITIONING SPOUSE OF A U.S. CITIZEN)", "IB1"],
+  ["IH3 (ADOPTION CASE)", "IH3"],
+  ["IH4 (ADOPTION CASE APPROVE AFTER APR. 2008)", "IH4"],
+  ["IH4 (ADOPTION CASE APPROVED AFTER APR. 2008)", "IH4"],
+  ["IR1 (SPOUSE OF A U.S. CITIZEN)", "IR1"],
+  ["IR2 (CHILDREN OF A U.S. CITIZEN PARENTS UNDER 21 YRS. OLD)", "IR2"],
+  ["IR3 (ORPHAN ADOPTED ABROAD BY U.S. CITIZEN)", "IR3"],
+  ["IR4 (ORPHAN TO BE ADOPTED ABROAD BY U.S. CITIZEN)", "IR4"],
+  ["IR5 (PARENT OF U.S. CITIZEN (18 YEARS OLD ABOVE))", "IR5"],
+  ["IW1 (SPOUSE OF A DECEASED U.S.CITIZEN)", "IW1"],
+  ["IW2 (DERIVATIVE CHILD OF IW1)", "IW2"],
+  ["K1 (FIANCEE)", "K1"],
+  ["K2 (DERIVATIVE CHILD OF K1)", "K2"],
+  ["K3 (K3 VISA)", "K3"],
+  ["K4 (K4 VISA)", "K4"],
+  ["SB1 (RETURNING RESIDENT)", "SB1"],
+  ["SD (CERTAIN RELIGIOUS WORKER)", "SD"],
+  ["SE (SPECIAL IMMIGRANT)", "SE"],
+  ["SM1 (SPECIAL IMMIGRANT OR ARMED FORCES GROUP)", "SM1"],
+  ["SR (CERTAIN RELIGIOUS WORKER)", "SR"],
+  ["SQ (CERTAIN IRAQIS OR AFGHANS EMPLOYED BY THE U.S. GOVERNMENT)", "SQ"],
+  ["VISA-93 (REFUGEE FOLLOW-TO-JOIN)", "VISA-93"],
+  ["YY (ASYLEE)", "YY"],
+]);
+
 /**
  * For Fetching user data
  */
 onMounted(async () => {
   showInformation();
-  // await profileStore.fetchProfileById(router.params.id)
-  // alertChange()
-
-  // date_of_birth.value = details.date_of_birth || "";
-  // cv_category.value = details.cv_category || "";
-  // cv_received.value = details.cv_received || "";
-  // cv_brand_name.value = details.cv_brand_name || "";
-  // firstDose.value = details.firstDose || "";
-  // secondDose.value = details.secondDose || "";
-  // cv_booster1.value = details.cv_booster1 || "";
-  // first_dose_booster.value = details.first_doseBooster || "";
-  // cv_booster2.value = details.cv_booster2 || "";
-  // second_dose_booster.value = details.second_doseBooster || "";
-  // ci_nvc_number.value = details.ci_nvc_number || "";
-  // ci_nvc_confirm.value = details.ci_nvc_number || "";
-  // ci_visa_pref_category.value = details.ci_visa_pref_category || "";
-  // ci_intervue_date.value = details.ci_interview_date || "";
-  // ci_interview_source.value = details.ci_interview_source || "";
-  // ad_last_name.value = details.ad_last_name || "";
-  // ad_first_name.value = details.ad_first_name || "";
-  // ad_middle_name.value = details.ad_middle_name || "";
-  // ad_gender.value = details.ad_gender || "";
-  // ad_civil_status.value = details.ad_civil_status || "";
-  // ad_nationality.value = details.ad_nationality || "";
-  // ad_birthplace.value = details.ad_birthplace || "";
-  // ad_birth_country.value = details.ad_birth_country || "";
-  // ad_mother_last_name.value = details.ad_mother_last_name || "";
-  // ad_mother_first_name.value = details.ad_mother_first_name || "";
-  // ad_mother_middle_name.value = details.ad_mother_middle_name || "";
-  // ad_address.value = details.ad_address || "";
-  // ad_city.value = details.ad_city || "";
-  // ad_province.value = details.ad_province || "";
-  // ad_zip_code.value = details.ad_zip_code || "";
-  // ad_overseas_country.value = details.ad_overseas_country || "";
-  // ad_overseas_street_address.value = details.ad_overseas_street_address || "";
-  // ad_overseas_city.value = details.ad_overseas_city || "";
-  // ad_overseas_province.value = details.ad_overseas_province || "";
-  // ad_overseas_zipcode.value = details.ad_overseas_zipcode || "";
-  // ad_contact_numbers.value = details.ad_contact_numbers || "";
-  // ad_present_residence.value = details.ad_present_residence || "";
-  // ad_prior_residence.value = details.ad_prior_residence || "";
-  // ad_passport_number.value = details.ad_passport_number || "";
-  // ad_passport_issued_by.value = details.ad_passport_issued_by || "";
-  // add_passport_date.value = details.ad_passport_date || "";
-  // add_passport_expiration_date.value = details.ad_passport_expiration_date || "";
-  // ad_has_been_issued_visa.value = details.ad_has_been_issued_visa || "";
-  // add_issuance_date.value = details.ad_issuance_date || "";
-  // add_expiration_date.value = details.ad_expiration_date || "";
-  // ad_prev_medical_exam_month.value = details.ad_prev_medical_exam_month || "";
-  // ad_prev_medical_exam_year.value = details.ad_prev_medical_exam_year || "";
-  // ad_prev_xray_month.value = details.ad_prev_xray_month || "";
-  // ad_prev_xray_year.value = details.ad_prev_xray_year || "";
-  // petitioner_fullname.value = details.petitioner_fullname || "";
-  // petitioner_is_alive.value = details.petitioner_is_alive || "";
-  // petitioner_relationship.value = details.petitioner_relationship || "";
-  // petitioner_us_street_addr.value = details.petitioner_us_street_addr || "";
-  // petitioner_us_city_addr.value = details.petitioner_us_city_addr || "";
-  // petitioner_us_state_addr.value = details.petitioner_us_state_addr || "";
-  // petitioner_us_postal_code.value = details.petitioner_us_postal_code || "";
-  // petitioner_contact_no.value = details.petitioner_contact_no || "";
-  // petitioner_email_addr.value = details.petitioner_email_addr || "";
-  // intended_port_of_entry.value = details.intended_port_of_entry || "";
-
-  // cv_received.value === "yes" ? (is_cv_received = false) : (is_cv_received = true);
-  // cv_received.value === "yes" ? (isVaccinated = false) : (isVaccinated = true);
-  // cv_received.value === "yes"
-  //   ? (callout_message =
-  //       "Applicants who received COVID-19 vaccines, single-dose of Janssen / J&J or 2 doses of Pfizer-Biotech/ Moderna/ Astra Zeneca/ Sinopharm/ Sinovac) COVID -19 vaccines, should present proof of vaccination (i.e. vaccine record or certificate).")
-  //   : (callout_message =
-  //       "Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.");
-  // secondDose.value !== "" ? (vaccineHasTwo = false) : (vaccineHasTwo = true);
-  // cv_booster1.value !== "" ? (hideBooster1 = false) : (hideBooster1 = true);
-  // cv_booster2.value !== "" ? (hideBooster2 = false) : (hideBooster2 = true);
-  // ad_has_been_issued_visa.value === "yes"
-  //   ? (showVisaDate = false)
-  //   : (showVisaDate = true);
 });
 
 // let showApplication = ref([]);
@@ -220,6 +254,7 @@ const showInformation = async () => {
   let showApplication = res.data.result;
 
   for (var i = 0; i < showApplication.length; i++) {
+    registrationID.value = showApplication[i].ID || "";
     date_of_birth.value = showApplication[i].DOB || "";
     cv_category.value = showApplication[i].covid_vaccine_priority || "";
     cv_received.value = showApplication[i].received_vaccine == "y" ? "yes" : "no" || "";
@@ -232,13 +267,54 @@ const showInformation = async () => {
     second_dose_booster.value = showApplication[i].booster2 || "";
     ci_nvc_number.value = showApplication[i].CaseNo || "";
     ci_nvc_confirm.value = showApplication[i].CaseNo || "";
-    ci_visa_pref_category.value = showApplication[i].PrefCat || "";
+    ci_visa_pref_category.value = visaPrefCategory.get(showApplication[i].PrefCat) || "";
     ci_intervue_date.value = showApplication[i].InterviewDate || "";
     ci_interview_source.value = showApplication[i].InterviewSource || "";
     ad_last_name.value = showApplication[i].LastName || "";
     ad_first_name.value = showApplication[i].FirstName || "";
     ad_middle_name.value = showApplication[i].MiddleName || "";
     ad_gender.value = showApplication[i].Gender || "";
+    ad_civil_status.value = showApplication[i].CivStatus || "";
+    ad_nationality.value = showApplication[i].country_nationality || "";
+    ad_birthplace.value = showApplication[i].BirthCity || "";
+    ad_birth_country.value = showApplication[i].BirthCountry || "";
+    ad_mother_name.value = showApplication[i].maiden_name || "";
+    ad_address.value = showApplication[i].HomeAddStreet || "";
+    ad_city.value = showApplication[i].HomeAddCity || "";
+    ad_province.value = showApplication[i].HomeAddProvince || "";
+    ad_zip_code.value = showApplication[i].HomeAddZip || "";
+    ad_overseas_country.value = showApplication[i].ForeignAddCountry || "";
+    ad_overseas_street_address.value = showApplication[i].ForeignAddStreet || "";
+    ad_overseas_city.value = showApplication[i].ForeignAddCity || "";
+    ad_overseas_province.value = showApplication[i].ForeignAddState || "";
+    ad_overseas_zipcode.value = showApplication[i].ForeignAddZip || "";
+    ad_contact_numbers.value = showApplication[i].HomeAddZip || "";
+    ad_contact_numbers.value = showApplication[i].HomeTelNo || "";
+    ad_present_residence.value = showApplication[i].PresCountry || "";
+    ad_prior_residence.value = showApplication[i].PriorCountry || "";
+    ad_passport_number.value = showApplication[i].PassportNo || "";
+    ad_passport_issued_by.value = showApplication[i].IssueCountry || "";
+    add_passport_date.value = showApplication[i].IssueDate || "";
+    add_passport_expiration_date.value = showApplication[i].ValidDate || "";
+    ad_has_been_issued_visa.value = showApplication[i].US_NIV == 'y' ? 'yes' : 'no' || "";
+    add_issuance_date.value = showApplication[i].NIV_IssueDate || "";
+    add_expiration_date.value = showApplication[i].NIV_ExpireDate || "";
+    ad_prev_medical_exam_month.value = moment(new Date(showApplication[i].PrevMed_Date)).format('MMMM') || "";
+    ad_prev_medical_exam_year.value = moment(new Date(showApplication[i].PrevMed_Date)).format('YYYY') || "";
+    ad_prev_xray_month.value = moment(new Date(showApplication[i].Prev_CXRDate)).format('MMMM') || "";
+    ad_prev_xray_year.value = moment(new Date(showApplication[i].Prev_CXRDate)).format('YYYY') || "";
+    petitioner_fullname.value = showApplication[i].Peti_Name || "";
+    petitioner_is_alive.value = showApplication[i].Peti_Stat == 'y' ? 'yes' : 'no' || "";
+    petitioner_relationship.value = showApplication[i].Peti_Relation || "";
+    petitioner_us_street_addr.value = showApplication[i].Peti_Street || "";
+    petitioner_us_city_addr.value = showApplication[i].Peti_City || "";
+    petitioner_us_state_addr.value = showApplication[i].Peti_State || "";
+    petitioner_us_postal_code.value = showApplication[i].Peti_Zip || "";
+    petitioner_contact_no.value = showApplication[i].Peti_Number || "";
+    petitioner_email_addr.value = showApplication[i].Peti_Email || "";
+    intended_port_of_entry.value = showApplication[i].PortEntry || "";
+
+    
 
     cv_category.value ? (covidHidden = false) : (covidHidden = true);
     cv_received.value === "yes" ? (is_cv_received = false) : (is_cv_received = true);
@@ -251,11 +327,14 @@ const showInformation = async () => {
     secondDose.value !== "" ? (vaccineHasTwo = false) : (vaccineHasTwo = true);
     cv_booster1.value !== "" ? (hideBooster1 = false) : (hideBooster1 = true);
     cv_booster2.value !== "" ? (hideBooster2 = false) : (hideBooster2 = true);
-    ad_has_been_issued_visa.value === "yes"
+    ad_has_been_issued_visa.value === 'yes'
       ? (showVisaDate = false)
       : (showVisaDate = true);
   }
+
+  
 };
+
 
 const alertChange = () => {
   let birthDate = new Date(date_of_birth.value);
@@ -390,24 +469,12 @@ const schema = yup.object().shape({
     .min(4, "Birth country must be atleast 4 characters")
     .max(25, "Birth country must be at most 25 characters")
     .matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  ad_mother_last_name: yup
+  ad_mother_name: yup
     .string()
     .required("Last name is required!")
     .min(4, "Last name must be atleast 2 characters")
     .max(25, "Last name must be at most 25 characters")
     .matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  ad_mother_first_name: yup
-    .string()
-    .required("First name is required!")
-    .min(2, "First name must be atleast 2 characters")
-    .max(25, "First name must be at most 25 characters")
-    .matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-  ad_mother_middle_name: yup.string().nullable().optional(),
-  ad_address: yup
-    .string()
-    .nullable()
-    .optional()
-    .min(5, "Address must be atleast 5 characters"),
   ad_city: yup.string().nullable().optional().min(5, "City must be atleast 5 characters"),
   ad_province: yup.string().nullable().optional(),
   ad_zip_code: yup
@@ -518,7 +585,24 @@ const schema = yup.object().shape({
  * Submit US individual form
  *
  */
-const handleDetails = async (values) => {
+
+
+const modifyDetails = async (regInformation) => {
+  let res = await axios.post("us-update", regInformation)
+
+  if (res.data.status_code == 200) {
+    let motherName = res.data.message
+
+    Swal.fire("Successfully updated ", "Please check your email "+ motherName, "success");
+
+    router.push('/application/show/' + country + '/' + regId);
+  } else {
+    Swal.fire("Update Failed", "Check your internet connection", "error");
+  }
+}
+
+const updateDetails = async (values) => {
+ 
   errors.value = [];
 
   let birthDate = moment(new Date(date_of_birth.value)).format("YYYY-MM-DD");
@@ -538,84 +622,87 @@ const handleDetails = async (values) => {
     "YYYY-MM-DD"
   );
 
-  const jsonDATA = {
-    json_user_id: user_id,
-    json_email: email,
-    json_date_of_birth: birthDate,
-    json_cv_category: values.cv_category,
-    json_cv_received: values.cv_received,
-    json_is_cv_received: is_cv_received,
-    json_cv_brand_name: values.cv_brand_name,
-    json_firstDose: first_dose,
-    json_secondDose: second_dose,
-    json_cv_booster1: values.cv_booster1,
-    json_first_doseBooster: first_doseBooster,
-    json_cv_booster2: values.cv_booster2,
-    json_second_doseBooster: second_doseBooster,
-    json_ci_nvc_number: values.ci_nvc_number,
-    json_ci_nvc_confirm: values.ci_nvc_confirm,
-    json_ci_visa_pref_category: values.ci_visa_pref_category,
-    json_ci_interview_date: ci_interview_date,
-    json_ci_interview_source: values.ci_interview_source,
-    json_ad_last_name: values.ad_last_name,
-    json_ad_first_name: values.ad_first_name,
-    json_ad_middle_name: values.ad_middle_name,
-    json_ad_gender: values.ad_gender,
-    json_ad_civil_status: values.ad_civil_status,
-    json_ad_nationality: values.ad_nationality,
-    json_ad_birthplace: values.ad_birthplace,
-    json_ad_birth_country: values.ad_birth_country,
-    json_ad_mother_last_name: values.ad_mother_last_name,
-    json_ad_mother_first_name: values.ad_mother_first_name,
-    json_ad_mother_middle_name: values.ad_mother_middle_name,
-    json_ad_address: values.ad_address,
-    json_ad_city: values.ad_city,
-    json_ad_province: values.ad_province,
-    json_ad_zip_code: values.ad_zip_code,
-    json_ad_overseas_country: values.ad_overseas_country,
-    json_ad_overseas_street_address: values.ad_overseas_street_address,
-    json_ad_overseas_city: values.ad_overseas_city,
-    json_ad_overseas_province: values.ad_overseas_province,
-    json_ad_overseas_zipcode: values.ad_overseas_zipcode,
-    json_ad_contact_numbers: values.ad_contact_numbers,
-    json_ad_email_add: email,
-    json_ad_present_residence: values.ad_present_residence,
-    json_ad_prior_residence: values.ad_prior_residence,
-    json_ad_passport_number: values.ad_passport_number,
-    json_ad_passport_issued_by: values.ad_passport_issued_by,
-    json_ad_passport_date: ad_passport_date,
-    json_ad_passport_expiration_date: ad_passport_expiration_date,
-    json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
-    json_ad_issuance_date: ad_issuance_date,
-    json_ad_expiration_date: ad_expiration_date,
-    json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
-    json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
-    json_ad_prev_xray_month: values.ad_prev_xray_month,
-    json_ad_prev_xray_year: values.ad_prev_xray_year,
-    json_petitioner_fullname: values.petitioner_fullname,
-    json_petitioner_is_alive: values.petitioner_is_alive,
-    json_petitioner_relationship: values.petitioner_relationship,
-    json_petitioner_us_street_addr: values.petitioner_us_street_addr,
-    json_petitioner_us_city_addr: values.petitioner_us_city_addr,
-    json_petitioner_us_state_addr: values.petitioner_us_state_addr,
-    json_petitioner_us_postal_code: values.petitioner_us_postal_code,
-    json_petitioner_contact_no: values.petitioner_contact_no,
-    json_petitioner_email_addr: values.petitioner_email_addr,
-    json_intended_port_of_entry: values.intended_port_of_entry,
-  };
-
   try {
-    let validateRequest = await axios.post("us-validate", jsonDATA);
-
-    if (validateRequest.data.status_code === 200) {
-      let res = JSON.stringify(jsonDATA);
-
-      USIndividualDetails.setUSIndividualDetails(res);
-      router.push("/individual/us/preview/");
-    } else {
-      inputName.value = validateRequest.data.name;
-      inputError.value = validateRequest.data.error;
-    }
+    Swal.fire({
+      title: "Are you sure you want to update?",
+      text: "Confirm your action",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      icon: "question",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const jsonDATA = {
+                json_registrationID: regId,
+                json_user_id: user_id,
+                json_email: email,
+                json_date_of_birth: birthDate,
+                json_cv_category: values.cv_category,
+                json_cv_received: values.cv_received,
+                json_is_cv_received: is_cv_received,
+                json_cv_brand_name: values.cv_brand_name,
+                json_firstDose: first_dose,
+                json_secondDose: second_dose,
+                json_cv_booster1: values.cv_booster1,
+                json_first_doseBooster: first_doseBooster,
+                json_cv_booster2: values.cv_booster2,
+                json_second_doseBooster: second_doseBooster,
+                json_ci_nvc_number: values.ci_nvc_number,
+                json_ci_nvc_confirm: values.ci_nvc_confirm,
+                json_ci_visa_pref_category: visaPrefCategoryCode.get(values.ci_visa_pref_category),
+                json_ci_interview_date: ci_interview_date,
+                json_ci_interview_source: values.ci_interview_source,
+                json_ad_last_name: values.ad_last_name,
+                json_ad_first_name: values.ad_first_name,
+                json_ad_middle_name: values.ad_middle_name,
+                json_ad_gender: values.ad_gender,
+                json_ad_civil_status: values.ad_civil_status,
+                json_ad_nationality: values.ad_nationality,
+                json_ad_birthplace: values.ad_birthplace,
+                json_ad_birth_country: values.ad_birth_country,
+                json_ad_mother_name: values.ad_mother_name,
+                json_ad_address: values.ad_address,
+                json_ad_city: values.ad_city,
+                json_ad_province: values.ad_province,
+                json_ad_zip_code: values.ad_zip_code,
+                json_ad_overseas_country: values.ad_overseas_country,
+                json_ad_overseas_street_address: values.ad_overseas_street_address,
+                json_ad_overseas_city: values.ad_overseas_city,
+                json_ad_overseas_province: values.ad_overseas_province,
+                json_ad_overseas_zipcode: values.ad_overseas_zipcode,
+                json_ad_contact_numbers: values.ad_contact_numbers,
+                json_ad_email_add: email,
+                json_ad_present_residence: values.ad_present_residence,
+                json_ad_prior_residence: values.ad_prior_residence,
+                json_ad_passport_number: values.ad_passport_number,
+                json_ad_passport_issued_by: values.ad_passport_issued_by,
+                json_ad_passport_date: ad_passport_date,
+                json_ad_passport_expiration_date: ad_passport_expiration_date,
+                json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
+                json_ad_issuance_date: ad_issuance_date,
+                json_ad_expiration_date: ad_expiration_date,
+                json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
+                json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
+                json_ad_prev_xray_month: values.ad_prev_xray_month,
+                json_ad_prev_xray_year: values.ad_prev_xray_year,
+                json_petitioner_fullname: values.petitioner_fullname,
+                json_petitioner_is_alive: values.petitioner_is_alive,
+                json_petitioner_relationship: values.petitioner_relationship,
+                json_petitioner_us_street_addr: values.petitioner_us_street_addr,
+                json_petitioner_us_city_addr: values.petitioner_us_city_addr,
+                json_petitioner_us_state_addr: values.petitioner_us_state_addr,
+                json_petitioner_us_postal_code: values.petitioner_us_postal_code,
+                json_petitioner_contact_no: values.petitioner_contact_no,
+                json_petitioner_email_addr: values.petitioner_email_addr,
+                json_intended_port_of_entry: values.intended_port_of_entry,
+              };
+   
+        modifyDetails(jsonDATA);
+        
+      } else if (result.isDenied) {
+        Swal.fire("Update failed", "Check your internet connection", "error");
+      }
+    });
+   
   } catch (err) {
     errors.value = err.response.data.errors;
   }
@@ -699,7 +786,7 @@ const moveBackSlot = async () => {
       <SubNavbar />
     </div>
   </div>
-  <div class="wrapper_container row bg-white border">
+  <div v-if="date_of_birth" class="wrapper_container row bg-white border">
     <div class="col-12 mb-3">
       <h1 class="text-secondary text-center fs-1 fw-bold">Edit Application Details</h1>
     </div>
@@ -709,9 +796,9 @@ const moveBackSlot = async () => {
 
     <Form
       :key="index"
-      @submit="handleDetails"
+      @submit="updateDetails"
       :validation-schema="schema"
-      class="col-lg-9 col-md-12 col-sm-12 mb-3"
+      class="col-12 mb-3"
     >
       <div class="col-12 mb-3">
         <div class="card-body row">
@@ -1022,7 +1109,7 @@ const moveBackSlot = async () => {
           </div>
           <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
             <RequiredSelectField
-              label="Visa Preferemce Category"
+              label="Visa Preference Category"
               FieldName="ci_visa_pref_category"
               ErrorName="ci_visa_pref_category"
               v-model:input="ci_visa_pref_category"
@@ -1133,34 +1220,12 @@ const moveBackSlot = async () => {
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <RequiredInputField
               label="Mother's maiden name"
-              placeholder="Last Name"
+              placeholder="Last Name, First Name Middle Name"
               type="text"
-              FieldName="ad_mother_last_name"
-              ErrorName="ad_mother_last_name"
-              smallLabel="Last Name"
-              v-model:input="ad_mother_last_name"
-            />
-          </div>
-          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-            <RequiredInputField
-              inputClassName="mt-2"
-              starClassName="d-none"
-              placeholder="First Name"
-              type="text"
-              FieldName="ad_mother_first_name"
-              ErrorName="ad_mother_first_name"
-              smallLabel="First Name"
-              v-model:input="ad_mother_first_name"
-            />
-          </div>
-          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
-            <InputField
-              placeholder="Middle Name"
-              type="text"
-              smallLabel="Middle Name"
-              FieldName="ad_mother_middle_name"
-              ErrorName="ad_mother_middle_name"
-              v-model:input="ad_mother_middle_name"
+              FieldName="ad_mother_name"
+              ErrorName="ad_mother_name"
+              smallLabel="Last Name, First Name Middle Name"
+              v-model:input="ad_mother_name"
             />
           </div>
           <div class="mb-3 mt-5 col-12">
@@ -1584,13 +1649,18 @@ const moveBackSlot = async () => {
         <SubmitFormButton
           btnType="submit"
           className="btn btn-primary w-25"
-          btnText="Preview"
+          btnText="Update"
         />
       </div>
     </Form>
     <!-- ============================================================== -->
     <!-- End of Main Container -->
     <!-- ============================================================== -->
+  </div>
+  <div v-else class="row">
+    <div class="col-12 m-5 p-5">
+      <h2 class="text-secondary text-center fs-1 fw-bold">Please wait...</h2>
+    </div>
   </div>
 
   <!-- ============================================================== -->
