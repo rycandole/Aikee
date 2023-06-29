@@ -58,9 +58,9 @@
 
     // dateList.forEach(fetchArray)
 
-    function fetchArray(item) {
-        lockedDates.push(new Date(item));
-    }
+    // function fetchArray(item) {
+    //     lockedDates.push(new Date(item));
+    // }
 
     const holiDates = async () => {
         const JSONdata = {
@@ -72,7 +72,7 @@
         let jsonParse = res.data.records;
 
         for (var i = 0; i < jsonParse.length; i++) {
-            jsonParse[i].preferred_date.forEach(fetchArray);
+            lockedDates.push(new Date(jsonParse[i].preferred_date))
         }
 
     }

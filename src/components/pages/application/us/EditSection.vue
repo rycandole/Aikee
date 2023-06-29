@@ -288,7 +288,6 @@ const showInformation = async () => {
     ad_overseas_city.value = showApplication[i].ForeignAddCity || "";
     ad_overseas_province.value = showApplication[i].ForeignAddState || "";
     ad_overseas_zipcode.value = showApplication[i].ForeignAddZip || "";
-    ad_contact_numbers.value = showApplication[i].HomeAddZip || "";
     ad_contact_numbers.value = showApplication[i].HomeTelNo || "";
     ad_present_residence.value = showApplication[i].PresCountry || "";
     ad_prior_residence.value = showApplication[i].PriorCountry || "";
