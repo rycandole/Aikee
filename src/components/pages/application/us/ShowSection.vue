@@ -108,7 +108,7 @@ const showInformation = async () => {
     </div>
   </div>
   <div v-if="US_Information" class="wrapper_container row bg-white border">
-    <div class="col-12 mb-5">
+    <div class="col-12 mb-3">
       <h1 class="text-secondary text-center fs-1 fw-bold">Application Details</h1>
     </div>
     <!-- ============================================================== -->
@@ -118,7 +118,7 @@ const showInformation = async () => {
     <form v-for="(row, index) in US_Information" :key="index" class="col-12 mb-3">
       <div class="col-12 mb-3">
         <div class="card-body row">
-          <div class="mb-3 col-12">
+          <div class="col-12">
             <FormHeader headerText="Medical Examination Schedule" />
           </div>
 
