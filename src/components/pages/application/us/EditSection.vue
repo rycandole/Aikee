@@ -5,8 +5,6 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { useProfileStore } from "@/store/profile-store";
-import { useUSIndividualSched } from "@/store/us-individual-sched";
-import { useUSIndividualDetails } from "@/store/us-individual-details";
 import { Form } from "vee-validate";
 import CalloutDanger from "@/components/global/CalloutDanger.vue";
 import SubmitFormButton from "@/components/global/SubmitFormButton.vue";
@@ -45,9 +43,6 @@ const route = useRoute();
 const regId = route.params.id;
 const country = route.params.country;
 const profileStore = useProfileStore();
-const US_IndividualSched = useUSIndividualSched();
-const USIndividualDetails = useUSIndividualDetails();
-// const details = JSON.parse(localStorage.getItem("us-individual-details"));
 
 let email = profileStore.email;
 let user_id = profileStore.id;
@@ -118,6 +113,10 @@ let petitioner_us_postal_code = ref(null);
 let petitioner_contact_no = ref(null);
 let petitioner_email_addr = ref(null);
 let intended_port_of_entry = ref(null);
+
+let printHash = ref(null);
+let PayCode = ref(null);
+let receiveDate = ref(null);
 
 let errors = ref([]);
 let inputName = ref(null);
@@ -312,6 +311,9 @@ const showInformation = async () => {
     petitioner_contact_no.value = showApplication[i].Peti_Number || "";
     petitioner_email_addr.value = showApplication[i].Peti_Email || "";
     intended_port_of_entry.value = showApplication[i].PortEntry || "";
+    printHash.value = showApplication[i].printhash;
+    PayCode.value = showApplication[i].PayCode;
+    receiveDate.value = showApplication[i].RcvDate;
 
     
 
@@ -460,8 +462,7 @@ const schema = yup.object().shape({
     .string()
     .required("Birthplace is required!")
     .min(2, "Birthplace must be atleast 4 characters")
-    .max(25, "Birthplace must be at most 25 characters")
-    .matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+    .max(25, "Birthplace must be at most 25 characters"),
   ad_birth_country: yup
     .string()
     .required("Birth country is required!")
@@ -693,6 +694,9 @@ const updateDetails = async (values) => {
                 json_petitioner_contact_no: values.petitioner_contact_no,
                 json_petitioner_email_addr: values.petitioner_email_addr,
                 json_intended_port_of_entry: values.intended_port_of_entry,
+                json_printHash: printHash.value,
+                json_PayCode: PayCode.value,
+                json_receiveDate: receiveDate.value
               };
    
         modifyDetails(jsonDATA);
@@ -739,41 +743,7 @@ const disablePastDateState = {
 };
 // ============ Inline End =================== //
 
-const handleBack = () => {
-  Swal.fire({
-    icon: "warning",
-    title: "Are you sure you want to go back?",
-    text: "The slot you saved and the details you filled up will be gone.",
-    showCancelButton: true,
-    confirmButtonText: "Yes",
-  }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
-    if (result.isConfirmed) {
-      moveBackSlot();
-    } else if (result.isDenied) {
-      Swal.fire("Changes are not saved", "", "info");
-    }
-  });
-};
 
-const moveBackSlot = async () => {
-  const jsonDATA = {
-    branch: useUSIndividualSched().branch,
-    country: useUSIndividualSched().country,
-    date: useUSIndividualSched().date,
-    time: useUSIndividualSched().time,
-  };
-
-  let remove_slot = await axios.post("remove_slot/", jsonDATA);
-
-  if (remove_slot.data.status_code === 200) {
-    US_IndividualSched.clearUSIndividualSched();
-    USIndividualDetails.clearUSIndividualDetails();
-    router.push("/individual/us/schedule");
-  }
-};
-
-// alert(covidHidden);
 </script>
 
 <template>
@@ -1640,14 +1610,8 @@ const moveBackSlot = async () => {
       <!-- <div class="col-lg-3 col-md-12 col-sm-12"></div> -->
       <div class="col-12 d-flex justify-content-center">
         <SubmitFormButton
-          btnType="button"
-          className="btn btn-secondary w-25 mr-5"
-          btnText="Back"
-          @click="handleBack"
-        />
-        <SubmitFormButton
           btnType="submit"
-          className="btn btn-primary w-25"
+          className="btn btn-primary btn-lg w-25"
           btnText="Update"
         />
       </div>
