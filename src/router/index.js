@@ -121,17 +121,17 @@ const routes = [
         component: ApplicationPage,
       },
       {
-        path: '/application/confirmation/:country/:id',
+        path: '/application/confirmation/:country/:id/:paycode',
         name: 'ConfirmationPage',
         component: ConfirmationPage,
       },
       {
-        path: '/application/show/:country/:id',
+        path: '/application/show/:country/:id/:paycode',
         name: 'applicationShow',
         component: ApplicationShow,
       },
       {
-        path: '/application/edit/:country/:id',
+        path: '/application/edit/:country/:id/:paycode',
         name: 'editApplication',
         component: EditApplication,
       },
