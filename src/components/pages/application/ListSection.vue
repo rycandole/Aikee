@@ -113,7 +113,9 @@ const re_sendEmail = async (id) => {
                           'application/confirmation/' +
                           `${row.Country}` +
                           '/' +
-                          `${row.ID}`
+                          `${row.ID}` +
+                          '/' +
+                          `${row.PayCode}`
                         "
                         class="dropdown-item"
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link

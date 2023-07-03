@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 import SubNavbar from "@/components/includes/SubNavbar.vue";
+// import slec_logo from "@/../assets/img/partials/slec-email-logo.png";
 // import FormHeader from '@/components/global/FormHeader.vue'
 
 // import QrCode from '@/components/global/QrCode.vue'
@@ -22,6 +23,7 @@ let medicalFee = ref(null);
 let Package = ref(null);
 let yrsold = ref(null);
 let US_Information = ref(null);
+let slec_logo = "@/";
 
 onMounted(async () => {
   showList();
@@ -63,12 +65,7 @@ const showList = async () => {
       <tr>
         <td align="center" class="p-2">
           <!-- ./../../../../../public/img/partials/slec-email-logo.png -->
-          <img
-            src="./../../../../../public/img/partials/slec-email-logo.png"
-            width="300px"
-            height="auto"
-            alt="SLEC LOGO"
-          />
+          <img :src="slec_logo" width="300px" height="auto" alt="SLEC LOGO" />
         </td>
       </tr>
       <tr>
