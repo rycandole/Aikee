@@ -1081,8 +1081,8 @@
                     </div>
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <DateField 
-                            label="Interview Date"
-                            placeholder="Interview Date"
+                            label="Issue Date"
+                            placeholder="Issue Date"
                             color="red"
                             :disabledDate="disableFutureDateState.disabledDates"
                             v-model:input="add_passport_date"

@@ -205,7 +205,7 @@
                                                 :RadioLabel="`${row.time_slot}`"
                                                 :RadioLabelClass="`${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''"
                                                 :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
-                                                :Slots="`${row.slot_limit}` > 0 ?`${row.slot_limit} slot` : ''" 
+                                                :Slots="`${row.slot_limit}` <= 1 ?`${row.slot_limit} slot` : `${row.slot_limit} slots`" 
                                                 :spanClassName="`${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'"
                                                 :inputId="`${row.slot_limit}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
                                                 :radioBtnStatus="`${row.slot_limit}` > 0 ? false : true"

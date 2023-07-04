@@ -16,9 +16,19 @@ const payCode = route.params.paycode;
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="navbar-brand">
-      <a
+      <!-- <a
         :href="
           'http://localhost/slec/slec-user-portal-backend/resources/views/confirmation/' +
+          country +
+          '/?pay_code=' +
+          payCode
+        "
+        target="__blank"
+        class="btn btn-outline-secondary btn-lg"
+      > -->
+      <a
+        :href="
+          'http://localhost/slec-fullstack/backend/resources/views/confirmation/' +
           country +
           '/?pay_code=' +
           payCode

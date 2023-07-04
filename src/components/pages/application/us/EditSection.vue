@@ -42,6 +42,7 @@ const router = useRouter();
 const route = useRoute();
 const regId = route.params.id;
 const country = route.params.country;
+const paycode = route.params.paycode;
 const profileStore = useProfileStore();
 
 let email = profileStore.email;
@@ -294,7 +295,7 @@ const showInformation = async () => {
     ad_passport_issued_by.value = showApplication[i].IssueCountry || "";
     add_passport_date.value = showApplication[i].IssueDate || "";
     add_passport_expiration_date.value = showApplication[i].ValidDate || "";
-    ad_has_been_issued_visa.value = showApplication[i].US_NIV == 'y' ? 'yes' : 'no' || "";
+    ad_has_been_issued_visa.value = showApplication[i].US_NIV || "";
     add_issuance_date.value = showApplication[i].NIV_IssueDate || "";
     add_expiration_date.value = showApplication[i].NIV_ExpireDate || "";
     ad_prev_medical_exam_month.value = moment(new Date(showApplication[i].PrevMed_Date)).format('MMMM') || "";
@@ -328,7 +329,7 @@ const showInformation = async () => {
     secondDose.value !== "" ? (vaccineHasTwo = false) : (vaccineHasTwo = true);
     cv_booster1.value !== "" ? (hideBooster1 = false) : (hideBooster1 = true);
     cv_booster2.value !== "" ? (hideBooster2 = false) : (hideBooster2 = true);
-    ad_has_been_issued_visa.value === 'yes'
+    ad_has_been_issued_visa.value == 'y'
       ? (showVisaDate = false)
       : (showVisaDate = true);
   }
@@ -403,7 +404,7 @@ const showBooster2 = () => {
 };
 
 const hasVisa = () => {
-  if (ad_has_been_issued_visa.value == "yes") {
+  if (ad_has_been_issued_visa.value == "y") {
     showVisaDate = false;
     ad_has_been_issued_visa.value = 1;
   } else {
@@ -473,7 +474,7 @@ const schema = yup.object().shape({
     .string()
     .required("Last name is required!")
     .min(4, "Last name must be atleast 2 characters")
-    .max(25, "Last name must be at most 25 characters")
+    .max(50, "Last name must be at most 25 characters")
     .matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
   ad_city: yup.string().nullable().optional().min(5, "City must be atleast 5 characters"),
   ad_province: yup.string().nullable().optional(),
@@ -595,7 +596,7 @@ const modifyDetails = async (regInformation) => {
 
     Swal.fire("Successfully updated ", "Please check your email "+ motherName, "success");
 
-    router.push('/application/show/' + country + '/' + regId);
+    router.push('/application/show/' + country + '/' + regId + '/' +  paycode );
   } else {
     Swal.fire("Update Failed", "Check your internet connection", "error");
   }
@@ -630,6 +631,7 @@ const updateDetails = async (values) => {
       confirmButtonText: "Yes",
       icon: "question",
     }).then((result) => {
+      
       if (result.isConfirmed) {
         const jsonDATA = {
                 json_registrationID: regId,
@@ -698,9 +700,19 @@ const updateDetails = async (values) => {
                 json_PayCode: PayCode.value,
                 json_receiveDate: receiveDate.value
               };
-   
-        modifyDetails(jsonDATA);
         
+        // if (ad_has_been_issued_visa.value == "yes") {
+        //     if (ad_issuance_date.value == "" || ad_expiration_date.value == "") {
+        //       alert("Issue date and Epiration date is required")
+        //       return false;
+        //     } else {
+        //       return true;
+        //     }
+        // } else {
+        //   modifyDetails(jsonDATA);
+        // }
+       
+        modifyDetails(jsonDATA);
       } else if (result.isDenied) {
         Swal.fire("Update failed", "Check your internet connection", "error");
       }
@@ -1362,8 +1374,8 @@ const disablePastDateState = {
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <DateField
-              label="Interview Date"
-              placeholder="Interview Date"
+              label="Issue Date"
+              placeholder="Issue Date"
               color="red"
               :disabledDate="disableFutureDateState.disabledDates"
               v-model:input="add_passport_date"
@@ -1406,7 +1418,7 @@ const disablePastDateState = {
                 <RadioButton
                   RadioLabel="Yes"
                   RadioBtnName="ad_has_been_issued_visa"
-                  RadioValue="yes"
+                  RadioValue="y"
                   v-model:input="ad_has_been_issued_visa"
                   :onChange="hasVisa"
                 />
@@ -1415,7 +1427,7 @@ const disablePastDateState = {
                 <RadioButton
                   RadioLabel="No"
                   RadioBtnName="ad_has_been_issued_visa"
-                  RadioValue="no"
+                  RadioValue="n"
                   v-model:input="ad_has_been_issued_visa"
                   :onChange="hasVisa"
                 />
@@ -1493,7 +1505,6 @@ const disablePastDateState = {
               type="text"
               FieldName="petitioner_fullname"
               ErrorName="petitioner_fullname"
-              smallLabel="(Area Code)<space>Tel.Number."
               v-model:input="petitioner_fullname"
             />
           </div>
