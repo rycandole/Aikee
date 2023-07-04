@@ -329,9 +329,7 @@ const showInformation = async () => {
     secondDose.value !== "" ? (vaccineHasTwo = false) : (vaccineHasTwo = true);
     cv_booster1.value !== "" ? (hideBooster1 = false) : (hideBooster1 = true);
     cv_booster2.value !== "" ? (hideBooster2 = false) : (hideBooster2 = true);
-    ad_has_been_issued_visa.value == 'y'
-      ? (showVisaDate = false)
-      : (showVisaDate = true);
+    ad_has_been_issued_visa.value == 'y' ? (showVisaDate = false) : (showVisaDate = true);
   }
 
   

@@ -33,34 +33,12 @@
     } else {
         currentDate = currentYear+", "+currentMonth+", "+currentDay;
     }
-    const clinics = ['Ermita, Manila', 'Bonifacio Global City'] 
-    const clinic_code = new Map([
-                                ['', null],
-                                ['Ermita, Manila', 'MNL'],
-                                ['Bonifacio Global City', 'BGC']
-                                ])
 
     // GET THE DATE 3 MONTHS FROM NOW
     let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
-    // =========== Inline Date ==================== //
-    const disableState = {
-        // months start's to 0(January) - 11(December) 
-        disabledDates: {
-            to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(formatted_d),
-            days: [0,6],
-            dates: [ // Disable an array of dates
-                new Date(2023, 3, 6),
-                new Date(2023, 3, 7),
-                new Date(2023, 3, 22),
-                new Date(2023, 3, 21),
-            ],
-            preventDisableDateSelection: true
-        }
-    }
-    // ========== End of Inline Date =============== //
+   
     
     let clinic_location = ref(null)
     let dateInput = ref(null)
@@ -71,22 +49,62 @@
     let branchValue = ref(null)
     let hasBranch = true
     let textSuccess = "text-success"
+    const lockedDates = [];
+    const clinics = ['Ermita, Manila', 'Bonifacio Global City'] 
+    const clinic_code = new Map([
+                                ['', null],
+                                ['Ermita, Manila', 'MNL'],
+                                ['Bonifacio Global City', 'BGC']
+                                ])
+
+    // let branchClinic = clinic_code.get(clinic_location.value)
 
     onMounted(async () => {
         handleSlots();
         handleDateTime();
+        holiDates();
     })
+    holiDates();
 
-    const handleBranch = () => {
-        // branch = clinic_code.get(clinic_location.value)
+    const holiDates = async () => {
+
+        const JSONdata = {
+            country: 'AU',
+            branch: clinic_code.get(clinic_location.value),
+        };
+
+        let res = await axios.post("get_holidays/", JSONdata);
+        let jsonParse = res.data.records;
+
+        for (var i = 0; i < jsonParse.length; i++) {
+            lockedDates.push(new Date(jsonParse[i].preferred_date))
+        }
 
         if(clinic_code.get(clinic_location.value) === null) {
             hasBranch = true
         } else {
             hasBranch = false
         }
-        
+
     }
+
+     // =========== Inline Date ==================== //
+     const disableState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(formatted_d),
+            days: [0,6],
+            dates: lockedDates,
+            preventDisableDateSelection: true
+        }
+    }
+    // ========== End of Inline Date =============== //
+
+    // const handleBranch = () => {
+    //     // branch = clinic_code.get(clinic_location.value)
+    //     holiDates();
+    // }
 
     const handleSlots = async () => {
         const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
@@ -190,7 +208,7 @@
                                     className="w-75"
                                     v-model:input="clinic_location"
                                     :items="clinics"
-                                    :onChange="handleBranch"
+                                    :onChange="holiDates"
                                 />
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
