@@ -4,6 +4,7 @@
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useUSIndividualSched } from '@/store/us-individual-sched'
+    import { useUSHolidates } from '@/store/us-holidates'
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
@@ -18,6 +19,7 @@
     
     const router = useRouter()
     const USIndividualSched = useUSIndividualSched()
+    const USHolidates = useUSHolidates()
 
     let currentDate = ref(null)
 
@@ -43,75 +45,25 @@
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
-    let hasBranch = true
     let textSuccess = "text-success"
 
-    const lockedDates = [];
-    // const dateList = [];
-    
-    
+    const holidays = USHolidates.list
+    const lockedDates  = [];
 
+    for (let a = 0; a <= holidays.length - 1; a++) {
+        lockedDates.push(new Date(holidays[a].preferred_date))
+    }
     
-
+    
     onMounted(async () => {
         handleSlots();
         handleDateTime();
-        // holiDates();
 
-        // const JSONdata = {
-        //     country: 'US',
-        //     branch: 'MNL',
-        // };
-
-
-        // let res = await axios.post("get_holidays/", JSONdata);
-        // let jsonParse = res.data.records;
-
-        // for (var i = 0; i < jsonParse.length; i++) {
-        //     lockedDates.push(new Date(jsonParse[i].preferred_date))
-        // }
-
-        // if(res.status == 200) {
-        //     hasBranch = true
-        //     alert(res.status)
-        // } else {
-        //     hasBranch = false
-        //     alert(res.status)
-        // }
-
-        const JSONdata = {
-            country: 'US',
-            branch: 'MNL',
-        };
-
-        let res = await axios.post("get_holidays/", JSONdata);
-        let jsonParse = res.data.records;
-
-        for (var i = 0; i < jsonParse.length; i++) {
-            lockedDates.push(new Date(jsonParse[i].preferred_date))
-        }
-
-        if(res.status) {
-            hasBranch = false
-        }
-
+        await USHolidates.fetchHolidaysByCountryAndBranch('US', 'MNL')
         
     })
-    // const holiDates = async () => {
-       
-        
-    //     // if(res.status == 200) {
-            
-    //     // }
 
-    //     // if(res.status == 200) {
-    //     //     hasBranch = false
-    //     // } else {
-    //     //     hasBranch = true
-    //     // }
-    // }
     
-
     const handleSlots = async () => {
         const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
 
@@ -188,8 +140,6 @@
     const schema = yup.object().shape({
         timeInput: yup.string().required('Please select preferred time')
     })
-
-    alert(hasBranch)
     
 </script>
 
@@ -218,7 +168,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
                                 <InlineDatePicker 
                                     label="Preferred Date"
                                     :disabledDate="disableState.disabledDates"
