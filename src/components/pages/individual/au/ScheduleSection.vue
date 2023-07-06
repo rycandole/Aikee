@@ -64,7 +64,6 @@
         handleDateTime();
         holiDates();
     })
-    holiDates();
 
     const holiDates = async () => {
 
@@ -80,7 +79,7 @@
             lockedDates.push(new Date(jsonParse[i].preferred_date))
         }
 
-        if(clinic_code.get(clinic_location.value) === null) {
+        if(lockedDates.count) {
             hasBranch = true
         } else {
             hasBranch = false

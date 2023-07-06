@@ -43,26 +43,42 @@
     let timeInput = ref(null)
     let timeSched = ref(null)
     let timeSlots = ref([])
+    let hasBranch = true
     let textSuccess = "text-success"
 
     const lockedDates = [];
     // const dateList = [];
+    
+    
 
+    
 
     onMounted(async () => {
         handleSlots();
         handleDateTime();
-        holiDates();
-        
-    })
+        // holiDates();
 
-    // dateList.forEach(fetchArray)
+        // const JSONdata = {
+        //     country: 'US',
+        //     branch: 'MNL',
+        // };
 
-    // function fetchArray(item) {
-    //     lockedDates.push(new Date(item));
-    // }
 
-    const holiDates = async () => {
+        // let res = await axios.post("get_holidays/", JSONdata);
+        // let jsonParse = res.data.records;
+
+        // for (var i = 0; i < jsonParse.length; i++) {
+        //     lockedDates.push(new Date(jsonParse[i].preferred_date))
+        // }
+
+        // if(res.status == 200) {
+        //     hasBranch = true
+        //     alert(res.status)
+        // } else {
+        //     hasBranch = false
+        //     alert(res.status)
+        // }
+
         const JSONdata = {
             country: 'US',
             branch: 'MNL',
@@ -75,22 +91,26 @@
             lockedDates.push(new Date(jsonParse[i].preferred_date))
         }
 
-    }
-    // alert(dateList)
-    
-
-     // =========== Inline Date ==================== //
-     const disableState = {
-        // months start's to 0(January) - 11(December) 
-        disabledDates: {
-            to: new Date(currentDate), // Disable all dates up to specific date
-            from: new Date(formatted_d),
-            days: [0,6],
-            dates: lockedDates,
-            preventDisableDateSelection: true
+        if(res.status) {
+            hasBranch = false
         }
-    }
-    // ============ End of Inline Date =============== //
+
+        
+    })
+    // const holiDates = async () => {
+       
+        
+    //     // if(res.status == 200) {
+            
+    //     // }
+
+    //     // if(res.status == 200) {
+    //     //     hasBranch = false
+    //     // } else {
+    //     //     hasBranch = true
+    //     // }
+    // }
+    
 
     const handleSlots = async () => {
         const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
@@ -105,6 +125,19 @@
         timeSlots = res.data.slot
         timeSched.value = timeSlots
     }
+
+    // =========== Inline Date ==================== //
+    const disableState = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(formatted_d),
+            days: [0,6],
+            dates: lockedDates,
+            preventDisableDateSelection: true
+        }
+    }
+    // ============ End of Inline Date =============== //
 
     const handleDateTime = async () => {
         const date = moment(dateInput.value).format('YYYY-MM-DD')
@@ -156,6 +189,7 @@
         timeInput: yup.string().required('Please select preferred time')
     })
 
+    alert(hasBranch)
     
 </script>
 
@@ -184,7 +218,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
                                 <InlineDatePicker 
                                     label="Preferred Date"
                                     :disabledDate="disableState.disabledDates"
