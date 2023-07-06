@@ -1,6 +1,45 @@
 <script setup>
+    import { useRouter } from 'vue-router'
+    import { onMounted } from 'vue'
+    import { use_AU_MNL_Holidates } from '@/store/au-holidates-mnl'
+    import { use_AU_BGC_Holidates } from '@/store/au-holidates-bgc'
+    import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import CalloutDanger from '@/components/global/CalloutDanger.vue'
     import RouterButton from '@/components/global/RouterButton.vue'
+    import Swal from '@/sweetalert2'
+
+
+    const router = useRouter()
+    const AU_MNL_Holidates = use_AU_MNL_Holidates()
+    const AU_BGC_Holidates = use_AU_BGC_Holidates()
+  
+
+    onMounted(async () => {
+        await AU_MNL_Holidates.fetchHolidaysByCountryAndBranch('AU', 'MNL')
+        await AU_BGC_Holidates.fetchHolidaysByCountryAndBranch('AU', 'BGC')
+    })
+
+    
+
+    const handleBack = () => {
+
+        Swal.fire({
+            title: 'Are you sure you want to go back?',
+            text: 'The details you filled up will be gone.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            icon: "question",
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                router.push('/individual/')
+                AU_MNL_Holidates.clearHolidays()
+                AU_BGC_Holidates.clearHolidays()
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
 
 
 
@@ -60,10 +99,11 @@
             />
         </div>
         <div class="col-12 d-flex justify-content-center">
-            <RouterButton 
-                btnUrl="/individual"
+            <SubmitFormButton 
+                btnType="button"
                 className="btn btn-secondary w-25 mr-5"
                 btnText="Back"
+                @click="handleBack"
             />
             <RouterButton 
                 btnUrl="/individual/au/schedule"

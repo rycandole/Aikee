@@ -1,8 +1,42 @@
 <script setup>
+    // import axios from 'axios'
+    import { useRouter } from 'vue-router'
+    import { onMounted } from 'vue'
+    import { useUSHolidates } from '@/store/us-holidates'
+    import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import CalloutDanger from '@/components/global/CalloutDanger.vue'
     import RouterButton from '@/components/global/RouterButton.vue'
+    import Swal from '@/sweetalert2'
+    
 
+    const router = useRouter()
+    const USHolidates = useUSHolidates()
 
+    onMounted(async () => {
+        await USHolidates.fetchHolidaysByCountryAndBranch('US', 'MNL')
+
+    })
+
+    
+
+    const handleBack = () => {
+
+        Swal.fire({
+            title: 'Are you sure you want to go back?',
+            text: 'The details you filled up will be gone.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            icon: "question",
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                router.push('/individual/')
+                USHolidates.clearHolidays()
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
 
 </script>
 
@@ -59,10 +93,11 @@
             />
         </div>
        <div class="col-12 d-flex justify-content-center">
-            <RouterButton 
-                btnUrl="/individual"
+            <SubmitFormButton 
+                btnType="button"
                 className="btn btn-secondary w-25 mr-5"
                 btnText="Back"
+                @click="handleBack"
             />
             <RouterButton 
                 btnUrl="/individual/us/schedule"
