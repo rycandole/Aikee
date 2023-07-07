@@ -3,6 +3,8 @@
     import { onMounted } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
+    import { use_AU_MNL_Holidates } from '@/store/au-holidates-mnl'
+    import { use_AU_BGC_Holidates } from '@/store/au-holidates-bgc'
     import { useAUIndividualSched } from '@/store/au-individual-sched'
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
@@ -18,6 +20,8 @@
     import * as yup from 'yup';
     
     const router = useRouter()
+    const AU_MNL_Holidates = use_AU_MNL_Holidates()
+    const AU_BGC_Holidates = use_AU_BGC_Holidates()
     const AUIndividualSched = useAUIndividualSched()
 
     let currentDate = ref(null)
@@ -47,9 +51,10 @@
     let timeSlots = ref([])
     let countryValue = ref(null)
     let branchValue = ref(null)
+    let branch = ""
     let hasBranch = true
     let textSuccess = "text-success"
-    const lockedDates = [];
+    
     const clinics = ['Ermita, Manila', 'Bonifacio Global City'] 
     const clinic_code = new Map([
                                 ['', null],
@@ -57,35 +62,54 @@
                                 ['Bonifacio Global City', 'BGC']
                                 ])
 
-    // let branchClinic = clinic_code.get(clinic_location.value)
-
     onMounted(async () => {
+        await AU_MNL_Holidates.fetchHolidaysByCountryAndBranch('AU', 'MNL')
+        await AU_BGC_Holidates.fetchHolidaysByCountryAndBranch('AU', 'BGC')
         handleSlots();
         handleDateTime();
-        holiDates();
+        handleBranch();
+
     })
 
-    const holiDates = async () => {
+    const holiday_mnl = AU_MNL_Holidates.list
+    const holiday_bgc = AU_BGC_Holidates.list
 
-        const JSONdata = {
-            country: 'AU',
-            branch: clinic_code.get(clinic_location.value),
-        };
+    const lockedDates = [];  
 
-        let res = await axios.post("get_holidays/", JSONdata);
-        let jsonParse = res.data.records;
+        
 
-        for (var i = 0; i < jsonParse.length; i++) {
-            lockedDates.push(new Date(jsonParse[i].preferred_date))
-        }
+    const handleBranch = () => {
+        branch = clinic_code.get(clinic_location.value)
 
-        if(lockedDates.count) {
-            hasBranch = true
-        } else {
+        if(branch == 'MNL') {
+            for (let a = 0; a <= lockedDates.length - 1; a++) {
+                delete lockedDates[a]
+            }
+            for (let a = 0; a <= holiday_mnl.length - 1; a++) {
+                lockedDates.push(new Date(holiday_mnl[a].preferred_date))
+            }
             hasBranch = false
-        }
 
+        } else if (branch == 'BGC') {
+            for (let a = 0; a <= lockedDates.length - 1; a++) {
+                delete lockedDates[a]
+            }
+
+            for (let a = 0; a <= holiday_bgc.length - 1; a++) {
+                lockedDates.push(new Date(holiday_bgc[a].preferred_date))
+            }
+            hasBranch = false
+       
+        } else {
+            for (let a = 0; a <= lockedDates.length - 1; a++) {
+                delete lockedDates[a]
+            }
+            hasBranch = true
+        }
+        
+        
     }
+
 
      // =========== Inline Date ==================== //
      const disableState = {
@@ -100,11 +124,7 @@
     }
     // ========== End of Inline Date =============== //
 
-    // const handleBranch = () => {
-    //     // branch = clinic_code.get(clinic_location.value)
-    //     holiDates();
-    // }
-
+    
     const handleSlots = async () => {
         const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
         countryValue = 'AU'
@@ -207,7 +227,7 @@
                                     className="w-75"
                                     v-model:input="clinic_location"
                                     :items="clinics"
-                                    :onChange="holiDates"
+                                    :onChange="handleBranch"
                                 />
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">

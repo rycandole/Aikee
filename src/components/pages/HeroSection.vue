@@ -62,12 +62,12 @@
                                 <li>Users accept the responsibility for supplying, checking, and verifying the accuracy and correctness of the information they provide on this system in connection with their application. Incorrect or inaccurate information supplied may result in forfeiture of passport application.</li>
                             </ul>
                         </div>
-                        <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
                             <router-link to="/individual" class="btn btn-info btn-lg mt-3 mb-3 w-100"><i class="fas fa-user mt-1 pr-1"></i> Start Individual Appointment </router-link>
                         </div>
-                        <div class="col-lg-6 col-md-12 col-sm-12">
+                        <!-- <div class="col-lg-6 col-md-12 col-sm-12">
                             <router-link to="/family" class="btn btn-info btn-lg mt-3 mb-3 w-100"><i class="fas fa-users mt-1 pr-1"></i> Start Family Appointment </router-link>
-                        </div>
+                        </div> -->
                         <div class="col-sm-12">
                             <p class="text-secondary p-1">
                                 After agreeing to the Terms and Conditions above, you may start your online application by clicking either "Start Individual Appointment" or "Start Family Appointment"
