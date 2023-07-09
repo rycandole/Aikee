@@ -69,72 +69,47 @@
         handleDateTime();
         handleBranch();
 
-        console.log(hasBranch)
-
     })
 
-    // const holiday_mnl = AU_MNL_Holidates.list
-    // const holiday_bgc = AU_BGC_Holidates.list
-    const lockedDates = [];
+    const holiday_mnl = AU_MNL_Holidates.list
+    const holiday_bgc = AU_BGC_Holidates.list
+
+    const lockedDates = [];  
+
+        
 
     const handleBranch = () => {
         branch = clinic_code.get(clinic_location.value)
 
         if(branch == 'MNL') {
+            for (let a = 0; a <= lockedDates.length - 1; a++) {
+                delete lockedDates[a]
+            }
+            for (let a = 0; a <= holiday_mnl.length - 1; a++) {
+                lockedDates.push(new Date(holiday_mnl[a].preferred_date))
+            }
             hasBranch = false
-            // alert(branch)
+
         } else if (branch == 'BGC') {
+            for (let a = 0; a <= lockedDates.length - 1; a++) {
+                delete lockedDates[a]
+            }
+
+            for (let a = 0; a <= holiday_bgc.length - 1; a++) {
+                lockedDates.push(new Date(holiday_bgc[a].preferred_date))
+            }
             hasBranch = false
-            // alert(branch)
+       
         } else {
+            for (let a = 0; a <= lockedDates.length - 1; a++) {
+                delete lockedDates[a]
+            }
             hasBranch = true
         }
         
+        
     }
 
-    
-
-    // if (branch) {
-
-    //     for (let a = 0; a <= holiday_mnl.length - 1; a++) {
-    //         lockedDates.push(new Date(holiday_mnl[a].preferred_date))
-    //     }
-
-    // } else if (clinic_code.get(clinic_location.value) == 'BGC') {
-
-    //     for (let a = 0; a <= holiday_bgc.length - 1; a++) {
-    //         lockedDates.push(new Date(holiday_bgc[a].preferred_date))
-    //     }
-
-    // }
-
-
-    // alert(branchValue.value)
-
-    // const holiDates = async () => {
-
-    //     alert(branchValue.value)
-
-    //     if(branchValue.value) {
-    //         hasBranch = true
-    //         alert(branchValue.value)
-    //     } else {
-    //         hasBranch = false
-    //     }
-
-    //     const JSONdata = {
-    //         country: 'AU',
-    //         branch: clinic_code.get(clinic_location.value),
-    //     };
-
-    //     let res = await axios.post("get_holidays/", JSONdata);
-    //     let jsonParse = res.data.records;
-
-    //     for (var i = 0; i < jsonParse.length; i++) {
-    //         lockedDates.push(new Date(jsonParse[i].preferred_date))
-    //     }
-
-    // }
 
      // =========== Inline Date ==================== //
      const disableState = {
