@@ -1,6 +1,7 @@
 <script setup>
     import axios from 'axios'
     import { onMounted } from 'vue'
+    import { onUpdated } from 'vue'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { use_AU_MNL_Holidates } from '@/store/au-holidates-mnl'
@@ -67,18 +68,43 @@
         await AU_BGC_Holidates.fetchHolidaysByCountryAndBranch('AU', 'BGC')
         handleSlots();
         handleDateTime();
-        handleBranch();
+        
 
     })
 
-    const holiday_mnl = AU_MNL_Holidates.list
-    const holiday_bgc = AU_BGC_Holidates.list
+    onUpdated(async () => {
+        handleBranch();
+    })
+
+    // const holiday_mnl = AU_MNL_Holidates.list
+    // const holiday_bgc = AU_BGC_Holidates.list
 
     const lockedDates = [];  
 
         
 
     const handleBranch = () => {
+        let country = 'AU'
+        branch = clinic_code.get(clinic_location.value)
+
+        if(branch == 'MNL') {
+            axios.get('get_holidays/' + country + '/' + branch).then(response =>{
+                console.log(response.data.records)
+            })
+        } else if (branch == 'BGC') {
+            axios.get('get_holidays/' + country + '/' + branch).then(response =>{
+                console.log(response.data.records)
+            })
+        } else {
+            hasBranch = true
+        }
+        
+        
+    }
+
+
+    const handleBranch = () => {
+        // let country = 'AU'
         branch = clinic_code.get(clinic_location.value)
 
         if(branch == 'MNL') {
@@ -112,6 +138,7 @@
 
 
      // =========== Inline Date ==================== //
+    
      const disableState = {
         // months start's to 0(January) - 11(December) 
         disabledDates: {
