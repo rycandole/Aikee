@@ -145,6 +145,10 @@
     const schema = yup.object().shape({
         timeInput: yup.string().required('Please select preferred time')
     })
+
+    // onUnmounted(() => {
+    //     USHolidates.clearHolidays()
+    // })
     
 </script>
 

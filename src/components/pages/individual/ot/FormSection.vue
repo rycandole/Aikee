@@ -1,9 +1,24 @@
 <script setup>
-    import {useRoute} from "vue-router"
+    import { useRoute, useRouter } from 'vue-router'
+    import { onMounted } from 'vue'
+    import { use_TRIPLETS_MNL_Holidates } from '@/store/triplets-holidates-mnl'
+    import { use_TRIPLETS_BGC_Holidates } from '@/store/triplets-holidates-bgc'
+    import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import CalloutDanger from '@/components/global/CalloutDanger.vue'
     import RouterButton from '@/components/global/RouterButton.vue'
+    import Swal from '@/sweetalert2'
 
     const route = useRoute();
+    const router = useRouter();
+    const TRIPLETS_MNL_Holidates = use_TRIPLETS_MNL_Holidates()
+    const TRIPLETS_BGC_Holidates = use_TRIPLETS_BGC_Holidates()
+
+    onMounted(async () => {
+        await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch('OT', 'MNL')
+        await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch('OT', 'BGC')
+    })
+
+
     const regCountry = route.params.country;
 
     const countryCode = new Map([
@@ -14,6 +29,26 @@
             ]);
 
     let countryName = countryCode.get(regCountry)
+
+    const handleBack = () => {
+
+        Swal.fire({
+            title: 'Are you sure you want to go back?',
+            text: 'The details you filled up will be gone.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            icon: "question",
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                router.push('/individual/')
+                TRIPLETS_MNL_Holidates.clearHolidays()
+                TRIPLETS_BGC_Holidates.clearHolidays()
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
 
 
 </script>
@@ -56,12 +91,13 @@
             />
         </div>
         <div class="col-12 d-flex justify-content-center">
-            <RouterButton 
-                btnUrl="/individual"
+            <SubmitFormButton 
+                btnType="button"
                 className="btn btn-secondary w-25 mr-5"
                 btnText="Back"
+                @click="handleBack"
             />
-            <RouterButton 
+                <RouterButton 
                 :btnUrl="'/individual/ot/schedule/'+regCountry"
                 className="btn btn-primary w-25"
                 btnText="Next"
