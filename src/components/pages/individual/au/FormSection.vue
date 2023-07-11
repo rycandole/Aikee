@@ -1,8 +1,8 @@
 <script setup>
     import { useRouter } from 'vue-router'
     import { onMounted } from 'vue'
-    import { use_AU_MNL_Holidates } from '@/store/au-holidates-mnl'
-    import { use_AU_BGC_Holidates } from '@/store/au-holidates-bgc'
+    import { use_TRIPLETS_MNL_Holidates } from '@/store/triplets-holidates-mnl'
+    import { use_TRIPLETS_BGC_Holidates } from '@/store/triplets-holidates-bgc'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
     import CalloutDanger from '@/components/global/CalloutDanger.vue'
     import RouterButton from '@/components/global/RouterButton.vue'
@@ -10,13 +10,13 @@
 
 
     const router = useRouter()
-    const AU_MNL_Holidates = use_AU_MNL_Holidates()
-    const AU_BGC_Holidates = use_AU_BGC_Holidates()
+    const TRIPLETS_MNL_Holidates = use_TRIPLETS_MNL_Holidates()
+    const TRIPLETS_BGC_Holidates = use_TRIPLETS_BGC_Holidates()
   
 
     onMounted(async () => {
-        await AU_MNL_Holidates.fetchHolidaysByCountryAndBranch('AU', 'MNL')
-        await AU_BGC_Holidates.fetchHolidaysByCountryAndBranch('AU', 'BGC')
+        await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch('AU', 'MNL')
+        await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch('AU', 'BGC')
     })
 
     
@@ -33,8 +33,8 @@
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 router.push('/individual/')
-                AU_MNL_Holidates.clearHolidays()
-                AU_BGC_Holidates.clearHolidays()
+                TRIPLETS_MNL_Holidates.clearHolidays()
+                TRIPLETS_BGC_Holidates.clearHolidays()
             } else if (result.isDenied) {
                 Swal.fire('Changes are not saved', '', 'info')
             }
