@@ -46,13 +46,6 @@
     let timeSched = ref(null)
     let timeSlots = ref([])
     let textSuccess = "text-success"
-
-    const holidays = USHolidates.list
-    const lockedDates  = [];
-
-    for (let a = 0; a <= holidays.length - 1; a++) {
-        lockedDates.push(new Date(holidays[a].preferred_date))
-    }
     
     
     onMounted(async () => {
@@ -62,6 +55,18 @@
         await USHolidates.fetchHolidaysByCountryAndBranch('US', 'MNL')
         
     })
+
+    const holidays = USHolidates.holidays
+    const full_dates = USHolidates.full_dates
+    const lockedDates  = [];
+
+    for (let a = 0; a <= holidays.length - 1; a++) {
+        lockedDates.push(new Date(holidays[a].preferred_date))
+    }
+
+    for (let a = 0; a <= full_dates.length - 1; a++) {
+        lockedDates.push(new Date(full_dates[a].PreferredMedicalExamDate))
+    }
 
     
     const handleSlots = async () => {
@@ -140,6 +145,10 @@
     const schema = yup.object().shape({
         timeInput: yup.string().required('Please select preferred time')
     })
+
+    // onUnmounted(() => {
+    //     USHolidates.clearHolidays()
+    // })
     
 </script>
 

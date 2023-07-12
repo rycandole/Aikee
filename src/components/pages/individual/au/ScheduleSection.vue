@@ -1,10 +1,10 @@
 <script setup>
     import axios from 'axios'
     import { onMounted } from 'vue'
-    import { ref } from 'vue'
+    import { ref, watch } from 'vue'
     import { useRouter } from 'vue-router'
-    import { use_AU_MNL_Holidates } from '@/store/au-holidates-mnl'
-    import { use_AU_BGC_Holidates } from '@/store/au-holidates-bgc'
+    import { use_TRIPLETS_MNL_Holidates } from '@/store/triplets-holidates-mnl'
+    import { use_TRIPLETS_BGC_Holidates } from '@/store/triplets-holidates-bgc'
     import { useAUIndividualSched } from '@/store/au-individual-sched'
     import { Form } from 'vee-validate'
     import { ErrorMessage } from 'vee-validate'
@@ -20,9 +20,9 @@
     import * as yup from 'yup';
     
     const router = useRouter()
-    const AU_MNL_Holidates = use_AU_MNL_Holidates()
-    const AU_BGC_Holidates = use_AU_BGC_Holidates()
     const AUIndividualSched = useAUIndividualSched()
+    const TRIPLETS_MNL_Holidates = use_TRIPLETS_MNL_Holidates()
+    const TRIPLETS_BGC_Holidates = use_TRIPLETS_BGC_Holidates()
 
     let currentDate = ref(null)
 
@@ -54,6 +54,7 @@
     let branch = ""
     let hasBranch = true
     let textSuccess = "text-success"
+    let selectIsActive = true
     
     const clinics = ['Ermita, Manila', 'Bonifacio Global City'] 
     const clinic_code = new Map([
@@ -62,63 +63,81 @@
                                 ['Bonifacio Global City', 'BGC']
                                 ])
 
+    const mnl_lockedDates = [];  
+    const bgc_lockedDates = [];
+
+
     onMounted(async () => {
-        await AU_MNL_Holidates.fetchHolidaysByCountryAndBranch('AU', 'MNL')
-        await AU_BGC_Holidates.fetchHolidaysByCountryAndBranch('AU', 'BGC')
+        await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch('AU', 'MNL')
+        await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch('AU', 'BGC')
         handleSlots();
         handleDateTime();
-        handleBranch();
-
+        selectIsActive = false
+        // handleBranch();
     })
 
-    const holiday_mnl = AU_MNL_Holidates.list
-    const holiday_bgc = AU_BGC_Holidates.list
 
-    const lockedDates = [];  
-
+    watch(() => clinic_location.value, (newValue) => {
+        newValue = clinic_code.get(newValue)
         
-
-    const handleBranch = () => {
-        branch = clinic_code.get(clinic_location.value)
-
-        if(branch == 'MNL') {
-            for (let a = 0; a <= lockedDates.length - 1; a++) {
-                delete lockedDates[a]
-            }
-            for (let a = 0; a <= holiday_mnl.length - 1; a++) {
-                lockedDates.push(new Date(holiday_mnl[a].preferred_date))
-            }
+        if (newValue == 'MNL') {
+            branch = newValue
             hasBranch = false
-
-        } else if (branch == 'BGC') {
-            for (let a = 0; a <= lockedDates.length - 1; a++) {
-                delete lockedDates[a]
-            }
-
-            for (let a = 0; a <= holiday_bgc.length - 1; a++) {
-                lockedDates.push(new Date(holiday_bgc[a].preferred_date))
-            }
+        } else if (newValue == 'BGC') { 
+            branch = newValue
             hasBranch = false
-       
         } else {
-            for (let a = 0; a <= lockedDates.length - 1; a++) {
-                delete lockedDates[a]
-            }
+            branch = ""
             hasBranch = true
         }
         
         
+    }) // { immediate: true }
+
+    const holiday_mnl = TRIPLETS_MNL_Holidates.holidays
+    const holiday_bgc = TRIPLETS_BGC_Holidates.holidays
+
+    const full_dates_mnl = TRIPLETS_MNL_Holidates.full_dates
+    const full_dates_bgc = TRIPLETS_BGC_Holidates.full_dates
+
+    // Fetch Holidays on MNL branch
+    for (let a = 0; a <= holiday_mnl.length - 1; a++) {
+        mnl_lockedDates.push(new Date(holiday_mnl[a].preferred_date))
     }
+    for (let a = 0; a <= full_dates_mnl.length - 1; a++) {
+        mnl_lockedDates.push(new Date(full_dates_mnl[a].preferred_date))
+    }
+    // ======= Emd =============== //
 
+    // Fetch Holidays on BGC branch
+    for (let a = 0; a <= holiday_bgc.length - 1; a++) {
+        bgc_lockedDates.push(new Date(holiday_bgc[a].preferred_date))
+    }
+    for (let a = 0; a <= full_dates_bgc.length - 1; a++) {
+        bgc_lockedDates.push(new Date(full_dates_bgc[a].preferred_date))
+    }
+    // ======= Emd =============== //
 
-     // =========== Inline Date ==================== //
-     const disableState = {
+    // =========== Inline Date ==================== //
+    // MNL
+    const disableState_MNL = {
         // months start's to 0(January) - 11(December) 
         disabledDates: {
             to: new Date(currentDate), // Disable all dates up to specific date
             from: new Date(formatted_d),
             days: [0,6],
-            dates: lockedDates,
+            dates: mnl_lockedDates,
+            preventDisableDateSelection: true
+        }
+    }
+    // BGC
+    const disableState_BGC = {
+        // months start's to 0(January) - 11(December) 
+        disabledDates: {
+            to: new Date(currentDate), // Disable all dates up to specific date
+            from: new Date(formatted_d),
+            days: [0,6],
+            dates: bgc_lockedDates,
             preventDisableDateSelection: true
         }
     }
@@ -192,6 +211,11 @@
         timeInput: yup.string().required('Please select preferred time')
     })
 
+    // onUnmounted(() => {
+    //     AU_MNL_Holidates.clearHolidays()
+    //     AU_BGC_Holidates.clearHolidays()
+    // })
+
 </script>
 
 <template>
@@ -216,10 +240,11 @@
                 <FormHeader
                     headerText="Medical Examination Schedule"
                 />
+                {{ branch }}
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
-                            <div class="col-lg-10 col-md-12 col-sm-12 mb-5">
+                            <div :hidden="selectIsActive" class="col-lg-10 col-md-12 col-sm-12 mb-5">
                                 <RequiredSelectField 
                                     label="Please select your preferred St. Luke's Extension Clinic location"
                                     FieldName="clinic_location"
@@ -227,13 +252,14 @@
                                     className="w-75"
                                     v-model:input="clinic_location"
                                     :items="clinics"
-                                    :onChange="handleBranch"
+                                    
                                 />
+                                <!-- :onChange="handleBranch" -->
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
                                 <InlineDatePicker 
                                     label="Preferred Date"
-                                    :disabledDate="disableState.disabledDates"
+                                    :disabledDate="branch == 'MNL' ? disableState_MNL.disabledDates : disableState_BGC.disabledDates"
                                     v-model:input="dateInput"
                                     :onChange="handleSlots"
                                 />
