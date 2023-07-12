@@ -1,25 +1,47 @@
+<script>
+import { ref } from "@vue/reactivity";
 
-<template>
-    <select v-model="inputComputed" placeholder="Choose option" width="100px">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select><br>
-    <h1>{{ selecvalue }}</h1>
-</template>
+export default {
+  setup() {
+    const days = ref(0);
+    const hours = ref(0);
+    const minutes = ref(0);
+    const seconds = ref(0);
+    const launchDate = new Date("13 July 2023");
 
-<script setup>
-// script setup
-import { ref, watch } from 'vue'  
+    setInterval(() => {
+      const currDate = new Date();
+      const launchTime = launchDate - currDate;
 
-let selectOption = ref(null)
-let selecvalue = ref()
+      seconds.value = parseInt(launchTime / 1000);
+      minutes.value = parseInt(seconds.value / 60);
+      hours.value = parseInt(minutes.value / 60);
+      days.value = parseInt(hours.value / 24);
+    }, 1000);
 
-watch(() => selectOption.value, (newValue) => {
-    selecvalue = newValue
-    
-})
-
+    return { days, hours, minutes, seconds };
+  },
+};
 </script>
+<template>
+  <div class="time_box">
+    <p>{{ days }} day</p>
+    <p>{{ hours % 24 }} hrs</p>
+    <p>{{ minutes % 60 }} min</p>
+    <p>{{ seconds % 60 }} sec</p>
+  </div>
+</template>
+<style lang="scss">
+.time_box p {
+  padding: 10px;
+  background: grey;
+  color: #fff;
+  margin: 10px;
+  font-size: 20pt;
+  float: left;
+}
+.time_box {
+  margin-left: 35%;
+  margin-top: 20%;
+}
+</style>
