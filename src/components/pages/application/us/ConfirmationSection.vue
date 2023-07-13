@@ -7,7 +7,7 @@ import SubNavbar from "@/components/includes/SubNavbar.vue";
 // import email_logo from "@/assets/img/partials/slec-email-logo.png";
 // import FormHeader from '@/components/global/FormHeader.vue'
 
-// import QrCode from '@/components/global/QrCode.vue'
+import QrCode from '@/components/global/QrCode.vue'
 // import PreviewText from '@/components/global/PreviewText.vue'
 // import moment from 'moment'
 
@@ -90,14 +90,14 @@ const showList = async () => {
           </h5>
         </td>
       </tr>
-      <!-- <tr>
-                <td align="center" class="p-3">
-                    <QrCode 
-                        stringValue="US230618U74DF7"
-                        sizeImage="200"
-                    />
-                </td>
-            </tr> -->
+      <tr>
+          <td align="center" class="p-3">
+              <QrCode 
+                  :stringValue="payCode"
+                  sizeImage="200"
+              />
+          </td>
+      </tr>
       <tr>
         <td align="center">
           <h1 style="font-family: C39T36L; font-size: 50pt">*{{ payCode }}*</h1>

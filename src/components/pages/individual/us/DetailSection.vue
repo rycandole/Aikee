@@ -19,7 +19,7 @@
     import RadioButton from '@/components/global/RadioButtton.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
-    import { Field, ErrorMessage } from 'vee-validate'
+    import { ErrorMessage } from 'vee-validate'
     import moment from 'moment'
     import * as yup from 'yup';
 
@@ -54,7 +54,6 @@
     let textSuccess1 = "text-success"
 
     let date_of_birth = ref(null)
-    let cv_category = ref(null)
     let is_cv_received = true
     let cv_received = ref(null)
     let firstDose = ref(null)
@@ -139,7 +138,6 @@
         // alertChange()
 
         date_of_birth.value = details.date_of_birth || ''
-        cv_category.value = details.cv_category || ''
         cv_received.value = details.cv_received || ''
         cv_brand_name.value = details.cv_brand_name || ''
         firstDose.value = details.firstDose || ''
@@ -291,7 +289,6 @@
     // required('Please choose vaccine brand name')
 
     const schema = yup.object().shape({
-        cv_category: yup.string().required('This field is required, please choose an option!'),
         cv_received: yup.string().required('This field is required, please choose an option!'),
         cv_brand_name: yup.string().required('Please choose vaccine brand name'),
         cv_booster1: yup.string(),
@@ -569,65 +566,6 @@
                     </div>
                     <div class="mb-3 col-12" :hidden="covidHidden">
                         <ol>
-                            <li>What category do you belong to?</li>
-                            <ul class="covid_category">
-                                <li class="mt-3"><h5>Priority Eligible A</h5></li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="A1" id="cv_category_b4" />
-                                    <b class="text-secondary">A1</b>. Workers in Frontline Health Services
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="A2" id="cv_category_b4" />
-                                    <b class="text-secondary">A2</b>. All Senior Citizens
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="A3" id="cv_category_b4" />
-                                    <b class="text-secondary">A3</b>. Persons with Comorbidities
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="A4" id="cv_category_b4" />
-                                    <b class="text-secondary">A4</b>. Frontline personnel in essential sectors, including uniformed personnel
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="A5" id="cv_category_b4" />
-                                    <b class="text-secondary">A5</b>. Indigent Population
-                                </li>
-
-                                <li class="mt-3"><h5>Priority Eligible B</h5></li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B1" id="cv_category_b4" />
-                                    <b class="text-secondary">B1</b>. Teachers, Social Workers
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B2" id="cv_category_b4" />
-                                    <b class="text-secondary">B2</b>. Other Government Workers
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B3" id="cv_category_b4" />
-                                    <b class="text-secondary">B3</b>. Other Essential Workers
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B4" id="cv_category_b4" />
-                                    <b class="text-secondary">B4</b>. Socio-demographic groups at significantly higher risk other than senior citizens and poor population based on the NHTS-PR
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B5" id="cv_category_b4" />
-                                    <b class="text-secondary">B5</b>. Overseas FIlipino Workers
-                                </li>
-                                <li>
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="B6" id="cv_category_b4" />
-                                    <b class="text-secondary">B6</b>. Other Remaining Workforce
-                                </li>
-
-                                <li class="mt-3"><h5>Priority Eligible C</h5></li>
-                                <li class="mb-3">
-                                    <Field class="form-check-input mt-2" type="radio" v-model="cv_category" name="cv_category" value="C" id="cv_category_b4" />
-                                    <b class="text-secondary">C.</b> Rest of the Filipino population not otherwise included in the above groups
-                                </li>
-                                <li>
-                                    <ErrorMessage name="cv_category" class="text-danger"/>
-                                </li>
-                            </ul>
                             <li>Have you received your COVID-19 vaccine?</li>
                                 <div class="row mt-4">
                                     <div class="col-lg-2 col-md-2 col-sm-12">
