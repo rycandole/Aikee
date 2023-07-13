@@ -6,7 +6,6 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
     user_id: null,
     email: null,
     date_of_birth: null,
-    cv_category: null,
     cv_received: null,
     is_cv_received: null,
     cv_brand_name: null,
@@ -73,7 +72,6 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.user_id = jsonPARSE.json_user_id
         this.$state.email = jsonPARSE.json_email
         this.$state.date_of_birth = jsonPARSE.json_date_of_birth
-        this.$state.cv_category = jsonPARSE.json_cv_category
         this.$state.cv_received = jsonPARSE.json_cv_received
         this.$state.is_cv_received = jsonPARSE.json_is_cv_received
         this.$state.vaccine_receive = jsonPARSE.json_vaccine_receive
@@ -138,7 +136,6 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.user_id = null,
         this.$state.email = null,
         this.$state.date_of_birth = null,
-        this.$state.cv_category = null,
         this.$state.cv_received = null,
         this.$state.is_cv_received = null,
         this.$state.cv_brand_name = null,

@@ -36,7 +36,7 @@
     }
 
     // GET THE DATE 3 MONTHS FROM NOW
-    let d = new Date(new Date().setMonth(new Date().getMonth() + 2))
+    let d = new Date(new Date().setMonth(new Date().getMonth() + 3))
     let formatted_d = moment(d).format('YYYY, MM, DD')
 
    
@@ -50,7 +50,7 @@
     
     onMounted(async () => {
         handleSlots();
-        handleDateTime();
+        // handleDateTime();
 
         await USHolidates.fetchHolidaysByCountryAndBranch('US', 'MNL')
         
@@ -196,16 +196,17 @@
                                     <div v-for="(row, index) in timeSched" :key="index" class="col-12">
                                            <RadioBtnSched
                                                 :RadioLabel="`${row.time_slot}`"
-                                                :RadioLabelClass="`${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''"
-                                                :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
-                                                :Slots="`${row.slot_limit}` <= 1 ?`${row.slot_limit} slot` : `${row.slot_limit} slots`" 
-                                                :spanClassName="`${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'"
-                                                :inputId="`${row.slot_limit}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
-                                                :radioBtnStatus="`${row.slot_limit}` > 0 ? false : true"
+                                                :RadioLabelClass="`${row.slot_limit - row.slot_acquired}` <= 0 ? 'text-body-tertiary' : ''"
+                                                :StatusLabel="`${row.slot_limit - row.slot_acquired}` > 0 ? 'Available | ' : 'Not Available'"
+                                                :Slots="`${row.slot_limit - row.slot_acquired}` <= 1 ?`${row.slot_limit - row.slot_acquired} slot` : `${row.slot_limit - row.slot_acquired} slots`" 
+                                                :spanClassName="`${row.slot_limit - row.slot_acquired}` > 0 ? 'text-success' : 'text-danger'"
+                                                :inputId="`${row.slot_limit - row.slot_acquired}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
+                                                :radioBtnStatus="`${row.slot_limit - row.slot_acquired}` > 0 ? false : true"
                                                 RadioBtnName="timeInput"
                                                 v-model:input="timeInput"
                                                 :RadioValue="`${row.time_slot}`"
                                             />
+                                            <!-- `${row.slot_acquired}` -->
                                     </div>
                                     
                                     <div class="col-12 pt-3">

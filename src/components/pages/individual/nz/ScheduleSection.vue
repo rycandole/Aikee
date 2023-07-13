@@ -278,12 +278,12 @@
                                     <div v-for="(row, index) in timeSched" :key="index" class="col-12">
                                            <RadioBtnSched
                                                 :RadioLabel="`${row.time_slot}`"
-                                                :RadioLabelClass="`${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''"
-                                                :StatusLabel="`${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'"
-                                                :Slots="`${row.slot_limit}` > 0 ?`${row.slot_limit} slot` : ''" 
-                                                :spanClassName="`${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'"
-                                                :inputId="`${row.slot_limit}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
-                                                :radioBtnStatus="`${row.slot_limit}` > 0 ? false : true"
+                                                :RadioLabelClass="`${row.slot_limit - row.slot_acquired}` <= 0 ? 'text-body-tertiary' : ''"
+                                                :StatusLabel="`${row.slot_limit - row.slot_acquired}` > 0 ? 'Available | ' : 'Not Available'"
+                                                :Slots="`${row.slot_limit - row.slot_acquired}` <= 1 ?`${row.slot_limit - row.slot_acquired} slot` : `${row.slot_limit - row.slot_acquired} slots`" 
+                                                :spanClassName="`${row.slot_limit - row.slot_acquired}` > 0 ? 'text-success' : 'text-danger'"
+                                                :inputId="`${row.slot_limit - row.slot_acquired}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
+                                                :radioBtnStatus="`${row.slot_limit - row.slot_acquired}` > 0 ? false : true"
                                                 RadioBtnName="timeInput"
                                                 v-model:input="timeInput"
                                                 :RadioValue="`${row.time_slot}`"

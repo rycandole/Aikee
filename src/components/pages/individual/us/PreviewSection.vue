@@ -42,23 +42,6 @@ let textSuccess2 = "text-success";
 let isButtonDisabled = true;
 let checkbox1 = ref(null);
 let checkbox2 = ref(null);
-const priorityCategory = new Map([
-  ["A1", "Workers in Frontline Health Services"],
-  ["A2", "All Senior Citizens"],
-  ["A3", "Persons with Comorbidities"],
-  ["A4", "Frontline personnel in essential sectors, including uniformed personnel"],
-  ["A5", "Indigent Population"],
-  ["B1", "Teachers, Social Workers"],
-  ["B2", "Other Government Workers"],
-  ["B3", "ther Essential Workers"],
-  [
-    "B4",
-    "Socio-demographic groups at significantly higher risk other than senior citizens and poor population based on the NHTS-PR",
-  ],
-  ["B5", "Overseas FIlipino Workers"],
-  ["B6", "Other Remaining Workforce"],
-  ["C", "Rest of the Filipino population not otherwise included in the above groups"],
-]);
 
 const visaPrefCategory = new Map([
   ["NONE", "NONE"],
@@ -128,8 +111,6 @@ let sched_time = schedule.time;
 
 // Details Store
 let detail_date_of_birth = moment(details.date_of_birth).format("LL");
-let detail_covid_vaccine_priority =
-  details.cv_category + ". " + priorityCategory.get(details.cv_category);
 let detail_cv_received = details.cv_received;
 let detail_cv_brand_name = details.cv_brand_name;
 let detail_firstDose = moment(details.firstDose).format("LL");
@@ -203,7 +184,6 @@ const handleStore = async () => {
     json_sched_time: sched_time,
     json_user_id: user_id,
     json_detail_date_of_birth: moment(details.date_of_birth).format("YYYY-MM-DD"),
-    json_detail_covid_vaccine_priority: details.cv_category,
     json_is_cv_received: details.cv_received,
     json_detail_cv_brand_name: detail_cv_brand_name,
     json_detail_firstDose: moment(details.firstDose).format("YYYY-MM-DD"),
@@ -371,12 +351,6 @@ const handleBack = () => {
           </div>
           <div class="mb-3 col-12">
             <FormHeader headerText="COVID-19 VACCINE" />
-          </div>
-          <div class="mb-3 col-12">
-            <PreviewText
-              previewLabel="What category do you belong to?"
-              v-bind:previewText="detail_covid_vaccine_priority"
-            />
           </div>
           <div class="mb-3 col-12">
             <PreviewText
