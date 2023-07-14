@@ -532,7 +532,7 @@
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration {{ isVaccinated }} </h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration </h1>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12">
             <SideNav 
@@ -794,7 +794,7 @@
                             :items="interviewSources"
                         />
                     </div>
-                    <div class="mb-3 mt-3 col-12">
+                    <div class="mb-3 mt-4 col-12">
                         <FormHeader
                             headerText="Applicant Details"
                         />
@@ -918,7 +918,7 @@
                             headerText="Contact Information"
                         />
                     </div>
-                    <div class="mb-3 mt-3 col-12">
+                    <div class="mb-1 mt-3 col-12">
                         <h5 class="text-uppercase">FOR APPLICANTS CURRENTLY LIVING IN THE PHILIPPINES:</h5>
                     </div>
                     <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
@@ -959,7 +959,7 @@
                             v-model:input="ad_zip_code"
                         />
                     </div>
-                   <div class="mb-3 mt-5 col-12">
+                   <div class="mb-1 mt-5 col-12">
                         <h5 class="text-uppercase">FOR APPLICANTS CURRENTLY LIVING OUTSIDE THE PHILIPPINES:</h5>
                     </div>
                     <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
@@ -1011,7 +1011,7 @@
                     
                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
                         <RequiredInputField 
-                            label="Contact Number(s), separate with a slash"
+                            label="Contact Number(s)"
                             placeholder="Contact Number"
                             type="text"
                             FieldName="ad_contact_numbers"
@@ -1028,7 +1028,7 @@
                                 </label>
                             </div>
                             <div class="col-12 input-group">
-                                <span class=" ml-3 fs-2 fw-normal text-secondary">
+                                <span class=" ml-3 fs-2 fw-normal">
                                 {{ email }}
                                 </span>
                             </div>
@@ -1192,7 +1192,7 @@
                             :items="years"
                         />
                     </div>
-                    <div class="mt-3 mb-3 col-12">
+                    <div class="mt-3 mb-4 col-12">
                         <FormHeader
                             headerText="Petitioner's Information"
                         />
@@ -1319,7 +1319,7 @@
             </div> 
 
             <!-- <div class="col-lg-3 col-md-12 col-sm-12"></div> -->
-            <div class="col-12 d-flex justify-content-center">
+            <div class="col-12 mt-4 d-flex justify-content-center">
                 <SubmitFormButton 
                     btnType="button"
                     className="btn btn-secondary w-25 mr-5"
@@ -1346,6 +1346,7 @@
 </template>
 
 <style lang="scss">
+
 .wrapper_container {
     margin: 0;
     margin-top: 1rem;

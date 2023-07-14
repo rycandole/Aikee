@@ -180,7 +180,7 @@
                                 <div class="row">
                                     <div class="col-12 mt-3">
                                         <label class="text-capitalize text-dark">
-                                            Preferred Time
+                                            Preferred Time <b class="text-danger p-1">*</b>
                                         </label>
                                         <br/><hr/> 
                                     </div>

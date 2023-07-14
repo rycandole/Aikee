@@ -27,9 +27,9 @@ const { previewLabelClassName, previewLabel, previewClassName, previewText, smal
             <span :class="previewClassName" class="text-muted prev_text">{{ previewText }}</span>
         </div>
         <div class="col-12">
-            <span class="text-secondary text-s fw-light display-block float-left ml-2">
+            <small class="text-secondary text-s fw-light display-block float-left">
                 {{ smallLabel }}
-            </span>
+            </small>
         </div>
     </div>
 </template>
