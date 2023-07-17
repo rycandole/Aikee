@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
 
-export const use_TRIPLETS_BGC_Holidates = defineStore('triplets-holidates-mnl', {
+export const use_TRIPLETS_BGC_Holidates = defineStore('triplets-holidates-bgc', {
   state: () => ({
     holidays: [],
     full_dates: []

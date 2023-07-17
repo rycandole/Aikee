@@ -7,7 +7,7 @@ export default {
     const hours = ref(0);
     const minutes = ref(0);
     const seconds = ref(0);
-    const launchDate = new Date("13 July 2023");
+    const launchDate = new Date("2023-07-18");
 
     setInterval(() => {
       const currDate = new Date();

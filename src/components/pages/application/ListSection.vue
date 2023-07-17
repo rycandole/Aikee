@@ -14,7 +14,7 @@ let showApplication = ref([]);
 let showApplication1 = ref([]);
 let USList = ref(null);
 let TripletsList = ref(null);
-let status_code = ref(null);
+// let status_code = ref(null);
 let listCount = ref(null);
 
 onMounted(async () => {
@@ -41,24 +41,29 @@ const re_sendEmail = async (id) => {
     icon: "question",
   }).then((result) => {
     if (result.isConfirmed) {
+
       const JSONdata = {
         regId: id,
       };
       /* Read more about isConfirmed, isDenied below */
       let res = axios.post("re-send-email-us/", JSONdata);
 
-      const results = async () => {
-        const a = await res;
+      alert(res.data.message)
 
-        status_code.value = a.status;
-      };
+      // console.log(res)
 
-      Swal.fire("Email send ", "Please check your email", "success");
+      // const results = async () => {
+      //   const a = await res;
+
+      //   status_code.value = a.status;
+      // };
+
+      // Swal.fire("Email send ", "Please check your email", "success");
       // if (results() == 200) {
 
       // }
 
-      console.log(results());
+      // console.log(results());
     } else if (result.isDenied) {
       Swal.fire("Email not Send", "Check your internet connection", "error");
     }

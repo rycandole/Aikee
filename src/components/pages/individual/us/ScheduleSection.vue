@@ -206,7 +206,6 @@
                                                 v-model:input="timeInput"
                                                 :RadioValue="`${row.time_slot}`"
                                             />
-                                            <!-- `${row.slot_acquired}` -->
                                     </div>
                                     
                                     <div class="col-12 pt-3">

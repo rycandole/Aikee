@@ -78,8 +78,8 @@ const mnl_lockedDates = [];
 const bgc_lockedDates = [];
 
 onMounted(async () => {
-    await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch('CA', 'MNL')
-    await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch('CA', 'BGC')
+    await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch('OT', 'MNL')
+    await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch('OT', 'BGC')
     handleSlots();
     handleDateTime();
     selectIsActive = false
@@ -114,7 +114,7 @@ watch(() => clinic_location.value, (newValue) => {
         mnl_lockedDates.push(new Date(holiday_mnl[a].preferred_date))
     }
     for (let a = 0; a <= full_dates_mnl.length - 1; a++) {
-        mnl_lockedDates.push(new Date(full_dates_mnl[a].preferred_date))
+        mnl_lockedDates.push(new Date(full_dates_mnl[a].PreferredMedicalExamDate))
     }
     // ======= Emd =============== //
 
@@ -123,7 +123,7 @@ watch(() => clinic_location.value, (newValue) => {
         bgc_lockedDates.push(new Date(holiday_bgc[a].preferred_date))
     }
     for (let a = 0; a <= full_dates_bgc.length - 1; a++) {
-        bgc_lockedDates.push(new Date(full_dates_bgc[a].preferred_date))
+        bgc_lockedDates.push(new Date(full_dates_bgc[a].PreferredMedicalExamDate))
     }
     // ======= Emd =============== //
 
@@ -270,26 +270,26 @@ const schema = yup.object().shape({
                   <hr />
                 </div>
                 <div v-for="(row, index) in timeSched" :key="index" class="col-12">
-                  <RadioBtnSched
-                    :RadioLabel="`${row.time_slot}`"
-                    :RadioLabelClass="
-                      `${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''
-                    "
-                    :StatusLabel="
-                      `${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'
-                    "
-                    :Slots="`${row.slot_limit}` > 0 ? `${row.slot_limit} slot` : ''"
-                    :spanClassName="
-                      `${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'
-                    "
-                    :inputId="
-                      `${row.slot_limit}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'
-                    "
-                    :radioBtnStatus="`${row.slot_limit}` > 0 ? false : true"
-                    RadioBtnName="timeInput"
-                    v-model:input="timeInput"
-                    :RadioValue="`${row.time_slot}`"
-                  />
+                      <RadioBtnSched
+                          :RadioLabel="`${row.time_slot}`"
+                          :RadioLabelClass="
+                            `${row.slot_limit}` <= 0 ? 'text-body-tertiary' : ''
+                          "
+                          :StatusLabel="
+                            `${row.slot_limit}` > 0 ? 'Available | ' : 'Not Available'
+                          "
+                          :Slots="`${row.slot_limit}` > 0 ? `${row.slot_limit} slot` : ''"
+                          :spanClassName="
+                            `${row.slot_limit}` > 0 ? 'text-success' : 'text-danger'
+                          "
+                          :inputId="
+                            `${row.slot_limit}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'
+                          "
+                          :radioBtnStatus="`${row.slot_limit}` > 0 ? false : true"
+                          RadioBtnName="timeInput"
+                          v-model:input="timeInput"
+                          :RadioValue="`${row.time_slot}`"
+                      />
                 </div>
 
                 <div class="col-12 pt-3">

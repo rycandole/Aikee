@@ -63,10 +63,6 @@
                                 ['Bonifacio Global City', 'BGC']
                                 ])
 
-    const mnl_lockedDates = [];  
-    const bgc_lockedDates = [];
-
-
     onMounted(async () => {
         await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch('AU', 'MNL')
         await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch('AU', 'BGC')
@@ -80,10 +76,10 @@
     watch(() => clinic_location.value, (newValue) => {
         newValue = clinic_code.get(newValue)
         
-        if (newValue == 'MNL') {
+        if (newValue === 'MNL') {
             branch = newValue
             hasBranch = false
-        } else if (newValue == 'BGC') { 
+        } else if (newValue === 'BGC') { 
             branch = newValue
             hasBranch = false
         } else {
@@ -100,12 +96,15 @@
     const full_dates_mnl = TRIPLETS_MNL_Holidates.full_dates
     const full_dates_bgc = TRIPLETS_BGC_Holidates.full_dates
 
+    const mnl_lockedDates = [];  
+    const bgc_lockedDates = [];
+
     // Fetch Holidays on MNL branch
     for (let a = 0; a <= holiday_mnl.length - 1; a++) {
         mnl_lockedDates.push(new Date(holiday_mnl[a].preferred_date))
     }
     for (let a = 0; a <= full_dates_mnl.length - 1; a++) {
-        mnl_lockedDates.push(new Date(full_dates_mnl[a].preferred_date))
+        mnl_lockedDates.push(new Date(full_dates_mnl[a].PreferredMedicalExamDate))
     }
     // ======= Emd =============== //
 
@@ -114,7 +113,7 @@
         bgc_lockedDates.push(new Date(holiday_bgc[a].preferred_date))
     }
     for (let a = 0; a <= full_dates_bgc.length - 1; a++) {
-        bgc_lockedDates.push(new Date(full_dates_bgc[a].preferred_date))
+        bgc_lockedDates.push(new Date(full_dates_bgc[a].PreferredMedicalExamDate))
     }
     // ======= Emd =============== //
 
@@ -240,7 +239,6 @@
                 <FormHeader
                     headerText="Medical Examination Schedule"
                 />
-                {{ branch }}
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="row">
@@ -259,7 +257,7 @@
                             <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
                                 <InlineDatePicker 
                                     label="Preferred Date"
-                                    :disabledDate="branch == 'MNL' ? disableState_MNL.disabledDates : disableState_BGC.disabledDates"
+                                    :disabledDate="branch === 'MNL' ? disableState_MNL.disabledDates : disableState_BGC.disabledDates"
                                     v-model:input="dateInput"
                                     :onChange="handleSlots"
                                 />

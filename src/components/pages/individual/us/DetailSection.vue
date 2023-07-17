@@ -18,6 +18,7 @@
     import InputField from '@/components/global/InputField.vue'
     import RadioButton from '@/components/global/RadioButtton.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
+    import TimerAlertBox from '@/components/global/TimerAlertBox.vue'
     import Swal from '@/sweetalert2'
     import { ErrorMessage } from 'vee-validate'
     import moment from 'moment'
@@ -528,6 +529,9 @@
                         <!-- Main Container -->
     <!-- ============================================================== -->
     <div class="wrapper_container row bg-white border">
+        <div class="col-12">
+            <TimerAlertBox />
+        </div>
         <div class="col-12 mb-5">
             <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration {{ isVaccinated }} </h1>
         </div>
