@@ -356,6 +356,7 @@ const handleBack = () => {
             <PreviewText
               previewLabel="Have you received your COVID-19 vaccine?"
               v-bind:previewText="detail_cv_received"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-3 col-12">
@@ -445,18 +446,21 @@ const handleBack = () => {
             <PreviewText
               previewLabel="Last Name"
               v-bind:previewText="detail_ad_last_name"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="First Name"
               v-bind:previewText="detail_ad_first_name"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Middle Name"
               v-bind:previewText="detail_ad_middle_name"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="col-12"><hr /></div>
@@ -480,6 +484,7 @@ const handleBack = () => {
             <PreviewText
               previewLabel="Birthplace"
               v-bind:previewText="detail_ad_birthplace"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
@@ -490,27 +495,32 @@ const handleBack = () => {
           </div>
           <div class="col-12"><hr /></div>
           <div class="col-12">
-            <div class="row mt-1 p-3">
+            <div class="row mt-1">
               <div class="col-12">
-                <label class="text-capitalize"> Mother's maiden name </label>
+                <label class="m-0 p-2 text-capitalize"> Mother's maiden name </label>
               </div>
               <div class="col-lg-4 col-md-12 col-sm-12">
                 <PreviewText
-                  previewLabel=""
                   v-bind:previewText="detail_ad_mother_last_name"
                   smallLabel="Last Name"
+                  previewClassName="text-capitalize"
+                  previewLabelClassName="d-none"
                 />
               </div>
               <div class="col-lg-4 col-md-12 col-sm-12">
                 <PreviewText
                   v-bind:previewText="detail_ad_mother_first_name"
                   smallLabel="First Name"
+                  previewClassName="text-capitalize"
+                  previewLabelClassName="d-none"
                 />
               </div>
               <div class="col-lg-4 col-md-12 col-sm-12">
                 <PreviewText
                   v-bind:previewText="detail_ad_mother_middle_name"
                   smallLabel="Middle Name"
+                  previewClassName="text-capitalize"
+                  previewLabelClassName="d-none"
                 />
               </div>
             </div>
@@ -527,16 +537,22 @@ const handleBack = () => {
             <PreviewText
               previewLabel="PHILIPPINE ADDRESS"
               v-bind:previewText="detail_ad_address"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
-            <PreviewText previewLabel="City/Town" v-bind:previewText="detail_ad_city" />
+            <PreviewText 
+              previewLabel="City/Town" 
+              v-bind:previewText="detail_ad_city"
+              previewClassName="text-capitalize"
+            />
           </div>
           <div class="col-12"><hr /></div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Province"
               v-bind:previewText="detail_ad_province"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
@@ -551,16 +567,18 @@ const handleBack = () => {
               FOR APPLICANTS CURRENTLY LIVING OUTSIDE THE PHILIPPINES:
             </h5>
           </div>
-          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Overseas Address"
               v-bind:previewText="detail_ad_overseas_country"
+              previewClassName="text-capitalize"
             />
           </div>
-          <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
+          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Street Address"
               v-bind:previewText="detail_ad_overseas_street_address"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="col-12"><hr /></div>
@@ -568,12 +586,14 @@ const handleBack = () => {
             <PreviewText
               previewLabel="City/Town"
               v-bind:previewText="detail_ad_overseas_city"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Province/State"
               v-bind:previewText="detail_ad_overseas_province"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-1 col-12">
@@ -610,13 +630,13 @@ const handleBack = () => {
           <div class="mb-3 mt-5 col-12">
             <SubFormHeader headerText="Passport Information" />
           </div>
-          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Passport Number"
               v-bind:previewText="detail_ad_passport_number"
             />
           </div>
-          <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
+          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Issued by (Country) "
               v-bind:previewText="detail_ad_passport_issued_by"
@@ -645,6 +665,7 @@ const handleBack = () => {
                 <PreviewText
                   previewLabel="Have you been issued a U.S. Tourist Visa?"
                   v-bind:previewText="detail_ad_has_been_issued_visa"
+                  previewClassName="text-capitalize"
                 />
               </div>
             </div>
@@ -697,6 +718,7 @@ const handleBack = () => {
             <PreviewText
               previewLabel="Name of Petitioner"
               v-bind:previewText="detail_petitioner_fullname"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="col-12"><hr /></div>
@@ -704,6 +726,7 @@ const handleBack = () => {
             <PreviewText
               previewLabel="Is the petitioner still alive?"
               v-bind:previewText="detail_petitioner_is_alive"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="col-12"><hr /></div>
@@ -718,12 +741,14 @@ const handleBack = () => {
             <PreviewText
               previewLabel="U.S. Address"
               v-bind:previewText="detail_petitioner_us_street_addr"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="City"
               v-bind:previewText="detail_petitioner_us_city_addr"
+              previewClassName="text-capitalize"
             />
           </div>
           <div class="col-12"><hr /></div>

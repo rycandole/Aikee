@@ -641,6 +641,7 @@ const moveBackSlot = async () => {
 </script>
 
 <template>
+<<<<<<< HEAD
   <!-- ============================================================== -->
   <!-- Main Container -->
   <!-- ============================================================== -->
@@ -654,6 +655,760 @@ const moveBackSlot = async () => {
         :className="textSuccess ? textSuccess : 'text-secondary'"
         :className1="textSuccess1 ? textSuccess1 : 'text-secondary'"
       />
+=======
+    <!-- ============================================================== -->
+                        <!-- Main Container -->
+    <!-- ============================================================== -->
+    <div class="wrapper_container row bg-white border">
+        <div class="col-12 mb-5">
+            <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration </h1>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12">
+            <SideNav 
+                :className="textSuccess ? textSuccess : 'text-secondary'"
+                :className1="textSuccess1 ? textSuccess1 : 'text-secondary'"
+            />
+        </div>
+         <!-- ============================================================== -->
+                            <!-- Main Container -->
+        <!-- ============================================================== -->
+        
+        <Form @submit="handleDetails" :validation-schema="schema"  class="col-lg-9 col-md-12 col-sm-12 mb-3">
+            <div class="col-12 mb-3">
+                <div class="card-body row">
+                    <div class="col-12">
+                        <span class="text-danger">Fields with asterisks(*) are required</span>
+                    </div>
+                    <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
+                        <DateField 
+                            label="Date of Birth"
+                            placeholder="Date of birth"
+                            color="red"
+                            :disabledDate="disableBirthdayState.disabledDates"
+                            v-model:input="date_of_birth"
+                            :isDisabled="radioDisabled"
+                            :onChange="alertChange"
+                            :error="(errors.json_date_of_birth) ? (errors.json_date_of_birth[0]) : ((inputName == 'json_date_of_birth') ? (inputError) : '')"
+                        />
+                    </div>
+                    <div class="mb-3 col-12" :hidden="covidHidden">
+                        <FormHeader
+                            headerText="COVID-19 VACCINE"
+                        />
+                    </div>
+                    <div class="mb-3 col-12" :hidden="covidHidden">
+                        <ol>
+                            <li>Have you received your COVID-19 vaccine?</li>
+                                <div class="row mt-4">
+                                    <div class="col-lg-2 col-md-2 col-sm-12">
+                                        <RadioButton 
+                                             RadioLabel="Yes"
+                                             RadioBtnName="cv_received"
+                                             RadioValue="yes"
+                                             v-model:input="cv_received"
+                                             :onChange="handleVaccine"
+                                        />
+                                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="cv_received" v-model.lazy="cv_received" value="yes" /><label for="">Yes</label> -->
+                                    </div>
+                                    <div class="col-lg-10 col-md-10 col-sm-12">
+                                        <RadioButton 
+                                             RadioLabel="No"
+                                             RadioBtnName="cv_received"
+                                             RadioValue="no"
+                                             v-model:input="cv_received"
+                                             :onChange="handleVaccine"
+                                        />
+                                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="cv_received" v-model.lazy="cv_received" value="no" /><label for="">No</label> -->
+                                    </div>
+                                    <div class="col-lg-10 col-md-10 col-sm-12">
+                                        <ErrorMessage name="cv_received" class="text-danger"/>
+                                    </div>
+                                    
+                                    <ol type="I" :hidden="is_cv_received">
+                                        <li class="col-lg-8 pr-5">
+                                            <RequiredSelectField 
+                                                label="Vaccine Brand Name"
+                                                FieldName="cv_brand_name"
+                                                ErrorName="cv_brand_name"
+                                                v-model:input="cv_brand_name"
+                                                :items="vaccine"
+                                                @change="changeVaccine"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5">
+                                            <DateField 
+                                                label="Vaccine Dose 1 Date Received"
+                                                color="red"
+                                                placeholder="Date Received"
+                                                :disabledDate="disableBirthdayState.disabledDates"
+                                                v-model:input="firstDose"
+                                                :onChange="showBooster1"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5" :hidden="vaccineHasTwo">
+                                            <DateField 
+                                                label="Vaccine Dose 2 Date Received"
+                                                color="red"
+                                                placeholder="Date Received"
+                                                :disabledDate="disableBirthdayState.disabledDates"
+                                                v-model:input="secondDose"
+                                                :onChange="showBooster1"
+                                            />
+                                           
+                                        </li>
+                                        <li class="col-lg-8 pr-5" :hidden="hideBooster1">
+                                            <hr/>
+                                            <SelectField 
+                                                label="Vaccine Booster 1 Brand Name"
+                                                FieldName="cv_booster1"
+                                                ErrorName="cv_booster1"
+                                                v-model:input="cv_booster1"
+                                                :items="vaccine"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5" :hidden="hideBooster1">
+                                            <DateField 
+                                                label="Vaccine Booster 1 Date Received"
+                                                requiredClass="d-none"
+                                                color="gray"
+                                                placeholder="Date Received"
+                                                :disabledDate="disableBirthdayState.disabledDates"
+                                                v-model:input="first_dose_booster"
+                                                :onChange="showBooster2"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5" :hidden="hideBooster2">
+                                            <hr/>
+                                            <SelectField 
+                                                label="Vaccine Booster 2 Brand Name"
+                                                FieldName="cv_booster2"
+                                                ErrorName="cv_booster2"
+                                                v-model:input="cv_booster2"
+                                                :items="vaccine"
+                                            />
+                                        </li>
+                                        <li class="col-lg-8 pr-5" :hidden="hideBooster2">
+                                            <DateField 
+                                                label="Vaccine Booster 2 Date Received"
+                                                requiredClass="d-none"
+                                                placeholder="Date Received"
+                                                color="gray"
+                                                :disabledDate="disableBirthdayState.disabledDates"
+                                                v-model:input="second_dose_booster"
+                                                :onChange="showBooster1"
+                                            />
+                                        </li>
+                                    </ol>
+                                   
+                                    <div class="mb-3 mt-3 col-12" :hidden="isVaccinated">
+                                        <CalloutDanger
+                                            headerTitle="Note"
+                                            :description="callout_message"
+                                        />
+                                    </div>
+                                </div>
+                        </ol>
+                    </div>
+                    
+                    <div class="mb-3 col-12">
+                        <FormHeader
+                            headerText="Case Information"
+                        />
+                    </div>
+        
+                    <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="NVC Case Number"
+                            type="text"
+                            FieldName="ci_nvc_number"
+                            ErrorName="ci_nvc_number"
+                            smallLabel="3-character Consulate Code+10-digit case number (ex. MNL##########)"
+                            v-model:input="ci_nvc_number"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Confirm NVC Case Number"
+                            type="text"
+                            FieldName="ci_nvc_confirm"
+                            ErrorName="ci_nvc_confirm"
+                            smallLabel="Please re-enter your NVC Case Number"
+                            v-model:input="ci_nvc_confirm"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Visa Preference Category"
+                            FieldName="ci_visa_pref_category"
+                            ErrorName="ci_visa_pref_category"
+                            v-model:input="ci_visa_pref_category"
+                            :items="visaCategories"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <DateField 
+                            label="Interview Date"
+                            requiredClass="d-none"
+                            placeholder="Interview Date"
+                            color="gray"
+                            v-model:input="ci_intervue_date"
+                            smallLabel="If none, leave blank'"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <SelectField 
+                            label="Interview Source"
+                            FieldName="ci_interview_source"
+                            ErrorName="ci_interview_source"
+                            v-model:input="ci_interview_source"
+                            :items="interviewSources"
+                        />
+                    </div>
+                    <div class="mb-3 mt-4 col-12">
+                        <FormHeader
+                            headerText="Applicant Details"
+                        />
+                        <SubFormHeader 
+                            headerText="Basic Information (as indicated in passport)"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Last Name"
+                            placeholder="Last Name"
+                            type="text"
+                            FieldName="ad_last_name"
+                            ErrorName="ad_last_name"
+                            v-model:input="ad_last_name"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="First Name"
+                            placeholder="First Name"
+                            type="text"
+                            FieldName="ad_first_name"
+                            ErrorName="ad_first_name"
+                            v-model:input="ad_first_name"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <InputField 
+                            label="Middle Name"
+                            placeholder="Middle Name"
+                            type="text"
+                            FieldName="ad_middle_name"
+                            ErrorName="ad_middle_name"
+                            v-model:input="ad_middle_name"
+                        />
+                    </div>
+                   <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Gender"
+                            FieldName="ad_gender"
+                            ErrorName="ad_gender"
+                            v-model:input="ad_gender"
+                            :items="genderOption"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Civil Status"
+                            FieldName="ad_civil_status"
+                            ErrorName="ad_civil_status"
+                            v-model:input="ad_civil_status"
+                            :items="civilStatus"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Country or Nationality"
+                            FieldName="ad_nationality"
+                            ErrorName="ad_nationality"
+                            v-model:input="ad_nationality"
+                            :items="countries"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Birthplace"
+                            placeholder="Birth City"
+                            smallLabel="Birth City"
+                            type="text"
+                            FieldName="ad_birthplace"
+                            ErrorName="ad_birthplace"
+                            v-model:input="ad_birthplace"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Country"
+                            smallLabel="Birth Country"
+                            FieldName="ad_birth_country"
+                            ErrorName="ad_birth_country"
+                            v-model:input="ad_birth_country"
+                            :items="countries"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Mother's maiden name"
+                            placeholder="Last Name"
+                            type="text"
+                            FieldName="ad_mother_last_name"
+                            ErrorName="ad_mother_last_name"
+                            smallLabel="Last Name"
+                            v-model:input="ad_mother_last_name"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            inputClassName="mt-2"
+                            starClassName="d-none"
+                            placeholder="First Name"
+                            type="text"
+                            FieldName="ad_mother_first_name"
+                            ErrorName="ad_mother_first_name"
+                            smallLabel="First Name"
+                            v-model:input="ad_mother_first_name"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <InputField 
+                            placeholder="Middle Name"
+                            type="text"
+                            smallLabel="Middle Name"
+                            FieldName="ad_mother_middle_name"
+                            ErrorName="ad_mother_middle_name"
+                            v-model:input="ad_mother_middle_name"
+                        />
+                    </div>
+                    <div class="mb-3 mt-5 col-12">
+                        <SubFormHeader 
+                            headerText="Contact Information"
+                        />
+                    </div>
+                    <div class="mb-1 mt-3 col-12">
+                        <h5 class="text-uppercase">FOR APPLICANTS CURRENTLY LIVING IN THE PHILIPPINES:</h5>
+                    </div>
+                    <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
+                        <InputField 
+                            label="PHILIPPINES ADDRESS"
+                            placeholder="Building Name and Street Address"
+                            type="text"
+                            FieldName="ad_address"
+                            ErrorName="ad_address"
+                            v-model:input="ad_address"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <InputField 
+                            placeholder="City/Town"
+                            type="text"
+                            FieldName="ad_city"
+                            ErrorName="ad_city"
+                            v-model:input="ad_city"
+                            
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <SelectField 
+                            label="Province"
+                            FieldName="ad_province"
+                            ErrorName="ad_province"
+                            v-model:input="ad_province"
+                            :items="philppineProvince"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <InputField 
+                            placeholder="Zip Code"
+                            type="text"
+                            FieldName="ad_zip_code"
+                            ErrorName="ad_zip_code"
+                            v-model:input="ad_zip_code"
+                        />
+                    </div>
+                   <div class="mb-1 mt-5 col-12">
+                        <h5 class="text-uppercase">FOR APPLICANTS CURRENTLY LIVING OUTSIDE THE PHILIPPINES:</h5>
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <SelectField 
+                            label="Overseas Address"
+                            FieldName="ad_overseas_country"
+                            ErrorName="ad_overseas_country"
+                            v-model:input="ad_overseas_country"
+                            :items="countries"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
+                        <InputField 
+                            placeholder="Street Address"
+                            type="text"
+                            FieldName="ad_overseas_street_address"
+                            ErrorName="ad_overseas_street_address"
+                            v-model:input="ad_overseas_street_address"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <InputField 
+                            placeholder="City/Town"
+                            type="text"
+                            FieldName="ad_overseas_city"
+                            ErrorName="ad_overseas_city"
+                            v-model:input="ad_overseas_city"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <InputField 
+                            placeholder="Province/State"
+                            type="text"
+                            FieldName="ad_overseas_province"
+                            ErrorName="ad_overseas_province"
+                            v-model:input="ad_overseas_province"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <InputField 
+                            placeholder="Zip Code"
+                            type="text"
+                            FieldName="ad_overseas_zipcode"
+                            ErrorName="ad_overseas_zipcode"
+                            v-model:input="ad_overseas_zipcode"
+                        />
+                    </div>
+                    <div class="col-12 mt-3 mb-1"><hr></div>
+                    
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Contact Number(s)"
+                            placeholder="Contact Number"
+                            type="text"
+                            FieldName="ad_contact_numbers"
+                            ErrorName="ad_contact_numbers"
+                            smallLabel="(Area Code)<space>Tel.Number."
+                            v-model:input="ad_contact_numbers"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label class="text-capitalize">
+                                Email Address
+                                </label>
+                            </div>
+                            <div class="col-12 input-group">
+                                <span class=" ml-3 fs-2 fw-normal">
+                                {{ email }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-3 mb-1"><hr></div>
+
+                   <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Present Country of Residence"
+                            FieldName="ad_present_residence"
+                            ErrorName="ad_present_residence"
+                            v-model:input="ad_present_residence"
+                            :items="countries"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Prior Country of Residence"
+                            FieldName="ad_prior_residence"
+                            ErrorName="ad_prior_residence"
+                            v-model:input="ad_prior_residence"
+                            :items="countries"
+                        />
+                    </div>
+                    <div class="mb-3 mt-5 col-12">
+                        <SubFormHeader 
+                            headerText="Passport Information"
+                        />
+                    </div>
+                     <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Passport Number"
+                            placeholder="Passport Number"
+                            type="text"
+                            FieldName="ad_passport_number"
+                            ErrorName="ad_passport_number"
+                            v-model:input="ad_passport_number"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Issued by (Country) "
+                            FieldName="ad_passport_issued_by"
+                            ErrorName="ad_passport_issued_by"
+                            v-model:input="ad_passport_issued_by"
+                            :items="countries"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <DateField 
+                            label="Issue Date"
+                            placeholder="Issue Date"
+                            color="red"
+                            :disabledDate="disableFutureDateState.disabledDates"
+                            v-model:input="add_passport_date"
+                            :error="(errors.json_ad_passport_date) ? (errors.json_ad_passport_date[0]) : ((inputName == 'json_ad_passport_date') ? (inputError) : '')"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <DateField 
+                            label="Expiration Date"
+                            placeholder="Expiration Date"
+                            color="red"
+                            :disabledDate="disablePastDateState.disabledDates"
+                            v-model:input="add_passport_expiration_date"
+                            :error="(errors.json_ad_passport_expiration_date) ? (errors.json_ad_passport_expiration_date[0]) : ((inputName == 'json_ad_passport_expiration_date') ? (inputError) : '')"
+                        />
+                    </div>
+                    <div class="mb-3 mt-5 col-12">
+                        <SubFormHeader 
+                            headerText="Additional Questions"
+                        />
+                    </div>
+                    <div class="mb-1 col-12">
+                       <div class="row">
+                            <div class="col-12">
+                                <label class="text-capitalize" >
+                                    Have you been issued a U.S. Tourist Visa? <b class="text-danger">*</b>
+                                </label>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-12 pl-4">
+                                <RadioButton 
+                                        RadioLabel="Yes"
+                                        RadioBtnName="ad_has_been_issued_visa"
+                                        RadioValue="yes"
+                                        v-model:input="ad_has_been_issued_visa"
+                                        :onChange="hasVisa"
+                                />
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
+                                <RadioButton 
+                                        RadioLabel="No"
+                                        RadioBtnName="ad_has_been_issued_visa"
+                                        RadioValue="no"
+                                        v-model:input="ad_has_been_issued_visa"
+                                        :onChange="hasVisa"
+                                />
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
+                                <ErrorMessage name="ad_has_been_issued_visa" class="text-danger"/>
+                            </div>
+                       </div>
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
+                        <DateField 
+                            label="Issuance Date"
+                            requiredClass="d-none"
+                            placeholder="Issuance Date"
+                            color="gray"
+                            :disabledDate="disableFutureDateState.disabledDates"
+                            v-model:input="add_issuance_date"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
+                        <DateField 
+                            label="Expiration Date"
+                            requiredClass="d-none"
+                            placeholder="Expiration Date"
+                            color="gray"
+                            v-model:input="add_expiration_date"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <SelectField 
+                            label="Previous Medical Examination at SLEC"
+                            smallLabel="Month"
+                            FieldName="ad_prev_medical_exam_month"
+                            ErrorName="ad_prev_medical_exam_month"
+                            v-model:input="ad_prev_medical_exam_month"
+                            :items="months"
+                            @change="handleVaccine"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <SelectField 
+                            smallLabel="Year"
+                            FieldName="ad_prev_medical_exam_year"
+                            ErrorName="ad_prev_medical_exam_year"
+                            v-model:input="ad_prev_medical_exam_year"
+                            :items="years"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <SelectField 
+                            label="Date of previous Chest X-Ray"
+                            smallLabel="Month"
+                            FieldName="ad_prev_xray_month"
+                            ErrorName="ad_prev_xray_month"
+                            v-model:input="ad_prev_xray_month"
+                            :items="months"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <SelectField 
+                            smallLabel="Year"
+                            FieldName="ad_prev_xray_year"
+                            ErrorName="ad_prev_xray_year"
+                            v-model:input="ad_prev_xray_year"
+                            :items="years"
+                        />
+                    </div>
+                    <div class="mt-3 mb-4 col-12">
+                        <FormHeader
+                            headerText="Petitioner's Information"
+                        />
+                    </div>
+                    <div class="mb-1 col-12">
+                        <RequiredInputField 
+                            label="Name of Petitioner"
+                            placeholder="Enter Full Name"
+                            type="text"
+                            FieldName="petitioner_fullname"
+                            ErrorName="petitioner_fullname"
+                            smallLabel="(Area Code)<space>Tel.Number."
+                            v-model:input="petitioner_fullname"
+                        />
+                    </div>
+
+                    <div class="mb-1 col-12 pt-3 pb-2">
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="text-capitalize" >
+                                    Is the petitioner still alive? <b class="text-danger">*</b>
+                                </label>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-12 pl-4">
+                                <RadioButton 
+                                        RadioLabel="Yes"
+                                        RadioBtnName="petitioner_is_alive"
+                                        RadioValue="yes"
+                                        v-model:input="petitioner_is_alive"
+                                />
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
+                                <RadioButton 
+                                        RadioLabel="No"
+                                        RadioBtnName="petitioner_is_alive"
+                                        RadioValue="no"
+                                        v-model:input="petitioner_is_alive"
+                                />
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
+                                <ErrorMessage name="petitioner_is_alive" class="text-danger"/>
+                            </div>
+                       </div>
+                    </div>
+                    
+                    <div class="mb-1 col-lg-8 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Relationship"
+                            FieldName="petitioner_relationship"
+                            ErrorName="petitioner_relationship"
+                            v-model:input="petitioner_relationship"
+                            :items="relationship"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="U.S. Address"
+                            type="text"
+                            FieldName="petitioner_us_street_addr"
+                            ErrorName="petitioner_us_street_addr"
+                            smallLabel="Street Address"
+                            v-model:input="petitioner_us_street_addr"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="City"
+                            FieldName="petitioner_us_city_addr"
+                            ErrorName="petitioner_us_city_addr"
+                            type="text"
+                            smallLabel="City"
+                            v-model:input="petitioner_us_city_addr"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="State"
+                            FieldName="petitioner_us_state_addr"
+                            ErrorName="petitioner_us_state_addr"
+                            v-model:input="petitioner_us_state_addr"
+                            :items="states"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Postal Code"
+                            placeholder="Enter postal code"
+                            type="text"
+                            FieldName="petitioner_us_postal_code"
+                            ErrorName="petitioner_us_postal_code"
+                            v-model:input="petitioner_us_postal_code"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Contact Number"
+                            placeholder="Enter postal code"
+                            type="text"
+                            FieldName="petitioner_contact_no"
+                            ErrorName="petitioner_contact_no"
+                            v-model:input="petitioner_contact_no"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="Email Address"
+                            placeholder="Enter postal code"
+                            type="text"
+                            FieldName="petitioner_email_addr"
+                            ErrorName="petitioner_email_addr"
+                            v-model:input="petitioner_email_addr"
+                        />
+                    </div>
+                    <div class="mb-1 col-lg-10 col-md-12 col-sm-12">
+                        <RequiredSelectField 
+                            label="Intended Port of Entry"
+                            FieldName="intended_port_of_entry"
+                            ErrorName="intended_port_of_entry"
+                            v-model:input="intended_port_of_entry"
+                            :items="states"
+                        />
+                    </div>    
+                </div>    
+            </div> 
+
+            <!-- <div class="col-lg-3 col-md-12 col-sm-12"></div> -->
+            <div class="col-12 mt-4 d-flex justify-content-center">
+                <SubmitFormButton 
+                    btnType="button"
+                    className="btn btn-secondary w-25 mr-5"
+                    btnText="Back"
+                    @click="handleBack"
+                />
+                <SubmitFormButton 
+                    btnType="submit"
+                    className="btn btn-primary w-25"
+                    btnText="Preview"
+                />
+            </div>
+        </Form>
+        <!-- ============================================================== -->
+                            <!-- End of Main Container -->
+        <!-- ============================================================== -->
+        
+        
+>>>>>>> c40582166904860d0825717347a187f3208e7d8a
     </div>
     <!-- ============================================================== -->
     <!-- Main Container -->
@@ -1403,6 +2158,7 @@ const moveBackSlot = async () => {
 </template>
 
 <style lang="scss">
+
 .wrapper_container {
   margin: 0;
   margin-top: 1rem;

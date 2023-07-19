@@ -16,7 +16,7 @@ const { headerText } = toRefs(props)
 <template>
     <div class="d-flex flex-column">
         <div class="p-2 sub_form_header">
-            <span class="text-center text-capitalize text-secondary float-left ml-1">
+            <span class="text-center text-capitalize text-dark font-weight-bold float-left ml-1">
                 {{ headerText }}
             </span>
         </div>
@@ -25,7 +25,8 @@ const { headerText } = toRefs(props)
 
 <style lang="scss">
 .sub_form_header {
-    background: #eeeff0;
+    background: #cdcdcd;
+    font-size: 18px;
 }
 
 @media only screen and (min-width: 768px) {
