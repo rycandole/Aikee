@@ -6,7 +6,8 @@ export const useUSIndividualSched = defineStore('us-individual-sched', {
     branch: null,
     country: null,
     date: null,
-    time: null
+    time: null,
+    timer: null
   }),
   actions: {
     setUSIndividualSched(res) {
@@ -16,12 +17,14 @@ export const useUSIndividualSched = defineStore('us-individual-sched', {
         this.$state.country = jsonPARSE.country
         this.$state.date = jsonPARSE.date
         this.$state.time = jsonPARSE.time
+        this.$state.timer = jsonPARSE.timer
     },
     clearUSIndividualSched() {
       this.$state.branch = null,
       this.$state.country = null,
       this.$state.date = null,
-      this.$state.time = null
+      this.$state.time = null,
+      this.$state.timer = null
     }
   },
   persist: true

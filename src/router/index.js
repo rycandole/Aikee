@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/store/user-store'
 
 // =============== Parent - View Import ==================== //
+import TestView from '@/views/TestView.vue'
 import HomeView from '@/views/HomeView.vue'
 import ApplicationView from '@/views/ApplicationView.vue'
 import ProfileView from '@/views/ProfileView.vue'
@@ -91,6 +92,11 @@ const routes = [
     path: '/:pathmatch(.*)*',
     name: 'Not Found',
     component: NotFoundView
+  },
+  {
+    path: '/test',
+    name: 'TestView',
+    component: TestView
   },
   {
     path: '',
