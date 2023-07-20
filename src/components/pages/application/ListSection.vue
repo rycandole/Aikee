@@ -47,6 +47,9 @@ const re_sendEmail = async (id) => {
       /* Read more about isConfirmed, isDenied below */
       let res = axios.post("re-send-email-us/", JSONdata);
 
+      console.log(res.data.id)
+      // alert(res.data.result)
+
       const results = async () => {
         const a = await res;
 
