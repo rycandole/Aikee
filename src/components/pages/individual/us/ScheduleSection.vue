@@ -144,7 +144,6 @@ const schema = yup.object().shape({
 </script>
 
 <template>
-<<<<<<< HEAD
   <!-- ============================================================== -->
   <!-- Main Container -->
   <!-- ============================================================== -->
@@ -156,75 +155,6 @@ const schema = yup.object().shape({
     <div class="col-lg-12 col-md-12 col-12">
       <h1 class="text-secondary text-center fs-1 fw-bold">U.S.A. Online Registration</h1>
     </div>
-=======
-    <!-- ============================================================== -->
-                        <!-- Main Container -->
-    <!-- ============================================================== -->
-    <Form @submit="handleDateTime" :validation-schema="schema" class="wrapper_container row bg-white border">
-       
-        <div class="col-lg-12 col-md-12 col-12">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >U.S.A. Online Registration</h1>
-        </div>
-        
-            <div class="col-lg-3 col-md-12 col-sm-12">
-                <SideNav 
-                    :className="textSuccess ? textSuccess : 'text-secondary'"
-                     className1="text-secondary"
-                     className2="text-secondary"
-                />
-            </div>
-       
-          <div class="col-lg-9 col-md-12 col-sm-12 mb-3 max-width-75">
-                <FormHeader
-                    headerText="Medical Examination Schedule"
-                />
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <InlineDatePicker 
-                                    label="Preferred Date"
-                                    :disabledDate="disableState.disabledDates"
-                                    v-model:input="dateInput"
-                                    :onChange="handleSlots"
-                                />
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="row">
-                                    <div class="col-12 mt-3">
-                                        <label class="text-capitalize text-dark">
-                                            Preferred Time <b class="text-danger p-1">*</b>
-                                        </label>
-                                        <br/><hr/> 
-                                    </div>
-                                    <div v-for="(row, index) in timeSched" :key="index" class="col-12">
-                                           <RadioBtnSched
-                                                :RadioLabel="`${row.time_slot}`"
-                                                :RadioLabelClass="`${row.slot_limit - row.slot_acquired}` <= 0 ? 'text-body-tertiary' : ''"
-                                                :StatusLabel="`${row.slot_limit - row.slot_acquired}` > 0 ? 'Available | ' : 'Not Available'"
-                                                :Slots="`${row.slot_limit - row.slot_acquired}` <= 1 ?`${row.slot_limit - row.slot_acquired} slot` : `${row.slot_limit - row.slot_acquired} slots`" 
-                                                :spanClassName="`${row.slot_limit - row.slot_acquired}` > 0 ? 'text-success' : 'text-danger'"
-                                                :inputId="`${row.slot_limit - row.slot_acquired}` < 0 ? 'flexRadioDefault1' : 'flexRadioDisabled'"
-                                                :radioBtnStatus="`${row.slot_limit - row.slot_acquired}` > 0 ? false : true"
-                                                RadioBtnName="timeInput"
-                                                v-model:input="timeInput"
-                                                :RadioValue="`${row.time_slot}`"
-                                            />
-                                            <!-- `${row.slot_acquired}` -->
-                                    </div>
-                                    
-                                    <div class="col-12 pt-3">
-                                        <ErrorMessage name="timeInput" class="text-danger ml-5 pl-3 pt-3"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="col-lg-3 col-md-12 col-sm-12"></div>
->>>>>>> c40582166904860d0825717347a187f3208e7d8a
 
     <div class="col-lg-3 col-md-12 col-sm-12">
       <SideNav
@@ -250,7 +180,9 @@ const schema = yup.object().shape({
             <div class="col-lg-6 col-md-6 col-sm-12">
               <div class="row">
                 <div class="col-12 mt-3">
-                  <label class="text-capitalize text-dark"> Preferred Time </label>
+                  <label class="text-capitalize text-dark">
+                    Preferred Time <b class="text-danger p-1">*</b>
+                  </label>
                   <br />
                   <hr />
                 </div>
@@ -289,6 +221,7 @@ const schema = yup.object().shape({
                     v-model:input="timeInput"
                     :RadioValue="`${row.time_slot}`"
                   />
+                  <!-- `${row.slot_acquired}` -->
                 </div>
 
                 <div class="col-12 pt-3">
