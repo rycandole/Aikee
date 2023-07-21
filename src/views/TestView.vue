@@ -96,3 +96,13 @@ schema.validate({ phone1: "", phone2: "", phone3: "" }).catch(function (err) {
     </Form>
   </div>
 </template>
+
+<!-- 
+Links
+https://docs.google.com/document/d/1P0WVT5iGBRxnQNjDTDb8DVkXMW027JNn/edit?usp=sharing&ouid=112065918962317465179&rtpof=true&sd=true
+https://docs.google.com/spreadsheets/d/1ZAJ-Ye0LzQyJNY2p-7ENByPvpJaj-id9euV39ZUP_Qs/edit?usp=sharing
+https://docs.google.com/document/d/1GOUagcreWRd-F7FB4i6Okte7aVinhhWQ9QAq3-FwxXo/edit?usp=sharing
+https://docs.google.com/document/d/1WDJBVIYwDvHLfpbua4IUTAOjuoNL9MKVAkZ1TebuPVs/edit?usp=sharing
+https://docs.google.com/document/d/1KhVENFlWk-__RApvBL5D6fTbfw401-gL87U88gBZJ-A/edit
+https://stackoverflow.com/questions/54919228/conditional-validation-with-yup-and-formik
+ -->
