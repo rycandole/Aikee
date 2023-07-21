@@ -66,7 +66,7 @@ const registrationTimer = () => {
 
           US_IndividualSched.setUSIndividualSched(res);
 
-          // location.reload();
+          location.reload();
 
           Swal.fire({
             icon: "success",

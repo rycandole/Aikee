@@ -670,6 +670,7 @@ const moveBackSlot = async () => {
           </div>
           <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
             <DateField
+              idName="DOB"
               label="Date of Birth"
               placeholder="Date of birth"
               color="red"
@@ -1173,6 +1174,7 @@ const moveBackSlot = async () => {
               </div>
               <div class="col-lg-2 col-md-2 col-sm-12 pl-4">
                 <RadioButton
+                  idName="hasBeenIssuedData"
                   RadioLabel="Yes"
                   RadioBtnName="ad_has_been_issued_visa"
                   RadioValue="yes"
@@ -1182,6 +1184,7 @@ const moveBackSlot = async () => {
               </div>
               <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
                 <RadioButton
+                  idName="hasBeenIssuedData"
                   RadioLabel="No"
                   RadioBtnName="ad_has_been_issued_visa"
                   RadioValue="no"
