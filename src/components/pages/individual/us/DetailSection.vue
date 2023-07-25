@@ -19,7 +19,7 @@ import InputField from "@/components/global/InputField.vue";
 import RadioButton from "@/components/global/RadioButtton.vue";
 import SideNav from "@/components/pages/individual/includes/SideNav.vue";
 import Swal from "@/sweetalert2";
-import { ErrorMessage } from "vee-validate";
+import { Field, ErrorMessage } from "vee-validate";
 import moment from "moment";
 import * as yup from "yup";
 
@@ -51,6 +51,10 @@ let textSuccess = "text-success";
 let textSuccess1 = "text-success";
 
 let date_of_birth = ref(null);
+let validate_date_of_birth = ref(null)
+let validate_first_dose = ref(null)
+let validate_second_dose = ref(null)
+let date_boolean = true;
 let is_cv_received = true;
 let cv_received = ref(null);
 let firstDose = ref(null);
@@ -61,6 +65,7 @@ let vaccineHasTwo = true;
 let hideBooster1 = true;
 let hideBooster2 = true;
 let cv_brand_name = ref(null);
+let cv_brand_name_boolean = true;
 let cv_booster1 = ref(null);
 let first_dose_booster = ref(null);
 let cv_booster2 = ref(null);
@@ -209,6 +214,7 @@ onMounted(async () => {
 
 const alertChange = () => {
   let birthDate = new Date(date_of_birth.value);
+  validate_date_of_birth.value = new Date(date_of_birth.value);
   let today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
   var month = today.getMonth() - birthDate.getMonth();
@@ -224,6 +230,7 @@ const alertChange = () => {
   } else {
     covidHidden = true;
   }
+  date_boolean = covidHidden;
 };
 
 const handleVaccine = () => {
@@ -247,6 +254,7 @@ const changeVaccine = () => {
   } else {
     vaccineHasTwo = false;
   }
+  cv_brand_name_boolean = vaccineHasTwo
 };
 
 const showBooster1 = () => {
@@ -254,6 +262,7 @@ const showBooster1 = () => {
     hideBooster1 = true;
   } else if (cv_brand_name.value == "Janssen / J&J" && firstDose.value != null) {
     hideBooster1 = false;
+    validate_first_dose.value = firstDose.value
   } else if (
     (cv_brand_name.value != "Janssen / J&J" && firstDose.value == null) ||
     secondDose.value == null
@@ -261,6 +270,8 @@ const showBooster1 = () => {
     hideBooster1 = true;
   } else {
     hideBooster1 = false;
+    validate_first_dose.value = firstDose.value
+    validate_second_dose.value = secondDose.value
   }
 };
 
@@ -283,10 +294,31 @@ const hasVisa = () => {
 };
 
 // required('Please choose vaccine brand name')
-
 const schema = yup.object().shape({
-  cv_received: yup.string().required("This field is required, please choose an option!"),
-  cv_brand_name: yup.string().required("Please choose vaccine brand name"),
+  validate_date_of_birth: yup.string().required("Date of birth is required!"),
+  date_boolean: yup.string(),
+  cv_received: yup.string().when('date_boolean', {
+    is: 'false',
+    then: (schema) => schema.required("This field is required, please choose an option!"),
+    otherwise: (schema) => schema.nullable()
+  }),
+  cvReceivedBoolean: yup.string(),
+  cv_brand_name: yup.string().when('cvReceivedBoolean', {
+    is: 'false',
+    then: (schema) => schema.required("Please choose vaccine brand name"),
+    otherwise: (schema) => schema.nullable()
+  }),
+  cv_brand_name_boolean: yup.string(),
+  cv_date_01: yup.string().when('cvReceivedBoolean', {
+    is: 'false',
+    then: (schema) => schema.required("Please choose date received"),
+    otherwise: (schema) => schema.nullable()
+  }),
+  cv_date_02: yup.string().when('cv_brand_name_boolean', {
+    is: 'false',
+    then: (schema) => schema.required("Please choose date received"),
+    otherwise: (schema) => schema.nullable()
+  }),
   cv_booster1: yup.string(),
   cv_booster2: yup.string(),
   ci_nvc_number: yup
@@ -308,7 +340,7 @@ const schema = yup.object().shape({
       "Please avoid using spaces and special characters ex: !@#$%^"
     )
     .oneOf([yup.ref("ci_nvc_number")], "NVC Case Number do not match"),
-  // ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
+  ci_interview_date: yup.string().required(),
   ci_visa_pref_category: yup.string().required("Interview date is required!"),
   ci_interview_source: yup.string().nullable(),
   ad_last_name: yup
@@ -376,12 +408,12 @@ const schema = yup.object().shape({
     .string()
     .nullable()
     .optional()
-    .min(5, "City must be atleast 5 characters"),
+    .min(4, "City must be atleast 5 characters"),
   ad_overseas_province: yup
     .string()
     .nullable()
     .optional()
-    .min(5, "Province must be atleast 5 characters"),
+    .min(4, "Province must be atleast 5 characters"),
   ad_overseas_zipcode: yup
     .string()
     .nullable()
@@ -405,14 +437,23 @@ const schema = yup.object().shape({
     .required("Passport number is required!")
     .min(9, "Passport number must be at least 9 characters")
     .max(10, "Passport number must be at most 10 characters"),
-  ad_passport_issued_by: yup.string().required("Passport issued by is required!"),
-  // ad_passport_date: yup.date().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
-  // ad_passport_expiration_date: yup.date().required('Passport expiration date is required!').min(yup.ref('ad_passport_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_passport_date')], 'Expiration date must not be equal to the issuance date'),
+  // ad_passport_issued_by: yup.string().required("Passport issued by is required!"),
+  validate_add_passport_date: yup.string().required("Passport date is required!"),
+  validate_add_passport_expiration_date: yup.string().required("Passport expiration date is required!"),
   ad_has_been_issued_visa: yup
     .string()
     .required("This field is required, please choose an option"),
-  // ad_issuance_date: yup.date().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
-  // ad_expiration_date: yup.date().required("Expiration date is required").min(yup.ref('ad_issuance_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_issuance_date')], 'Expiration date must not be equal to the issuance date'),
+  issued_data_boolean: yup.string(),
+  validate_issuance_date: yup.string().when('issued_data_boolean', {
+    is: 'false',
+    then: (schema) => schema.required("Issuance date is required!"),
+    otherwise: (schema) => schema.nullable()
+  }),
+  validate_issuance_expiration_date: yup.string().when('issued_data_boolean', {
+    is: 'false',
+    then: (schema) => schema.required("Expiration date is required!"),
+    otherwise: (schema) => schema.nullable()
+  }),
   ad_prev_medical_exam_month: yup.string().nullable().optional(),
   ad_prev_medical_exam_year: yup.string().nullable().optional(),
   ad_prev_xray_month: yup.string().nullable().optional(),
@@ -442,8 +483,8 @@ const schema = yup.object().shape({
   petitioner_us_postal_code: yup
     .string()
     .required("Postal code is required!")
-    .min(5, "Postal code must be exactly 5 numbers")
-    .max(5, "Postal code must be exactly 5 numbers")
+    .min(4, "Postal code must be exactly 4 numbers")
+    .max(4, "Postal code must be exactly 4 numbers")
     .matches(numOnlyRegex, "Postal Code must be number only!"),
   petitioner_contact_no: yup
     .string()
@@ -491,6 +532,7 @@ const handleDetails = async (values) => {
     json_user_id: user_id,
     json_email: email,
     json_date_of_birth: birthDate,
+    json_covidHidden: covidHidden,
     json_cv_category: values.cv_category,
     json_cv_received: values.cv_received,
     json_is_cv_received: is_cv_received,
@@ -535,6 +577,7 @@ const handleDetails = async (values) => {
     json_ad_passport_date: ad_passport_date,
     json_ad_passport_expiration_date: ad_passport_expiration_date,
     json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
+    json_ad_showVisaDate: showVisaDate,
     json_ad_issuance_date: ad_issuance_date,
     json_ad_expiration_date: ad_expiration_date,
     json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
@@ -686,13 +729,26 @@ const moveBackSlot = async () => {
                   : ''
               "
             />
+            <Field
+              type="hidden"
+              name="validate_date_of_birth"
+              width="100px"
+              v-model="validate_date_of_birth"
+            />
+            <ErrorMessage name="validate_date_of_birth" class="text-danger pt-3 pl-3" />
+            <Field
+              type="hidden"
+              name="date_boolean"
+              v-model="date_boolean"
+              width="100px"
+            />
           </div>
           <div class="mb-3 col-12" :hidden="covidHidden">
             <FormHeader headerText="COVID-19 VACCINE" />
           </div>
           <div class="mb-3 col-12" :hidden="covidHidden">
             <ol>
-              <li>Have you received your COVID-19 vaccine?</li>
+              <li>Have you received your COVID-19 vaccine? <b class="text-danger">*</b></li>
               <div class="row mt-4">
                 <div class="col-lg-2 col-md-2 col-sm-12">
                   <RadioButton
@@ -702,7 +758,6 @@ const moveBackSlot = async () => {
                     v-model:input="cv_received"
                     :onChange="handleVaccine"
                   />
-                  <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="cv_received" v-model.lazy="cv_received" value="yes" /><label for="">Yes</label> -->
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-12">
                   <RadioButton
@@ -712,9 +767,14 @@ const moveBackSlot = async () => {
                     v-model:input="cv_received"
                     :onChange="handleVaccine"
                   />
-                  <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="cv_received" v-model.lazy="cv_received" value="no" /><label for="">No</label> -->
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-12">
+                  <Field
+                    type="hidden"
+                    name="cvReceivedBoolean"
+                    v-model="is_cv_received"
+                    width="100px"
+                  />
                   <ErrorMessage name="cv_received" class="text-danger" />
                 </div>
 
@@ -728,6 +788,12 @@ const moveBackSlot = async () => {
                       :items="vaccine"
                       @change="changeVaccine"
                     />
+                    <Field
+                      type="hidden"
+                      name="cv_brand_name_boolean"
+                      width="100px"
+                      v-model="cv_brand_name_boolean"
+                    />
                   </li>
                   <li class="col-lg-8 pr-5">
                     <DateField
@@ -738,6 +804,13 @@ const moveBackSlot = async () => {
                       v-model:input="firstDose"
                       :onChange="showBooster1"
                     />
+                    <Field
+                      type="hidden"
+                      name="cv_date_01"
+                      width="100px"
+                      v-model="validate_first_dose"
+                    />
+                    <ErrorMessage name="cv_date_01" class="text-danger" />
                   </li>
                   <li class="col-lg-8 pr-5" :hidden="vaccineHasTwo">
                     <DateField
@@ -748,6 +821,13 @@ const moveBackSlot = async () => {
                       v-model:input="secondDose"
                       :onChange="showBooster1"
                     />
+                    <Field
+                      type="hidden"
+                      name="cv_date_02"
+                      width="100px"
+                      v-model="validate_second_dose"
+                    />
+                    <ErrorMessage name="cv_date_02" class="text-danger" />
                   </li>
                   <li class="col-lg-8 pr-5" :hidden="hideBooster1">
                     <hr />
@@ -788,7 +868,6 @@ const moveBackSlot = async () => {
                       color="gray"
                       :disabledDate="disableBirthdayState.disabledDates"
                       v-model:input="second_dose_booster"
-                      :onChange="showBooster1"
                     />
                   </li>
                 </ol>
@@ -1145,6 +1224,13 @@ const moveBackSlot = async () => {
                   : ''
               "
             />
+            <Field
+              type="hidden"
+              name="validate_add_passport_date"
+              width="100px"
+              v-model="add_passport_date"
+            />
+            <ErrorMessage name="validate_add_passport_date" class="text-danger pt-3 pl-3" />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <DateField
@@ -1161,6 +1247,13 @@ const moveBackSlot = async () => {
                   : ''
               "
             />
+            <Field
+              type="hidden"
+              name="validate_add_passport_expiration_date"
+              width="100px"
+              v-model="add_passport_expiration_date"
+            />
+            <ErrorMessage name="validate_add_passport_expiration_date" class="text-danger pt-3 pl-3" />
           </div>
           <div class="mb-3 mt-5 col-12">
             <SubFormHeader headerText="Additional Questions" />
@@ -1191,6 +1284,12 @@ const moveBackSlot = async () => {
                   v-model:input="ad_has_been_issued_visa"
                   :onChange="hasVisa"
                 />
+                <Field
+                  type="hidden"
+                  name="issued_data_boolean"
+                  width="100px"
+                  v-model="showVisaDate"
+                />
               </div>
               <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
                 <ErrorMessage name="ad_has_been_issued_visa" class="text-danger" />
@@ -1206,6 +1305,13 @@ const moveBackSlot = async () => {
               :disabledDate="disableFutureDateState.disabledDates"
               v-model:input="add_issuance_date"
             />
+            <Field
+              type="hidden"
+              name="validate_issuance_date"
+              width="100px"
+              v-model="add_issuance_date"
+            />
+            <ErrorMessage name="validate_issuance_date" class="text-danger pt-3 pl-3" />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
             <DateField
@@ -1215,6 +1321,13 @@ const moveBackSlot = async () => {
               color="gray"
               v-model:input="add_expiration_date"
             />
+            <Field
+              type="hidden"
+              name="validate_issuance_expiration_date"
+              width="100px"
+              v-model="add_expiration_date"
+            />
+            <ErrorMessage name="validate_issuance_expiration_date" class="text-danger pt-3 pl-3" />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <SelectField

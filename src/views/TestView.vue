@@ -1,56 +1,36 @@
 <script setup>
 import { ref } from "vue";
 import { Form, Field, ErrorMessage } from "vee-validate";
+// import moment from "moment";
 import * as yup from "yup";
 
-let phone_1 = ref(null);
+const today = new Date();
+
+let date_1 = ref(null);
 let phone_2 = ref(null);
 let phone_3 = ref(null);
+// let gender = "boy";
+
 
 const handleDetails = () => {
-  alert(phone_1.value + " | " + phone_2.value + " | " + phone_3.value);
+  alert(date_1.value + " | " + phone_2.value + " | " + phone_3.value);
 };
 
-// const schema = yup.object().shape({
-//   memberType: yup.string().required(),
-//   phone1: yup.string().required(),
-//   phone2: yup
-//     .string()
-//     .trim()
-//     .when("memberType", {
-//       is: "individual",
-//       then: yup.string().required("Must enter phone number"),
-//     }),
-// });
 
-const schema = yup.object().shape(
-  {
-    phone1: yup.string().when(["phone2", "phone3"], {
-      is: (phone2, phone3) => !phone2 && !phone3,
-      then: yup.string().required("Please enter one of the three fields"),
-    }),
-    phone2: yup.string().when(["phone1", "phone3"], {
-      is: (phone1, phone3) => !phone1 && !phone3,
-      then: yup.string().required("Please enter one of the three fields"),
-    }),
-    phone3: yup.string().when(["phone1", "phone2"], {
-      is: (phone1, phone2) => !phone1 && !phone2,
-      then: yup.string().required("Please enter one of the three fields"),
-    }),
-  },
-  [
-    ["phone1", "phone2"],
-    ["phone1", "phone3"],
-    ["phone2", "phone3"],
-  ]
-);
-
-schema.validate({ phone1: "", phone2: "", phone3: "" }).catch(function (err) {
-  console.log(err.errors[0]);
+const schema = yup.object().shape({
+  boolean: yup.string(),
+  phone2: yup.string().when('date1', {
+    is: today,
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.nullable()
+  }),
+  phone3: yup.string().when('phone2', {
+    is: "girl" || "boy" || "gay" || "lesbian",
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.nullable()
+  })
 });
-// const schema = yup.object.shape({
-//   phone1: yup.string().required(),
-// });
+
 </script>
 <template>
   <div>
@@ -61,14 +41,14 @@ schema.validate({ phone1: "", phone2: "", phone3: "" }).catch(function (err) {
       class="col-lg-9 col-md-12 col-sm-12 mb-3"
     >
       <Field
-        type="text"
+        type="date"
         placeholder="Phone 1"
-        id="my_phone1"
-        name="phone1"
-        v-model="phone_1"
+        id="my_date1"
+        name="date1"
+        v-model="date_1"
         width="100px"
       /><br />
-      <ErrorMessage name="phone1" class="text-danger" /><br />
+      <ErrorMessage name="date1" class="text-danger" /><br />
 
       <Field
         type="text"

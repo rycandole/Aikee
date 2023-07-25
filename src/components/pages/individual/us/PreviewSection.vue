@@ -111,6 +111,7 @@ let sched_time = schedule.time;
 
 // Details Store
 let detail_date_of_birth = moment(details.date_of_birth).format("LL");
+let detail_covidHidden = details.covidHidden;
 let detail_cv_received = details.cv_received;
 let detail_cv_brand_name = details.cv_brand_name;
 let detail_firstDose = moment(details.firstDose).format("LL");
@@ -154,6 +155,7 @@ let detail_ad_passport_expiration_date = moment(
   details.ad_passport_expiration_date
 ).format("LL");
 let detail_ad_has_been_issued_visa = details.ad_has_been_issued_visa;
+let detail_ad_showVisaDate = details.ad_showVisaDate;
 let detail_ad_issuance_date = moment(details.ad_issuance_date).format("LL");
 let detail_ad_expiration_date = moment(details.ad_expiration_date).format("LL");
 let detail_ad_prev_medical_exam_month = details.ad_prev_medical_exam_month;
@@ -349,17 +351,17 @@ const handleBack = () => {
               v-bind:previewText="detail_date_of_birth"
             />
           </div>
-          <div class="mb-3 col-12">
+          <div :hidden="detail_covidHidden" class="mb-3 col-12">
             <FormHeader headerText="COVID-19 VACCINE" />
           </div>
-          <div class="mb-3 col-12">
+          <div :hidden="detail_covidHidden" class="mb-3 col-12">
             <PreviewText
               previewLabel="Have you received your COVID-19 vaccine?"
               v-bind:previewText="detail_cv_received"
               previewClassName="text-capitalize"
             />
           </div>
-          <div class="mb-3 col-12">
+          <div :hidden="detail_cv_received == 'no' ? true : false " class="mb-3 col-12">
             <ol type="I">
               <li>
                 <PreviewText
@@ -671,19 +673,19 @@ const handleBack = () => {
             </div>
           </div>
           <div class="col-12"><hr /></div>
-          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+          <div :hidden="detail_ad_showVisaDate" class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Issuance Date"
               v-bind:previewText="detail_ad_issuance_date"
             />
           </div>
-          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+          <div :hidden="detail_ad_showVisaDate" class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Expiration Date"
               v-bind:previewText="detail_ad_expiration_date"
             />
           </div>
-          <div class="col-12"><hr /></div>
+          <div :hidden="detail_ad_showVisaDate" class="col-12"><hr /></div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Previous Medical Examination at SLEC"

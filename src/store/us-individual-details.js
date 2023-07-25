@@ -6,6 +6,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
     user_id: null,
     email: null,
     date_of_birth: null,
+    covidHidden: null,
     cv_received: null,
     is_cv_received: null,
     cv_brand_name: null,
@@ -48,6 +49,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
     ad_passport_date: null,
     ad_passport_expiration_date: null,
     ad_has_been_issued_visa: null,
+    ad_showVisaDate: null,
     ad_issuance_date: null,
     ad_expiration_date: null,
     ad_prev_medical_exam_month: null,
@@ -72,6 +74,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.user_id = jsonPARSE.json_user_id
         this.$state.email = jsonPARSE.json_email
         this.$state.date_of_birth = jsonPARSE.json_date_of_birth
+        this.$state.covidHidden = jsonPARSE.json_covidHidden
         this.$state.cv_received = jsonPARSE.json_cv_received
         this.$state.is_cv_received = jsonPARSE.json_is_cv_received
         this.$state.vaccine_receive = jsonPARSE.json_vaccine_receive
@@ -115,6 +118,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.ad_passport_date = jsonPARSE.json_ad_passport_date
         this.$state.ad_passport_expiration_date = jsonPARSE.json_ad_passport_expiration_date
         this.$state.ad_has_been_issued_visa = jsonPARSE.json_ad_has_been_issued_visa
+        this.$state.ad_showVisaDate = jsonPARSE.json_ad_showVisaDate
         this.$state.ad_issuance_date = jsonPARSE.json_ad_issuance_date
         this.$state.ad_expiration_date = jsonPARSE.json_ad_expiration_date
         this.$state.ad_prev_medical_exam_month = jsonPARSE.json_ad_prev_medical_exam_month
@@ -136,6 +140,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.user_id = null,
         this.$state.email = null,
         this.$state.date_of_birth = null,
+        this.$state.covidHidden = null,
         this.$state.cv_received = null,
         this.$state.is_cv_received = null,
         this.$state.cv_brand_name = null,
@@ -183,6 +188,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.ad_passport_date = null,
         this.$state.ad_passport_expiration_date = null,
         this.$state.ad_has_been_issued_visa = null,
+        this.$state.ad_showVisaDate = null,
         this.$state.ad_issuance_date = null,
         this.$state.ad_expiration_date = null,
         this.$state.ad_prev_medical_exam_month = null,

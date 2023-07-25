@@ -36,6 +36,10 @@ onMounted(() => {
   registrationTimer();
 });
 
+// onUpdated(() => {
+//   console.log("Updated")
+// })
+
 const registrationTimer = () => {
   let timer = setInterval(() => {
     const timeNow = moment(new Date().getTime());
@@ -59,7 +63,7 @@ const registrationTimer = () => {
             country: useUSIndividualSched().country,
             date: useUSIndividualSched().date,
             time: useUSIndividualSched().time,
-            timer: moment(new Date().getTime()).add(5, "minutes"),
+            timer: moment(new Date().getTime()).add(10, "minutes"),
           };
 
           let res = JSON.stringify(requestPAYLOAD);
@@ -76,11 +80,19 @@ const registrationTimer = () => {
             timer: 2500,
           });
         } else if (result.isDenied) {
-          Swal.fire(
-            "Your registration is cancelled",
-            "The slot and details you input is gone",
-            "info"
-          );
+           Swal.fire({
+            icon: "info",
+            title: "Your registration is cancelled",
+            text: "Please finish the registration form",
+            showConfirmButton: false,
+            showCancelButton: false,
+            timer: 1000,
+          });
+          // Swal.fire(
+          //   "Your registration is cancelled",
+          //   "The slot and details you input is gone",
+          //   "info"
+          // );
           moveBackSlot();
         }
       });
