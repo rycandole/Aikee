@@ -111,7 +111,10 @@ let validate_add_passport_date = ref(null);
 let validate_passport_expiration_date = ref(null);
 let add_issuance_date = ref(null);
 let add_expiration_date = ref(null);
+let validate_issuance_date = ref(null);
+let validate_issuance_expiration_date = ref(null);
 let ad_has_been_issued_visa = ref(null);
+let ad_has_been_issued_visa_boolean = true;
 let ad_prev_medical_exam_month = ref(null);
 let ad_prev_medical_exam_year = ref(null);
 let ad_prev_xray_month = ref(null);
@@ -270,6 +273,13 @@ const handleVaccine = () => {
   }
 };
 
+const alertIssueVisa = () => {
+  validate_issuance_date.value = new Date(add_issuance_date.value)
+}
+const alertIssueVisaExpired = () => {
+  validate_issuance_expiration_date.value = new Date(add_expiration_date.value)
+}
+
 const changeVaccine = () => {
   switch (cv_brand_name.value) {
     case "":
@@ -413,9 +423,11 @@ const hasVisa = () => {
   if (ad_has_been_issued_visa.value == "yes") {
     showVisaDate = false;
     ad_has_been_issued_visa.value = 1;
+    ad_has_been_issued_visa_boolean = false
   } else {
     showVisaDate = true;
     ad_has_been_issued_visa.value = 0;
+    ad_has_been_issued_visa_boolean = true
   }
 };
 
@@ -573,6 +585,17 @@ const schema = yup.object().shape({
     .required("This field is required, please choose an option"),
   // ad_issuance_date: yup.date().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
   // ad_expiration_date: yup.date().required("Expiration date is required").min(yup.ref('ad_issuance_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_issuance_date')], 'Expiration date must not be equal to the issuance date'),
+  ad_has_been_issued_visa_boolean:yup.string(),
+  validate_issuance_date: yup.string().when('ad_has_been_issued_visa_boolean', {
+    is: 'false',
+    then: (schema) => schema.required("Issuance date required!"),
+    otherwise: (schema) => schema.nullable()
+  }),
+  validate_issuance_expiration_date: yup.string().when('ad_has_been_issued_visa_boolean', {
+    is: 'false',
+    then: (schema) => schema.required("Issuance expiration date required!"),
+    otherwise: (schema) => schema.nullable()
+  }),
   ad_prev_medical_exam_month: yup.string().nullable().optional(),
   ad_prev_medical_exam_year: yup.string().nullable().optional(),
   ad_prev_xray_month: yup.string().nullable().optional(),
@@ -602,8 +625,8 @@ const schema = yup.object().shape({
   petitioner_us_postal_code: yup
     .string()
     .required("Postal code is required!")
-    .min(5, "Postal code must be exactly 5 numbers")
-    .max(5, "Postal code must be exactly 5 numbers")
+    .min(4, "Postal code must be exactly 4 numbers")
+    .max(4, "Postal code must be exactly 4 numbers")
     .matches(numOnlyRegex, "Postal Code must be number only!"),
   petitioner_contact_no: yup
     .string()
@@ -1418,6 +1441,7 @@ const moveBackSlot = async () => {
                   :onChange="hasVisa"
                 />
               </div>
+              <Field type="hidden" name="ad_has_been_issued_visa_boolean" :value="ad_has_been_issued_visa_boolean" v-model="ad_has_been_issued_visa_boolean"/>
               <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
                 <ErrorMessage name="ad_has_been_issued_visa" class="text-danger" />
               </div>
@@ -1428,33 +1452,35 @@ const moveBackSlot = async () => {
               label="Issuance Date"
               requiredClass="d-none"
               placeholder="Issuance Date"
-              color="gray"
+              color="red"
               :disabledDate="disableFutureDateState.disabledDates"
               v-model:input="add_issuance_date"
+              :onChange="alertIssueVisa"
             />
             <Field
-              type="text"
-              name="validate_add_passport_date"
+              type="hidden"
+              name="validate_issuance_date"
               width="100px"
               v-model="validate_issuance_date"
             />
-            <ErrorMessage name="validate_add_passport_date" class="text-danger pt-3 pl-3" />
+            <ErrorMessage name="validate_issuance_date" class="text-danger pt-3 pl-3" />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
             <DateField
               label="Expiration Date"
               requiredClass="d-none"
               placeholder="Expiration Date"
-              color="gray"
+              color="red"
               v-model:input="add_expiration_date"
+              :onChange="alertIssueVisaExpired"
             />
             <Field
-              type="text"
-              name="validate_passport_expiration_date"
+              type="hidden"
+              name="validate_issuance_expiration_date"
               width="100px"
               v-model="validate_issuance_expiration_date"
             />
-            <ErrorMessage name="validate_passport_expiration_date" class="text-danger pt-3 pl-3" />
+            <ErrorMessage name="validate_issuance_expiration_date" class="text-danger pt-3 pl-3" />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <SelectField
