@@ -4,6 +4,7 @@ import { ref } from "@vue/reactivity";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { defineProps, toRefs } from "vue";
+// import { defineExpose } from  "vue";
 import { useUSIndividualSched } from "@/store/us-individual-sched";
 import { useUSIndividualDetails } from "@/store/us-individual-details";
 import moment from "moment";
@@ -27,10 +28,18 @@ const { divClassName } = toRefs(props);
 const schedule = JSON.parse(localStorage.getItem("us-individual-sched"));
 
 let sched_timer = schedule.timer;
+// let saveDetailsTrigger = ref(0)
+// let triggerInput = ref(null)
 
 const minutes = ref(0);
 const seconds = ref(0);
 const launchMinute = new Date(sched_timer);
+
+// triggerInput = saveDetailsTrigger
+
+// defineExpose({
+//   triggerInput,
+// })
 
 onMounted(() => {
   registrationTimer();
@@ -63,11 +72,11 @@ const registrationTimer = () => {
             country: useUSIndividualSched().country,
             date: useUSIndividualSched().date,
             time: useUSIndividualSched().time,
-            timer: moment(new Date().getTime()).add(10, "minutes"),
+            timer: moment(new Date().getTime()).add(5, "minutes"),
           };
 
           let res = JSON.stringify(requestPAYLOAD);
-
+          
           US_IndividualSched.setUSIndividualSched(res);
 
           location.reload();
@@ -143,3 +152,7 @@ const moveBackSlot = async () => {
   box-shadow: -3px 3px 10px 0 #b1b3b3;
 }
 </style>
+
+
+
+

@@ -10,6 +10,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
     dateBoolean: null,
     covidHidden: null,
     cv_received: null,
+    cv_received_boolean: null,
     is_cv_received: null,
     cv_brand_name_boolean: null,
     cv_brand_name_boolean_1: null,
@@ -86,6 +87,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.dateBoolean = jsonPARSE.json_dateBoolean
         this.$state.covidHidden = jsonPARSE.json_covidHidden
         this.$state.cv_received = jsonPARSE.json_cv_received
+        this.$state.cv_received_boolean = jsonPARSE.json_cv_received_boolean
         this.$state.is_cv_received = jsonPARSE.json_is_cv_received
         this.$state.cv_brand_name_boolean = jsonPARSE.json_cv_brand_name_boolean
         this.$state.cv_brand_name_boolean_1 = jsonPARSE.json_cv_brand_name_boolean_1
@@ -160,6 +162,7 @@ export const useUSIndividualDetails = defineStore('us-individual-details', {
         this.$state.dateBoolean = null,
         this.$state.covidHidden = null,
         this.$state.cv_received = null,
+        this.$state.cv_received_boolean = null,
         this.$state.is_cv_received = null,
         this.$state.cv_brand_name_boolean = null,
         this.$state.cv_brand_name_boolean_1 = null,

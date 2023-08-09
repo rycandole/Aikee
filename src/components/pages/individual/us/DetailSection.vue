@@ -2,6 +2,7 @@
 import axios from "axios";
 import { ref } from "vue";
 import { onMounted } from "vue";
+import { defineExpose } from  "vue";
 import { useRouter } from "vue-router";
 import { useProfileStore } from "@/store/profile-store";
 import { useUSIndividualSched } from "@/store/us-individual-sched";
@@ -150,13 +151,14 @@ onMounted(async () => {
   date_boolean = details.dateBoolean;
   covidHidden = details.covidHidden == null ? true : details.covidHidden;
   cv_received.value = details.cv_received || "";
+  cv_received_boolean = details.cv_received_boolean == false ? false : true;
   cv_brand_name.value = details.cv_brand_name || "";
-  // cv_brand_name_boolean.value = details.cv_brand_name_boolean || "";
-  // cv_brand_name_boolean_1.value = details.cv_brand_name_boolean_1 || "";
+  cv_brand_name_boolean = details.cv_brand_name_boolean;
+  cv_brand_name_boolean_1 = details.cv_brand_name_boolean_1;
   firstDose.value = details.firstDose || "";
-  validate_first_dose.value = details.validate_first_dose || "";
+  validate_first_dose.value = details.validate_first_dose == "Invalid date" ? "" : details.validate_first_dose || "";
   secondDose.value = details.secondDose || "";
-  validate_second_dose.value = details.validate_second_dose || "";
+  validate_second_dose.value = details.validate_second_dose == "Invalid date" ? "" : details.validate_second_dose || "";
   cv_booster1.value = details.cv_booster1 || "";
   first_dose_booster.value = details.first_doseBooster || "";
   cv_booster2.value = details.cv_booster2 || "";
@@ -228,7 +230,12 @@ onMounted(async () => {
   ad_has_been_issued_visa.value === "yes"
     ? (showVisaDate = false)
     : (showVisaDate = true);
+  
 });
+
+
+// Expose String, Objects, Methods on parent component
+
 
 const alertChange = () => {
   let birthDate = new Date(date_of_birth.value);
@@ -243,12 +250,31 @@ const alertChange = () => {
 
   if (age <= 4) {
     covidHidden = true;
+    cv_received.value = ""
+    cv_received_boolean = true;
+    is_cv_received = true
+    cv_brand_name.value = ""
+    cv_brand_name_boolean = true
+    cv_brand_name_boolean_1 = true
+    noVaccine = true
+    vaccineHasOne = true
+    firstDose.value = ""
+    secondDose.value = ""
+    validate_first_dose.value = ""
+    validate_second_dose.value = ""
+    hideBooster1 = true
+    hideBooster2 = true
+    cv_brand_name_boolean = true
+    cv_brand_name_boolean_1 = true
+    
   } else if (age > 4) {
     covidHidden = false;
+    cv_received_boolean = false;
   } else {
     covidHidden = true;
   }
   date_boolean = covidHidden;
+  
 };
 
 const alertPassportDate = () => {
@@ -262,12 +288,33 @@ const handleVaccine = () => {
   isVaccinated = false;
   if (cv_received.value === "yes") {
     is_cv_received = false;
-    cv_received_boolean = is_cv_received
+    cv_received_boolean = false;
+    noVaccine = true
+    vaccineHasOne = true
     callout_message =
       "Applicants who received COVID-19 vaccines, single-dose of Janssen / J&J or 2 doses of Pfizer-Biotech/ Moderna/ Astra Zeneca/ Sinopharm/ Sinovac) COVID -19 vaccines, should present proof of vaccination (i.e. vaccine record or certificate).";
+   
+  } else if (cv_received.value === "no") {
+    is_cv_received = true;
+    cv_received_boolean = true;
+    noVaccine = true
+    vaccineHasOne = true
+    cv_brand_name.value = ""
+    cv_booster1.value = ""
+    first_dose_booster.value = ""
+    cv_booster2.value = ""
+    second_dose_booster.value = ""
+    hideBooster1 = true
+    hideBooster2 = true
+    cv_brand_name_boolean = true
+    cv_brand_name_boolean_1 = true
+    callout_message =
+      "Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.";
+  } else if (cv_received.value === "") {
+    cv_received_boolean = true;
   } else {
     is_cv_received = true;
-    cv_received_boolean = is_cv_received
+    cv_received_boolean = true;
     callout_message =
       "Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.";
   }
@@ -285,12 +332,18 @@ const changeVaccine = () => {
     case "":
         noVaccine = true
         vaccineHasOne = true
-        // firstDose = ""
-        // secondDose = ""
-        // validate_first_dose.value = ""
-        // validate_second_dose.value = ""
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
         hideBooster1 = true
         hideBooster2 = true
+        cv_brand_name_boolean = true
+        cv_brand_name_boolean_1 = true
+        cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -301,6 +354,14 @@ const changeVaccine = () => {
         hideBooster2 = true;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = true
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+        cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -309,6 +370,14 @@ const changeVaccine = () => {
         vaccineHasOne = false;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = false
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+        cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -317,6 +386,14 @@ const changeVaccine = () => {
         vaccineHasOne = false;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = false
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+         cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -325,6 +402,14 @@ const changeVaccine = () => {
         vaccineHasOne = false;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = false
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+         cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -333,6 +418,14 @@ const changeVaccine = () => {
         vaccineHasOne = false;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = false
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+        cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -341,6 +434,14 @@ const changeVaccine = () => {
         vaccineHasOne = false;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = false
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+        cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -349,6 +450,14 @@ const changeVaccine = () => {
         vaccineHasOne = false;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = false
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+         cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -357,6 +466,14 @@ const changeVaccine = () => {
         vaccineHasOne = false;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = false
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+         cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
 
@@ -365,6 +482,14 @@ const changeVaccine = () => {
         vaccineHasOne = false;
         cv_brand_name_boolean = false
         cv_brand_name_boolean_1 = false
+        firstDose.value = ""
+        secondDose.value = ""
+        validate_first_dose.value = ""
+        validate_second_dose.value = ""
+         cv_booster1.value = ""
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
 
       break;
     
@@ -377,6 +502,155 @@ const changeVaccine = () => {
   }
   
 };
+
+const changeBooster1 = () => {
+
+  switch (cv_booster1.value) {
+    case "":
+        first_dose_booster.value = ""
+        cv_booster2.value = ""
+        second_dose_booster.value = ""
+        hideBooster2 = true
+
+      break;
+
+    case "Janssen / J&J":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+
+      break;
+
+    case "Pfizer":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+
+      break;
+
+    case "Moderna":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+
+      break;
+
+    case "Astra Zeneca":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+
+      break;
+
+    case "Sinovac":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+
+      break;
+
+    case "Sinopharm":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+    
+      break;
+
+    case "Gamaleya / Sputnik V":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+
+      break;
+
+    case "NOVAVAX":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+
+      break;
+
+    case "BHARAT BIOTECH":
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+
+      break;
+    
+    default:
+      first_dose_booster.value = ""
+      cv_booster2.value = ""
+      second_dose_booster.value = ""
+      hideBooster2 = true
+      
+  }
+}
+
+const changeBooster2 = () => {
+  switch (cv_booster2.value) {
+    case "":
+        second_dose_booster.value = ""
+      break;
+
+    case "Janssen / J&J":
+      second_dose_booster.value = ""
+
+      break;
+
+    case "Pfizer":
+      second_dose_booster.value = ""
+
+      break;
+
+    case "Moderna":
+      second_dose_booster.value = ""
+
+      break;
+
+    case "Astra Zeneca":
+      second_dose_booster.value = ""
+
+      break;
+
+    case "Sinovac":
+      second_dose_booster.value = ""
+
+      break;
+
+    case "Sinopharm":
+      second_dose_booster.value = ""
+    
+      break;
+
+    case "Gamaleya / Sputnik V":
+      second_dose_booster.value = ""
+
+      break;
+
+    case "NOVAVAX":
+      second_dose_booster.value = ""
+
+      break;
+
+    case "BHARAT BIOTECH":
+      second_dose_booster.value = ""
+
+      break;
+    
+    default:
+      second_dose_booster.value = ""
+      
+  }
+}
 
 const showBooster1 = () => {
   switch (true) {
@@ -509,8 +783,7 @@ const schema = yup.object().shape({
     .string()
     .required("Birth country is required!")
     .min(4, "Birth country must be atleast 4 characters")
-    .max(25, "Birth country must be at most 25 characters")
-    .matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+    .max(25, "Birth country must be at most 25 characters"),
   ad_mother_last_name: yup
     .string()
     .required("Last name is required!")
@@ -669,6 +942,7 @@ const handleDetails = async (values) => {
   let ad_expiration_date = moment(new Date(add_expiration_date.value)).format(
     "YYYY-MM-DD"
   );
+  let ad_showVisaDate = ad_has_been_issued_visa.value == 'yes' ? false : true
 
   const jsonDATA = {
     json_user_id: user_id,
@@ -679,6 +953,7 @@ const handleDetails = async (values) => {
     json_covidHidden: covidHidden,
     json_cv_category: values.cv_category,
     json_cv_received: values.cv_received,
+    json_cv_received_boolean: cv_received_boolean,
     json_is_cv_received: is_cv_received,
     json_cv_brand_name_boolean: cv_brand_name_boolean,
     json_cv_brand_name_boolean_1: cv_brand_name_boolean_1,
@@ -727,6 +1002,7 @@ const handleDetails = async (values) => {
     json_validate_add_passport_date: validate_add_passport_date,
     json_validate_passport_expiration_date: validate_passport_expiration_date,
     json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
+    json_ad_showVisaDate: ad_showVisaDate,
     json_ad_issuance_date: ad_issuance_date,
     json_ad_expiration_date: ad_expiration_date,
     json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
@@ -828,7 +1104,12 @@ const moveBackSlot = async () => {
     router.push("/individual/us/schedule");
   }
 };
-
+const sampleFunction = () => {
+  console.log("Function called!")
+}
+defineExpose({
+  sampleFunction,
+})
 </script>
 
 <template>
@@ -859,180 +1140,6 @@ const moveBackSlot = async () => {
           <div class="col-12">
             <span class="text-danger">Fields with asterisks(*) are required</span>
           </div>
-          <div class="mb-3 col-lg-8 col-md-12 col-sm-12">
-            <DateField
-              idName="DOB"
-              label="Date of Birth"
-              placeholder="Date of birth"
-              color="red"
-              :disabledDate="disableBirthdayState.disabledDates"
-              v-model:input="date_of_birth"
-              :isDisabled="radioDisabled"
-              :onChange="alertChange"
-              :error="
-                errors.json_date_of_birth
-                  ? errors.json_date_of_birth[0]
-                  : inputName == 'json_date_of_birth'
-                  ? inputError
-                  : ''
-              "
-            />
-             <Field
-                type="hidden"
-                name="validate_date_of_birth"
-                width="100px"
-                v-model="validate_date_of_birth"
-              />
-            <ErrorMessage name="validate_date_of_birth" class="text-danger pt-3 pl-3" />
-            <Field
-              type="hidden"
-              name="date_boolean"
-              v-model="date_boolean"
-              width="100px"
-            />
-          </div>
-          <div class="mb-3 col-12" :hidden="covidHidden">
-            <FormHeader headerText="COVID-19 VACCINE" />
-          </div>
-          <div class="mb-3 col-12" :hidden="covidHidden">
-            <ol>
-              <li>Have you received your COVID-19 vaccine?</li>
-              <div class="row mt-4">
-                <div class="col-lg-2 col-md-2 col-sm-12">
-                  <RadioButton
-                    RadioLabel="Yes"
-                    RadioBtnName="cv_received"
-                    RadioValue="yes"
-                    v-model:input="cv_received"
-                    :onChange="handleVaccine"
-                  />
-                </div>
-                <div class="col-lg-10 col-md-10 col-sm-12">
-                  <RadioButton
-                    RadioLabel="No"
-                    RadioBtnName="cv_received"
-                    RadioValue="no"
-                    v-model:input="cv_received"
-                    :onChange="handleVaccine"
-                  />
-                </div>
-                <div class="col-lg-10 col-md-10 col-sm-12"> 
-                  <Field
-                    type="hidden"
-                    name="cvReceivedBoolean"
-                    v-model="cv_received_boolean"
-                    width="100px"
-                  />
-                  <ErrorMessage name="cv_received" class="text-danger" />
-                </div>
-
-                <ol type="I" :hidden="is_cv_received">
-                  <li class="col-lg-8 pr-5">
-                    <RequiredSelectField
-                      label="Vaccine Brand Name"
-                      FieldName="cv_brand_name"
-                      ErrorName="cv_brand_name"
-                      v-model:input="cv_brand_name"
-                      :items="vaccine"
-                      @change="changeVaccine"
-                    />
-                    <Field
-                      type="hidden"
-                      name="cv_brand_name_boolean"
-                      width="100px"
-                      v-model="cv_brand_name_boolean"
-                    />
-                    <Field
-                      type="hidden"
-                      name="cv_brand_name_boolean_1"
-                      width="100px"
-                      v-model="cv_brand_name_boolean_1"
-                    />
-                  </li>
-                  <li class="col-lg-8 pr-5" :hidden="noVaccine">
-                    <DateField
-                      label="Vaccine Dose 1 Date Received"
-                      color="red"
-                      placeholder="Date Received"
-                      :disabledDate="disableBirthdayState.disabledDates"
-                      v-model:input="firstDose"
-                      :onChange="showBooster1"
-                    />
-                    <Field
-                      type="hidden"
-                      name="cv_date_01"
-                      width="100px"
-                      v-model="validate_first_dose"
-                    />
-                    <ErrorMessage name="cv_date_01" class="text-danger" />
-                  </li>
-                  <li class="col-lg-8 pr-5" :hidden="vaccineHasOne">
-                    <DateField
-                      label="Vaccine Dose 2 Date Received"
-                      color="red"
-                      placeholder="Date Received"
-                      :disabledDate="disableBirthdayState.disabledDates"
-                      v-model:input="secondDose"
-                      :onChange="showBooster1"
-                    />
-                    <Field
-                      type="hidden"
-                      name="cv_date_02"
-                      width="100px"
-                      v-model="validate_second_dose"
-                    />
-                    <ErrorMessage name="cv_date_02" class="text-danger" />
-                  </li>
-                  <li class="col-lg-8 pr-5" :hidden="hideBooster1">
-                    <hr />
-                    <SelectField
-                      label="Vaccine Booster 1 Brand Name"
-                      FieldName="cv_booster1"
-                      ErrorName="cv_booster1"
-                      v-model:input="cv_booster1"
-                      :items="vaccine"
-                    />
-                  </li>
-                  <li class="col-lg-8 pr-5" :hidden="hideBooster1">
-                    <DateField
-                      label="Vaccine Booster 1 Date Received"
-                      requiredClass="d-none"
-                      color="gray"
-                      placeholder="Date Received"
-                      :disabledDate="disableBirthdayState.disabledDates"
-                      v-model:input="first_dose_booster"
-                      :onChange="showBooster2"
-                    />
-                  </li>
-                  <li class="col-lg-8 pr-5" :hidden="hideBooster2">
-                    <hr />
-                    <SelectField
-                      label="Vaccine Booster 2 Brand Name"
-                      FieldName="cv_booster2"
-                      ErrorName="cv_booster2"
-                      v-model:input="cv_booster2"
-                      :items="vaccine"
-                    />
-                  </li>
-                  <li class="col-lg-8 pr-5" :hidden="hideBooster2">
-                    <DateField
-                      label="Vaccine Booster 2 Date Received"
-                      requiredClass="d-none"
-                      placeholder="Date Received"
-                      color="gray"
-                      :disabledDate="disableBirthdayState.disabledDates"
-                      v-model:input="second_dose_booster"
-                    />
-                  </li>
-                </ol>
-
-                <div class="mb-3 mt-3 col-12" :hidden="isVaccinated">
-                  <CalloutDanger headerTitle="Note" :description="callout_message" />
-                </div>
-              </div>
-            </ol>
-          </div>
-
           <div class="mb-3 col-12">
             <FormHeader headerText="Case Information" />
           </div>
@@ -1117,6 +1224,38 @@ const moveBackSlot = async () => {
               FieldName="ad_middle_name"
               ErrorName="ad_middle_name"
               v-model:input="ad_middle_name"
+            />
+          </div>
+          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+            <DateField
+              idName="DOB"
+              label="Date of Birth"
+              placeholder="Date of birth"
+              color="red"
+              :disabledDate="disableBirthdayState.disabledDates"
+              v-model:input="date_of_birth"
+              :isDisabled="radioDisabled"
+              :onChange="alertChange"
+              :error="
+                errors.json_date_of_birth
+                  ? errors.json_date_of_birth[0]
+                  : inputName == 'json_date_of_birth'
+                  ? inputError
+                  : ''
+              "
+            />
+             <Field
+                type="hidden"
+                name="validate_date_of_birth"
+                width="100px"
+                v-model="validate_date_of_birth"
+              />
+            <ErrorMessage name="validate_date_of_birth" class="text-danger pt-3 pl-3" />
+            <Field
+              type="hidden"
+              name="date_boolean"
+              v-model="date_boolean"
+              width="100px"
             />
           </div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
@@ -1369,7 +1508,7 @@ const moveBackSlot = async () => {
               placeholder="Issue Date"
               color="red"
               :disabledDate="disableFutureDateState.disabledDates"
-              v-model:input="newLocal"
+              v-model:input="add_passport_date"
               :onChange="alertPassportDate"
               :error="
                 errors.json_ad_passport_date
@@ -1520,6 +1659,149 @@ const moveBackSlot = async () => {
               v-model:input="ad_prev_xray_year"
               :items="years"
             />
+          </div>
+          <div class="mb-3 col-12" :hidden="covidHidden">
+            <FormHeader headerText="COVID-19 VACCINE" />
+          </div>
+          <div class="mb-3 col-12" :hidden="covidHidden">
+            <ol>
+              <li>Have you received your COVID-19 vaccine?</li>
+              <div class="row mt-4">
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                  <RadioButton
+                    RadioLabel="Yes"
+                    RadioBtnName="cv_received"
+                    RadioValue="yes"
+                    v-model:input="cv_received"
+                    :onChange="handleVaccine"
+                  />
+                </div>
+                <div class="col-lg-10 col-md-10 col-sm-12">
+                  <RadioButton
+                    RadioLabel="No"
+                    RadioBtnName="cv_received"
+                    RadioValue="no"
+                    v-model:input="cv_received"
+                    :onChange="handleVaccine"
+                  />
+                </div>
+                <div class="col-lg-10 col-md-10 col-sm-12"> 
+                  <Field
+                    type="hidden"
+                    name="cvReceivedBoolean"
+                    v-model="cv_received_boolean"
+                    width="100px"
+                  />
+                  <ErrorMessage name="cv_received" class="text-danger" />
+                </div>
+
+                <ol type="I" :hidden="is_cv_received">
+                  <li class="col-lg-8 pr-5">
+                    <RequiredSelectField
+                      label="Vaccine Brand Name"
+                      FieldName="cv_brand_name"
+                      ErrorName="cv_brand_name"
+                      v-model:input="cv_brand_name"
+                      :items="vaccine"
+                      @change="changeVaccine"
+                    />
+                    <Field
+                      type="hidden"
+                      name="cv_brand_name_boolean"
+                      width="100px"
+                      v-model="cv_brand_name_boolean"
+                    />
+                    <Field
+                      type="hidden"
+                      name="cv_brand_name_boolean_1"
+                      width="100px"
+                      v-model="cv_brand_name_boolean_1"
+                    />
+                  </li>
+                  <li class="col-lg-8 pr-5" :hidden="noVaccine">
+                    <DateField
+                      label="Vaccine Dose 1 Date Received"
+                      color="red"
+                      placeholder="Date Received"
+                      :disabledDate="disableBirthdayState.disabledDates"
+                      v-model:input="firstDose"
+                      :onChange="showBooster1"
+                    />
+                    <Field
+                      type="hidden"
+                      name="cv_date_01"
+                      width="100px"
+                      v-model="validate_first_dose"
+                    />
+                    <ErrorMessage name="cv_date_01" class="text-danger" />
+                  </li>
+                  <li class="col-lg-8 pr-5" :hidden="vaccineHasOne">
+                    <DateField
+                      label="Vaccine Dose 2 Date Received"
+                      color="red"
+                      placeholder="Date Received"
+                      :disabledDate="disableBirthdayState.disabledDates"
+                      v-model:input="secondDose"
+                      :onChange="showBooster1"
+                    />
+                    <Field
+                      type="hidden"
+                      name="cv_date_02"
+                      width="100px"
+                      v-model="validate_second_dose"
+                    />
+                    <ErrorMessage name="cv_date_02" class="text-danger" />
+                  </li>
+                  <li class="col-lg-8 pr-5" :hidden="hideBooster1">
+                    <hr />
+                    <SelectField
+                      label="Vaccine Booster 1 Brand Name"
+                      FieldName="cv_booster1"
+                      ErrorName="cv_booster1"
+                      v-model:input="cv_booster1"
+                      :items="vaccine"
+                      :onChange="changeBooster1"
+                    />
+                  </li>
+                  <li class="col-lg-8 pr-5" :hidden="hideBooster1">
+                    <DateField
+                      label="Vaccine Booster 1 Date Received"
+                      requiredClass="d-none"
+                      color="gray"
+                      placeholder="Date Received"
+                      :disabledDate="disableBirthdayState.disabledDates"
+                      v-model:input="first_dose_booster"
+                      :onChange="showBooster2"
+                    />
+                  </li>
+                  <li class="col-lg-8 pr-5" :hidden="hideBooster2">
+                    <hr />
+                    <SelectField
+                      label="Vaccine Booster 2 Brand Name"
+                      FieldName="cv_booster2"
+                      ErrorName="cv_booster2"
+                      v-model:input="cv_booster2"
+                      :items="vaccine"
+                      :onChange="changeBooster2"
+                    />
+                  </li>
+                  <li class="col-lg-8 pr-5" :hidden="hideBooster2">
+                    <DateField
+                      label="Vaccine Booster 2 Date Received"
+                      requiredClass="d-none"
+                      placeholder="Date Received"
+                      color="gray"
+                      :disabledDate="disableBirthdayState.disabledDates"
+                      v-model:input="second_dose_booster"
+                    />
+                  </li>
+                </ol>
+
+                <div class="mb-3 mt-3 col-12" :hidden="isVaccinated">
+                  <CalloutDanger headerTitle="Note" :description="callout_message" />
+                </div>
+              </div>
+            </ol>
           </div>
           <div class="mt-3 mb-4 col-12">
             <FormHeader headerText="Petitioner's Information" />
