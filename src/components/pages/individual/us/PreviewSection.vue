@@ -122,7 +122,7 @@ let detail_cv_booster2 = details.cv_booster2;
 let detail_second_doseBooster = moment(details.second_doseBooster).format("LL");
 let detail_ci_nvc_number = details.ci_nvc_number;
 let detail_ci_visa_pref_category = details.ci_visa_pref_category;
-let detail_ci_interview_date = moment(details.ci_interview_date).format("LL");
+let detail_ci_interview_date = details.ci_interview_date === "Invalid date" ? "none" : moment(details.ci_interview_date).format("LL");
 let detail_ci_interview_source = details.ci_interview_source;
 let detail_ad_last_name = details.ad_last_name;
 let detail_ad_first_name = details.ad_first_name;
@@ -188,17 +188,15 @@ const handleStore = async () => {
     json_detail_date_of_birth: moment(details.date_of_birth).format("YYYY-MM-DD"),
     json_is_cv_received: details.cv_received,
     json_detail_cv_brand_name: detail_cv_brand_name,
-    json_detail_firstDose: moment(details.firstDose).format("YYYY-MM-DD"),
-    json_detail_secondDose: moment(details.secondDose).format("YYYY-MM-DD"),
+    json_detail_firstDose: details.firstDose === "Invalid date" ? null : moment(details.firstDose).format("YYYY-MM-DD"),
+    json_detail_secondDose: details.secondDose === "Invalid date" ? null : moment(details.secondDose).format("YYYY-MM-DD"),
     json_detail_cv_booster1: detail_cv_booster1,
-    json_detail_first_doseBooster: moment(details.first_doseBooster).format("YYYY-MM-DD"),
+    json_detail_first_doseBooster: details.first_doseBooster === "Invalid date" ? null : moment(details.first_doseBooster).format("YYYY-MM-DD"),
     json_detail_cv_booster2: detail_cv_booster2,
-    json_detail_second_doseBooster: moment(details.second_doseBooster).format(
-      "YYYY-MM-DD"
-    ),
+    json_detail_second_doseBooster: details.second_doseBooster === "Invalid date" ? null : moment(details.second_doseBooster).format("YYYY-MM-DD"),
     json_detail_ci_nvc_number: detail_ci_nvc_number,
     json_detail_ci_visa_pref_category: visaPrefCategory.get(detail_ci_visa_pref_category),
-    json_detail_ci_interview_date: details.ci_interview_date,
+    json_detail_ci_interview_date: details.ci_interview_date === "Invalid date" ? null : moment(details.ci_interview_date).format("YYYY-MM-DD"),
     json_detail_ci_interview_source: detail_ci_interview_source,
     json_detail_ad_last_name: detail_ad_last_name,
     json_detail_ad_first_name: detail_ad_first_name,
@@ -234,10 +232,8 @@ const handleStore = async () => {
       detail_ad_has_been_issued_visa == "yes"
         ? (detail_ad_has_been_issued_visa = 1)
         : (detail_ad_has_been_issued_visa = 0),
-    json_detail_ad_issuance_date: moment(details.ad_issuance_date).format("YYYY-MM-DD"),
-    json_detail_ad_expiration_date: moment(details.ad_expiration_date).format(
-      "YYYY-MM-DD"
-    ),
+    json_detail_ad_issuance_date: details.ad_issuance_date === "Invalid date" ? null : moment(details.ad_issuance_date).format("YYYY-MM-DD"),
+    json_detail_ad_expiration_date: details.ad_expiration_date === "Invalid date" ? null : moment(details.ad_expiration_date).format("YYYY-MM-DD"),
     json_detail_ad_prev_medical_exam_month: detail_ad_prev_medical_exam_month,
     json_detail_ad_prev_medical_exam_year: detail_ad_prev_medical_exam_year,
     json_detail_ad_prev_xray_month: detail_ad_prev_xray_month,
@@ -346,71 +342,6 @@ const handleBack = () => {
           </div>
           <div class="col-12"><hr /></div>
           <div class="mb-3 col-12">
-            <PreviewText
-              previewLabel="Date of Birth"
-              v-bind:previewText="detail_date_of_birth"
-            />
-          </div>
-          <div :hidden="detail_covidHidden" class="mb-3 col-12">
-            <FormHeader headerText="COVID-19 VACCINE" />
-          </div>
-          <div :hidden="detail_covidHidden" class="mb-3 col-12">
-            <PreviewText
-              previewLabel="Have you received your COVID-19 vaccine?"
-              v-bind:previewText="detail_cv_received"
-              previewClassName="text-capitalize"
-            />
-          </div>
-          <div :hidden="detail_cv_received == 'no' ? true : false " class="mb-3 col-12">
-            <ol type="I">
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Brand Name"
-                  v-bind:previewText="detail_cv_brand_name"
-                />
-              </li>
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Dose 1 Date Received "
-                  v-bind:previewText="detail_firstDose"
-                />
-              </li>
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Dose 2 Date Received "
-                  v-bind:previewText="detail_secondDose"
-                />
-              </li>
-              <li>
-                <hr />
-                <PreviewText
-                  previewLabel="Vaccine Booster 1 Brand Name"
-                  v-bind:previewText="detail_cv_booster1"
-                />
-              </li>
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Booster 1 Date Received"
-                  v-bind:previewText="detail_first_doseBooster"
-                />
-              </li>
-              <li>
-                <hr />
-                <PreviewText
-                  previewLabel="Vaccine Booster 2 Brand Name"
-                  v-bind:previewText="detail_cv_booster2"
-                />
-              </li>
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Booster 2 Date Received"
-                  v-bind:previewText="detail_second_doseBooster"
-                />
-              </li>
-            </ol>
-          </div>
-
-          <div class="mb-3 col-12">
             <FormHeader headerText="Case Information" />
           </div>
 
@@ -467,6 +398,12 @@ const handleBack = () => {
           </div>
           <div class="col-12"><hr /></div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
+            <PreviewText
+              previewLabel="Date of Birth"
+              v-bind:previewText="detail_date_of_birth"
+            />
+          </div>
+          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText previewLabel="Gender" v-bind:previewText="detail_ad_gender" />
           </div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
@@ -475,21 +412,21 @@ const handleBack = () => {
               v-bind:previewText="detail_ad_civil_status"
             />
           </div>
+          <div class="col-12"><hr /></div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Country"
               v-bind:previewText="detail_ad_nationality"
             />
           </div>
-          <div class="col-12"><hr /></div>
-          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Birthplace"
               v-bind:previewText="detail_ad_birthplace"
               previewClassName="text-capitalize"
             />
           </div>
-          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Birth Country"
               v-bind:previewText="detail_ad_birth_country"
@@ -712,6 +649,64 @@ const handleBack = () => {
               smallLabel="Year"
               v-bind:previewText="detail_ad_prev_xray_year"
             />
+          </div>
+          <div :hidden="detail_covidHidden" class="mb-3 col-12">
+            <FormHeader headerText="COVID-19 VACCINE" />
+          </div>
+          <div :hidden="detail_covidHidden" class="mb-3 col-12">
+            <PreviewText
+              previewLabel="Have you received your COVID-19 vaccine?"
+              v-bind:previewText="detail_cv_received"
+              previewClassName="text-capitalize"
+            />
+          </div>
+          <div :hidden="detail_cv_received == 'no' ? true : false " class="mb-3 col-12">
+            <ol type="I">
+              <li>
+                <PreviewText
+                  previewLabel="Vaccine Brand Name"
+                  v-bind:previewText="detail_cv_brand_name"
+                />
+              </li>
+              <li>
+                <PreviewText
+                  previewLabel="Vaccine Dose 1 Date Received "
+                  v-bind:previewText="detail_firstDose"
+                />
+              </li>
+              <li :hidden="detail_secondDose == 'Invalid date' ? true : false ">
+                <PreviewText
+                  previewLabel="Vaccine Dose 2 Date Received "
+                  v-bind:previewText="detail_secondDose"
+                />
+              </li>
+              <li :hidden="detail_cv_booster1 == '' ? true : false">
+                <hr />
+                <PreviewText
+                  previewLabel="Vaccine Booster 1 Brand Name"
+                  v-bind:previewText="detail_cv_booster1"
+                />
+              </li>
+              <li :hidden="detail_first_doseBooster == 'Invalid date' ? true : false ">
+                <PreviewText
+                  previewLabel="Vaccine Booster 1 Date Received"
+                  v-bind:previewText="detail_first_doseBooster"
+                />
+              </li>
+              <li :hidden="detail_cv_booster2 == '' ? true : false">
+                <hr />
+                <PreviewText
+                  previewLabel="Vaccine Booster 2 Brand Name"
+                  v-bind:previewText="detail_cv_booster2"
+                />
+              </li>
+              <li :hidden="detail_second_doseBooster == 'Invalid date' ? true : false ">>
+                <PreviewText
+                  previewLabel="Vaccine Booster 2 Date Received"
+                  v-bind:previewText="detail_second_doseBooster"
+                />
+              </li>
+            </ol>
           </div>
           <div class="mb-3 col-12">
             <FormHeader headerText="Petitioner's Information" />

@@ -18,7 +18,7 @@
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import CheckBox from '@/components/global/CheckBox.vue'
     import Swal from '@/sweetalert2'
-    import { ErrorMessage } from 'vee-validate'
+    import { Field, ErrorMessage } from 'vee-validate'
     import moment from 'moment'
     import * as yup from 'yup';
 
@@ -44,6 +44,8 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let hasMedicalExam = true
+    let is_first_med_exam = true
+    let has_alias =  true
     let wasFirstMedicalExam = ref(null)
     let prevClinicName = ref(null)
     let passportNumber = ref(null)
@@ -79,7 +81,7 @@
     let check_alias = ref(null)
     let isButtonDisabled = true
     
-    const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
+    // const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
@@ -118,7 +120,7 @@
         fileNumber.value = details.fileNumber || ''
         agencyField.value = details.agencyField || ''
 
-        wasFirstMedicalExam.value === 'Y' ? hasMedicalExam = true : hasMedicalExam = false
+        wasFirstMedicalExam.value == 'N' ? hasMedicalExam = false : hasMedicalExam = true
         wasFirstMedicalExam.value === 'Y' ? prevClinicName.value = "" : prevClinicName.value = details.prevClinicName
         wasFirstMedicalExam.value === 'Y' ? prevCategory.value = "" : prevCategory.value = details.prevCategory
         check_alias.value === 'checked' ? isButtonDisabled = false : isButtonDisabled = true
@@ -133,33 +135,55 @@
             hasMedicalExam = true
             prevClinicName.value = ""
             prevCategory.value = ""
+            is_first_med_exam = true
         } else {
             hasMedicalExam = false
+            is_first_med_exam = false
         }
     }
 
     const hasAlias = () => {
         if(check_alias.value == 'checked') {
             isButtonDisabled = false
+            has_alias = false
         } else {
             isButtonDisabled = true
             alias_lastName.value = ""
             alias_firstName.value = ""
             alias_middleName.value = ""
+            has_alias = true
         }
     }
 
     const schema = yup.object().shape({
         wasFirstMedicalExam: yup.string().required('This field is required, please choose an option!'),
-        prevClinicName: yup.string().nullable(),
-        prevCategory: yup.string().nullable(),
-        passportNumber: yup.string().nullable().max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
+        is_first_med_exam:yup.string(),
+        prevClinicName: yup.string().when('is_first_med_exam', {
+            is: 'false',
+            then: (schema) => schema.required('Previous clinic name required!'),
+            otherwise: (schema) => schema.nullable()
+        }),
+        prevCategory: yup.string().when('is_first_med_exam', {
+            is: 'false',
+            then: (schema) => schema.required('Previous category name required!'),
+            otherwise: (schema) => schema.nullable()
+        }),
+        // passportNumber: yup.string().nullable().max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         issuedCountry: yup.string().nullable(),
         ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         ad_firstName: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         ad_middleName: yup.string().optional('Middle name is required!').min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
-        alias_lastName: yup.string().optional().min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
-        alias_firstName: yup.string().optional().min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
+        has_alias: yup.string(),
+        alias_lastName: yup.string().when('has_alias', {
+            is: 'false',
+            then: (schema) => schema.required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(30, 'Last name must be at most 30 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+            otherwise: (schema) => schema.nullable()
+        }),
+        alias_firstName: yup.string().when('has_alias', {
+            is: 'false',
+            then: (schema) => schema.required('First name is required!').min(2, 'First name must be atleast 2 characters').max(30, 'First name must be at most 30 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+            otherwise: (schema) => schema.nullable()
+        }),
         alias_middleName: yup.string().optional().min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
         mother_lastName: yup.string().required('Mother Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         mother_firstName: yup.string().required('Mother First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
@@ -350,6 +374,7 @@
                         />
                         <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                     </div>
+                    <Field type="hidden" name="is_first_med_exam" :value="is_first_med_exam" v-model="is_first_med_exam"/>
                      <div class="col-12">
                         <ErrorMessage name="wasFirstMedicalExam" class="text-danger"/>
                     </div>
@@ -454,6 +479,7 @@
                                     <label class="form-check-label font-weight-bold " for="flexCheckDefault">
                                         ALIAS/A.K.A. Name on Passport, if any.
                                     </label>
+                                    <Field type="hidden" name="has_alias" :value="has_alias" v-model="has_alias"/>
                                 </div>
                                 <div class="col-lg-8 col-md-12 col-sm-12" :hidden="isButtonDisabled">
                                     <InputField 
@@ -525,12 +551,20 @@
                                     <DateField 
                                         divLabelClass="d-none"
                                         placeholder="Date of Birth"
+                                        color="red"
                                         :disabledDate="disableBirthdayState.disabledDates"
                                         v-model:input="dateOfBirth"
-                                        :onChange="showBooster1"
+                                        :onChange="alertChange"
                                         :error="(errors.json_dateOfBirth) ? (errors.json_dateOfBirth[0]) : ((inputName == 'json_dateOfBirth') ? (inputError) : '')"
                                     />
                                 </div>
+                                <Field
+                                    type="hidden"
+                                    name="validate_date_of_birth"
+                                    width="100px"
+                                    v-model="validate_date_of_birth"
+                                />
+                                <ErrorMessage name="validate_date_of_birth" class="text-danger pt-3 pl-3" />
                             </div>
                             <li>Gender <b class="text-danger">*</b></li>
                             <div class="row">

@@ -225,6 +225,7 @@ onMounted(async () => {
         "Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.");
   firstDose.value !== "" ? (noVaccine = false) : (noVaccine = true);
   secondDose.value !== "" ? (vaccineHasOne = false) : (vaccineHasOne = true);
+  secondDose.value == "Invalid date" ? (vaccineHasOne = true) : (vaccineHasOne = false);
   cv_booster1.value !== "" ? (hideBooster1 = false) : (hideBooster1 = true);
   cv_booster2.value !== "" ? (hideBooster2 = false) : (hideBooster2 = true);
   ad_has_been_issued_visa.value === "yes"
@@ -783,7 +784,7 @@ const schema = yup.object().shape({
     .string()
     .required("Birth country is required!")
     .min(4, "Birth country must be atleast 4 characters")
-    .max(25, "Birth country must be at most 25 characters"),
+    .max(40, "Birth country must be at most 40 characters"),
   ad_mother_last_name: yup
     .string()
     .required("Last name is required!")
@@ -933,7 +934,7 @@ const handleDetails = async (values) => {
   let second_doseBooster = moment(new Date(second_dose_booster.value)).format(
     "YYYY-MM-DD"
   );
-  let ci_interview_date = moment(new Date(ci_intervue_date.value)).format("YYYY-MM-DD");
+  let ci_interview_date = moment(new Date(ci_intervue_date.value || "0000-00-00")).format("YYYY-MM-DD");
   let ad_passport_date = moment(new Date(add_passport_date.value)).format("YYYY-MM-DD");
   let ad_passport_expiration_date = moment(
     new Date(add_passport_expiration_date.value)
@@ -943,6 +944,8 @@ const handleDetails = async (values) => {
     "YYYY-MM-DD"
   );
   let ad_showVisaDate = ad_has_been_issued_visa.value == 'yes' ? false : true
+
+  // alert(ci_intervue_date.value)
 
   const jsonDATA = {
     json_user_id: user_id,

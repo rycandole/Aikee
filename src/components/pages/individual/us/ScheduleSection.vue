@@ -103,7 +103,6 @@ const handleDateTime = async () => {
   };
 
   let save_slot = await axios.post("save_slot/", jsonDATA);
-
   let res = JSON.stringify(jsonDATA);
 
   USIndividualSched.setUSIndividualSched(res);
