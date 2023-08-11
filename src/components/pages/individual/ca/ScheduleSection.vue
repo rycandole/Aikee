@@ -52,6 +52,7 @@
     let countryValue = ref(null)
     let branchValue = ref(null)
     let hasBranch = true
+
     let branch = ""
     let textSuccess = "text-success"
     let selectIsActive = true
@@ -77,14 +78,19 @@
         if (newValue == 'MNL') {
             branch = newValue
             hasBranch = false
+            dateInput.value = ""
+            timeSched.value = ""
+            timeInput.value = ""
         } else if (newValue == 'BGC') { 
             branch = newValue
             hasBranch = false
+            dateInput.value = ""
+            timeSched.value = ""
+            timeInput.value = ""
         } else {
             branch = ""
             hasBranch = true
         }
-        
         
     }) // { immediate: true }
 
@@ -139,17 +145,6 @@
         }
     }
     // ========== End of Inline Date =============== //
-
-    // const handleBranch = () => {
-    //     // branch = clinic_code.get(clinic_location.value)
-    //     if(clinic_code.get(clinic_location.value) === null) {
-    //         hasBranch = true
-    //     } else {
-    //         hasBranch = false
-    //         timeSched.value = ""
-    //     }
-        
-    // }
 
     const handleSlots = async () => {
         const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
@@ -253,7 +248,6 @@
                                     className="w-75"
                                     v-model:input="clinic_location"
                                     :items="clinics"
-                                    
                                 />
                                 <!-- :onChange="handleBranch" -->
                             </div>

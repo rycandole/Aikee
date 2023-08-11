@@ -14,23 +14,6 @@ const regId = route.params.id;
 
 let showApplication = ref([]);
 let US_Information = ref(null);
-const priorityCategory = new Map([
-  ["A1", "Workers in Frontline Health Services"],
-  ["A2", "All Senior Citizens"],
-  ["A3", "Persons with Comorbidities"],
-  ["A4", "Frontline personnel in essential sectors, including uniformed personnel"],
-  ["A5", "Indigent Population"],
-  ["B1", "Teachers, Social Workers"],
-  ["B2", "Other Government Workers"],
-  ["B3", "ther Essential Workers"],
-  [
-    "B4",
-    "Socio-demographic groups at significantly higher risk other than senior citizens and poor population based on the NHTS-PR",
-  ],
-  ["B5", "Overseas FIlipino Workers"],
-  ["B6", "Other Remaining Workforce"],
-  ["C", "Rest of the Filipino population not otherwise included in the above groups"],
-]);
 
 const visaPrefCategory = new Map([
   ["NONE", "NONE"],
@@ -135,79 +118,6 @@ const showInformation = async () => {
               v-bind:previewText="`${row.priorityTime}`"
             />
           </div>
-          <div class="col-12"><hr /></div>
-          <div class="mb-3 col-12">
-            <PreviewText
-              previewLabel="Date of Birth"
-              v-bind:previewText="moment(`${row.DOB}`).format('LL')"
-            />
-          </div>
-          <div class="mb-3 col-12">
-            <FormHeader headerText="COVID-19 VACCINE" />
-          </div>
-          <div class="mb-3 col-12">
-            <PreviewText
-              previewLabel="What category do you belong to?"
-              v-bind:previewText="`${
-                row.covid_vaccine_priority +
-                '. ' +
-                priorityCategory.get(row.covid_vaccine_priority)
-              }`"
-            />
-          </div>
-          <div class="mb-3 col-12">
-            <PreviewText
-              previewLabel="Have you received your COVID-19 vaccine?"
-              v-bind:previewText="`${row.received_vaccine === 'y' ? 'Yes' : 'No'}`"
-            />
-            <ol type="I">
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Brand Name"
-                  v-bind:previewText="`${row.vaccine_brand}`"
-                />
-              </li>
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Dose 1 Date Received "
-                  v-bind:previewText="moment(`${row.first_dose}`).format('LL')"
-                />
-              </li>
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Dose 2 Date Received "
-                  v-bind:previewText="moment(`${row.second_dose}`).format('LL')"
-                />
-              </li>
-              <li>
-                <hr />
-                <PreviewText
-                  previewLabel="Vaccine Booster 1 Brand Name"
-                  v-bind:previewText="`${row.booster1_brand}`"
-                />
-              </li>
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Booster 1 Date Received"
-                  v-bind:previewText="moment(`${row.booster1}`).format('LL')"
-                />
-              </li>
-              <li>
-                <hr />
-                <PreviewText
-                  previewLabel="Vaccine Booster 2 Brand Name"
-                  v-bind:previewText="`${row.booster2_brand}`"
-                />
-              </li>
-              <li>
-                <PreviewText
-                  previewLabel="Vaccine Booster 2 Date Received"
-                  v-bind:previewText="moment(`${row.booster2}`).format('LL')"
-                />
-              </li>
-            </ol>
-          </div>
-
           <div class="mb-3 col-12">
             <FormHeader headerText="Case Information" />
           </div>
@@ -261,6 +171,12 @@ const showInformation = async () => {
             />
           </div>
           <div class="col-12"><hr /></div>
+          <div class="mb-3 col-mb-1 col-lg-4 col-md-12 col-sm-12">
+            <PreviewText
+              previewLabel="Date of Birth"
+              v-bind:previewText="moment(`${row.DOB}`).format('LL')"
+            />
+          </div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText previewLabel="Gender" v-bind:previewText="`${row.Gender}`" />
           </div>
@@ -270,20 +186,20 @@ const showInformation = async () => {
               v-bind:previewText="`${row.CivStatus}`"
             />
           </div>
+          <div class="col-12"><hr /></div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Country"
               v-bind:previewText="`${row.country_nationality}`"
             />
           </div>
-          <div class="col-12"><hr /></div>
-          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Birthplace"
               v-bind:previewText="`${row.BirthCity}`"
             />
           </div>
-          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+          <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Birth Country"
               v-bind:previewText="`${row.BirthCountry}`"
@@ -468,6 +384,63 @@ const showInformation = async () => {
               smallLabel="Month"
               v-bind:previewText="moment(`${row.Prev_CXRDate}`).format('LL')"
             />
+          </div>
+          <div class="mb-3 col-12">
+            <FormHeader headerText="COVID-19 VACCINE" />
+          </div>
+          <div class="mb-3 col-12">
+            <PreviewText
+              previewLabel="Have you received your COVID-19 vaccine?"
+              v-bind:previewText="`${row.received_vaccine === 'y' ? 'Yes' : 'No'}`"
+            />
+          
+            <ol type="I" :hidden="`${row.received_vaccine == 'y' ? true : false}`">
+              <li>
+                <PreviewText
+                  previewLabel="Vaccine Brand Name"
+                  v-bind:previewText="`${row.vaccine_brand}`"
+                />
+                
+              </li>
+              <li>
+                <PreviewText
+                  previewLabel="Vaccine Dose 1 Date Received "
+                  v-bind:previewText="moment(`${row.first_dose}`).format('LL')"
+                />
+              </li>
+              <li>
+                <PreviewText
+                  previewLabel="Vaccine Dose 2 Date Received "
+                  v-bind:previewText="moment(`${row.second_dose}`).format('LL')"
+                />
+              </li>
+              <li>
+                <hr />
+                <PreviewText
+                  previewLabel="Vaccine Booster 1 Brand Name"
+                  v-bind:previewText="`${row.booster1_brand}`"
+                />
+              </li>
+              <li>
+                <PreviewText
+                  previewLabel="Vaccine Booster 1 Date Received"
+                  v-bind:previewText="moment(`${row.booster1}`).format('LL')"
+                />
+              </li>
+              <li>
+                <hr />
+                <PreviewText
+                  previewLabel="Vaccine Booster 2 Brand Name"
+                  v-bind:previewText="`${row.booster2_brand}`"
+                />
+              </li>
+              <li>
+                <PreviewText
+                  previewLabel="Vaccine Booster 2 Date Received"
+                  v-bind:previewText="moment(`${row.booster2}`).format('LL')"
+                />
+              </li>
+            </ol>
           </div>
           <div class="mb-3 col-12">
             <FormHeader headerText="Petitioner's Information" />

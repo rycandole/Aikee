@@ -1,9 +1,22 @@
 <script setup>
+import { ref } from "vue";
+import { onMounted } from "vue";
 import TopNavBar from "@/components/includes/TopNavBar.vue";
 import SideNavigation from "@/components/includes/SideNavigation.vue";
 import FooterSection from "@/components/includes/FooterSection.vue";
 import DetailSection from "@/components/pages/individual/us/DetailSection.vue";
 import TimerAlertBox from "@/components/global/TimerAlertBox.vue";
+
+let child = ref(null)
+
+onMounted(() => {
+  child.value.sampleFunction()
+});
+
+
+
+
+
 </script>
 <template>
   <div class="wrapper">
@@ -15,7 +28,7 @@ import TimerAlertBox from "@/components/global/TimerAlertBox.vue";
     <div class="content-wrapper">
       <div class="row timerAlertBoxDiv">
         <div class="col-12">
-          <TimerAlertBox divClassName="timerAlertBox" />
+          <TimerAlertBox divClassName="timerAlertBox" ref="child"/>
         </div>
       </div>
       <div class="container-lg">
@@ -41,7 +54,7 @@ import TimerAlertBox from "@/components/global/TimerAlertBox.vue";
             </ol>
           </div>
           <!-- /.col -->
-          <DetailSection />
+          <DetailSection ref="child"/>
         </div>
         <!-- /.row -->
       </div>
