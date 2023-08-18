@@ -30,7 +30,7 @@ onMounted(async () => {
 });
 
 const showList = async () => {
-  let res = await axios.get("us-application/" + regID);
+  let res = await axios.get("ca-application/" + regID);
 
   sched_date.value = res.data.result.sched_date;
   sched_time.value = res.data.result.sched_time;

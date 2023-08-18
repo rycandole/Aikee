@@ -1,9 +1,17 @@
 <script setup>
-    import TopNavBar from '@/components/includes/TopNavBar.vue'
-    import SideNavigation from '@/components/includes/SideNavigation.vue'
-    import FooterSection from '@/components/includes/FooterSection.vue'
-    import DetailSection from '@/components/pages/individual/au/DetailSection.vue'
+import { ref } from "vue";
+import { onMounted } from "vue";
+import TopNavBar from '@/components/includes/TopNavBar.vue'
+import SideNavigation from '@/components/includes/SideNavigation.vue'
+import FooterSection from '@/components/includes/FooterSection.vue'
+import DetailSection from '@/components/pages/individual/au/DetailSection.vue'
+import AU_TimerAlertBox from "@/components/global/AU_TimerAlertBox.vue";
 
+let child = ref(null)
+
+onMounted(() => {
+  child.value.sampleFunction()
+});
     
 
 </script>
@@ -13,6 +21,11 @@
         <SideNavigation />
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
+            <div class="row timerAlertBoxDiv">
+                <div class="col-12">
+                  <AU_TimerAlertBox divClassName="timerAlertBox" ref="child"/>
+                </div>
+              </div>
                 <div class="container-md">
                     <div class="row mb-2 pt-5 pb-5 class_for_padding">
                         <div class="col-sm-6">
@@ -25,7 +38,7 @@
                                 <li class="breadcrumb-item "><router-link to="" class="text-secondary">Details</router-link></li>
                             </ol>
                         </div><!-- /.col -->
-                            <DetailSection />
+                            <DetailSection ref="child" />
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             <!-- /.content -->
@@ -40,13 +53,30 @@
     padding: 1rem 0 0 0;
 }
 
-@media only screen and (min-width: 768px) {
+.timerAlertBox {
+    width: 100%;
+    min-height: 50px;
+    float: right;
+}
+.timerAlertBoxDiv {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
 
+@media only screen and (min-width: 768px) {
+    .timerAlertBox {
+        width: 50%;
+    }
 }
 
 @media only screen and (min-width: 1000px) {
     .class_for_padding {
         padding: 0 3rem 0 3rem;
+    }
+    .timerAlertBox {
+        width: 40%;
     }
 }
 </style>

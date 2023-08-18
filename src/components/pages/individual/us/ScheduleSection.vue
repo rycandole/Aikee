@@ -99,7 +99,7 @@ const handleDateTime = async () => {
     country: "US",
     date: date,
     time: timeInput.value,
-    timer: moment(new Date().getTime()).add(30, "minutes"),
+    timer: moment(new Date().getTime()).add(10, "seconds"),
   };
 
   let save_slot = await axios.post("save_slot/", jsonDATA);

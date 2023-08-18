@@ -91,9 +91,15 @@ watch(() => clinic_location.value, (newValue) => {
       if (newValue == 'MNL') {
           branch = newValue
           hasBranch = false
+          dateInput.value = ""
+          timeSched.value = ""
+          timeInput.value = ""
       } else if (newValue == 'BGC') { 
           branch = newValue
           hasBranch = false
+          dateInput.value = ""
+          timeSched.value = ""
+          timeInput.value = ""
       } else {
           branch = ""
           hasBranch = true
@@ -177,6 +183,7 @@ const handleDateTime = async () => {
     country: "OT",
     date: date,
     time: timeInput.value,
+    timer: moment(new Date().getTime()).add(2, "minutes"),
   };
 
   let save_slot = await axios.post("save_slot/", jsonDATA);

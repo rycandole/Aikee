@@ -75,10 +75,10 @@
     let issuedDate = moment(details.issuedDate).format('LL');
     let lastName = details.ad_lastName
     let firstName = details.ad_firstName
-    let middleName = details.ad_middleName
+    let middleName = details.ad_middleName == "" ? "None" : details.ad_middleName
     let motherLastName = details.mother_lastName
     let motherFirstName = details.mother_firstName
-    let motherdiddleName = details.mother_middleName
+    let motherdiddleName = details.mother_middleName == "" ? "None" : details.mother_middleName
     let birthDate = moment(details.dob).format('LL');
     let gender = details.gender
     let civilStatus = details.civil_status

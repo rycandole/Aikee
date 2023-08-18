@@ -15,7 +15,6 @@
     import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
     import Swal from '@/sweetalert2'
-    // import Datepicker from '@/datepicker.js'
     import moment from 'moment'
     import * as yup from 'yup';
     
@@ -76,9 +75,15 @@
         if (newValue == 'MNL') {
             branch = newValue
             hasBranch = false
+            dateInput.value = ""
+            timeSched.value = ""
+            timeInput.value = ""
         } else if (newValue == 'BGC') { 
             branch = newValue
             hasBranch = false
+            dateInput.value = ""
+            timeSched.value = ""
+            timeInput.value = ""
         } else {
             branch = ""
             hasBranch = true
@@ -174,10 +179,11 @@
         const date = moment(dateInput.value).format('YYYY-MM-DD')
 
         const jsonDATA = {
-                branch: clinic_code.get(clinic_location.value),
-                country: "NZ",
-                date: date,
-                time: timeInput.value
+            branch: clinic_code.get(clinic_location.value),
+            country: "NZ",
+            date: date,
+            time: timeInput.value,
+            timer: moment(new Date().getTime()).add(30, "seconds")
         }
 
         let save_slot = await axios.post("save_slot/", jsonDATA);

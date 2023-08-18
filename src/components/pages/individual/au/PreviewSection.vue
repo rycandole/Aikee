@@ -48,7 +48,6 @@
     let textSuccess1 = "text-success"
     let textSuccess2 = "text-success"
     let isButtonDisabled = true
-    let hasMedicalExam = true
     let checkbox1 = ref(null)
     let checkbox2 = ref(null)
     let branch = ref(null)
@@ -78,10 +77,10 @@
     let issuedDate = moment(details.issuedDate).format('LL');
     let lastName = details.ad_lastName
     let firstName = details.ad_firstName
-    let middleName = details.ad_middleName
+    let middleName = details.ad_middleName || 'None'
     let motherLastName = details.mother_lastName
     let motherFirstName = details.mother_firstName
-    let motherdiddleName = details.mother_middleName
+    let motherdiddleName = details.mother_middleName || 'None'
     let birthDate = moment(details.dateOfBirth).format('LL');
     let gender = details.gender
     let civilStatus = details.civil_status
@@ -274,7 +273,7 @@
                             v-bind:previewText="wasFirstMedExam == 'Y' ? 'Yes' : 'No'"
                         />
                     </div>
-                    <div class="col-12 pl-5" :hidden="wasFirstMedExam == 'yes' ? hasMedicalExam = true : hasMedicalExam = false">
+                    <div class="col-12 pl-5" :hidden="wasFirstMedExam == 'N' ? false : true">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-sm-12">
                                 <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
@@ -296,28 +295,28 @@
                         </div>
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div :hidden="trn !== '' ? false : true" class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="TRN/HAP I.D."
                             v-bind:previewText="trn"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div :hidden="trn !== '' ? false : true" class="col-12"><hr /></div>
+                    <div :hidden="passportNumber !== '' ? false : true" class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Passport Number"
                             v-bind:previewText="passportNumber"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div :hidden="passportNumber !== '' ? false : true" class="col-12"><hr /></div>
+                    <div :hidden="issuedCountry !== '' ? false : true" class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Country of Issue"
                             v-bind:previewText="issuedCountry"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div :hidden="issuedCountry !== '' ? false : true" class="col-12"><hr /></div>
+                    <div :hidden="issuedDate === '' || issuedDate == 'Invalid date' ? true : false" class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
                             v-bind:previewText="issuedDate"

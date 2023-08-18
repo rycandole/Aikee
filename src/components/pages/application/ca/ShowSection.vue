@@ -7,6 +7,7 @@ import FormHeader from '@/components/global/FormHeader.vue'
 // import SubFormHeader from '@/components/global/SubFormHeader.vue'
 import PreviewText from '@/components/global/PreviewText.vue'
 import PreviewSmallText from '@/components/global/PreviewSmallText.vue'
+import SubNavbar from "@/components/includes/SubNavbar.vue";
 import moment from 'moment'
 
 const route = useRoute();
@@ -33,6 +34,11 @@ const showInformation = async () => {
     <!-- ============================================================== -->
                         <!-- Main Container -->
     <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-12">
+          <SubNavbar />
+        </div>
+      </div>
     <div v-if="CA_Information" class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
             <h1 class="text-secondary text-center fs-1 fw-bold" >Application Details</h1>
@@ -77,7 +83,7 @@ const showInformation = async () => {
                             v-bind:previewText="`${row.Prev_AUMed}` == 'N' ? 'No' : 'Yes' "
                         />
                     </div>
-                    <div class="col-12 pl-5">
+                    <div :hidden="`${row.Prev_AUMed}` == 'N' ? true : false" class="col-12 pl-5">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-sm-12">
                                 <PreviewText 
@@ -155,8 +161,9 @@ const showInformation = async () => {
                                 <PreviewText 
                                     previewLabel="ALIAS/A.K.A. Name on Passport, if any."
                                 />
+                                <h4 :hidden="`${row.AKALastName}` == 'null' ? false : true" class="text-secondary ml-2">{{ `${row.AKALastName}` == 'null' ? "None" : '' }}</h4>
                             </li>
-                            <div class="row">
+                            <div class="row" :hidden="`${row.AKALastName}` == 'null' ? true : false">
                                 <div class="col-lg-4 col-md-12 col-sm-12">
                                     <PreviewSmallText 
                                         v-bind:previewText="`${row.AKALastName}`"
@@ -171,7 +178,7 @@ const showInformation = async () => {
                                 </div>
                                 <div class="col-lg-4 col-md-12 col-sm-12">
                                     <PreviewSmallText 
-                                        v-bind:previewText="`${row.AKAMiddleName}`"
+                                        v-bind:previewText="`${row.AKAMiddleName}` == 'null' ?'None' : `${row.AKAMiddleName}`"
                                         smallLabel="Middle Name"
                                     />
                                 </div>
@@ -278,19 +285,20 @@ const showInformation = async () => {
                             headerText="Visa Application Information"
                         />
                     </div>
-                    <div class="col-12">
-                        <PreviewText 
-                            previewLabel="Embassy of Visa Application"
-                            v-bind:previewText="`${row.priorityTime}`"
-                        />
-                    </div>
-                    <div class="col-12"><hr /></div>
                     <div class="col-12 pb-3">
                         <PreviewText 
-                            previewLabel="Visa Category"
+                            previewLabel="Category of applicant"
                             v-bind:previewText="`${row.SubClass}`"
                         />
                     </div>
+                    <div class="col-12"><hr /></div>
+                    <div class="col-12">
+                        <PreviewText 
+                            previewLabel="File Number/IME"
+                            v-bind:previewText="`${row.App_TRN}`"
+                        />
+                    </div>
+                    
                     
                     <div class="mb-3 col-12">
                         <FormHeader
