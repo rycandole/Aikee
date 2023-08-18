@@ -70,19 +70,20 @@
     let wasFirstMedExam = details.wasFirstMedicalExam
     let prevClinic = details.prevClinicName
     let prevCategory = details.prevCategory
-    let passportNumber = details.passportNumber
-    let issuedCountry = details.issuedCountry
-    let issuedDate = moment(details.issuedDate).format('LL');
+    let passportNumber = details.passportNumber == "" ? "null" : details.passportNumber
+    let issuedCountry = details.issuedCountry == "" ? "null" : details.issuedCountry
+    let issuedDate = moment(details.issuedDate).format('LL') == "Invalid date" ? "null" : moment(details.issuedDate).format('LL');
     let lastName = details.ad_lastName
     let firstName = details.ad_firstName
     let middleName = details.ad_middleName
+    let check_alias = details.check_alias
     let alias_lastName = details.alias_lastName
     let alias_firstName = details.alias_firstName
     let alias_middleName = details.alias_middleName
     let motherLastName = details.mother_lastName
     let motherFirstName = details.mother_firstName
     let motherdiddleName = details.mother_middleName
-    let birthDate = moment(details.dob).format('LL');
+    let birthDate = moment(details.date_of_birth).format('LL');
     let gender = details.gender
     let civilStatus = details.civil_status
     let nationality = details.nationality
@@ -125,7 +126,7 @@
                 json_prevCategory: prevCategory,
                 json_passportNumber: passportNumber,
                 json_issuedCountry: issuedCountry,
-                json_issuedDate: details.issuedDate,
+                json_issuedDate: details.issuedDate == "Invalid date" ? null : moment(details.issuedDate).format('YYYY-MM-DD'),
                 json_lastName: lastName,
                 json_firstName: firstName,
                 json_middleName: middleName,
@@ -135,7 +136,7 @@
                 json_motherLastName: motherLastName,
                 json_motherFirstName: motherFirstName,
                 json_motherMiddleName: motherdiddleName,
-                json_birthDate: details.dob,
+                json_birthDate: moment(details.date_of_birth).format('YYYY-MM-DD'),
                 json_gender: gender,
                 json_civilStatus: civilStatus,
                 json_nationality: nationality,
@@ -265,7 +266,7 @@
                             v-bind:previewText="wasFirstMedExam == 'N' ? 'No' : 'Yes' "
                         />
                     </div>
-                    <div class="col-12 pl-5">
+                    <div class="col-12 pl-5" :hidden="wasFirstMedExam == 'N' ? false : true">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-sm-12">
                                 <PreviewText 
@@ -336,9 +337,10 @@
                             <li>
                                 <PreviewText 
                                     previewLabel="ALIAS/A.K.A. Name on Passport, if any."
+                                    v-bind:previewText="check_alias == 'checked' ? 'Has alias' : 'No Alias'"
                                 />
                             </li>
-                            <div class="row">
+                            <div :hidden="check_alias == 'checked' ? false : true" class="row">
                                 <div class="col-lg-4 col-md-12 col-sm-12">
                                     <PreviewSmallText 
                                         v-bind:previewText="alias_lastName"

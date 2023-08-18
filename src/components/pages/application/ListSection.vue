@@ -53,32 +53,12 @@ const re_sendEmail = async (id) => {
 
       alert(res.data.message)
 
-      // console.log(res)
-
-      // const results = async () => {
-      //   const a = await res;
-
-      //   status_code.value = a.status;
-      // };
-
-      // Swal.fire("Email send ", "Please check your email", "success");
-      // if (results() == 200) {
-
-      // }
-
-      // console.log(results());
     } else if (result.isDenied) {
       Swal.fire("Email not Send", "Check your internet connection", "error");
     }
   });
 
-  // const JSONdata = {
-  //           date: '2023-06-29',
-  //           country: 'US'
-  //       }
-
-  // let res = await axios.post('check_slots/', JSONdata)
-};
+}
 </script>
 <template>
   <div class="col-12">
@@ -187,7 +167,14 @@ const re_sendEmail = async (id) => {
                   <ul class="dropdown-menu">
                     <li>
                       <router-link
-                        :to="'application/' + `${row.Country}` + '/' + `${row.Id}`"
+                        :to="
+                          'application/show/' +
+                          `${row.Country}` +
+                          '/' +
+                          `${row.Id}` +
+                          '/' +
+                          `${row.PayCode}`
+                        "
                         class="dropdown-item"
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
                       >

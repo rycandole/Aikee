@@ -79,10 +79,10 @@
     let issuedDate = moment(details.issuedDate).format('LL');
     let lastName = details.ad_lastName
     let firstName = details.ad_firstName
-    let middleName = details.ad_middleName
+    let middleName = details.ad_middleName == '' ? 'None' : details.ad_middleName || ''
     let motherLastName = details.mother_lastName
     let motherFirstName = details.mother_firstName
-    let motherdiddleName = details.mother_middleName
+    let motherdiddleName = details.mother_middleName == '' ? 'None' : details.mother_middleName || ''
     let birthDate = moment(details.dob).format('LL');
     let gender = details.gender
     let civilStatus = details.civil_status
@@ -274,7 +274,7 @@
                             v-bind:previewText="wasFirstMedExam == 'N' ? 'No' : 'Yes' "
                         />
                     </div>
-                    <div class="col-12 pl-5">
+                    <div :hidden="wasFirstMedExam == 'Y' ? true : false" class="col-12 pl-5">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-sm-12">
                                 <PreviewText 
@@ -291,19 +291,19 @@
                         </div>
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12">
+                    <div :hidden="passportNumber == '' ? true : false" class="col-lg-8 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Passport Number"
                             v-bind:previewText="passportNumber"
                         />
                     </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12">
+                    <div :hidden="issuedCountry == '' ? true : false" class="col-lg-8 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Country of Issue"
                             v-bind:previewText="issuedCountry"
                         />
                     </div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div :hidden="issuedDate == '' || issuedDate == 'Invalid date' ? true : false " class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
                             v-bind:previewText="issuedDate"
@@ -482,13 +482,13 @@
                                         v-bind:previewText="intendedStay == 'T' ? 'Temporary' : 'Permanent' "
                                     />
                                 </div>
-                                <div class="col-2">
+                                <div :hidden="intendedStay == 'P' ? true : false" class="col-2">
                                     <PreviewText 
                                         previewLabel="Year"
                                         v-bind:previewText="stayYear"
                                     />
                                 </div>
-                                <div class="col-2">
+                                <div :hidden="intendedStay == 'P' ? true : false" class="col-2">
                                     <PreviewText 
                                         previewLabel="Months"
                                         v-bind:previewText="stayMonth"

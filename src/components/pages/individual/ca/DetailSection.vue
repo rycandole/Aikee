@@ -2,6 +2,7 @@
     import axios from 'axios'
     import { ref } from 'vue'
     import { onMounted } from 'vue'
+    import { defineExpose } from  "vue";
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useCAIndividualSched } from '@/store/ca-individual-sched'
@@ -57,7 +58,8 @@
     let mother_lastName = ref(null)
     let mother_firstName = ref(null)
     let mother_middleName = ref(null)
-    let dateOfBirth = ref(null)
+    let date_of_birth = ref(null)
+    let validate_date_of_birth = ref(null)
     let gender = ref(null)
     let civil_status = ref(null)
     let nationality = ref(null)
@@ -102,7 +104,8 @@
         mother_lastName.value = details.mother_lastName || ''
         mother_firstName.value = details.mother_firstName || ''
         mother_middleName.value = details.mother_middleName || ''
-        dateOfBirth.value = details.dob || ''
+        date_of_birth.value = details.dob || ''
+        validate_date_of_birth.value = details.dob || ''
         gender.value = details.gender || ''
         civil_status.value = details.civil_status || ''
         nationality.value = details.nationality || ''
@@ -155,6 +158,10 @@
         }
     }
 
+    const alertChange = () => {
+        validate_date_of_birth.value = new Date(date_of_birth.value);
+    }
+
     const schema = yup.object().shape({
         wasFirstMedicalExam: yup.string().required('This field is required, please choose an option!'),
         is_first_med_exam:yup.string(),
@@ -184,15 +191,16 @@
             then: (schema) => schema.required('First name is required!').min(2, 'First name must be atleast 2 characters').max(30, 'First name must be at most 30 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
             otherwise: (schema) => schema.nullable()
         }),
-        alias_middleName: yup.string().optional().min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
+        // alias_middleName: yup.string().max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
         mother_lastName: yup.string().required('Mother Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         mother_firstName: yup.string().required('Mother First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         mother_middleName: yup.string().optional().nullable(),
+        validate_date_of_birth: yup.string().required("Date of Birth is Required!"),
         gender:yup.string().required('Gender is required!'),
         civil_status:yup.string().required('This field is required, please choose from options!'),
         nationality: yup.string().required('This field is required, please choose from options!'),
         contactNumber: yup.string().required('Contact number is required!').min(11, 'Contact number must be exactly 11').max(11, 'Contact number must be exactly 11').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
-        street: yup.string().required('Street is required').min(2, 'Minimmum of 2 character').max(6, 'maximum of 6 characters'),
+        street: yup.string().required('Street is required').min(2, 'Minimmum of 2 character').max(20, 'maximum of 20 characters'),
         barangay: yup.string().required('Barangay is required').min(5, 'This field must be atleast 5 characters').max(25, 'This field must be at most 25 characters'),
         city: yup.string().required('City is required').min(5, 'City must be atleast 5 characters').max(25,'This field must be at most 25 characters'),
         provinceField: yup.string().required('Province is required!').min(4, 'This field atleast 4 characters').max(25, 'This field must be at most 25 characters'),
@@ -211,7 +219,7 @@
 
         errors.value = []
 
-        let dob = moment(new Date(dateOfBirth.value)).format('YYYY-MM-DD')
+        let dob = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
         let isuedDate = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
       
         const jsonDATA = {
@@ -232,7 +240,7 @@
                 json_mother_lastName: values.mother_lastName,
                 json_mother_firstName: values.mother_firstName,
                 json_mother_middleName: values.mother_middleName,
-                json_dateOfBirth: dob,
+                json_date_of_birth: dob,
                 json_gender: values.gender,
                 json_civil_status: values.civil_status,
                 json_nationality: values.nationality,
@@ -310,6 +318,7 @@
             country: useCAIndividualSched().country,
             date: useCAIndividualSched().date,
             time: useCAIndividualSched().time,
+            timer: useCAIndividualSched().timer,
         }
 
         let remove_slot = await axios.post("remove_slot/", jsonDATA);
@@ -322,6 +331,13 @@
 
         }
     }
+
+const sampleFunction = () => {
+  console.log("Function called!")
+}
+defineExpose({
+  sampleFunction,
+})
 </script>
 
 <template>
@@ -360,7 +376,6 @@
                                 v-model:input="wasFirstMedicalExam"
                                 :onChange="handlePrevMedicalExam"
                         />
-                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
                     </div>
                    
                     <div class="col-lg-10 col-md-9 col-sm-12 examRadioRight">
@@ -372,7 +387,6 @@
                                 v-model:input="wasFirstMedicalExam"
                                 :onChange="handlePrevMedicalExam"
                         />
-                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                     </div>
                     <Field type="hidden" name="is_first_med_exam" :value="is_first_med_exam" v-model="is_first_med_exam"/>
                      <div class="col-12">
@@ -426,7 +440,6 @@
                             requiredClass="d-none"
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="issuedDate"
-                            :onChange="showBooster1"
                             :error="(errors.json_issuedDate) ? (errors.json_issuedDate[0]) : ((inputName == 'json_issuedDate') ? (inputError) : '')"
                         />
                     </div>
@@ -553,9 +566,9 @@
                                         placeholder="Date of Birth"
                                         color="red"
                                         :disabledDate="disableBirthdayState.disabledDates"
-                                        v-model:input="dateOfBirth"
+                                        v-model:input="date_of_birth"
                                         :onChange="alertChange"
-                                        :error="(errors.json_dateOfBirth) ? (errors.json_dateOfBirth[0]) : ((inputName == 'json_dateOfBirth') ? (inputError) : '')"
+                                        :error="(errors.json_date_of_birth) ? (errors.json_date_of_birth[0]) : ((inputName == 'json_date_of_birth') ? (inputError) : '')"
                                     />
                                 </div>
                                 <Field

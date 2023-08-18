@@ -2,6 +2,7 @@
     import axios from 'axios'
     import { ref } from 'vue'
     import { onMounted } from 'vue'
+    import { defineExpose } from  "vue";
     import { useRouter } from 'vue-router'
     import {useRoute} from "vue-router"
     import { useProfileStore } from '@/store/profile-store'
@@ -18,11 +19,9 @@
     import RadioButton from '@/components/global/RadioButtton.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
-    import { ErrorMessage } from 'vee-validate'
+    import { Field, ErrorMessage } from 'vee-validate'
     import moment from 'moment'
     import * as yup from 'yup';
-
-    // import { ucwords } from "@/assets/js/string_functions"
 
     // ================= Select Option Array ===================== //
     import civilStatus from '@/assets/js/arrays/civil_status_array'
@@ -56,6 +55,7 @@
     let textSuccess1 = "text-success"
     let embassyOfVisa = regCountry
     let visaCategoryField = ref(null)
+    let validate_date_of_issue = ref(null)
     let passportNumber = ref(null)
     let issuedCountry = ref(null)
     let issuedDate = ref(null)
@@ -66,6 +66,7 @@
     let mother_firstName = ref(null)
     let mother_middleName = ref(null)
     let dateOfBirth = ref(null)
+    let validate_date_of_birth = ref(null)
     let gender = ref(null)
     let civil_status = ref(null)
     let nationality = ref(null)
@@ -85,43 +86,15 @@
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
 
     /**
-     * For Fetching user data
-     */
-    //  onMounted(async () => {
-    //     await profileStore.fetchProfileById(router.params.id)
-
-    //     embassyOfVisa.value = details.embassyOfVisa || ''
-    //     visaCategoryField.value = details.visaCategoryField || ''
-    //     passportNumber.value = details.passportNumber || ''
-    //     issuedCountry.value = details.issuedCountry || ''
-    //     issuedDate.value = details.issuedDate || ''
-    //     ad_lastName.value = details.ad_lastName || ''
-    //     ad_firstName.value = details.ad_firstName || ''
-    //     ad_middleName.value = details.ad_middleName || ''
-    //     mother_lastName.value = details.mother_lastName || ''
-    //     mother_firstName.value = details.mother_firstName || ''
-    //     mother_middleName.value = details.mother_middleName || ''
-    //     dateOfBirth.value = details.dob || ''
-    //     gender.value = details.gender || ''
-    //     civil_status.value = details.civil_status || ''
-    //     nationality.value = details.nationality || ''
-    //     contactNumber.value = details.contactNumber || ''
-    //     street.value = details.street || ''
-    //     barangay.value = details.barangay || ''
-    //     city.value = details.city || ''
-    //     provinceField.value = details.provinceField || ''
-    //     postalCode.value = details.postalCode || ''
-    // })
-
-    /**
      * Display informaion for edit
      */
 
-    onMounted( () => {
+    onMounted( async () => {
         visaCategoryField.value = details.visaCategoryField || ''
         passportNumber.value = details.passportNumber || ''
         issuedCountry.value = details.issuedCountry || ''
         issuedDate.value = details.issuedDate || ''
+        validate_date_of_issue.value = details.issuedDate || ''
         ad_lastName.value = details.ad_lastName || ''
         ad_firstName.value = details.ad_firstName || ''
         ad_middleName.value = details.ad_middleName || ''
@@ -129,6 +102,7 @@
         mother_firstName.value = details.mother_firstName || ''
         mother_middleName.value = details.mother_middleName || ''
         dateOfBirth.value = details.dob || ''
+        validate_date_of_birth.value = details.dob || ''
         gender.value = details.gender || ''
         civil_status.value = details.civil_status || ''
         nationality.value = details.nationality || ''
@@ -140,18 +114,27 @@
         postalCode.value = details.postalCode || ''
     })
 
-    
 
+    const alertIssueDate = () => {
+        validate_date_of_issue.value = new Date(issuedDate.value);
+    }
+
+    const alertChange = () => {
+        validate_date_of_birth.value = new Date(dateOfBirth.value)
+    }
+    
     const schema = yup.object().shape({
         visaCategoryField: yup.string().required('This field is required, please choose an option!'),
         passportNumber: yup.string().required('This field is required!').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         issuedCountry: yup.string().required('This field is required, please choose an option!'),
+        validate_date_of_issue: yup.string().required("Date of issue is required!"),
         ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         ad_firstName: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_middleName: yup.string().optional('Middle name is required!').min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
+        ad_middleName: yup.string().nullable(),
         mother_lastName: yup.string().required('Mother Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         mother_firstName: yup.string().required('Mother First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        mother_middleName: yup.string().optional().nullable(),
+        mother_middleName: yup.string().nullable(),
+        validate_date_of_birth: yup.string().required("Date of birth is required!"),
         gender:yup.string().required('Gender is required!'),
         civil_status:yup.string().required('This field is required, please choose from options!'),
         nationality: yup.string().required('This field is required, please choose from options!'),
@@ -275,6 +258,13 @@
             from: new Date(currentDate),
         }
     }
+
+    const sampleFunction = () => {
+        console.log("Function called!")
+    }
+    defineExpose({
+        sampleFunction,
+    })
 </script>
 
 <template>
@@ -341,13 +331,19 @@
                         <DateField 
                             label="Date of Issue"
                             placeholder="Date Received"
-                            requiredClass="d-none"
+                            color="red"
+                            :onChange="alertIssueDate"
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="issuedDate"
-                            :onChange="showBooster1"
                             :error="(errors.json_issuedDate) ? (errors.json_issuedDate[0]) : ((inputName == 'json_issuedDate') ? (inputError) : '')"
                         />
-                            
+                        <Field
+                            type="hidden"
+                            name="validate_date_of_issue"
+                            width="100px"
+                            v-model="validate_date_of_issue"
+                        />
+                        <ErrorMessage name="validate_date_of_issue" class="text-danger pt-3 pl-3" />
                     </div>
                     <div class="mb-3 col-12">
                         <FormHeader
@@ -430,12 +426,20 @@
                                     <DateField 
                                         divLabelClass="d-none"
                                         placeholder="Date of Birth"
+                                        color="red"
                                         :disabledDate="disableBirthdayState.disabledDates"
                                         v-model:input="dateOfBirth"
-                                        :onChange="showBooster1"
+                                        :onChange="alertChange"
                                         :error="(errors.json_dateOfBirth) ? (errors.json_dateOfBirth[0]) : ((inputName == 'json_dateOfBirth') ? (inputError) : '')"
                                     />
                                 </div>
+                                <Field
+                                    type="hidden"
+                                    name="validate_date_of_birth"
+                                    width="100px"
+                                    v-model="validate_date_of_birth"
+                                />
+                                <ErrorMessage name="validate_date_of_birth" class="text-danger pt-3 pl-3" />
                             </div>
                             <li>Gender <b class="text-danger">*</b></li>
                             <div class="row">

@@ -2,6 +2,7 @@
     import axios from 'axios'
     import { ref } from 'vue'
     import { onMounted } from 'vue'
+    import { defineExpose } from  "vue";
     import { useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useNZIndividualSched } from '@/store/nz-individual-sched'
@@ -12,13 +13,12 @@
     import DateField from '@/components/global/DateField.vue'
     import RequiredInputField from '@/components/global/RequiredInputField.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
-    // import RequiredRadioButton from '@/components/global/RequiredRadioButton.vue'
     import SelectField from '@/components/global/SelectField.vue'
     import InputField from '@/components/global/InputField.vue'
     import RadioButton from '@/components/global/RadioButtton.vue'
     import SideNav from '@/components/pages/individual/includes/SideNav.vue'
     import Swal from '@/sweetalert2'
-    import { ErrorMessage } from 'vee-validate'
+    import { Field, ErrorMessage } from 'vee-validate'
     import moment from 'moment'
     import * as yup from 'yup';
 
@@ -45,6 +45,7 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let hasMedicalExam = true
+    let is_first_med_exam = true
     let wasFirstMedicalExam = ref(null)
     let prevClinic = ref(null)
     let prevCategory = ref(null)
@@ -58,6 +59,7 @@
     let mother_firstName = ref(null)
     let mother_middleName = ref(null)
     let dateOfBirth = ref(null)
+    let validate_date_of_birth = ref(null)
     let gender = ref(null)
     let civil_status = ref(null)
     let nationality = ref(null)
@@ -70,6 +72,7 @@
     let isPermanent = true
     let medCertType = ref(null)
     let intendedStay = ref(null)
+    let validate_intended_stay = true
     let intendedOccupation = ref(null)
     let stayYear = ref(null)
     let stayMonth = ref(null)
@@ -80,7 +83,7 @@
     let inputError = ref(null)
     
 
-    const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
+    // const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
     const numOnlyRegex = /^[\p{N}]+$/u;
     const contactNumberRegex = /^[\p{N}\p{M}\s+/]+$/u;
@@ -104,6 +107,7 @@
         mother_firstName.value = details.mother_firstName || ''
         mother_middleName.value = details.mother_middleName || ''
         dateOfBirth.value = details.dob || ''
+        validate_date_of_birth.value = details.dob || ''
         gender.value = details.gender || ''
         civil_status.value = details.civil_status || ''
         nationality.value = details.nationality || ''
@@ -126,6 +130,7 @@
         intendedStay.value === 'P' ? isPermanent = true : isPermanent = false
         intendedStay.value === 'P' ? stayYear.value = "" : stayYear.value = details.stayYear
         intendedStay.value === 'P' ? stayMonth.value = "" : stayMonth.value = details.stayMonth
+        validate_intended_stay = intendedStay.value === 'P' ? false : true
     })
     
     const handlePrevMedicalExam = () => {
@@ -133,8 +138,10 @@
             hasMedicalExam = true
             prevClinic.value = ""
             prevCategory.value = ""
+            is_first_med_exam = true
         } else {
             hasMedicalExam = false
+            is_first_med_exam = false
         }
 
     }
@@ -144,38 +151,63 @@
             isPermanent = true
             stayYear.value = ""
             stayMonth.value = ""
+            validate_intended_stay = false
 
         } else {
             isPermanent = false
+            validate_intended_stay = true
         }
+    }
+
+    const alertChange = () => {
+        validate_date_of_birth.value = new Date(dateOfBirth.value);
     }
 
     const schema = yup.object().shape({
         medCertType: yup.string().required('This field is required, please choose from options'),
         wasFirstMedicalExam: yup.string().required('This field is required, please choose from options'),
-        prevClinic: yup.string().nullable(),
-        prevCategory: yup.string().nullable(),
-        passportNumber: yup.string().required('This field is required!').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
-        issuedCountry: yup.string().required('This field is required, please choose from options'),
+        is_first_med_exam:yup.string(),
+        prevClinicName: yup.string().when('is_first_med_exam', {
+            is: 'false',
+            then: (schema) => schema.required('Previous clinic name required!'),
+            otherwise: (schema) => schema.nullable()
+        }),
+        prevCategory: yup.string().when('is_first_med_exam', {
+            is: 'false',
+            then: (schema) => schema.required('Previous category name required!'),
+            otherwise: (schema) => schema.nullable()
+        }),
+        // passportNumber: yup.string().required('This field is required!').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
+        issuedCountry: yup.string().nullable(),
         ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         ad_firstName: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_middleName: yup.string().optional().min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
+        // ad_middleName: yup.string().nullable().min(2, 'Middle name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         gender:yup.string().required('Gender is required!'),
         mother_lastName: yup.string().required("Mother's first name is required").min(2, 'The value of this field must be at least 2 characters').max(25, 'The value must be at most 25 characters'),
         mother_firstName: yup.string().required("Mother last name is required").min(2, 'The value of this field must be at least 2 characters').max(25, 'The value must be at most 25 characters'),
-        mother_middleName: yup.string().optional().nullable(),
+        // mother_middleName: yup.string().nullable().min(2, "Mother's middle name must be atleast 2 characters").max(25, "Mother's middle name must be at most 25 characters").matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+        validate_date_of_birth: yup.string().required("Date of Birth is Required!"),
         civil_status:yup.string().required('This field is required, please choose an option!'),
         nationality: yup.string().required('This field is required, please choose an option!'),
         contactNumber: yup.string().required('Contact number is required!').min(11, 'Contact number must be exactly 11').max(11, 'Contact number must be exactly 11').matches(contactNumberRegex, "characters ex: abc!@#$%^").nullable(),
-        street: yup.string().required('Street is required').min(1, 'Minimmum of 1 character').max(6, 'maximum of 6 characters').nullable(),
-        barangay: yup.string().required('Barangay is required').min(5, 'This field must be atleast 5 characters').max(25, 'This field must be at most 25 characters').nullable(),
+        street: yup.string().required('Street is required').min(1, 'Minimmum of 1 character').max(6, 'maximum of 6 characters'),
+        barangay: yup.string().required('Barangay is required').min(5, 'This field must be atleast 5 characters').max(25, 'This field must be at most 25 characters'),
         city: yup.string().required('City is required').min(5, 'City must be atleast 5 characters').max(25,'This field must be at most 25 characters'),
         provinceField: yup.string().required('Province is required!').min(4, 'This field atleast 4 characters').max(25, ''),
         postalCode: yup.string().required('Postal code is required!').min(4, 'Postal code must be atleast 4 numbers').max(4, 'Postal code must be atleast 4 numbers').matches(numOnlyRegex, "Postal Code must be number only!"),
         intendedOccupation: yup.string().required('This field is required').min(4, 'Minimum of 4 characters').max(25, 'Maximum of 25 characters'),
         intendedStay: yup.string().required('This field is required, please choose from options'),
-        stayYear: yup.string().matches(numOnlyRegex, "Number only!"),
-        stayMonth: yup.string().matches(numOnlyRegex, "Number only!"),
+        validate_intended_stay: yup.string(),
+        stayYear: yup.string().when('validate_intended_stay', {
+            is: 'true',
+            then: (schema) => schema.required('Year is required!').matches(numOnlyRegex, "Number only!"),
+            otherwise: (schema) => schema.nullable()
+        }),
+        stayMonth: yup.string().when('validate_intended_stay', {
+            is: 'true',
+            then: (schema) => schema.required('Month is required!').matches(numOnlyRegex, "Number only!"),
+            otherwise: (schema) => schema.nullable()
+        }),
         visaCategory: yup.string().required('This field is required, please choose from options'),
         agencyField: yup.string().required('This field is required, please choose from options'),
     })
@@ -196,7 +228,7 @@
                 json_user_id: user_id,
                 json_medCertType: values.medCertType,
                 json_wasFirstMedicalExam: values.wasFirstMedicalExam,
-                json_prevClinic: values.prevClinic,
+                json_prevClinic: values.prevClinicName,
                 json_prevCategory: values.prevCategory,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
@@ -301,6 +333,12 @@
 
         }
     }
+    const sampleFunction = () => {
+        console.log("Function called!")
+    }
+    defineExpose({
+        sampleFunction,
+    })
 </script>
 
 <template>
@@ -348,7 +386,6 @@
                                 v-model:input="wasFirstMedicalExam"
                                 :onChange="handlePrevMedicalExam"
                         />
-                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
                     </div>
                    
                     <div class="col-lg-10 col-md-9 col-sm-12 examRadioRight">
@@ -360,8 +397,8 @@
                                 v-model:input="wasFirstMedicalExam"
                                 :onChange="handlePrevMedicalExam"
                         />
-                        <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                     </div>
+                    <Field type="hidden" name="is_first_med_exam" :value="is_first_med_exam" v-model="is_first_med_exam"/>
                      <div class="col-12">
                         <ErrorMessage name="wasFirstMedicalExam" class="text-danger"/>
                     </div>
@@ -371,8 +408,8 @@
                                 <InputField 
                                     label="Name of Clinic and Year of Visa Medical Examination"
                                     type="text"
-                                    FieldName="prevClinic"
-                                    ErrorName="prevClinic"
+                                    FieldName="prevClinicName"
+                                    ErrorName="prevClinicName"
                                     v-model:input="prevClinic"
                                 />
                             </div>
@@ -498,12 +535,20 @@
                                     <DateField 
                                         divLabelClass="d-none"
                                         placeholder="Date of Birth"
+                                        color="red"
                                         :disabledDate="disableBirthdayState.disabledDates"
                                         v-model:input="dateOfBirth"
-                                        :onChange="showBooster1"
+                                        :onChange="alertChange"
                                         :error="(errors.json_dateOfBirth) ? (errors.json_dateOfBirth[0]) : ((inputName == 'json_dateOfBirth') ? (inputError) : '')"
                                     />
                                 </div>
+                                <Field
+                                    type="hidden"
+                                    name="validate_date_of_birth"
+                                    width="100px"
+                                    v-model="validate_date_of_birth"
+                                />
+                                <ErrorMessage name="validate_date_of_birth" class="text-danger pt-3 pl-3" />
                             </div>
                             <li>Gender <b class="text-danger">*</b></li>
                             <div class="row">
@@ -667,6 +712,7 @@
                                     />
                                     <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                                 </div>
+                                <Field type="text" name="validate_intended_stay" :value="validate_intended_stay" v-model="validate_intended_stay"/>
                                 <div class="col-12">
                                     <ErrorMessage name="intendedStay" class="text-danger pb-3"/>
                                 </div>

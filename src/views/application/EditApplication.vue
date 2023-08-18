@@ -5,7 +5,7 @@ import SideNavigation from "@/components/includes/SideNavigation.vue";
 import FooterSection from "@/components/includes/FooterSection.vue";
 
 import EditSection_US from "@/components/pages/application/us/EditSection.vue";
-import ShowSection_CA from "@/components/pages/application/ca/ShowSection.vue";
+import EditSection_CA from "@/components/pages/application/ca/EditSection.vue";
 import ShowSection_AU from "@/components/pages/application/au/ShowSection.vue";
 import ShowSection_NZ from "@/components/pages/application/nz/ShowSection.vue";
 import ShowSection_OT from "@/components/pages/application/ot/ShowSection.vue";
@@ -20,6 +20,7 @@ const country = route.params.country;
     <SideNavigation />
 
     <!-- Content Wrapper. Contains page content -->
+    
     <div class="content-wrapper p-1 pb-5">
       <div class="container-md">
         <div class="row mb-2 pt-5 pb-5 class_for_padding">
@@ -44,7 +45,7 @@ const country = route.params.country;
             <EditSection_US />
           </div>
           <div v-else-if="country === 'CA'" class="col-12">
-            <ShowSection_CA />
+            <EditSection_CA />
           </div>
           <div v-else-if="country === 'AU'" class="col-12">
             <ShowSection_AU />

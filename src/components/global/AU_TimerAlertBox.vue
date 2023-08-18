@@ -4,50 +4,30 @@ import { ref } from "@vue/reactivity";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { defineProps, toRefs } from "vue";
-// import { defineExpose } from  "vue";
-import { useUSIndividualSched } from "@/store/us-individual-sched";
-import { useUSIndividualDetails } from "@/store/us-individual-details";
+import { useAUIndividualSched } from "@/store/au-individual-sched";
+import { useAUIndividualDetails } from "@/store/au-individual-details";
 import moment from "moment";
 import Swal from "@/sweetalert2";
 
 const router = useRouter();
-const US_IndividualSched = useUSIndividualSched();
-const USIndividualDetails = useUSIndividualDetails();
+const AU_IndividualSched = useAUIndividualSched();
+const AUIndividualDetails = useAUIndividualDetails();
 
 const props = defineProps({
   divClassName: String,
 });
 
 const { divClassName } = toRefs(props);
-
-// const inputComputed = computed({
-//   get: () => input.value,
-//   set: (val) => emit("update:input", val),
-// });
-
-const schedule = JSON.parse(localStorage.getItem("us-individual-sched"));
+const schedule = JSON.parse(localStorage.getItem("au-individual-sched"));
 
 let sched_timer = schedule.timer;
-// let saveDetailsTrigger = ref(0)
-// let triggerInput = ref(null)
-
 const minutes = ref(0);
 const seconds = ref(0);
 const launchMinute = new Date(sched_timer);
 
-// triggerInput = saveDetailsTrigger
-
-// defineExpose({
-//   triggerInput,
-// })
-
 onMounted(() => {
   registrationTimer();
 });
-
-// onUpdated(() => {
-//   console.log("Updated")
-// })
 
 const registrationTimer = () => {
   let timer = setInterval(() => {
@@ -68,16 +48,16 @@ const registrationTimer = () => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           const requestPAYLOAD = {
-            branch: useUSIndividualSched().branch,
-            country: useUSIndividualSched().country,
-            date: useUSIndividualSched().date,
-            time: useUSIndividualSched().time,
-            timer: moment(new Date().getTime()).add(5, "seconds"),
+            branch: useAUIndividualSched().branch,
+            country: useAUIndividualSched().country,
+            date: useAUIndividualSched().date,
+            time: useAUIndividualSched().time,
+            timer: moment(new Date().getTime()).add(5, "minutes")
           };
 
           let res = JSON.stringify(requestPAYLOAD);
           
-          US_IndividualSched.setUSIndividualSched(res);
+          AU_IndividualSched.setAUIndividualSched(res);
 
           location.reload();
 
@@ -103,11 +83,6 @@ const registrationTimer = () => {
           //   "info"
           // );
           moveBackSlot();
-        } else {
-          US_IndividualSched.clearUSIndividualSched();
-          USIndividualDetails.clearUSIndividualDetails();
-
-          clearInterval(timer);
         }
       });
     }
@@ -121,19 +96,19 @@ const registrationTimer = () => {
 
 const moveBackSlot = async () => {
   const jsonDATA = {
-    branch: useUSIndividualSched().branch,
-    country: useUSIndividualSched().country,
-    date: useUSIndividualSched().date,
-    time: useUSIndividualSched().time,
-    timer: useUSIndividualSched().timer,
+    branch: AU_IndividualSched().branch,
+    country: AU_IndividualSched().country,
+    date: AU_IndividualSched().date,
+    time: AU_IndividualSched().time,
+    timer: AU_IndividualSched().timer
   };
 
   let remove_slot = await axios.post("remove_slot/", jsonDATA);
 
   if (remove_slot.data.status_code === 200) {
-    US_IndividualSched.clearUSIndividualSched();
-    USIndividualDetails.clearUSIndividualDetails();
-    router.push("/individual/us/schedule");
+    AU_IndividualSched.clearAUIndividualSched();
+    AUIndividualDetails.clearAUIndividualDetails();
+    router.push("/individual/au/schedule");
   }
 };
 </script>

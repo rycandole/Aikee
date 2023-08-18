@@ -3,51 +3,34 @@ import axios from "axios";
 import { ref } from "@vue/reactivity";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import {useRoute} from "vue-router"
 import { defineProps, toRefs } from "vue";
-// import { defineExpose } from  "vue";
-import { useUSIndividualSched } from "@/store/us-individual-sched";
-import { useUSIndividualDetails } from "@/store/us-individual-details";
+import { useOTIndividualSched } from "@/store/ot-individual-sched";
+import { useOTIndividualDetails } from "@/store/ot-individual-details";
 import moment from "moment";
 import Swal from "@/sweetalert2";
 
 const router = useRouter();
-const US_IndividualSched = useUSIndividualSched();
-const USIndividualDetails = useUSIndividualDetails();
+const route = useRoute();
+const OT_IndividualSched = useOTIndividualSched();
+const OTIndividualDetails = useOTIndividualDetails();
+const regCountry = route.params.country;
 
 const props = defineProps({
   divClassName: String,
 });
 
 const { divClassName } = toRefs(props);
-
-// const inputComputed = computed({
-//   get: () => input.value,
-//   set: (val) => emit("update:input", val),
-// });
-
-const schedule = JSON.parse(localStorage.getItem("us-individual-sched"));
+const schedule = JSON.parse(localStorage.getItem("ot-individual-sched"));
 
 let sched_timer = schedule.timer;
-// let saveDetailsTrigger = ref(0)
-// let triggerInput = ref(null)
-
 const minutes = ref(0);
 const seconds = ref(0);
 const launchMinute = new Date(sched_timer);
 
-// triggerInput = saveDetailsTrigger
-
-// defineExpose({
-//   triggerInput,
-// })
-
 onMounted(() => {
   registrationTimer();
 });
-
-// onUpdated(() => {
-//   console.log("Updated")
-// })
 
 const registrationTimer = () => {
   let timer = setInterval(() => {
@@ -68,16 +51,16 @@ const registrationTimer = () => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           const requestPAYLOAD = {
-            branch: useUSIndividualSched().branch,
-            country: useUSIndividualSched().country,
-            date: useUSIndividualSched().date,
-            time: useUSIndividualSched().time,
-            timer: moment(new Date().getTime()).add(5, "seconds"),
+            branch: useOTIndividualSched().branch,
+            country: useOTIndividualSched().country,
+            date: useOTIndividualSched().date,
+            time: useOTIndividualSched().time,
+            timer: moment(new Date().getTime()).add(10, "seconds"),
           };
 
           let res = JSON.stringify(requestPAYLOAD);
           
-          US_IndividualSched.setUSIndividualSched(res);
+          OT_IndividualSched.setOTIndividualSched(res);
 
           location.reload();
 
@@ -103,11 +86,6 @@ const registrationTimer = () => {
           //   "info"
           // );
           moveBackSlot();
-        } else {
-          US_IndividualSched.clearUSIndividualSched();
-          USIndividualDetails.clearUSIndividualDetails();
-
-          clearInterval(timer);
         }
       });
     }
@@ -121,19 +99,19 @@ const registrationTimer = () => {
 
 const moveBackSlot = async () => {
   const jsonDATA = {
-    branch: useUSIndividualSched().branch,
-    country: useUSIndividualSched().country,
-    date: useUSIndividualSched().date,
-    time: useUSIndividualSched().time,
-    timer: useUSIndividualSched().timer,
+    branch: useOTIndividualSched().branch,
+    country: useOTIndividualSched().country,
+    date: useOTIndividualSched().date,
+    time: useOTIndividualSched().time,
+    timer: useOTIndividualSched().timer,
   };
 
   let remove_slot = await axios.post("remove_slot/", jsonDATA);
 
   if (remove_slot.data.status_code === 200) {
-    US_IndividualSched.clearUSIndividualSched();
-    USIndividualDetails.clearUSIndividualDetails();
-    router.push("/individual/us/schedule");
+    OT_IndividualSched.clearOTIndividualSched();
+    OTIndividualDetails.clearOTIndividualDetails();
+    router.push("/individual/ot/schedule/"+ regCountry);
   }
 };
 </script>
