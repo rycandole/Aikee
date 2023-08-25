@@ -98,7 +98,7 @@ const re_sendEmail = async (id) => {
                     <li>
                       <router-link
                         :to="
-                          'application/confirmation/' +
+                          'application/show/' +
                           `${row.Country}` +
                           '/' +
                           `${row.ID}` +
@@ -180,9 +180,17 @@ const re_sendEmail = async (id) => {
                       >
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link
-                      >
+                      <router-link 
+                        :to="
+                        'application/edit/' +
+                        `${row.Country}` +
+                        '/' +
+                        `${row.Id}` +
+                        '/' +
+                        `${row.PayCode}`
+                        "
+                        class="dropdown-item"
+                      ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link>
                     </li>
                     <li>
                       <router-link to="/" class="dropdown-item"

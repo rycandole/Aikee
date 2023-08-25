@@ -53,14 +53,15 @@ const payCode = route.params.paycode;
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <!-- Don't delete this router!!!! -->
+        <!-- <li class="nav-item">
           <router-link
             :to="'/application/confirmation/' + country + '/' + regID + '/' + payCode"
             class="nav-link"
           >
             <i class="fas fa-file-pdf pr-2"></i> Confirmation
           </router-link>
-        </li>
+        </li> -->
         <li class="nav-item">
           <router-link
             :to="'/application/show/' + country + '/' + regID + '/' + payCode"

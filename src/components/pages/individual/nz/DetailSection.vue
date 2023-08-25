@@ -712,7 +712,7 @@
                                     />
                                     <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                                 </div>
-                                <Field type="text" name="validate_intended_stay" :value="validate_intended_stay" v-model="validate_intended_stay"/>
+                                <Field type="hidden" name="validate_intended_stay" :value="validate_intended_stay" v-model="validate_intended_stay"/>
                                 <div class="col-12">
                                     <ErrorMessage name="intendedStay" class="text-danger pb-3"/>
                                 </div>

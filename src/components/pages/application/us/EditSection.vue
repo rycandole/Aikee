@@ -767,7 +767,7 @@ const disablePastDateState = {
   </div>
   <div v-if="date_of_birth" class="wrapper_container row bg-white border">
     <div class="col-12 mb-3">
-      <h1 class="text-secondary text-center fs-1 fw-bold">Edit Application Details</h1>
+      <h1 class="text-secondary text-center fs-1 fw-bold">United States of America</h1>
     </div>
     <!-- ============================================================== -->
     <!-- Main Container -->
