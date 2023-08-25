@@ -7,6 +7,7 @@ import FormHeader from '@/components/global/FormHeader.vue'
 // import SubFormHeader from '@/components/global/SubFormHeader.vue'
 import PreviewText from '@/components/global/PreviewText.vue'
 import PreviewSmallText from '@/components/global/PreviewSmallText.vue'
+import SubNavbar from "@/components/includes/SubNavbar.vue";
 import moment from 'moment'
 
 const route = useRoute();
@@ -14,6 +15,18 @@ const regId = route.params.id;
 
 let showApplication = ref([])
 let NZ_Information = ref(null)
+
+// const clinic_code = new Map([
+//             ["", null],
+//             ["MNL", "Ermita, Manila"],
+//             ["BGC", "Bonifacio Global City(BGC)"],
+//         ]);
+const medicalCertificate = new Map([
+                                ['Full', 'Full Medical Examination'],
+                                ['CXR', 'Chest X-ray only'],
+                                ['Limited', 'Limited Medical Examination']
+                            ])
+                            
 
 onMounted(async () => {
     showInformation()
@@ -25,6 +38,7 @@ const showInformation = async () => {
     showApplication = res.data.result
     NZ_Information.value = showApplication
 
+
 }
 
 </script>
@@ -33,9 +47,14 @@ const showInformation = async () => {
     <!-- ============================================================== -->
                         <!-- Main Container -->
     <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-12">
+            <SubNavbar />
+        </div>
+    </div>
     <div v-if="NZ_Information" class="wrapper_container row bg-white border">
-        <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Application Details</h1>
+        <div class="col-12 mb-2">
+            <h1 class="text-secondary text-center fs-1 fw-bold" >New Zealand</h1>
         </div>
          <!-- ============================================================== -->
                             <!-- Main Container -->
@@ -56,94 +75,71 @@ const showInformation = async () => {
                         />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Preferred Date of Medical examination"
                             v-bind:previewText="moment(`${row.PreferredMedicalExamDate}`).format('LL')"
                         />
                         
                     </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Preferred Time of Medical examination"
                             v-bind:previewText="`${row.priorityTime}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
+
                     <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Medical Certificate Type"
-                            v-bind:previewText="`${row.ExamType_NZ}`"
+                            v-bind:previewText="`${row.ExamType_NZ}` == 'null' ? 'None' : medicalCertificate.get(`${row.ExamType_NZ}`)"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
+
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Is this your first medical examination for the Canadian Embassy? "
                             v-bind:previewText="`${row.Prev_AUMed}` == 'N' ? 'No' : 'Yes' "
                         />
                     </div>
-                    <div class="col-12 pl-5">
+                    <div :hidden="`${row.Prev_AUMed}` == 'Y' ? true : false" class="col-12 pl-5">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-sm-12">
                                 <PreviewText 
                                     previewLabel="Name of Clinic and Year of Visa Medical Examination"
-                                    v-bind:previewText="`${row.PrevMedDetail1}`"
+                                    v-bind:previewText="`${row.PrevMedDetail1}` == 'null' ? 'None' : `${row.PrevMedDetail1}`"
                                 />
                             </div>
                             <div class="col-lg-8 col-md-12 col-sm-12">
                                 <PreviewText 
                                     previewLabel="Category applied for"
-                                    v-bind:previewText="`${row.PrevMedDetail2}`"
+                                    v-bind:previewText="`${row.PrevMedDetail2}` == 'null' ? 'None' : `${row.PrevMedDetail2}`"
                                 />
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="PASSPORT INFORMATION"
-                        />
-                    </div>
-                    <div class="col-12">
+                    <div class="col-12"><hr /></div>
+                    <div :hidden="`${row.PassNo}` == '' ? true : false" class="col-lg-8 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Passport Number"
-                            v-bind:previewText="`${row.PassNo}`"
+                            v-bind:previewText="`${row.PassNo}` == 'null' ? 'None' : `${row.PassNo}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
-                    <div class="col-12">
+                    <div :hidden="`${row.IssuedCountry}` == '' ? true : false" class="col-lg-6 col-md-12 col-sm-12">
                         <PreviewText 
                             previewLabel="Country of Issue"
-                            v-bind:previewText="`${row.IssuedCountry}`"
+                            v-bind:previewText="`${row.IssuedCountry}` == 'null' ? 'None' : `${row.IssuedCountry}`"
                         />
                     </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-12 pb-3">
+                    <div :hidden="`${row.IssuedDate}` == '' || `${row.IssuedDate}` == 'Invalid date' ? true : false " class="col-lg-6 col-md-12 col-sm-12 mb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
-                            v-bind:previewText="`${row.IssuedDate}`"
+                            v-bind:previewText="`${row.IssuedDate}` == 'null' ? 'None' : moment(`${row.IssuedDate}`).format('LL')"
                         />
                     </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="Visa Application Information"
-                        />
-                    </div>
-                    <div class="col-12">
-                        <PreviewText 
-                            previewLabel="Embassy of Visa Application"
-                            v-bind:previewText="`${row.priorityTime}`"
-                        />
-                    </div>
-                    <div class="col-12"><hr /></div>
-                    <div class="col-12 pb-3">
-                        <PreviewText 
-                            previewLabel="Visa Category"
-                            v-bind:previewText="`${row.SubClass}`"
-                        />
-                    </div>
-                    
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="APPLICANT DETAILS"
@@ -171,7 +167,7 @@ const showInformation = async () => {
                                 </div>
                                 <div class="col-lg-4 col-md-12 col-sm-12">
                                     <PreviewSmallText 
-                                        v-bind:previewText="`${row.MiddleName}`"
+                                        v-bind:previewText="`${row.MiddleName}` == 'null' ? 'None' : `${row.MiddleName}`"
                                         smallLabel="Middle Name"
                                     />
                                 </div>
@@ -179,9 +175,16 @@ const showInformation = async () => {
                             <hr />
                             <li>
                                 <PreviewText 
-                                    previewLabel="Mother's Maiden Name"
-                                    v-bind:previewText="`${row.MaidenName}`"
+                                    previewLabel="Mother's Maiden Name (Last Name, First Name, Middle Name)"
                                 />
+                                <div class="row">
+                                    <div class="col-12">
+                                        <PreviewSmallText 
+                                            v-bind:previewText="`${row.MaidenName}`"
+                                            smallLabel="Last Name, First Name, Middle Name"
+                                        />
+                                    </div>
+                                </div>
                                 <hr />
                             </li>
                             <li>
@@ -224,7 +227,7 @@ const showInformation = async () => {
                                         />
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12">
-                                        <PreviewText
+                                        <PreviewText 
                                             previewLabel="Email Address"
                                             v-bind:previewText="`${row.EmailAdd}`"
                                         />
@@ -273,6 +276,7 @@ const showInformation = async () => {
                             </li>
                         </ol>
                     </div>
+                    
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="ADDITIONAL QUESTIONS"
@@ -285,7 +289,7 @@ const showInformation = async () => {
                                 <div class="col-12">
                                     <PreviewText 
                                         previewLabelClassName="d-none"
-                                        v-bind:previewText="`${row.Intended}`"
+                                        v-bind:previewText="`${row.AddPost}`"
                                     />
                                 </div>
                             </div>
@@ -297,13 +301,13 @@ const showInformation = async () => {
                                         v-bind:previewText="`${row.Stay}` == 'T' ? 'Temporary' : 'Permanent' "
                                     />
                                 </div>
-                                <div class="col-2">
+                                <div :hidden="`${row.Stay}` == 'P' ? true : false" class="col-2">
                                     <PreviewText 
                                         previewLabel="Year"
                                         v-bind:previewText="`${row.StayYr}`"
                                     />
                                 </div>
-                                <div class="col-2">
+                                <div :hidden="`${row.Stay}` == 'P' ? true : false" class="col-2">
                                     <PreviewText 
                                         previewLabel="Months"
                                         v-bind:previewText="`${row.StayMt}`"
@@ -331,9 +335,10 @@ const showInformation = async () => {
                             </div>
                         </ol>
                     </div>
+                 
                 </div>        
             </div>
-        </form>    
+        </form>
         <!-- ============================================================== -->
                             <!-- End of Main Container -->
         <!-- ============================================================== -->

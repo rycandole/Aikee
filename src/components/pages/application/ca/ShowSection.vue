@@ -36,12 +36,12 @@ const showInformation = async () => {
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-12">
-          <SubNavbar />
+            <SubNavbar />
         </div>
-      </div>
+    </div>
     <div v-if="CA_Information" class="wrapper_container row bg-white border">
-        <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Application Details</h1>
+        <div class="col-12 mb-3">
+            <h1 class="text-secondary text-center fs-1 fw-bold" >Canada</h1>
         </div>
          <!-- ============================================================== -->
                             <!-- Main Container -->
@@ -67,7 +67,6 @@ const showInformation = async () => {
                             previewLabel="Preferred Date of Medical examination"
                             v-bind:previewText="moment(`${row.PreferredMedicalExamDate}`).format('LL')"
                         />
-                        
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
@@ -83,7 +82,7 @@ const showInformation = async () => {
                             v-bind:previewText="`${row.Prev_AUMed}` == 'N' ? 'No' : 'Yes' "
                         />
                     </div>
-                    <div :hidden="`${row.Prev_AUMed}` == 'N' ? true : false" class="col-12 pl-5">
+                    <div :hidden="`${row.Prev_AUMed}` == 'Y' ? true : false" class="col-12 pl-5">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-sm-12">
                                 <PreviewText 

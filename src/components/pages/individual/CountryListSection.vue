@@ -29,7 +29,7 @@
                 />
                 <CountryLinkBtn 
                     btnUrl="/individual/ot/kr"
-                    btnText="South Korea"
+                    btnText="South Korea / KOICA"
                 />
                 <CountryLinkBtn 
                     btnUrl="/individual/ot/fk"

@@ -7,20 +7,30 @@ import FormHeader from '@/components/global/FormHeader.vue'
 // import SubFormHeader from '@/components/global/SubFormHeader.vue'
 import PreviewText from '@/components/global/PreviewText.vue'
 import PreviewSmallText from '@/components/global/PreviewSmallText.vue'
+import SubNavbar from "@/components/includes/SubNavbar.vue";
 import moment from 'moment'
 
 const route = useRoute();
 const regId = route.params.id;
+const country = route.params.country;
+const country_code = new Map([
+    ["KR", "South Korea / KOICA"],
+    ["FK", "Falkland Islands"],
+    ["LV", "Latvia"],
+    ["MU", "Mauritius"],
+    ["OT", "Other Country"],
+])
 
 let showApplication = ref([])
 let OT_Information = ref(null)
+let country_name = country_code.get(country)
 
 onMounted(async () => {
     showInformation()
 })
 
 const showInformation = async () => {
-    let res = await axios.get('ot-show/' + regId)
+    let res = await axios.get('ot-show/'+ regId +"/"+ country)
 
     showApplication = res.data.result
     OT_Information.value = showApplication
@@ -33,9 +43,14 @@ const showInformation = async () => {
     <!-- ============================================================== -->
                         <!-- Main Container -->
     <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-12">
+            <SubNavbar />
+        </div>
+    </div>
     <div v-if="OT_Information" class="wrapper_container row bg-white border">
         <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Application Details</h1>
+            <h1 class="text-secondary text-center fs-1 fw-bold" >{{ country_name }}</h1>
         </div>
          <!-- ============================================================== -->
                             <!-- Main Container -->
@@ -78,7 +93,7 @@ const showInformation = async () => {
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Embassy of Visa Application"
-                            v-bind:previewText="`${row.priorityTime}`"
+                            v-bind:previewText="country_code.get(`${row.Country}`)"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
@@ -103,14 +118,14 @@ const showInformation = async () => {
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Country of Issue"
-                            v-bind:previewText="`${row.issuedCountry}`"
+                            v-bind:previewText="`${row.IssuedCountry}`"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-12 pb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
-                            v-bind:previewText="moment(`${row.issuedDate}`).format('LL')"
+                            v-bind:previewText="moment(`${row.IssuedDate}`).format('LL')"
                         />
                     </div>
                     <div class="mb-3 col-12">

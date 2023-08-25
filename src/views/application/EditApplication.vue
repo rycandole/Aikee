@@ -6,9 +6,9 @@ import FooterSection from "@/components/includes/FooterSection.vue";
 
 import EditSection_US from "@/components/pages/application/us/EditSection.vue";
 import EditSection_CA from "@/components/pages/application/ca/EditSection.vue";
-import ShowSection_AU from "@/components/pages/application/au/ShowSection.vue";
-import ShowSection_NZ from "@/components/pages/application/nz/ShowSection.vue";
-import ShowSection_OT from "@/components/pages/application/ot/ShowSection.vue";
+import EditSection_AU from "@/components/pages/application/au/EditSection.vue";
+import EditSection_NZ from "@/components/pages/application/nz/EditSection.vue";
+import EditSection_OT from "@/components/pages/application/ot/EditSection.vue";
 
 const route = useRoute();
 
@@ -41,20 +41,20 @@ const country = route.params.country;
             </ol>
           </div>
           <!-- /.col -->
-          <div v-if="country === 'US'" class="col-12 mb-5">
+          <div v-if="country === 'US'" class="col-12 mb-2">
             <EditSection_US />
           </div>
-          <div v-else-if="country === 'CA'" class="col-12">
+          <div v-else-if="country === 'CA'" class="col-12 mb-2">
             <EditSection_CA />
           </div>
-          <div v-else-if="country === 'AU'" class="col-12">
-            <ShowSection_AU />
+          <div v-else-if="country === 'AU'" class="col-12 mb-2">
+            <EditSection_AU />
           </div>
-          <div v-else-if="country === 'NZ'" class="col-12">
-            <ShowSection_NZ />
+          <div v-else-if="country === 'NZ'" class="col-12 mb-2">
+            <EditSection_NZ />
           </div>
-          <div v-else class="col-12">
-            <ShowSection_OT />
+          <div v-else class="col-12 mb-2">
+            <EditSection_OT />
           </div>
         </div>
         <!-- /.row -->
@@ -65,3 +65,21 @@ const country = route.params.country;
     <FooterSection />
   </div>
 </template>
+<style lang="scss">
+
+.class_for_padding {
+    padding: 1rem 0 0 0;
+}
+
+
+@media only screen and (min-width: 768px) {
+
+}
+
+@media only screen and (min-width: 1000px) {
+    .class_for_padding {
+        padding: 0 3rem 0 3rem;
+      }
+
+}
+</style>
