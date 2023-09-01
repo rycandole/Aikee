@@ -130,7 +130,16 @@ const re_sendEmail = async (id) => {
                       >
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
+                      <router-link  
+                      :to="
+                      'application/resched/' +
+                      `${row.Country}` +
+                      '/' +
+                      `${row.ID}` +
+                      '/' +
+                      `${row.PayCode}`
+                      " 
+                      class="dropdown-item"
                         ><i class="fas fa-calendar mr-2 text-success"></i>
                         Re-schedule</router-link
                       >
@@ -199,7 +208,16 @@ const re_sendEmail = async (id) => {
                       >
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
+                      <router-link 
+                      :to="
+                      'application/resched/' +
+                      `${row.Country}` +
+                      '/' +
+                      `${row.Id}` +
+                      '/' +
+                      `${row.PayCode}`
+                      " 
+                      class="dropdown-item"
                         ><i class="fas fa-calendar mr-2 text-success"></i>
                         Re-schedule</router-link
                       >

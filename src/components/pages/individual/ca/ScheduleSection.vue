@@ -15,7 +15,6 @@
     import RadioBtnSched from '@/components/global/RadioBtnSched.vue'
     import RequiredSelectField from '@/components/global/RequiredSelectField.vue'
     import Swal from '@/sweetalert2'
-    // import Datepicker from '@/datepicker.js'
     import moment from 'moment'
     import * as yup from 'yup';
     
