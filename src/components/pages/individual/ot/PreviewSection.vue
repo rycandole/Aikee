@@ -71,8 +71,8 @@
     let embassyOfVisa = details.embassyOfVisa
     let visaCategoryField = details.visaCategoryField
     let passportNumber = details.passportNumber
-    let issued_country = details.issuedCountry
-    let issued_date = moment(details.issuedDate).format('LL');
+    let country_issue = details.issuedCountry
+    let date_issued = moment(details.issuedDate).format('LL');
     let lastName = details.ad_lastName
     let firstName = details.ad_firstName
     let middleName = details.ad_middleName == "" ? "None" : details.ad_middleName
@@ -116,7 +116,7 @@
                 json_embassyOfVisa: embassyOfVisa,
                 json_visaCategoryField: visaCategoryField,
                 json_passportNumber: passportNumber,
-                json_issuedCountry: issued_country,
+                json_issuedCountry: country_issue,
                 json_issuedDate: details.issuedDate,
                 json_lastName: lastName,
                 json_firstName: firstName,
@@ -278,14 +278,14 @@
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Country of Issue"
-                            v-bind:previewText="issued_country"
+                            v-bind:previewText="country_issue"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-12 pb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
-                            v-bind:previewText="issued_date"
+                            v-bind:previewText="date_issued"
                         />
                     </div>
                     <div class="mb-3 col-12">

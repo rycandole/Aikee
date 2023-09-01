@@ -29,7 +29,7 @@ import ApplicationPage from '@/views/application/ApplicationPage.vue'
 import ApplicationShow from '@/views/application/ApplicationShow.vue'
 import ConfirmationPage from '@/views/application/ConfirmationPage.vue'
 import EditApplication from '@/views/application/EditApplication.vue'
-
+import ReschedulePage from '@/views/application/ReschedulePage.vue'
 
 // ================== INDIVIDUAL CHILD =========================== //
 import IndividualCountryPage from '@/views/individual/CountryPage.vue'
@@ -140,6 +140,11 @@ const routes = [
         path: '/application/edit/:country/:id/:paycode',
         name: 'editApplication',
         component: EditApplication,
+      },
+      {
+        path: '/application/resched/:country/:id/:paycode',
+        name: 'reschedulePage',
+        component: ReschedulePage,
       },
     ]
   },

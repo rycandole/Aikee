@@ -92,14 +92,14 @@ const showList = async () => {
       </tr>
       <tr>
           <td align="center" class="p-3">
-              <QrCode 
+              <!-- <QrCode 
                   :stringValue="payCode"
                   sizeImage="200"
-              />
-              <!-- <QrCode 
-                  stringValue="https://dev.slec.ph/?pds=UOL000001&country=us&branch=mnl"
-                  sizeImage="200"
               /> -->
+              <QrCode 
+                  stringValue="http://bit.ly/SLEC_Service_Evaluation"
+                  sizeImage="400"
+              />
               
           </td>
       </tr>
