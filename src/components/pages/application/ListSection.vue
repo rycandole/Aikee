@@ -46,9 +46,9 @@ const showList = async () => {
   listCount.value = res.data.listCount;
 };
 
-const sendMail = async (PAYLOAD) => {
+const sendMail = async (PAYLOAD, country) => {
    /* Read more about isConfirmed, isDenied below */
-   let res = await axios.post("re-send-email-us/", PAYLOAD);
+   let res = await axios.post("re-send-email-"+country+"/", PAYLOAD);
 
   let status_code = res.data.status_code
   let message = res.data.response
@@ -61,7 +61,7 @@ const sendMail = async (PAYLOAD) => {
     Swal.fire("Email not sent!", "Please inform administrator", "error");
   }
 }
-const re_sendEmail = async (id) => {
+const re_sendEmail = async (id, country) => {
   Swal.fire({
     title: "Are you sure you want to Re-send email?",
     text: "Confirm your action",
@@ -75,7 +75,7 @@ const re_sendEmail = async (id) => {
         regId: id,
       };
 
-      sendMail(requestPAYLOAD);
+      sendMail(requestPAYLOAD, country);
 
     } else if (result.isDenied) {
       Swal.fire("Email not Send", "Check your internet connection", "error");
@@ -169,7 +169,7 @@ const re_sendEmail = async (id) => {
                       >
                     </li>
                     <li>
-                      <button @click="re_sendEmail(`${row.ID}`)" class="dropdown-item">
+                      <button @click="re_sendEmail(`${row.ID}`, `${row.Country}`)" class="dropdown-item">
                         <i class="fas fa-envelope mr-2 text-primary"></i> Re-send email
                       </button>
                     </li>
@@ -247,10 +247,9 @@ const re_sendEmail = async (id) => {
                       >
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-envelope mr-2 text-primary"></i> Re-send
-                        email</router-link
-                      >
+                      <button @click="re_sendEmail(`${row.Id}`, `${row.Country}`)" class="dropdown-item">
+                        <i class="fas fa-envelope mr-2 text-primary"></i> Re-send email
+                      </button>
                     </li>
                   </ul>
                 </div>
