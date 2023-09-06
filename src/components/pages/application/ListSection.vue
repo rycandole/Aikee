@@ -3,10 +3,16 @@ import axios from "axios";
 import { ref } from "vue";
 import { onMounted } from "vue";
 import { useProfileStore } from "@/store/profile-store";
+// import { useUSHolidates } from "@/store/us-holidates";
+// import { use_TRIPLETS_MNL_Holidates } from '@/store/triplets-holidates-mnl'
+// import { use_TRIPLETS_BGC_Holidates } from '@/store/triplets-holidates-bgc'
 import Swal from "@/sweetalert2";
 import moment from "moment";
 
 const profileStore = useProfileStore();
+// const USHolidates = useUSHolidates();
+// const TRIPLETS_MNL_Holidates = use_TRIPLETS_MNL_Holidates()
+// const TRIPLETS_BGC_Holidates = use_TRIPLETS_BGC_Holidates()
 
 let user_id = profileStore.id;
 
@@ -16,9 +22,17 @@ let USList = ref(null);
 let TripletsList = ref(null);
 // let status_code = ref(null);
 let listCount = ref(null);
+// let country_list = ["CA", "AU", "NZ", "KR", "FK", "LV", "MU"];
 
 onMounted(async () => {
   showList();
+  // await USHolidates.fetchHolidaysByCountryAndBranch("US", "MNL");
+
+  // for (let i = 0; i <= 6; i++) {
+  //   await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch(country_list[i], 'MNL')
+  //   await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch(country_list[i], 'BGC')
+  // }
+
 });
 
 const showList = async () => {
@@ -31,7 +45,22 @@ const showList = async () => {
 
   listCount.value = res.data.listCount;
 };
-// id
+
+const sendMail = async (PAYLOAD) => {
+   /* Read more about isConfirmed, isDenied below */
+   let res = await axios.post("re-send-email-us/", PAYLOAD);
+
+  let status_code = res.data.status_code
+  let message = res.data.response
+
+  if (status_code == 200) {
+    Swal.fire(message, "Check your email", "success");
+  } else if (status_code == 422) {
+    Swal.fire(message, "Email not sent!", "error");
+  } else {
+    Swal.fire("Email not sent!", "Please inform administrator", "error");
+  }
+}
 const re_sendEmail = async (id) => {
   Swal.fire({
     title: "Are you sure you want to Re-send email?",
@@ -42,16 +71,11 @@ const re_sendEmail = async (id) => {
   }).then((result) => {
     if (result.isConfirmed) {
 
-      const JSONdata = {
+      const requestPAYLOAD = {
         regId: id,
       };
-      /* Read more about isConfirmed, isDenied below */
-      let res = axios.post("re-send-email-us/", JSONdata);
 
-      console.log(res.data.id)
-      // alert(res.data.result)
-
-      alert(res.data.message)
+      sendMail(requestPAYLOAD);
 
     } else if (result.isDenied) {
       Swal.fire("Email not Send", "Check your internet connection", "error");
@@ -132,7 +156,7 @@ const re_sendEmail = async (id) => {
                     <li>
                       <router-link  
                       :to="
-                      'application/resched/' +
+                      'application/redirect/' +
                       `${row.Country}` +
                       '/' +
                       `${row.ID}` +
@@ -210,7 +234,7 @@ const re_sendEmail = async (id) => {
                     <li>
                       <router-link 
                       :to="
-                      'application/resched/' +
+                      'application/redirect/' +
                       `${row.Country}` +
                       '/' +
                       `${row.Id}` +
