@@ -32,9 +32,9 @@
                 ["BGC", "Bonifacio Global City(BGC)"],
             ]);
     const medicalCertificate = new Map([
-                                    ['Full', 'Full Medical Examination'],
-                                    ['CXR', 'Chest X-ray only'],
-                                    ['Limited', 'Limited Medical Examination']
+                                    ['Full Medical Examination', 'Full'],
+                                    ['Chest X-ray only', 'CXR'],
+                                    ['Limited Medical Examination', 'Limited']
                                 ])
 
     /**
