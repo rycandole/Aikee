@@ -52,7 +52,7 @@ const registrationTimer = () => {
             country: useNZIndividualSched().country,
             date: useNZIndividualSched().date,
             time: useNZIndividualSched().time,
-            timer: moment(new Date().getTime()).add(1, "minute")
+            timer: moment(new Date().getTime()).add(5, "minutes")
           };
 
           let res = JSON.stringify(requestPAYLOAD);
