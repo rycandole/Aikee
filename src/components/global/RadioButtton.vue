@@ -12,6 +12,7 @@ const props = defineProps({
   RadioLabelClass: String,
   RadioValue: String,
   onChange: String,
+  onDisabled: Boolean
 });
 
 const {
@@ -22,6 +23,7 @@ const {
   RadioBtnName,
   RadioValue,
   onChange,
+  onDisabled,
 } = toRefs(props);
 
 const inputComputed = computed({
@@ -38,5 +40,6 @@ const inputComputed = computed({
     :name="RadioBtnName"
     v-model="inputComputed"
     :value="RadioValue"
+    :disabled="onDisabled"
   /><label for="" :class="RadioLabelClass">{{ RadioLabel }}</label>
 </template>

@@ -91,7 +91,7 @@ const showInformation = async () => {
     </div>
   </div>
   <div v-if="US_Information" class="wrapper_container row bg-white border">
-    <div class="col-12 mb-3">
+    <div class="col-12">
       <h1 class="text-secondary text-center fs-1 fw-bold">United States of America</h1>
     </div>
     <!-- ============================================================== -->
@@ -101,6 +101,11 @@ const showInformation = async () => {
     <form v-for="(row, index) in US_Information" :key="index" class="col-12 mb-3">
       <div class="col-12 mb-3">
         <div class="card-body row">
+          <div class="col-12 pb-3" :hidden="`${row.Seen}` == 1 ? false : true">
+            <h2 class="text-danger text-center">
+              This application was arrived. Edit information is not abled!
+            </h2>
+          </div>
           <div class="col-12">
             <FormHeader headerText="Medical Examination Schedule" />
           </div>
