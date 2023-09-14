@@ -192,7 +192,7 @@ const cancelBtn = async (id, country) => {
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
                       >
                     </li>
-                    <li>
+                    <li :hidden="`${row.Seen}` == 1 ? true : false">
                       <router-link 
                          :to="
                          'application/edit/' +
@@ -272,7 +272,7 @@ const cancelBtn = async (id, country) => {
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
                       >
                     </li>
-                    <li>
+                    <li :hidden="`${row.Seen}` == 1 ? true : false">
                       <router-link 
                         :to="
                         'application/edit/' +

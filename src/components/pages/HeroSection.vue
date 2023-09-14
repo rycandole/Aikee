@@ -19,7 +19,7 @@
 </script>
 
 <template>
-    <div class="wrapper">
+    <!-- <div class="wrapper"> -->
         <TopNavBar />
         <SideNavigation />
 
@@ -87,7 +87,7 @@
 
         <FooterSection />
 
-    </div>
+    <!-- </div> -->
 </template>
 
 <style lang="scss">

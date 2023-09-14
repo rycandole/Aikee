@@ -6,6 +6,7 @@ const regID = route.params.id;
 const country = route.params.country;
 const payCode = route.params.paycode;
 
+
 // const print = () => {
 //   const printableContent = document.getElementById("printable-content");
 //   const printWindow = window.open("", "", "height=1000,width=1000");
