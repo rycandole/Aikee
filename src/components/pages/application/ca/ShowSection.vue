@@ -50,6 +50,11 @@ const showInformation = async () => {
         <form v-for="(row, index) in CA_Information" :key="index" class="col-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
+                    <div class="col-12 pb-3" :hidden="`${row.Seen}` == 1 ? false : true">
+                        <h2 class="text-danger text-center">
+                            This application was arrived. Edit information is not abled!
+                        </h2>
+                    </div>
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="Medical Examination Schedule"

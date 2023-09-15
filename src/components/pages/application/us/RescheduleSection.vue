@@ -52,6 +52,7 @@ let name = ref(null);
 let preferred_date = ref(null);
 let time_slot = ref(null)
 let current_schedule = ref(null);
+let arrived = ref(null);
 
 /**
  * For Fetching user data
@@ -74,6 +75,7 @@ const showInformation = async () => {
     ad_middle_name.value = showApplication[i].MiddleName || "";
     time_slot.value = showApplication[i].priorityTime;
     preferred_date.value = showApplication[i].PreferredMedicalExamDate;
+    arrived.value = showApplication[i].Seen;
 
     pay_code.value = showApplication[i].PayCode || "";
     name.value = ad_last_name.value+", "+ad_first_name.value+" "+ad_middle_name.value
@@ -220,7 +222,7 @@ const schema = yup.object().shape({
                     <h5>Name: <a class="text-primary">{{ name }}</a></h5>
                     <h5>Current Schedule: <a class="text-primary">{{ current_schedule }}</a></h5>
                   </div>
-                  <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div :hidden="arrived == 1 ? true : false" class="col-lg-6 col-md-6 col-sm-12">
                     <InlineDatePicker
                       label="Preferred Date"
                       :disabledDate="disableState.disabledDates"
@@ -228,7 +230,7 @@ const schema = yup.object().shape({
                       :onChange="handleSlots"
                     />
                   </div>
-                  <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div :hidden="arrived == 1 ? true : false" class="col-lg-6 col-md-6 col-sm-12">
                     <div class="row">
                       <div class="col-12 mt-3">
                         <label class="text-capitalize text-dark">
@@ -281,20 +283,25 @@ const schema = yup.object().shape({
                       </div>
                     </div>
                   </div>
+                  <div class="col-12 p-5" :hidden="arrived == 1 ? false : true">
+                    <h2 class="text-danger text-center">This application was already arrived. Rescheduling is not available!</h2>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-lg-3 col-md-12 col-sm-12"></div>
       
-          <div class="col-12 d-flex justify-content-center">
+          <div  class="col-12 d-flex justify-content-center">
             <SubmitFormButton
+              :hidden="arrived == 1 ? true : false"
               btnType="button"
               className="btn btn-secondary w-25 mr-5"
               btnText="Back"
               @click="handleBack"
             />
             <SubmitFormButton
+              :hidden="arrived == 1 ? true : false"
               btnType="submit"
               className="btn btn-primary w-25"
               btnText="Save"

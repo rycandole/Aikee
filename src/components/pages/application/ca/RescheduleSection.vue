@@ -58,6 +58,7 @@ let name = ref(null);
 let preferred_date = ref(null);
 let time_slot = ref(null)
 let current_schedule = ref(null);
+let arrived = ref(null);
 let hasBranch = true
 let branch = ""
 let selectIsActive = true
@@ -121,6 +122,7 @@ const showInformation = async () => {
     ad_middle_name.value = showApplication[i].MiddleName || "";
     time_slot.value = showApplication[i].priorityTime;
     preferred_date.value = showApplication[i].PreferredMedicalExamDate;
+    arrived.value = showApplication[i].Seen;
     clinic_location.value = clinic_desc.get(showApplication[i].branch || "");
     current_branch.value = showApplication[i].branch || ""
 
@@ -302,7 +304,7 @@ const schema = yup.object().shape({
                         <h5>Current Schedule: <a class="text-primary">{{ current_schedule }}</a></h5>
                       </div>
 
-                        <div :hidden="selectIsActive" class="col-lg-10 col-md-12 col-sm-12 mb-5">
+                        <div :hidden="selectIsActive || arrived == 1 ? true : false" class="col-lg-10 col-md-12 col-sm-12 mb-5">
                             <RequiredSelectField 
                                 label="Please select your preferred St. Luke's Extension Clinic location"
                                 FieldName="clinic_location"
@@ -313,7 +315,7 @@ const schema = yup.object().shape({
                             />
                             <!-- :onChange="handleBranch" -->
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
+                        <div :hidden="hasBranch || arrived == 1 ? true : false" class="col-lg-6 col-md-6 col-sm-12">
                             <InlineDatePicker 
                                 label="Preferred Date"
                                 :disabledDate="branch === 'MNL' ? disableState_MNL.disabledDates : disableState_BGC.disabledDates"
@@ -321,7 +323,7 @@ const schema = yup.object().shape({
                                 :onChange="handleSlots"
                             />
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12" :hidden="hasBranch">
+                        <div :hidden="hasBranch || arrived == 1 ? true : false" class="col-lg-6 col-md-6 col-sm-12">
                             <div class="row">
                                 <div class="col-12 mt-3">
                                     <label class="text-capitalize text-dark">
@@ -349,6 +351,9 @@ const schema = yup.object().shape({
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 p-5" :hidden="arrived == 1 ? false : true">
+                          <h2 class="text-danger text-center">This application was already arrived. Rescheduling is not available!</h2>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -358,12 +363,14 @@ const schema = yup.object().shape({
       
           <div class="col-12 d-flex justify-content-center">
             <SubmitFormButton
+              :hidden="arrived == 1 ? true : false"
               btnType="button"
               className="btn btn-secondary w-25 mr-5"
               btnText="Back"
               @click="handleBack"
             />
             <SubmitFormButton
+              :hidden="arrived == 1 ? true : false"
               btnType="submit"
               className="btn btn-primary w-25"
               btnText="Save"

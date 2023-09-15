@@ -101,7 +101,7 @@ const cancelApplication = async (PAYLOAD) => {
   let error_msg = res.data.error_msg
 
   if (status_code == 200) {
-    Swal.fire(message, "", "success");
+    Swal.fire(error_msg, message, "success");
     showList();
   } else if (status_code == 400) {
     Swal.fire(error_msg, message, "error");

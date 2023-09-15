@@ -157,24 +157,22 @@
         try {
 
             let res = await axios.post('nz-store/', JSONdata)
+            let status_code = res.data.status_code
+            let response = res.data.response
+            let message = res.data.message
 
-            if (res.request.status === 200 && res.data.status_code === 200) {
-
-                Swal.fire(res.data.message, '', 'success')
+            if (status_code === 200) {
+                Swal.fire(response, message, 'success')
 
                 NZ_IndividualSched.clearNZIndividualSched()
                 NZ_IndividualDetails.clearNZIndividualDetails()
 
                 router.push("/application")
                 
-            } else if (res.request.status === 400) {
-
-                Swal.fire(res.data.message, '', 'info')
-
-            } else if (res.request.status === 500) {
-
-                Swal.fire('Internal Server Error', '', 'warning')
-
+            } else if(status_code === 501) {
+                Swal.fire(response, message, "error");
+            } else if(status_code === 500) {
+                Swal.fire(response, message, "error");
             } else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
                 Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
