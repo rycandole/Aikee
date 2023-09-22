@@ -129,8 +129,6 @@ const disableState = {
 const handleDateTime = async () => {
   const date = moment(dateInput.value).format("YYYY-MM-DD");
 
-  
-
   const confirmedSchedule = async () => {
       const requestPAYLOAD = {
           branch: "MNL",
@@ -152,7 +150,7 @@ const handleDateTime = async () => {
         } else {
           Swal.fire(save_slot.data.message, save_slot.data.error, "error");
         }
-      }
+    }
 
   Swal.fire({
     title: "Are you sure you want to change the schedule?",

@@ -756,7 +756,7 @@ const schema = yup.object().shape({
     )
     .oneOf([yup.ref("ci_nvc_number")], "NVC Case Number do not match"),
   // ci_interview_date: yup.string().nullable().min(new Date(1925, 0, 1), "Interview date must be atleast January 01, 1923"),
-  ci_visa_pref_category: yup.string().required("Interview date is required!"),
+  ci_visa_pref_category: yup.string().required("Visa preference category is required!"),
   ci_interview_source: yup.string().nullable(),
   ad_last_name: yup
     .string()

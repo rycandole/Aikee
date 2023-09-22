@@ -113,7 +113,7 @@ const cancelApplication = async (PAYLOAD) => {
 
 }
 
-const cancelBtn = async (id, country) => {
+const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) => {
   Swal.fire({
     title: "Are you sure you want to cancel this application?",
     text: "Confirm your action",
@@ -123,9 +123,15 @@ const cancelBtn = async (id, country) => {
   }).then((result) => {
     if (result.isConfirmed) {
 
+      let clinic_branch = branch || 'MNL'
+
       const requestPAYLOAD = {
         regId: id,
         regCountry: country,
+        regBranch: clinic_branch,
+        regSchedDate: sched_date,
+        regSchedTime: sched_time,
+        regPaycode: paycode
       };
 
       cancelApplication(requestPAYLOAD);
@@ -207,7 +213,7 @@ const cancelBtn = async (id, country) => {
                       >
                     </li>
                     <li>
-                      <button @click="cancelBtn(`${row.ID}`, `${row.Country}`)" class="dropdown-item">
+                      <button @click="cancelBtn(`${row.ID}`, `${row.Country}`, 'MNL', `${row.PreferredMedicalExamDate}`, `${row.priorityTime}`, `${row.PayCode}`)" class="dropdown-item">
                         <i class="fas fa-window-close mr-2 text-danger"></i> Cancel
                       </button>
                     </li>
@@ -227,7 +233,7 @@ const cancelBtn = async (id, country) => {
                       >
                     </li>
                     <li>
-                      <button @click="re_sendEmail(`${row.ID}`, `${row.Country}`)" class="dropdown-item">
+                      <button @click="re_sendEmail(`${row.ID}`, `${row.Country}`, `${row.branch}`, `${row.PreferredMedicalExamDate}`, `${row.priorityTime}`)" class="dropdown-item">
                         <i class="fas fa-envelope mr-2 text-primary"></i> Re-send email
                       </button>
                     </li>
@@ -286,7 +292,7 @@ const cancelBtn = async (id, country) => {
                       ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link>
                     </li>
                     <li>
-                      <button @click="cancelBtn(`${row.Id}`, `${row.Country}`)" class="dropdown-item">
+                      <button @click="cancelBtn(`${row.Id}`, `${row.Country}`, `${row.branch}`, `${row.PreferredMedicalExamDate}`, `${row.priorityTime}`, `${row.PayCode}`)" class="dropdown-item">
                         <i class="fas fa-window-close mr-2 text-danger"></i> Cancel
                       </button>
                     </li>

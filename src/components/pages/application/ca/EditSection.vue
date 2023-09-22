@@ -76,6 +76,8 @@
     let agencyField = ref(null)
 
     let branch = ref(null)
+    let preferred_medical_exam_date = ref(null)
+    let priority_time = ref(null)
     let printHash = ref(null);
     let PayCode = ref(null);
     let receiveDate = ref(null);
@@ -138,6 +140,8 @@ const showInformation = async () => {
     PayCode.value = showApplication[i].PayCode;
     branch.value = showApplication[i].branch;
     receiveDate.value = showApplication[i].RcvDate;
+    preferred_medical_exam_date.value = showApplication[i].PreferredMedicalExamDate || ''
+    priority_time.value = showApplication[i].priorityTime || ''
 
     wasFirstMedicalExam.value === 'N' ? hasMedicalExam = false : hasMedicalExam = true
     wasFirstMedicalExam.value === 'N' ? prevClinicName.value = showApplication[i].PrevMedDetail1 : prevClinicName.value = ""
@@ -240,7 +244,7 @@ const showInformation = async () => {
         let dob = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
         let isuedDate = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
       
-        const jsonRequest = {
+        const requestPAYLOAD = {
                 json_registrationID: regId,
                 json_user_id: user_id,
                 json_wasFirstMedicalExam: values.wasFirstMedicalExam,
@@ -274,15 +278,17 @@ const showInformation = async () => {
                 json_printHash: printHash.value,
                 json_PayCode: PayCode.value,
                 json_branch: branch.value,
-                json_receiveDate: receiveDate.value
+                json_receiveDate: receiveDate.value,
+                json_sched_date: preferred_medical_exam_date.value,
+                json_sched_time: priority_time.value
         }
 
         try {
-            let validateRequest = await axios.post('ca-validate', jsonRequest)
+            let validateRequest = await axios.post('ca-validate', requestPAYLOAD)
 
             if (validateRequest.data.status_code === 200) {
               
-              let updateRequest = await axios.post('ca-update', jsonRequest)
+              let updateRequest = await axios.post('ca-update', requestPAYLOAD)
               
               if (updateRequest.data.status_code === 200) {
                 

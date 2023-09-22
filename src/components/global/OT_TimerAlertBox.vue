@@ -55,7 +55,7 @@ const registrationTimer = () => {
             country: useOTIndividualSched().country,
             date: useOTIndividualSched().date,
             time: useOTIndividualSched().time,
-            timer: moment(new Date().getTime()).add(10, "seconds"),
+            timer: moment(new Date().getTime()).add(30, "minutes"),
           };
 
           let res = JSON.stringify(requestPAYLOAD);
