@@ -207,7 +207,7 @@ const showInformation = async () => {
         errors.value = []
 
         let dob = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
-        let isuedDate = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
+        // let issued_date = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
       
         const jsonRequest = {
                 json_registrationID: regId,
@@ -219,7 +219,7 @@ const showInformation = async () => {
                 json_trn: values.trn,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
-                json_issuedDate: isuedDate,
+                json_issuedDate: values.issuedDate,
                 json_ad_lastName:values.ad_lastName,
                 json_ad_firstName:values.ad_firstName,
                 json_ad_middleName:values.ad_middleName,

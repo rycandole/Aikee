@@ -160,7 +160,7 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="/application" class="nav-link">
-                            <i class="nav-icon fas fa-edit"></i>
+                            <i class="nav-icon fas fa-tasks"></i>
                             <p>
                                 Application
                             </p>
@@ -168,7 +168,7 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="" class="nav-link">
-                            <i class="nav-icon fas fa-tasks"></i>
+                            <i class="nav-icon fas fa-edit"></i>
                             <p>
                                 Status
                                 <span class="right badge badge-danger">New</span>
