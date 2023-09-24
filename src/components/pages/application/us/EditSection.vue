@@ -2,7 +2,7 @@
 import axios from "axios";
 import { ref } from "vue";
 import { onMounted } from "vue";
-// import { useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { useProfileStore } from "@/store/profile-store";
 import { Form } from "vee-validate";
@@ -17,7 +17,7 @@ import SelectField from "@/components/global/SelectField.vue";
 import InputField from "@/components/global/InputField.vue";
 import RadioButton from "@/components/global/RadioButtton.vue";
 import SubNavbar from "@/components/includes/SubNavbar.vue";
-// import Swal from "@/sweetalert2";
+import Swal from "@/sweetalert2";
 import { Field, ErrorMessage } from "vee-validate";
 import moment from "moment";
 import * as yup from "yup";
@@ -36,23 +36,23 @@ import years from "@/assets/js/arrays/year_list_array";
 import relationship from "@/assets/js/arrays/relationship_array";
 import states from "@/assets/js/arrays/states_array";
 import vaccine from "@/assets/js/arrays/vaccine_list_array";
-// import YearList from '@/assets/js/arrays/year_list_array'
+// import YearList from "@/assets/js/arrays/year_list_array";
 
-// const router = useRouter();
+const router = useRouter();
 const route = useRoute();
 const regId = route.params.id;
-// const country = route.params.country;
-// const paycode = route.params.paycode;
+const country = route.params.country;
+const paycode = route.params.paycode;
 const profileStore = useProfileStore();
 
 let email = profileStore.email;
-// let user_id = profileStore.id;
+let user_id = profileStore.id;
 
 let registrationID = ref(null);
 let date_of_birth = ref(null);
-let validate_date_of_birth = ref(null)
-let validate_first_dose = ref(null)
-let validate_second_dose = ref(null)
+let validate_date_of_birth = ref(null);
+let validate_first_dose = ref(null);
+let validate_second_dose = ref(null);
 let date_boolean = true;
 let cv_category = ref(null);
 let is_cv_received = true;
@@ -106,6 +106,8 @@ let ad_passport_number = ref(null);
 let ad_passport_issued_by = ref(null);
 let add_passport_date = ref(null);
 let add_passport_expiration_date = ref(null);
+let validate_add_passport_date = ref(null);
+let validate_passport_expiration_date = ref(null);
 let add_issuance_date = ref(null);
 let add_expiration_date = ref(null);
 let validate_issuance_date = ref(null);
@@ -195,60 +197,60 @@ const visaPrefCategory = new Map([
   ["YY", "YY (ASYLEE)"],
 ]);
 
-// const visaPrefCategoryCode = new Map([
-//   ["NONE", "NONE"],
-//   ["AM-VTNM (VIETNAMESE AMERASIAN)", "AM-VTNM"],
-//   ["CR1 (SPOUSE OF U.S. CITIZEN UNDER TWO YEARS OF MARRIAGE)", "CR1"],
-//   ["CR2 (CHILD OF U.S. CITIZEN UNDER TWO YEARS OF MARRIAGE)", "CR2"],
-//   ["DV (DIVERSITY VISA)", "DV"],
-//   ["E1 (ALIEN WITH EXTRAORDINARY ABILITY)", "E1"],
-//   ["E2 (PROFESSIONAL HOLDING ADVANCED DEGREE)", "E2"],
-//   ["E3 (SKILLED WORKER)", "E3"],
-//   ["E4 (SD1 MINISTER OF RELIGION)", "E4"],
-//   ["E5 (IMMIGRANT INVESTORS)", "E5"],
-//   ["EW (OTHER WORKER (UNSKILLED WORKERS))", "EW"],
-//   ["EX (SCHEDULE WORKERS)", "EX"],
-//   ["F1-F11 (UNMARRIED SON/DAUGHTER OF U.S. CITIZEN)", "F1-F11"],
-//   ["F1-F12 (CHILD OF F11)", "F1-F12"],
-//   ["F2A-F21 (SPOUSE OF LAWFUL PERMANENT RESIDENT)", "F2A-F21"],
-//   ["F2A-F22 (CHILD OF LAWFUL PERMANENT RESIDENT)", "F2A-F22"],
-//   ["F2A-F23 (DERIVATIVE CHILD OF F21 OR F22)", "F2A-F23"],
-//   ["F2B-F24 (UNMARRIED SON/DAUGHTER OF LAWFUL PER. ADDRESS)", "F2B-F24"],
-//   ["F2B-F25 (DERIVATIVE CHILD OF F24)", "F2B-F25"],
-//   ["F3-F31 (MARRIED SON/DAUGHTER OF U.S. CITIZEN)", "F3-F31"],
-//   ["F3-F32 (DERIVATIVE SPOUSE OF F31)", "F3-F32"],
-//   ["F3-F33 (DERIVATIVE CHILD OF F31)", "F3-F33"],
-//   ["F4-F41 (BROTHER/SISTER OF U.S. CITIZEN)", "F4-F41"],
-//   ["F4-F42 (DERIVATIVE SPOUSE OF F41)", "F4-F42"],
-//   ["F4-F43 (DERIVATIVE CHILD OF F41)", "F4-F43"],
-//   ["FX-F21 (SPOUSE OF LAWFUL PERMANENT RESIDENT)", "FX-F21"],
-//   ["FX-F22 (CHILD OF LAWFUL PERMANENT RESIDENT)", "FX-F22"],
-//   ["FX-F23 (DERIVATIVE CHILD OF F-21 OR F22)", "FX-F23"],
-//   ["FP1 (PAROLEE)", "FP1"],
-//   ["IB1 (SELF PETITIONING SPOUSE OF A U.S. CITIZEN)", "IB1"],
-//   ["IH3 (ADOPTION CASE)", "IH3"],
-//   ["IH4 (ADOPTION CASE APPROVE AFTER APR. 2008)", "IH4"],
-//   ["IH4 (ADOPTION CASE APPROVED AFTER APR. 2008)", "IH4"],
-//   ["IR1 (SPOUSE OF A U.S. CITIZEN)", "IR1"],
-//   ["IR2 (CHILDREN OF A U.S. CITIZEN PARENTS UNDER 21 YRS. OLD)", "IR2"],
-//   ["IR3 (ORPHAN ADOPTED ABROAD BY U.S. CITIZEN)", "IR3"],
-//   ["IR4 (ORPHAN TO BE ADOPTED ABROAD BY U.S. CITIZEN)", "IR4"],
-//   ["IR5 (PARENT OF U.S. CITIZEN (18 YEARS OLD ABOVE))", "IR5"],
-//   ["IW1 (SPOUSE OF A DECEASED U.S.CITIZEN)", "IW1"],
-//   ["IW2 (DERIVATIVE CHILD OF IW1)", "IW2"],
-//   ["K1 (FIANCEE)", "K1"],
-//   ["K2 (DERIVATIVE CHILD OF K1)", "K2"],
-//   ["K3 (K3 VISA)", "K3"],
-//   ["K4 (K4 VISA)", "K4"],
-//   ["SB1 (RETURNING RESIDENT)", "SB1"],
-//   ["SD (CERTAIN RELIGIOUS WORKER)", "SD"],
-//   ["SE (SPECIAL IMMIGRANT)", "SE"],
-//   ["SM1 (SPECIAL IMMIGRANT OR ARMED FORCES GROUP)", "SM1"],
-//   ["SR (CERTAIN RELIGIOUS WORKER)", "SR"],
-//   ["SQ (CERTAIN IRAQIS OR AFGHANS EMPLOYED BY THE U.S. GOVERNMENT)", "SQ"],
-//   ["VISA-93 (REFUGEE FOLLOW-TO-JOIN)", "VISA-93"],
-//   ["YY (ASYLEE)", "YY"],
-// ]);
+const visaPrefCategoryCode = new Map([
+  ["NONE", "NONE"],
+  ["AM-VTNM (VIETNAMESE AMERASIAN)", "AM-VTNM"],
+  ["CR1 (SPOUSE OF U.S. CITIZEN UNDER TWO YEARS OF MARRIAGE)", "CR1"],
+  ["CR2 (CHILD OF U.S. CITIZEN UNDER TWO YEARS OF MARRIAGE)", "CR2"],
+  ["DV (DIVERSITY VISA)", "DV"],
+  ["E1 (ALIEN WITH EXTRAORDINARY ABILITY)", "E1"],
+  ["E2 (PROFESSIONAL HOLDING ADVANCED DEGREE)", "E2"],
+  ["E3 (SKILLED WORKER)", "E3"],
+  ["E4 (SD1 MINISTER OF RELIGION)", "E4"],
+  ["E5 (IMMIGRANT INVESTORS)", "E5"],
+  ["EW (OTHER WORKER (UNSKILLED WORKERS))", "EW"],
+  ["EX (SCHEDULE WORKERS)", "EX"],
+  ["F1-F11 (UNMARRIED SON/DAUGHTER OF U.S. CITIZEN)", "F1-F11"],
+  ["F1-F12 (CHILD OF F11)", "F1-F12"],
+  ["F2A-F21 (SPOUSE OF LAWFUL PERMANENT RESIDENT)", "F2A-F21"],
+  ["F2A-F22 (CHILD OF LAWFUL PERMANENT RESIDENT)", "F2A-F22"],
+  ["F2A-F23 (DERIVATIVE CHILD OF F21 OR F22)", "F2A-F23"],
+  ["F2B-F24 (UNMARRIED SON/DAUGHTER OF LAWFUL PER. ADDRESS)", "F2B-F24"],
+  ["F2B-F25 (DERIVATIVE CHILD OF F24)", "F2B-F25"],
+  ["F3-F31 (MARRIED SON/DAUGHTER OF U.S. CITIZEN)", "F3-F31"],
+  ["F3-F32 (DERIVATIVE SPOUSE OF F31)", "F3-F32"],
+  ["F3-F33 (DERIVATIVE CHILD OF F31)", "F3-F33"],
+  ["F4-F41 (BROTHER/SISTER OF U.S. CITIZEN)", "F4-F41"],
+  ["F4-F42 (DERIVATIVE SPOUSE OF F41)", "F4-F42"],
+  ["F4-F43 (DERIVATIVE CHILD OF F41)", "F4-F43"],
+  ["FX-F21 (SPOUSE OF LAWFUL PERMANENT RESIDENT)", "FX-F21"],
+  ["FX-F22 (CHILD OF LAWFUL PERMANENT RESIDENT)", "FX-F22"],
+  ["FX-F23 (DERIVATIVE CHILD OF F-21 OR F22)", "FX-F23"],
+  ["FP1 (PAROLEE)", "FP1"],
+  ["IB1 (SELF PETITIONING SPOUSE OF A U.S. CITIZEN)", "IB1"],
+  ["IH3 (ADOPTION CASE)", "IH3"],
+  ["IH4 (ADOPTION CASE APPROVE AFTER APR. 2008)", "IH4"],
+  ["IH4 (ADOPTION CASE APPROVED AFTER APR. 2008)", "IH4"],
+  ["IR1 (SPOUSE OF A U.S. CITIZEN)", "IR1"],
+  ["IR2 (CHILDREN OF A U.S. CITIZEN PARENTS UNDER 21 YRS. OLD)", "IR2"],
+  ["IR3 (ORPHAN ADOPTED ABROAD BY U.S. CITIZEN)", "IR3"],
+  ["IR4 (ORPHAN TO BE ADOPTED ABROAD BY U.S. CITIZEN)", "IR4"],
+  ["IR5 (PARENT OF U.S. CITIZEN (18 YEARS OLD ABOVE))", "IR5"],
+  ["IW1 (SPOUSE OF A DECEASED U.S.CITIZEN)", "IW1"],
+  ["IW2 (DERIVATIVE CHILD OF IW1)", "IW2"],
+  ["K1 (FIANCEE)", "K1"],
+  ["K2 (DERIVATIVE CHILD OF K1)", "K2"],
+  ["K3 (K3 VISA)", "K3"],
+  ["K4 (K4 VISA)", "K4"],
+  ["SB1 (RETURNING RESIDENT)", "SB1"],
+  ["SD (CERTAIN RELIGIOUS WORKER)", "SD"],
+  ["SE (SPECIAL IMMIGRANT)", "SE"],
+  ["SM1 (SPECIAL IMMIGRANT OR ARMED FORCES GROUP)", "SM1"],
+  ["SR (CERTAIN RELIGIOUS WORKER)", "SR"],
+  ["SQ (CERTAIN IRAQIS OR AFGHANS EMPLOYED BY THE U.S. GOVERNMENT)", "SQ"],
+  ["VISA-93 (REFUGEE FOLLOW-TO-JOIN)", "VISA-93"],
+  ["YY (ASYLEE)", "YY"],
+]);
 
 /**
  * For Fetching user data
@@ -270,7 +272,15 @@ const showInformation = async () => {
     cv_received.value = showApplication[i].received_vaccine == "y" ? "yes" : "no" || "";
     cv_brand_name.value = showApplication[i].vaccine_brand || "";
     firstDose.value = showApplication[i].first_dose || "";
+    validate_first_dose.value =
+      showApplication[i].first_dose == "Invalid date"
+        ? ""
+        : showApplication[i].first_dose || "";
     secondDose.value = showApplication[i].second_dose || "";
+    validate_second_dose.value =
+      showApplication[i].second_dose == "Invalid date"
+        ? ""
+        : showApplication[i].second_dose || "";
     cv_booster1.value = showApplication[i].booster1_brand || "";
     first_dose_booster.value = showApplication[i].booster1 || "";
     cv_booster2.value = showApplication[i].booster2_brand || "";
@@ -305,15 +315,21 @@ const showInformation = async () => {
     ad_passport_issued_by.value = showApplication[i].IssueCountry || "";
     add_passport_date.value = showApplication[i].IssueDate || "";
     add_passport_expiration_date.value = showApplication[i].ValidDate || "";
+    validate_add_passport_date.value = showApplication[i].IssueDate || "";
+    validate_passport_expiration_date.value = showApplication[i].ValidDate || "";
     ad_has_been_issued_visa.value = showApplication[i].US_NIV || "";
     add_issuance_date.value = showApplication[i].NIV_IssueDate || "";
     add_expiration_date.value = showApplication[i].NIV_ExpireDate || "";
-    ad_prev_medical_exam_month.value = moment(new Date(showApplication[i].PrevMed_Date)).format('MMMM') || "";
-    ad_prev_medical_exam_year.value = moment(new Date(showApplication[i].PrevMed_Date)).format('YYYY') || "";
-    ad_prev_xray_month.value = moment(new Date(showApplication[i].Prev_CXRDate)).format('MMMM') || "";
-    ad_prev_xray_year.value = moment(new Date(showApplication[i].Prev_CXRDate)).format('YYYY') || "";
+    ad_prev_medical_exam_month.value =
+      moment(new Date(showApplication[i].PrevMed_Date)).format("MMMM") || "";
+    ad_prev_medical_exam_year.value =
+      moment(new Date(showApplication[i].PrevMed_Date)).format("YYYY") || "";
+    ad_prev_xray_month.value =
+      moment(new Date(showApplication[i].Prev_CXRDate)).format("MMMM") || "";
+    ad_prev_xray_year.value =
+      moment(new Date(showApplication[i].Prev_CXRDate)).format("YYYY") || "";
     petitioner_fullname.value = showApplication[i].Peti_Name || "";
-    petitioner_is_alive.value = showApplication[i].Peti_Stat == 'y' ? 'yes' : 'no' || "";
+    petitioner_is_alive.value = showApplication[i].Peti_Stat == "y" ? "yes" : "no" || "";
     petitioner_relationship.value = showApplication[i].Peti_Relation || "";
     petitioner_us_street_addr.value = showApplication[i].Peti_Street || "";
     petitioner_us_city_addr.value = showApplication[i].Peti_City || "";
@@ -325,8 +341,6 @@ const showInformation = async () => {
     printHash.value = showApplication[i].printhash;
     PayCode.value = showApplication[i].PayCode;
     receiveDate.value = showApplication[i].RcvDate;
-
-    
 
     cv_category.value ? (covidHidden = false) : (covidHidden = true);
     cv_received.value === "yes" ? (is_cv_received = false) : (is_cv_received = true);
@@ -341,10 +355,8 @@ const showInformation = async () => {
     secondDose.value == "Invalid date" ? (vaccineHasOne = true) : (vaccineHasOne = false);
     cv_booster1.value !== "" ? (hideBooster1 = false) : (hideBooster1 = true);
     cv_booster2.value !== "" ? (hideBooster2 = false) : (hideBooster2 = true);
-    ad_has_been_issued_visa.value == 'y' ? (showVisaDate = false) : (showVisaDate = true);
+    ad_has_been_issued_visa.value == "y" ? (showVisaDate = false) : (showVisaDate = true);
   }
-
-  
 };
 
 const alertChange = () => {
@@ -360,23 +372,22 @@ const alertChange = () => {
 
   if (age <= 4) {
     covidHidden = true;
-    cv_received.value = ""
+    cv_received.value = "";
     cv_received_boolean = true;
-    is_cv_received = true
-    cv_brand_name.value = ""
-    cv_brand_name_boolean = true
-    cv_brand_name_boolean_1 = true
-    noVaccine = true
-    vaccineHasOne = true
-    firstDose.value = ""
-    secondDose.value = ""
-    validate_first_dose.value = ""
-    validate_second_dose.value = ""
-    hideBooster1 = true
-    hideBooster2 = true
-    cv_brand_name_boolean = true
-    cv_brand_name_boolean_1 = true
-
+    is_cv_received = true;
+    cv_brand_name.value = "";
+    cv_brand_name_boolean = true;
+    cv_brand_name_boolean_1 = true;
+    noVaccine = true;
+    vaccineHasOne = true;
+    firstDose.value = "";
+    secondDose.value = "";
+    validate_first_dose.value = "";
+    validate_second_dose.value = "";
+    hideBooster1 = true;
+    hideBooster2 = true;
+    cv_brand_name_boolean = true;
+    cv_brand_name_boolean_1 = true;
   } else if (age > 4) {
     covidHidden = false;
     cv_received_boolean = false;
@@ -384,429 +395,474 @@ const alertChange = () => {
     covidHidden = true;
   }
   date_boolean = covidHidden;
-
 };
 
-// const handleVaccine = () => {
-//   isVaccinated = false;
-//   if (cv_received.value === "yes") {
-//     is_cv_received = false;
-//     callout_message =
-//       "Applicants who received COVID-19 vaccines, single-dose of Janssen / J&J or 2 doses of Pfizer-Biotech/ Moderna/ Astra Zeneca/ Sinopharm/ Sinovac) COVID -19 vaccines, should present proof of vaccination (i.e. vaccine record or certificate).";
-//   } else {
-//     is_cv_received = true;
-//     callout_message =
-//       "Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.";
-//   }
-// };
+const alertPassportDate = () => {
+  validate_add_passport_date.value = new Date(add_passport_date.value);
+};
+const alertPassportExpiration = () => {
+  validate_passport_expiration_date = new Date(add_passport_expiration_date.value);
+};
+
+const handleVaccine = () => {
+  isVaccinated = false;
+  if (cv_received.value === "yes") {
+    is_cv_received = false;
+    cv_received_boolean = false;
+    noVaccine = true;
+    vaccineHasOne = true;
+    callout_message =
+      "Applicants who received COVID-19 vaccines, single-dose of Janssen / J&J or 2 doses of Pfizer-Biotech/ Moderna/ Astra Zeneca/ Sinopharm/ Sinovac) COVID -19 vaccines, should present proof of vaccination (i.e. vaccine record or certificate).";
+  } else if (cv_received.value === "no") {
+    is_cv_received = true;
+    cv_received_boolean = true;
+    noVaccine = true;
+    vaccineHasOne = true;
+    cv_brand_name.value = "";
+    cv_booster1.value = "";
+    first_dose_booster.value = "";
+    cv_booster2.value = "";
+    second_dose_booster.value = "";
+    hideBooster1 = true;
+    hideBooster2 = true;
+    cv_brand_name_boolean = true;
+    cv_brand_name_boolean_1 = true;
+    callout_message =
+      "Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.";
+  } else if (cv_received.value === "") {
+    cv_received_boolean = true;
+  } else {
+    is_cv_received = true;
+    callout_message =
+      "Please be advised that completed COVID-19 vaccination is a mandatory requirement for submission of medical examination report to the US Embassy.";
+  }
+};
 
 const alertIssueVisa = () => {
-  validate_issuance_date.value = new Date(add_issuance_date.value)
-}
+  validate_issuance_date.value = new Date(add_issuance_date.value);
+};
 const alertIssueVisaExpired = () => {
-  validate_issuance_expiration_date.value = new Date(add_expiration_date.value)
-}
+  validate_issuance_expiration_date.value = new Date(add_expiration_date.value);
+};
 
-// const changeVaccine = () => {
-//   switch (cv_brand_name.value) {
-//     case "":
-//         noVaccine = true
-//         vaccineHasOne = true
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//         hideBooster1 = true
-//         hideBooster2 = true
-//         cv_brand_name_boolean = true
-//         cv_brand_name_boolean_1 = true
-//         cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+const changeVaccine = () => {
+  switch (cv_brand_name.value) {
+    case "":
+      noVaccine = true;
+      vaccineHasOne = true;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      hideBooster1 = true;
+      hideBooster2 = true;
+      cv_brand_name_boolean = true;
+      cv_brand_name_boolean_1 = true;
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "Janssen / J&J":
-//         noVaccine = false
-//         vaccineHasOne = true;
-//         hideBooster1 = true;
-//         hideBooster2 = true;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = true
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//         cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "Janssen / J&J":
+      noVaccine = false;
+      vaccineHasOne = true;
+      hideBooster1 = true;
+      hideBooster2 = true;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = true;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "Pfizer":
-//         noVaccine = false
-//         vaccineHasOne = false;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = false
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//         cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "Pfizer":
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = false;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "Moderna":
-//         noVaccine = false
-//         vaccineHasOne = false;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = false
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//          cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "Moderna":
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = false;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "Astra Zeneca":
-//         noVaccine = false
-//         vaccineHasOne = false;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = false
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//          cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "Astra Zeneca":
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = false;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "Sinovac":
-//         noVaccine = false
-//         vaccineHasOne = false;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = false
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//         cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "Sinovac":
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = false;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "Sinopharm":
-//         noVaccine = false
-//         vaccineHasOne = false;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = false
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//         cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "Sinopharm":
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = false;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "Gamaleya / Sputnik V":
-//         noVaccine = false
-//         vaccineHasOne = false;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = false
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//          cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "Gamaleya / Sputnik V":
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = false;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "NOVAVAX":
-//         noVaccine = false
-//         vaccineHasOne = false;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = false
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//          cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "NOVAVAX":
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = false;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
+      break;
 
-//     case "BHARAT BIOTECH":
-//         noVaccine = false
-//         vaccineHasOne = false;
-//         cv_brand_name_boolean = false
-//         cv_brand_name_boolean_1 = false
-//         firstDose.value = ""
-//         secondDose.value = ""
-//         validate_first_dose.value = ""
-//         validate_second_dose.value = ""
-//          cv_booster1.value = ""
-//         first_dose_booster.value = ""
-//         cv_booster2.value = ""
-//         second_dose_booster.value = ""
+    case "BHARAT BIOTECH":
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = false;
+      cv_brand_name_boolean_1 = false;
+      firstDose.value = "";
+      secondDose.value = "";
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+      cv_booster1.value = "";
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
 
-//       break;
-    
-//     default:
-//       noVaccine = false
-//       vaccineHasOne = false;
-//       cv_brand_name_boolean = true
-//       cv_brand_name_boolean_1 = true
-      
-//   }
-// };
+      break;
 
-// const changeBooster1 = () => {
+    default:
+      noVaccine = false;
+      vaccineHasOne = false;
+      cv_brand_name_boolean = true;
+      cv_brand_name_boolean_1 = true;
+  }
+};
 
-// switch (cv_booster1.value) {
-//   case "":
-//       first_dose_booster.value = ""
-//       cv_booster2.value = ""
-//       second_dose_booster.value = ""
-//       hideBooster2 = true
+const changeBooster1 = () => {
+  switch (cv_booster1.value) {
+    case "":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//     break;
+      break;
 
-//   case "Janssen / J&J":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
+    case "Janssen / J&J":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//     break;
+      break;
 
-//   case "Pfizer":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
+    case "Pfizer":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//     break;
+      break;
 
-//   case "Moderna":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
+    case "Moderna":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//     break;
+      break;
 
-//   case "Astra Zeneca":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
+    case "Astra Zeneca":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//     break;
+      break;
 
-//   case "Sinovac":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
+    case "Sinovac":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//     break;
+      break;
 
-//   case "Sinopharm":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
-  
-//     break;
+    case "Sinopharm":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//   case "Gamaleya / Sputnik V":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
+      break;
 
-//     break;
+    case "Gamaleya / Sputnik V":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//   case "NOVAVAX":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
+      break;
 
-//     break;
+    case "NOVAVAX":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-//   case "BHARAT BIOTECH":
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
+      break;
 
-//     break;
-  
-//   default:
-//     first_dose_booster.value = ""
-//     cv_booster2.value = ""
-//     second_dose_booster.value = ""
-//     hideBooster2 = true
-    
-// }
-// }
+    case "BHARAT BIOTECH":
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
 
-// const changeBooster2 = () => {
-// switch (cv_booster2.value) {
-//   case "":
-//       second_dose_booster.value = ""
-//     break;
+      break;
 
-//   case "Janssen / J&J":
-//     second_dose_booster.value = ""
+    default:
+      first_dose_booster.value = "";
+      cv_booster2.value = "";
+      second_dose_booster.value = "";
+      hideBooster2 = true;
+  }
+};
 
-//     break;
+const changeBooster2 = () => {
+  switch (cv_booster2.value) {
+    case "":
+      second_dose_booster.value = "";
+      break;
 
-//   case "Pfizer":
-//     second_dose_booster.value = ""
+    case "Janssen / J&J":
+      second_dose_booster.value = "";
 
-//     break;
+      break;
 
-//   case "Moderna":
-//     second_dose_booster.value = ""
+    case "Pfizer":
+      second_dose_booster.value = "";
 
-//     break;
+      break;
 
-//   case "Astra Zeneca":
-//     second_dose_booster.value = ""
+    case "Moderna":
+      second_dose_booster.value = "";
 
-//     break;
+      break;
 
-//   case "Sinovac":
-//     second_dose_booster.value = ""
+    case "Astra Zeneca":
+      second_dose_booster.value = "";
 
-//     break;
+      break;
 
-//   case "Sinopharm":
-//     second_dose_booster.value = ""
-  
-//     break;
+    case "Sinovac":
+      second_dose_booster.value = "";
 
-//   case "Gamaleya / Sputnik V":
-//     second_dose_booster.value = ""
+      break;
 
-//     break;
+    case "Sinopharm":
+      second_dose_booster.value = "";
 
-//   case "NOVAVAX":
-//     second_dose_booster.value = ""
+      break;
 
-//     break;
+    case "Gamaleya / Sputnik V":
+      second_dose_booster.value = "";
 
-//   case "BHARAT BIOTECH":
-//     second_dose_booster.value = ""
+      break;
 
-//     break;
-  
-//   default:
-//     second_dose_booster.value = ""
-    
-// }
-// }
+    case "NOVAVAX":
+      second_dose_booster.value = "";
 
-// const showBooster1 = () => {
-//   if (cv_brand_name.value == "Janssen / J&J" && firstDose.value == null) {
-//     hideBooster1 = true;
-//   } else if (cv_brand_name.value == "Janssen / J&J" && firstDose.value != null) {
-//     hideBooster1 = false;
-//   } else if (
-//     (cv_brand_name.value != "Janssen / J&J" && firstDose.value == null) ||
-//     secondDose.value == null
-//   ) {
-//     hideBooster1 = true;
-//   } else {
-//     hideBooster1 = false;
-//   }
-// };
+      break;
 
-// const showBooster2 = () => {
-//   if (cv_booster1.value == null || first_dose_booster.value == null) {
-//     hideBooster2 = true;
-//   } else {
-//     hideBooster2 = false;
-//   }
-// };
+    case "BHARAT BIOTECH":
+      second_dose_booster.value = "";
+
+      break;
+
+    default:
+      second_dose_booster.value = "";
+  }
+};
+
+const showBooster1 = () => {
+  switch (true) {
+    case cv_brand_name.value == "":
+      hideBooster1 = false;
+      validate_first_dose.value = firstDose.value;
+      validate_second_dose.value = secondDose.value;
+      break;
+    case cv_brand_name.value == "Janssen / J&J" && firstDose.value != null:
+      hideBooster1 = false;
+      validate_first_dose.value = firstDose.value;
+      break;
+    case cv_brand_name.value == "Janssen / J&J" && firstDose.value == null:
+      hideBooster1 = false;
+      validate_first_dose.value = firstDose.value;
+      break;
+    case cv_brand_name.value != "Janssen / J&J" && firstDose.value != null:
+      hideBooster1 = false;
+      validate_first_dose.value = firstDose.value;
+      validate_second_dose.value = secondDose.value;
+      break;
+    case (cv_brand_name.value != "Janssen / J&J" && firstDose.value == null) ||
+      (cv_brand_name.value != "Janssen / J&J" && secondDose.value != null):
+      hideBooster1 = false;
+      validate_first_dose.value = firstDose.value;
+      validate_second_dose.value = secondDose.value;
+      break;
+
+    default:
+      hideBooster1 = true;
+      validate_first_dose.value = "";
+      validate_second_dose.value = "";
+  }
+};
+
+const showBooster2 = () => {
+  if (cv_booster1.value == null || first_dose_booster.value == null) {
+    hideBooster2 = true;
+  } else {
+    hideBooster2 = false;
+  }
+};
 
 const hasVisa = () => {
   if (ad_has_been_issued_visa.value == "y") {
     showVisaDate = false;
     ad_has_been_issued_visa.value = 1;
-    ad_has_been_issued_visa_boolean = false
+    ad_has_been_issued_visa_boolean = false;
   } else {
     showVisaDate = true;
     ad_has_been_issued_visa.value = 0;
-    ad_has_been_issued_visa_boolean = true
+    ad_has_been_issued_visa_boolean = true;
   }
 };
 
-// const modifyDetails = async (regInformation) => {
-//   let res = await axios.post("us-update", regInformation)
+const modifyDetails = async (regInformation) => {
+  let res = await axios.post("us-update", regInformation);
 
-//   if (res.data.status_code == 200) {
-//     let motherName = res.data.message
+  if (res.data.status_code == 200) {
+    let motherName = res.data.message;
 
-//     Swal.fire("Successfully updated ", "Please check your email "+ motherName, "success");
+    Swal.fire(
+      "Successfully updated ",
+      "Please check your email " + motherName,
+      "success"
+    );
 
-//     router.push('/application/show/' + country + '/' + regId + '/' +  paycode );
-//   } else {
-//     Swal.fire("Update Failed", "Check your internet connection", "error");
-//   }
-// }
-
+    router.push("/application/show/" + country + "/" + regId + "/" + paycode);
+  } else {
+    Swal.fire("Update Failed", "Check your internet connection", "error");
+  }
+};
 
 const schema = yup.object().shape({
   validate_date_of_birth: yup.string().required("Date of birth is required!"),
   date_boolean: yup.string(),
-  cv_received: yup.string().when('date_boolean', {
-    is: 'false',
+  cv_received: yup.string().when("date_boolean", {
+    is: "false",
     then: (schema) => schema.required("This field is required, please choose an option!"),
-    otherwise: (schema) => schema.nullable()
+    otherwise: (schema) => schema.nullable(),
   }),
   cvReceivedBoolean: yup.string(),
-  // cv_brand_name: yup.string().when('cvReceivedBoolean', {
-  //   is: 'false',
-  //   then: (schema) => schema.required("Please choose vaccine brand name"),
-  //   otherwise: (schema) => schema.nullable()
-  // }),
+  cv_brand_name: yup.string().when("cvReceivedBoolean", {
+    is: "false",
+    then: (schema) => schema.required("Please choose vaccine brand name"),
+    otherwise: (schema) => schema.nullable(),
+  }),
   cv_brand_name_boolean: yup.string(),
-  // cv_date_01: yup.string().when('cv_brand_name_boolean', {
-  //   is: 'false',
-  //   then: (schema) => schema.required("Please choose date received"),
-  //   otherwise: (schema) => schema.nullable()
-  // }),
+  cv_date_01: yup.string().when("cv_brand_name_boolean", {
+    is: "false",
+    then: (schema) => schema.required("Please choose date received"),
+    otherwise: (schema) => schema.nullable(),
+  }),
   cv_brand_name_boolean_1: yup.string(),
-  // cv_date_02: yup.string().when('cv_brand_name_boolean_1', {
-  //   is: 'false',
-  //   then: (schema) => schema.required("Please choose date received"),
-  //   otherwise: (schema) => schema.nullable()
-  // }),
+  cv_date_02: yup.string().when("cv_brand_name_boolean_1", {
+    is: "false",
+    then: (schema) => schema.required("Please choose date received"),
+    otherwise: (schema) => schema.nullable(),
+  }),
   cv_booster1: yup.string().nullable(),
   cv_booster2: yup.string().nullable(),
   ci_nvc_number: yup
@@ -856,8 +912,8 @@ const schema = yup.object().shape({
     .string()
     .required("Birth country is required!")
     .min(4, "Birth country must be atleast 4 characters")
-    .max(25, "Birth country must be at most 25 characters")
-    .matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
+    .max(50, "Birth country must be at most 50 characters"),
+  // .matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
   ad_mother_name: yup
     .string()
     .required("Last name is required!")
@@ -919,23 +975,27 @@ const schema = yup.object().shape({
     .max(10, "Passport number must be at most 10 characters"),
   ad_passport_issued_by: yup.string().required("Passport issued by is required!"),
   validate_add_passport_date: yup.string().required("Passport issue date is required!"),
-  validate_passport_expiration_date: yup.string().required("Passport expiration date is required!"),
+  validate_passport_expiration_date: yup
+    .string()
+    .required("Passport expiration date is required!"),
   // ad_passport_date: yup.date().required('Passport date is required!').min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
   // ad_passport_expiration_date: yup.date().required('Passport expiration date is required!').min(yup.ref('ad_passport_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_passport_date')], 'Expiration date must not be equal to the issuance date'),
   ad_has_been_issued_visa: yup
     .string()
     .required("This field is required, please choose an option"),
-  ad_has_been_issued_visa_boolean:yup.string(),
-  validate_issuance_date: yup.string().when('ad_has_been_issued_visa_boolean', {
-    is: 'false',
+  ad_has_been_issued_visa_boolean: yup.string(),
+  validate_issuance_date: yup.string().when("ad_has_been_issued_visa_boolean", {
+    is: "false",
     then: (schema) => schema.required("Issuance date required!"),
-    otherwise: (schema) => schema.nullable()
+    otherwise: (schema) => schema.nullable(),
   }),
-  validate_issuance_expiration_date: yup.string().when('ad_has_been_issued_visa_boolean', {
-    is: 'false',
-    then: (schema) => schema.required("Issuance expiration date required!"),
-    otherwise: (schema) => schema.nullable()
-  }),
+  validate_issuance_expiration_date: yup
+    .string()
+    .when("ad_has_been_issued_visa_boolean", {
+      is: "false",
+      then: (schema) => schema.required("Issuance expiration date required!"),
+      otherwise: (schema) => schema.nullable(),
+    }),
   // ad_issuance_date: yup.date().required("Issuance date is required").min(new Date(1925, 0, 1), "Passport must be atleast January 01, 1923").max(new Date(), "Invalid date"),
   // ad_expiration_date: yup.date().required("Expiration date is required").min(yup.ref('ad_issuance_date'), 'Expiration date must not be less than the issuance date').notOneOf([yup.ref('ad_issuance_date')], 'Expiration date must not be equal to the issuance date'),
   ad_prev_medical_exam_month: yup.string().nullable().optional(),
@@ -988,116 +1048,115 @@ const schema = yup.object().shape({
   intended_port_of_entry: yup.string().required("Port of entry is required!"),
 });
 
-// const updateDetails = async (values) => {
- 
-//   errors.value = [];
+const updateDetails = async (values) => {
+  errors.value = [];
 
-//   let birthDate = moment(new Date(date_of_birth.value)).format("YYYY-MM-DD");
-//   let first_dose = moment(new Date(firstDose.value)).format("YYYY-MM-DD");
-//   let second_dose = moment(new Date(secondDose.value)).format("YYYY-MM-DD");
-//   let first_doseBooster = moment(new Date(first_dose_booster.value)).format("YYYY-MM-DD");
-//   let second_doseBooster = moment(new Date(second_dose_booster.value)).format(
-//     "YYYY-MM-DD"
-//   );
-//   let ci_interview_date = moment(new Date(ci_intervue_date.value)).format("YYYY-MM-DD");
-//   let ad_passport_date = moment(new Date(add_passport_date.value)).format("YYYY-MM-DD");
-//   let ad_passport_expiration_date = moment(
-//     new Date(add_passport_expiration_date.value)
-//   ).format("YYYY-MM-DD");
-//   let ad_issuance_date = moment(new Date(add_issuance_date.value)).format("YYYY-MM-DD");
-//   let ad_expiration_date = moment(new Date(add_expiration_date.value)).format(
-//     "YYYY-MM-DD"
-//   );
+  let birthDate = moment(new Date(date_of_birth.value)).format("YYYY-MM-DD");
+  let first_dose = moment(new Date(firstDose.value)).format("YYYY-MM-DD");
+  let second_dose = moment(new Date(secondDose.value)).format("YYYY-MM-DD");
+  let first_doseBooster = moment(new Date(first_dose_booster.value)).format("YYYY-MM-DD");
+  let second_doseBooster = moment(new Date(second_dose_booster.value)).format(
+    "YYYY-MM-DD"
+  );
+  let ci_interview_date = moment(new Date(ci_intervue_date.value)).format("YYYY-MM-DD");
+  let ad_passport_date = moment(new Date(add_passport_date.value)).format("YYYY-MM-DD");
+  let ad_passport_expiration_date = moment(
+    new Date(add_passport_expiration_date.value)
+  ).format("YYYY-MM-DD");
+  let ad_issuance_date = moment(new Date(add_issuance_date.value)).format("YYYY-MM-DD");
+  let ad_expiration_date = moment(new Date(add_expiration_date.value)).format(
+    "YYYY-MM-DD"
+  );
 
-//   try {
-//     Swal.fire({
-//       title: "Are you sure you want to update?",
-//       text: "Confirm your action",
-//       showCancelButton: true,
-//       confirmButtonText: "Yes",
-//       icon: "question",
-//     }).then((result) => {
-      
-//       if (result.isConfirmed) {
-//         const requestPAYLOAD = {
-//                 json_registrationID: regId,
-//                 json_user_id: user_id,
-//                 json_email: email,
-//                 json_date_of_birth: birthDate,
-//                 json_validate_date_of_birth: birthDate,
-//                 json_cv_category: values.cv_category,
-//                 json_cv_received: values.cv_received,
-//                 json_is_cv_received: is_cv_received,
-//                 json_cv_brand_name: values.cv_brand_name,
-//                 json_firstDose: first_dose,
-//                 json_secondDose: second_dose,
-//                 json_cv_booster1: values.cv_booster1,
-//                 json_first_doseBooster: first_doseBooster,
-//                 json_cv_booster2: values.cv_booster2,
-//                 json_second_doseBooster: second_doseBooster,
-//                 json_ci_nvc_number: values.ci_nvc_number,
-//                 json_ci_nvc_confirm: values.ci_nvc_confirm,
-//                 json_ci_visa_pref_category: visaPrefCategoryCode.get(values.ci_visa_pref_category),
-//                 json_ci_interview_date: ci_interview_date,
-//                 json_ci_interview_source: values.ci_interview_source,
-//                 json_ad_last_name: values.ad_last_name,
-//                 json_ad_first_name: values.ad_first_name,
-//                 json_ad_middle_name: values.ad_middle_name,
-//                 json_ad_gender: values.ad_gender,
-//                 json_ad_civil_status: values.ad_civil_status,
-//                 json_ad_nationality: values.ad_nationality,
-//                 json_ad_birthplace: values.ad_birthplace,
-//                 json_ad_birth_country: values.ad_birth_country,
-//                 json_ad_mother_name: values.ad_mother_name,
-//                 json_ad_address: values.ad_address,
-//                 json_ad_city: values.ad_city,
-//                 json_ad_province: values.ad_province,
-//                 json_ad_zip_code: values.ad_zip_code,
-//                 json_ad_overseas_country: values.ad_overseas_country,
-//                 json_ad_overseas_street_address: values.ad_overseas_street_address,
-//                 json_ad_overseas_city: values.ad_overseas_city,
-//                 json_ad_overseas_province: values.ad_overseas_province,
-//                 json_ad_overseas_zipcode: values.ad_overseas_zipcode,
-//                 json_ad_contact_numbers: values.ad_contact_numbers,
-//                 json_ad_email_add: email,
-//                 json_ad_present_residence: values.ad_present_residence,
-//                 json_ad_prior_residence: values.ad_prior_residence,
-//                 json_ad_passport_number: values.ad_passport_number,
-//                 json_ad_passport_issued_by: values.ad_passport_issued_by,
-//                 json_ad_passport_date: ad_passport_date,
-//                 json_ad_passport_expiration_date: ad_passport_expiration_date,
-//                 json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
-//                 json_ad_issuance_date: ad_issuance_date,
-//                 json_ad_expiration_date: ad_expiration_date,
-//                 json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
-//                 json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
-//                 json_ad_prev_xray_month: values.ad_prev_xray_month,
-//                 json_ad_prev_xray_year: values.ad_prev_xray_year,
-//                 json_petitioner_fullname: values.petitioner_fullname,
-//                 json_petitioner_is_alive: values.petitioner_is_alive,
-//                 json_petitioner_relationship: values.petitioner_relationship,
-//                 json_petitioner_us_street_addr: values.petitioner_us_street_addr,
-//                 json_petitioner_us_city_addr: values.petitioner_us_city_addr,
-//                 json_petitioner_us_state_addr: values.petitioner_us_state_addr,
-//                 json_petitioner_us_postal_code: values.petitioner_us_postal_code,
-//                 json_petitioner_contact_no: values.petitioner_contact_no,
-//                 json_petitioner_email_addr: values.petitioner_email_addr,
-//                 json_intended_port_of_entry: values.intended_port_of_entry,
-//                 json_printHash: printHash.value,
-//                 json_PayCode: PayCode.value,
-//                 json_receiveDate: receiveDate.value
-//         };
-       
-//         modifyDetails(requestPAYLOAD);
-//       } else if (result.isDenied) {
-//         Swal.fire("Update failed", "Check your internet connection", "error");
-//       }
-//     });
-   
-//   } catch (err) {
-//     errors.value = err.response.data.errors;
-//   }
-// };
+  try {
+    Swal.fire({
+      title: "Are you sure you want to update?",
+      text: "Confirm your action",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      icon: "question",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const requestPAYLOAD = {
+          json_registrationID: regId,
+          json_user_id: user_id,
+          json_email: email,
+          json_date_of_birth: birthDate,
+          json_validate_date_of_birth: birthDate,
+          json_cv_category: values.cv_category,
+          json_cv_received: values.cv_received,
+          json_is_cv_received: is_cv_received,
+          json_cv_brand_name: values.cv_brand_name,
+          json_firstDose: first_dose,
+          json_secondDose: second_dose,
+          json_cv_booster1: values.cv_booster1,
+          json_first_doseBooster: first_doseBooster,
+          json_cv_booster2: values.cv_booster2,
+          json_second_doseBooster: second_doseBooster,
+          json_ci_nvc_number: values.ci_nvc_number,
+          json_ci_nvc_confirm: values.ci_nvc_confirm,
+          json_ci_visa_pref_category: visaPrefCategoryCode.get(
+            values.ci_visa_pref_category
+          ),
+          json_ci_interview_date: ci_interview_date,
+          json_ci_interview_source: values.ci_interview_source,
+          json_ad_last_name: values.ad_last_name,
+          json_ad_first_name: values.ad_first_name,
+          json_ad_middle_name: values.ad_middle_name,
+          json_ad_gender: values.ad_gender,
+          json_ad_civil_status: values.ad_civil_status,
+          json_ad_nationality: values.ad_nationality,
+          json_ad_birthplace: values.ad_birthplace,
+          json_ad_birth_country: values.ad_birth_country,
+          json_ad_mother_name: values.ad_mother_name,
+          json_ad_address: values.ad_address,
+          json_ad_city: values.ad_city,
+          json_ad_province: values.ad_province,
+          json_ad_zip_code: values.ad_zip_code,
+          json_ad_overseas_country: values.ad_overseas_country,
+          json_ad_overseas_street_address: values.ad_overseas_street_address,
+          json_ad_overseas_city: values.ad_overseas_city,
+          json_ad_overseas_province: values.ad_overseas_province,
+          json_ad_overseas_zipcode: values.ad_overseas_zipcode,
+          json_ad_contact_numbers: values.ad_contact_numbers,
+          json_ad_email_add: email,
+          json_ad_present_residence: values.ad_present_residence,
+          json_ad_prior_residence: values.ad_prior_residence,
+          json_ad_passport_number: values.ad_passport_number,
+          json_ad_passport_issued_by: values.ad_passport_issued_by,
+          json_ad_passport_date: ad_passport_date,
+          json_ad_passport_expiration_date: ad_passport_expiration_date,
+          json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
+          json_ad_issuance_date: ad_issuance_date,
+          json_ad_expiration_date: ad_expiration_date,
+          json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
+          json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
+          json_ad_prev_xray_month: values.ad_prev_xray_month,
+          json_ad_prev_xray_year: values.ad_prev_xray_year,
+          json_petitioner_fullname: values.petitioner_fullname,
+          json_petitioner_is_alive: values.petitioner_is_alive,
+          json_petitioner_relationship: values.petitioner_relationship,
+          json_petitioner_us_street_addr: values.petitioner_us_street_addr,
+          json_petitioner_us_city_addr: values.petitioner_us_city_addr,
+          json_petitioner_us_state_addr: values.petitioner_us_state_addr,
+          json_petitioner_us_postal_code: values.petitioner_us_postal_code,
+          json_petitioner_contact_no: values.petitioner_contact_no,
+          json_petitioner_email_addr: values.petitioner_email_addr,
+          json_intended_port_of_entry: values.intended_port_of_entry,
+          json_printHash: printHash.value,
+          json_PayCode: PayCode.value,
+          json_receiveDate: receiveDate.value,
+        };
+
+        modifyDetails(requestPAYLOAD);
+      } else if (result.isDenied) {
+        Swal.fire("Update failed", "Check your internet connection", "error");
+      }
+    });
+  } catch (err) {
+    errors.value = err.response.data.errors;
+  }
+};
 
 // Get the current year
 
@@ -1130,8 +1189,6 @@ const disablePastDateState = {
   },
 };
 // ============ Inline End =================== //
-
-
 </script>
 
 <template>
@@ -1150,7 +1207,7 @@ const disablePastDateState = {
     <!-- ============================================================== -->
     <!-- Main Container -->
     <!-- ============================================================== -->
-    
+
     <Form
       :key="index"
       :validation-schema="schema"
@@ -1272,12 +1329,7 @@ const disablePastDateState = {
               v-model="validate_date_of_birth"
             />
             <ErrorMessage name="validate_date_of_birth" class="text-danger pt-3 pl-3" />
-            <Field
-              type="text"
-              name="date_boolean"
-              v-model="date_boolean"
-              width="100px"
-            />
+            <Field type="text" name="date_boolean" v-model="date_boolean" width="100px" />
           </div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <RequiredSelectField
@@ -1508,6 +1560,7 @@ const disablePastDateState = {
               color="red"
               :disabledDate="disableFutureDateState.disabledDates"
               v-model:input="add_passport_date"
+              :onChange="alertPassportDate"
               :error="
                 errors.json_ad_passport_date
                   ? errors.json_ad_passport_date[0]
@@ -1515,6 +1568,16 @@ const disablePastDateState = {
                   ? inputError
                   : ''
               "
+            />
+            <Field
+              type="text"
+              name="validate_add_passport_date"
+              width="100px"
+              v-model="validate_add_passport_date"
+            />
+            <ErrorMessage
+              name="validate_add_passport_date"
+              class="text-danger pt-3 pl-3"
             />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
@@ -1524,6 +1587,7 @@ const disablePastDateState = {
               color="red"
               :disabledDate="disablePastDateState.disabledDates"
               v-model:input="add_passport_expiration_date"
+              :onChange="alertPassportExpiration"
               :error="
                 errors.json_ad_passport_expiration_date
                   ? errors.json_ad_passport_expiration_date[0]
@@ -1531,6 +1595,16 @@ const disablePastDateState = {
                   ? inputError
                   : ''
               "
+            />
+            <Field
+              type="text"
+              name="validate_passport_expiration_date"
+              width="100px"
+              v-model="validate_passport_expiration_date"
+            />
+            <ErrorMessage
+              name="validate_passport_expiration_date"
+              class="text-danger pt-3 pl-3"
             />
           </div>
           <div class="mb-3 mt-5 col-12">
@@ -1561,29 +1635,34 @@ const disablePastDateState = {
                   :onChange="hasVisa"
                 />
               </div>
-              <Field type="text" name="ad_has_been_issued_visa_boolean" :value="ad_has_been_issued_visa_boolean" v-model="ad_has_been_issued_visa_boolean"/>
+              <Field
+                type="text"
+                name="ad_has_been_issued_visa_boolean"
+                :value="ad_has_been_issued_visa_boolean"
+                v-model="ad_has_been_issued_visa_boolean"
+              />
               <div class="col-lg-10 col-md-10 col-sm-12 pl-4">
                 <ErrorMessage name="ad_has_been_issued_visa" class="text-danger" />
               </div>
             </div>
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
-          <DateField
-            label="Issuance Date"
-            requiredClass="d-none"
-            placeholder="Issuance Date"
-            color="red"
-            :disabledDate="disableFutureDateState.disabledDates"
-            v-model:input="add_issuance_date"
-            :onChange="alertIssueVisa"
-          />
-          <Field
-            type="text"
-            name="validate_issuance_date"
-            width="100px"
-            v-model="validate_issuance_date"
-          />
-          <ErrorMessage name="validate_issuance_date" class="text-danger pt-3 pl-3" />
+            <DateField
+              label="Issuance Date"
+              requiredClass="d-none"
+              placeholder="Issuance Date"
+              color="red"
+              :disabledDate="disableFutureDateState.disabledDates"
+              v-model:input="add_issuance_date"
+              :onChange="alertIssueVisa"
+            />
+            <Field
+              type="text"
+              name="validate_issuance_date"
+              width="100px"
+              v-model="validate_issuance_date"
+            />
+            <ErrorMessage name="validate_issuance_date" class="text-danger pt-3 pl-3" />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12" :hidden="showVisaDate">
             <DateField
@@ -1594,13 +1673,16 @@ const disablePastDateState = {
               v-model:input="add_expiration_date"
               :onChange="alertIssueVisaExpired"
             />
-          <Field
-            type="text"
-            name="validate_issuance_expiration_date"
-            width="100px"
-            v-model="validate_issuance_expiration_date"
-          />
-          <ErrorMessage name="validate_issuance_expiration_date" class="text-danger pt-3 pl-3" />
+            <Field
+              type="text"
+              name="validate_issuance_expiration_date"
+              width="100px"
+              v-model="validate_issuance_expiration_date"
+            />
+            <ErrorMessage
+              name="validate_issuance_expiration_date"
+              class="text-danger pt-3 pl-3"
+            />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <SelectField
@@ -1656,7 +1738,6 @@ const disablePastDateState = {
                     v-model:input="cv_received"
                     :onChange="handleVaccine"
                   />
-                  <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="cv_received" v-model.lazy="cv_received" value="yes" /><label for="">Yes</label> -->
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-12">
                   <RadioButton
@@ -1666,7 +1747,6 @@ const disablePastDateState = {
                     v-model:input="cv_received"
                     :onChange="handleVaccine"
                   />
-                  <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="cv_received" v-model.lazy="cv_received" value="no" /><label for="">No</label> -->
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-12">
                   <Field
@@ -1710,6 +1790,13 @@ const disablePastDateState = {
                       v-model:input="firstDose"
                       :onChange="showBooster1"
                     />
+                    <Field
+                      type="text"
+                      name="cv_date_01"
+                      width="100px"
+                      v-model="validate_first_dose"
+                    />
+                    <ErrorMessage name="cv_date_01" class="text-danger" />
                   </li>
                   <li class="col-lg-8 pr-5" :hidden="vaccineHasOne">
                     <DateField
@@ -1720,6 +1807,13 @@ const disablePastDateState = {
                       v-model:input="secondDose"
                       :onChange="showBooster1"
                     />
+                    <Field
+                      type="text"
+                      name="cv_date_02"
+                      width="100px"
+                      v-model="validate_second_dose"
+                    />
+                    <ErrorMessage name="cv_date_02" class="text-danger" />
                   </li>
                   <li class="col-lg-8 pr-5" :hidden="hideBooster1">
                     <hr />
