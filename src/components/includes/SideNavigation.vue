@@ -124,9 +124,11 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <router-link to="/" class="brand-link">
+        <router-link to="/" class="brand-link pl-5">
+            <!-- <img src="img/icons/favicon.ico" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light">AdminLTE 3</span> -->
             <!-- :src="slecLogo" -->
-            <img  :src="'img/icons/favicon.ico'" alt="" class="img-circle elevation-2 m-2" style="opacity: .8" />
+            <!-- <img  src="img/icons/favicon.ico" alt="SLEC LOGO" class="brand-image img-circle elevation-2" style="opacity: .8" /> -->
             <span class="brand-text font-weight-light">SLEC</span>
         </router-link>
 
@@ -149,7 +151,7 @@
                     <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <router-link to="/" class="nav-link active">
+                        <router-link to="/" class="nav-link">
                             <i class="nav-icon fas fa-home"></i>
                             <p>
                                 Home
@@ -158,7 +160,7 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="/application" class="nav-link">
-                            <i class="nav-icon fas fa-edit"></i>
+                            <i class="nav-icon fas fa-tasks"></i>
                             <p>
                                 Application
                             </p>
@@ -166,7 +168,7 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="" class="nav-link">
-                            <i class="nav-icon fas fa-tasks"></i>
+                            <i class="nav-icon fas fa-edit"></i>
                             <p>
                                 Status
                                 <span class="right badge badge-danger">New</span>

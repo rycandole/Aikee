@@ -37,7 +37,7 @@ const inputComputed = computed({
         </div>
         <div class="col-6 input-group">
             <strong :class="spanClassName">
-                {{ StatusLabel }} {{ Slots }}
+                    {{ StatusLabel }} {{ Slots }}
             </strong>
         </div>
     </div>

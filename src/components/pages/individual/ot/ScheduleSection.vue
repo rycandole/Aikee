@@ -19,6 +19,7 @@ import Swal from "@/sweetalert2";
 // import Datepicker from '@/datepicker.js'
 import moment from "moment";
 import * as yup from "yup";
+import { ucwords } from '@/assets/js/string_functions'
 
 const router = useRouter();
 const OTIndividualSched = useOTIndividualSched();
@@ -78,8 +79,8 @@ const mnl_lockedDates = [];
 const bgc_lockedDates = [];
 
 onMounted(async () => {
-    await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch('OT', 'MNL')
-    await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch('OT', 'BGC')
+    await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch(ucwords(regCountry), 'MNL')
+    await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch(ucwords(regCountry), 'BGC')
     handleSlots();
     handleDateTime();
     selectIsActive = false
@@ -160,7 +161,7 @@ watch(() => clinic_location.value, (newValue) => {
 
 const handleSlots = async () => {
   const prefDate = moment(dateInput.value).format("YYYY-MM-DD");
-  countryValue = "OT";
+  countryValue = regCountry;
   branchValue = clinic_code.get(clinic_location.value);
 
   const JSONdata = {
@@ -180,10 +181,10 @@ const handleDateTime = async () => {
 
   const jsonDATA = {
     branch: clinic_code.get(clinic_location.value),
-    country: "OT",
+    country: regCountry,
     date: date,
     time: timeInput.value,
-    timer: moment(new Date().getTime()).add(2, "minutes"),
+    timer: moment(new Date().getTime()).add(20, "minutes"),
   };
 
   let save_slot = await axios.post("save_slot/", jsonDATA);

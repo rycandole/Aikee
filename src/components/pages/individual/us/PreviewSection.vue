@@ -255,15 +255,21 @@ const handleStore = async () => {
 
   try {
     let res = await axios.post("us-store/", JSONdata);
+    let status_code = res.data.status_code
+    let response = res.data.response
+    let message = res.data.message
 
-    if (res.data.status_code === 200) {
-      Swal.fire("Applicant successfully registered", "", "success");
-      // alert('Success '+ res.data.response +' - '+ res.data.sched)
+    if (status_code === 200) {
+      Swal.fire(response, message, "success");
 
       US_IndividualSched.clearUSIndividualSched();
       US_IndividualDetails.clearUSIndividualDetails();
 
       router.push("/application");
+    } else if(status_code === 501) {
+      Swal.fire(response, message, "error");
+    } else if(status_code === 500) {
+      Swal.fire(response, message, "error");
     } else {
       // alert('Reject, '+ res.data.error +', '+ res.data.message)
       Swal.fire(

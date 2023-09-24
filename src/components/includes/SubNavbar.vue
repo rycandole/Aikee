@@ -6,6 +6,7 @@ const regID = route.params.id;
 const country = route.params.country;
 const payCode = route.params.paycode;
 
+
 // const print = () => {
 //   const printableContent = document.getElementById("printable-content");
 //   const printWindow = window.open("", "", "height=1000,width=1000");
@@ -53,6 +54,7 @@ const payCode = route.params.paycode;
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
+        <!-- Don't delete this router!!!! -->
         <li class="nav-item">
           <router-link
             :to="'/application/confirmation/' + country + '/' + regID + '/' + payCode"

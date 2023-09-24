@@ -3,10 +3,16 @@ import axios from "axios";
 import { ref } from "vue";
 import { onMounted } from "vue";
 import { useProfileStore } from "@/store/profile-store";
+// import { useUSHolidates } from "@/store/us-holidates";
+// import { use_TRIPLETS_MNL_Holidates } from '@/store/triplets-holidates-mnl'
+// import { use_TRIPLETS_BGC_Holidates } from '@/store/triplets-holidates-bgc'
 import Swal from "@/sweetalert2";
 import moment from "moment";
 
 const profileStore = useProfileStore();
+// const USHolidates = useUSHolidates();
+// const TRIPLETS_MNL_Holidates = use_TRIPLETS_MNL_Holidates()
+// const TRIPLETS_BGC_Holidates = use_TRIPLETS_BGC_Holidates()
 
 let user_id = profileStore.id;
 
@@ -16,11 +22,20 @@ let USList = ref(null);
 let TripletsList = ref(null);
 // let status_code = ref(null);
 let listCount = ref(null);
+// let country_list = ["CA", "AU", "NZ", "KR", "FK", "LV", "MU"];
 
 onMounted(async () => {
   showList();
+  // await USHolidates.fetchHolidaysByCountryAndBranch("US", "MNL");
+
+  // for (let i = 0; i <= 6; i++) {
+  //   await TRIPLETS_MNL_Holidates.fetchHolidaysByCountryAndBranch(country_list[i], 'MNL')
+  //   await TRIPLETS_BGC_Holidates.fetchHolidaysByCountryAndBranch(country_list[i], 'BGC')
+  // }
+
 });
 
+// ============= For displaying list of applications ========= //
 const showList = async () => {
   let res = await axios.get("registration-list/" + user_id);
   showApplication = res.data.result;
@@ -31,8 +46,27 @@ const showList = async () => {
 
   listCount.value = res.data.listCount;
 };
-// id
-const re_sendEmail = async (id) => {
+
+// ====================== End ============================== //
+
+// =========== Resend Email ================ //
+const sendMail = async (PAYLOAD, country) => {
+   /* Read more about isConfirmed, isDenied below */
+   let res = await axios.post("re-send-email-"+country+"/", PAYLOAD);
+
+  let status_code = res.data.status_code
+  let error_msg = res.data.error_msg
+  let message = res.data.message
+
+  if (status_code == 200) {
+    Swal.fire(error_msg, message, "success");
+  } else if (status_code == 422) {
+    Swal.fire(error_msg, message, "error");
+  } else {
+    Swal.fire("Email not sent!", "Please inform administrator", "error");
+  }
+}
+const re_sendEmail = async (id, country) => {
   Swal.fire({
     title: "Are you sure you want to Re-send email?",
     text: "Confirm your action",
@@ -42,16 +76,11 @@ const re_sendEmail = async (id) => {
   }).then((result) => {
     if (result.isConfirmed) {
 
-      const JSONdata = {
+      const requestPAYLOAD = {
         regId: id,
       };
-      /* Read more about isConfirmed, isDenied below */
-      let res = axios.post("re-send-email-us/", JSONdata);
 
-      console.log(res.data.id)
-      // alert(res.data.result)
-
-      alert(res.data.message)
+      sendMail(requestPAYLOAD, country);
 
     } else if (result.isDenied) {
       Swal.fire("Email not Send", "Check your internet connection", "error");
@@ -59,6 +88,62 @@ const re_sendEmail = async (id) => {
   });
 
 }
+
+// ============== End =================== //
+
+// ======== For Cancel Button ================ //
+const cancelApplication = async (PAYLOAD) => {
+   /* Read more about isConfirmed, isDenied below */
+   let res = await axios.post("cancel_application/", PAYLOAD);
+
+  let status_code = res.data.status_code
+  let message = res.data.message
+  let error_msg = res.data.error_msg
+
+  if (status_code == 200) {
+    Swal.fire(error_msg, message, "success");
+    showList();
+  } else if (status_code == 400) {
+    Swal.fire(error_msg, message, "error");
+  } else if (status_code == 409) {
+    Swal.fire(error_msg, message, "error");
+  } else {
+    Swal.fire(message+" Please contact administrator.", error_msg, "error");
+  }
+
+}
+
+const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) => {
+  Swal.fire({
+    title: "Are you sure you want to cancel this application?",
+    text: "Confirm your action",
+    showCancelButton: true,
+    confirmButtonText: "Yes",
+    icon: "question",
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      let clinic_branch = branch || 'MNL'
+
+      const requestPAYLOAD = {
+        regId: id,
+        regCountry: country,
+        regBranch: clinic_branch,
+        regSchedDate: sched_date,
+        regSchedTime: sched_time,
+        regPaycode: paycode
+      };
+
+      cancelApplication(requestPAYLOAD);
+
+    } else if (result.isDenied) {
+      Swal.fire("Email not Send", "Check your internet connection", "error");
+    }
+  });
+
+}
+
+// ================== End =================== //
 </script>
 <template>
   <div class="col-12">
@@ -82,7 +167,11 @@ const re_sendEmail = async (id) => {
               <td>{{ `${row.EmailAdd}` }}</td>
               <td>{{ moment(`${row.PreferredMedicalExamDate}`).format("LL") }}</td>
               <td align="right">
-                <b>Cancelled<i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
+                <b v-if="`${row.Cancelled}` == 1">Cancelled<i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
+                <b v-else-if="`${row.Expired}` == 1">Expired<i class="fas fa-hourglass-end fa-lg text-secondary ml-2"></i></b>
+                <b v-else-if="`${row.paid}` == 1">Paid <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
+                <b v-else-if="`${row.Seen}` == 1">Arrived <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
+                <b v-else>Awaiting payment <i class="fas fa-minus-circle fa-lg text-info ml-2"></i></b>
               </td>
               <td>
                 <div class="dropdown">
@@ -98,7 +187,7 @@ const re_sendEmail = async (id) => {
                     <li>
                       <router-link
                         :to="
-                          'application/confirmation/' +
+                          'application/show/' +
                           `${row.Country}` +
                           '/' +
                           `${row.ID}` +
@@ -109,7 +198,7 @@ const re_sendEmail = async (id) => {
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
                       >
                     </li>
-                    <li>
+                    <li :hidden="`${row.Seen}` == 1 ? true : false">
                       <router-link 
                          :to="
                          'application/edit/' +
@@ -124,19 +213,27 @@ const re_sendEmail = async (id) => {
                       >
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-window-close mr-2 text-danger"></i>
-                        Cancel</router-link
-                      >
+                      <button @click="cancelBtn(`${row.ID}`, `${row.Country}`, 'MNL', `${row.PreferredMedicalExamDate}`, `${row.priorityTime}`, `${row.PayCode}`)" class="dropdown-item">
+                        <i class="fas fa-window-close mr-2 text-danger"></i> Cancel
+                      </button>
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
+                      <router-link  
+                      :to="
+                      'application/redirect/' +
+                      `${row.Country}` +
+                      '/' +
+                      `${row.ID}` +
+                      '/' +
+                      `${row.PayCode}`
+                      " 
+                      class="dropdown-item"
                         ><i class="fas fa-calendar mr-2 text-success"></i>
                         Re-schedule</router-link
                       >
                     </li>
                     <li>
-                      <button @click="re_sendEmail(`${row.ID}`)" class="dropdown-item">
+                      <button @click="re_sendEmail(`${row.ID}`, `${row.Country}`, `${row.branch}`, `${row.PreferredMedicalExamDate}`, `${row.priorityTime}`)" class="dropdown-item">
                         <i class="fas fa-envelope mr-2 text-primary"></i> Re-send email
                       </button>
                     </li>
@@ -150,9 +247,11 @@ const re_sendEmail = async (id) => {
               <td>{{ `${row.EmailAdd}` }}</td>
               <td>{{ moment(`${row.PreferredMedicalExamDate}`).format("LL") }}</td>
               <td align="right">
-                <b
-                  >Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i
-                ></b>
+                <b v-if="`${row.Cancelled}` == 1">Cancelled<i class="fas fa-times-circle fa-lg text-danger ml-2"></i></b>
+                <b v-else-if="`${row.Expired}` == 1">Expired<i class="fas fa-hourglass-end fa-lg text-secondary ml-2"></i></b>
+                <b v-else-if="`${row.paid}` == 1">Paid <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
+                <b v-else-if="`${row.Seen}` == 1">Arrived <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
+                <b v-else>Awaiting payment <i class="fas fa-minus-circle fa-lg text-info ml-2"></i></b>
               </td>
               <td>
                 <div class="dropdown">
@@ -179,239 +278,43 @@ const re_sendEmail = async (id) => {
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
                       >
                     </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link
-                      >
+                    <li :hidden="`${row.Seen}` == 1 ? true : false">
+                      <router-link 
+                        :to="
+                        'application/edit/' +
+                        `${row.Country}` +
+                        '/' +
+                        `${row.Id}` +
+                        '/' +
+                        `${row.PayCode}`
+                        "
+                        class="dropdown-item"
+                      ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link>
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-window-close mr-2 text-danger"></i>
-                        Cancel</router-link
-                      >
+                      <button @click="cancelBtn(`${row.Id}`, `${row.Country}`, `${row.branch}`, `${row.PreferredMedicalExamDate}`, `${row.priorityTime}`, `${row.PayCode}`)" class="dropdown-item">
+                        <i class="fas fa-window-close mr-2 text-danger"></i> Cancel
+                      </button>
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
+                      <router-link 
+                      :to="
+                      'application/redirect/' +
+                      `${row.Country}` +
+                      '/' +
+                      `${row.Id}` +
+                      '/' +
+                      `${row.PayCode}`
+                      " 
+                      class="dropdown-item"
                         ><i class="fas fa-calendar mr-2 text-success"></i>
                         Re-schedule</router-link
                       >
                     </li>
                     <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-envelope mr-2 text-primary"></i> Re-send
-                        email</router-link
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Sample Example</td>
-              <td>U.S.A.</td>
-              <td>sample@example.com</td>
-              <td>May 05, 2023</td>
-              <td align="right">
-                <b
-                  >Cancelled <i class="fas fa-times-circle fa-lg text-danger ml-2"></i
-                ></b>
-              </td>
-              <td>
-                <div class="dropdown">
-                  <button
-                    class="btn btn-light dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-window-close mr-2 text-danger"></i>
-                        Cancel</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-calendar mr-2 text-success"></i>
-                        Re-schedule</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-envelope mr-2 text-primary"></i> Re-send
-                        email</router-link
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Sample Example</td>
-              <td>U.S.A.</td>
-              <td>sample@example.com</td>
-              <td>May 05, 2023</td>
-              <td align="right">
-                <b>Paid <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
-              </td>
-              <td>
-                <div class="dropdown">
-                  <button
-                    class="btn btn-light dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-window-close mr-2 text-danger"></i>
-                        Cancel</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-calendar mr-2 text-success"></i>
-                        Re-schedule</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-envelope mr-2 text-primary"></i> Re-send
-                        email</router-link
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Sample Example</td>
-              <td>U.S.A.</td>
-              <td>sample@example.com</td>
-              <td>May 05, 2023</td>
-              <td align="right">
-                <b
-                  >Awaiting payment
-                  <i class="fas fa-minus-circle fa-lg text-info ml-2"></i
-                ></b>
-              </td>
-              <td>
-                <div class="dropdown">
-                  <button
-                    class="btn btn-light dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-window-close mr-2 text-danger"></i>
-                        Cancel</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-calendar mr-2 text-success"></i>
-                        Re-schedule</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-envelope mr-2 text-primary"></i> Re-send
-                        email</router-link
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Sample Example</td>
-              <td>U.S.A.</td>
-              <td>sample@example.com</td>
-              <td>May 05, 2023</td>
-              <td align="right">
-                <b
-                  >Re-scheduled <i class="fas fa-check-circle fa-lg text-success ml-2"></i
-                ></b>
-              </td>
-              <td>
-                <div class="dropdown">
-                  <button
-                    class="btn btn-light dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="fas fa-cog fa-lg fa-rotate-90 mr-3"></i>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-edit mr-2 text-warning"></i> Edit</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-window-close mr-2 text-danger"></i>
-                        Cancel</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-calendar mr-2 text-success"></i>
-                        Re-schedule</router-link
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/" class="dropdown-item"
-                        ><i class="fas fa-envelope mr-2 text-primary"></i> Re-send
-                        email</router-link
-                      >
+                      <button @click="re_sendEmail(`${row.Id}`, `${row.Country}`)" class="dropdown-item">
+                        <i class="fas fa-envelope mr-2 text-primary"></i> Re-send email
+                      </button>
                     </li>
                   </ul>
                 </div>

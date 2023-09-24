@@ -14,10 +14,11 @@ const props = defineProps({
     ErrorName: String,
     error: String,
     smallLabel: String,
-    onChange: String
+    onChange: String,
+    onDisabled: Boolean
 })
 
-const { labelClassName, label, className, input, items, error, smallLabel, FieldName, ErrorName, onChange } = toRefs(props)
+const { labelClassName, label, className, input, items, error, smallLabel, FieldName, ErrorName, onChange, onDisabled } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
@@ -36,7 +37,7 @@ const inputComputed = computed({
             </label>
         </div>
         <div class="col-12 input-group">
-            <Field :name="FieldName" as="select" @input="onChange" class="form-control form-select w-100" :class="className" v-model="inputComputed" aria-label="Default select example" required>
+            <Field :name="FieldName" as="select" @input="onChange" class="form-control form-select w-100" :class="className" v-model="inputComputed" aria-label="Default select example" :disabled="onDisabled" required>
                 <option :selected="true" value="">Select</option>
                 <option v-for="item in items" :key="item" :value="item">
                     {{ item }}

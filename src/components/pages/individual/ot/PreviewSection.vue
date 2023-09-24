@@ -71,8 +71,8 @@
     let embassyOfVisa = details.embassyOfVisa
     let visaCategoryField = details.visaCategoryField
     let passportNumber = details.passportNumber
-    let issuedCountry = details.issuedCountry
-    let issuedDate = moment(details.issuedDate).format('LL');
+    let country_issue = details.issuedCountry
+    let date_issued = moment(details.issuedDate).format('LL');
     let lastName = details.ad_lastName
     let firstName = details.ad_firstName
     let middleName = details.ad_middleName == "" ? "None" : details.ad_middleName
@@ -116,7 +116,7 @@
                 json_embassyOfVisa: embassyOfVisa,
                 json_visaCategoryField: visaCategoryField,
                 json_passportNumber: passportNumber,
-                json_issuedCountry: issuedCountry,
+                json_issuedCountry: country_issue,
                 json_issuedDate: details.issuedDate,
                 json_lastName: lastName,
                 json_firstName: firstName,
@@ -135,32 +135,32 @@
                 json_city: city,
                 json_province: province,
                 json_postalCode: postalCode,
+                json_country: regCountry
         }
 
         try {
 
             let res = await axios.post('ot-store/', JSONdata)
+            let status_code = res.data.status_code
+            let response = res.data.response
+            let message = res.data.message
 
-            if (res.request.status === 200 && res.data.status_code === 200) {
-
-                Swal.fire(res.data.message, '', 'success')
+            if (status_code === 200) {
+                Swal.fire(response, message, 'success')
     
                 OT_IndividualSched.clearOTIndividualSched()
                 OT_IndividualDetails.clearOTIndividualDetails()
                 
                 router.push("/application")
-                
-            } else if (res.request.status === 400) {
-
-                Swal.fire(res.data.message, '', 'info')
-
-            } else if (res.request.status === 500) {
-
-                Swal.fire('Internal Server Error', '', 'warning')
-
+            } else if (status_code === 400) {
+                Swal.fire(response, message, 'info')
+            } else if (status_code === 401) {
+                Swal.fire(response, message, 'error')
+            } else if (status_code === 500) {
+                Swal.fire(response, message, 'warning')
             } else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
-                Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
+                Swal.fire(response, message, 'warning')
                 console.log('Reject, '+ res.data.error +', '+ res.data.message)
             }
 
@@ -277,14 +277,14 @@
                     <div class="col-12">
                         <PreviewText 
                             previewLabel="Country of Issue"
-                            v-bind:previewText="issuedCountry"
+                            v-bind:previewText="country_issue"
                         />
                     </div>
                     <div class="col-12"><hr /></div>
                     <div class="col-12 pb-3">
                         <PreviewText 
                             previewLabel="Date of Issue"
-                            v-bind:previewText="issuedDate"
+                            v-bind:previewText="date_issued"
                         />
                     </div>
                     <div class="mb-3 col-12">

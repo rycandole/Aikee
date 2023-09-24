@@ -153,26 +153,23 @@
         try {
 
             let res = await axios.post('au-store/', JSONdata)
+            let status_code = res.data.status_code
+            let response = res.data.response
+            let message = res.data.message
 
-            if (res.data.status_code === 200 ) {
-
-                Swal.fire('Applicant successfully registered', '', 'success')
-                // alert('Success '+ res.data.response +' - '+ res.data.sched)
+            if (status_code === 200) {
+                Swal.fire(response, message, 'success')
 
                 AU_IndividualSched.clearAUIndividualSched()
                 AU_IndividualDetails.clearAUIndividualDetails()
 
                 router.push("/application")
                 
-            } else if (res.request.status === 400) {
-
-                Swal.fire(res.data.message, '', 'info')
-
-            } else if (res.request.status === 500) {
-
-                Swal.fire('Internal Server Error', '', 'warning')
-
-            }else {
+            } else if(status_code === 501) {
+                Swal.fire(response, message, "error");
+            } else if(status_code === 500) {
+                Swal.fire(response, message, "error");
+            } else {
                 // alert('Reject, '+ res.data.error +', '+ res.data.message)
                 Swal.fire('There is something wrong.', 'Please check the fields or contact the administrator', 'info')
                 console.log('Reject, '+ res.data.error +', '+ res.data.message)

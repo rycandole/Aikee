@@ -4,11 +4,11 @@ import TopNavBar from "@/components/includes/TopNavBar.vue";
 import SideNavigation from "@/components/includes/SideNavigation.vue";
 import FooterSection from "@/components/includes/FooterSection.vue";
 
-import ShowSection_US from "@/components/pages/application/us/ShowSection.vue";
-import ShowSection_CA from "@/components/pages/application/ca/ShowSection.vue";
-import ShowSection_AU from "@/components/pages/application/au/ShowSection.vue";
-import ShowSection_NZ from "@/components/pages/application/nz/ShowSection.vue";
-import ShowSection_OT from "@/components/pages/application/ot/ShowSection.vue";
+import RescheduleSection_US from "@/components/pages/application/us/RescheduleSection.vue";
+import RescheduleSection_CA from "@/components/pages/application/ca/RescheduleSection.vue";
+import RescheduleSection_AU from "@/components/pages/application/au/RescheduleSection.vue";
+import RescheduleSection_NZ from "@/components/pages/application/nz/RescheduleSection.vue";
+import RescheduleSection_OT from "@/components/pages/application/ot/RescheduleSection.vue";
 
 const route = useRoute();
 
@@ -20,11 +20,12 @@ const country = route.params.country;
     <SideNavigation />
 
     <!-- Content Wrapper. Contains page content -->
+    
     <div class="content-wrapper p-1 pb-5">
       <div class="container-md">
         <div class="row mb-2 pt-5 pb-5 class_for_padding">
           <div class="col-sm-6">
-            <h1 class="m-0">Application Details</h1>
+            <h1 class="m-0">Re-schedule</h1>
           </div>
           <!-- /.col -->
           <div class="col-sm-6">
@@ -34,26 +35,26 @@ const country = route.params.country;
               </li>
               <li class="breadcrumb-item">
                 <router-link to="/" class="text-secondary">
-                  Application Details
+                    Re-schedule
                 </router-link>
               </li>
             </ol>
           </div>
           <!-- /.col -->
           <div v-if="country === 'US'" class="col-12 mb-2">
-            <ShowSection_US />
+            <RescheduleSection_US />
           </div>
           <div v-else-if="country === 'CA'" class="col-12 mb-2">
-            <ShowSection_CA />
+            <RescheduleSection_CA />
           </div>
           <div v-else-if="country === 'AU'" class="col-12 mb-2">
-            <ShowSection_AU />
+            <RescheduleSection_AU />
           </div>
           <div v-else-if="country === 'NZ'" class="col-12 mb-2">
-            <ShowSection_NZ />
+            <RescheduleSection_NZ />
           </div>
-          <div v-else class="col-12  mb-2">
-            <ShowSection_OT />
+          <div v-else class="col-12 mb-2">
+            <RescheduleSection_OT />
           </div>
         </div>
         <!-- /.row -->
@@ -64,8 +65,10 @@ const country = route.params.country;
     <FooterSection />
   </div>
 </template>
+<style lang="scss">
+
 .class_for_padding {
-  padding: 1rem 0 0 0;
+    padding: 1rem 0 0 0;
 }
 
 
@@ -74,8 +77,9 @@ const country = route.params.country;
 }
 
 @media only screen and (min-width: 1000px) {
-  .class_for_padding {
-      padding: 0 3rem 0 3rem;
-    }
+    .class_for_padding {
+        padding: 0 3rem 0 3rem;
+      }
 
 }
+</style>

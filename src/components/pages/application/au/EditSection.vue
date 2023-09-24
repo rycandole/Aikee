@@ -16,7 +16,6 @@
     import InputField from '@/components/global/InputField.vue'
     import RadioButton from '@/components/global/RadioButtton.vue'
     import SubNavbar from "@/components/includes/SubNavbar.vue";
-    import CheckBox from '@/components/global/CheckBox.vue'
     import Swal from '@/sweetalert2'
     import { Field, ErrorMessage } from 'vee-validate'
     import moment from 'moment'
@@ -28,9 +27,10 @@
     import civilStatus from '@/assets/js/arrays/civil_status_array'
     import countries from '@/assets/js/arrays/countries_array'
     import years from '@/assets/js/arrays/year_list_array'
+    import subClass from '@/assets/js/arrays/subclass_array'
     import province from '@/assets/js/arrays/province_array'
     import agency from '@/assets/js/arrays/agency_array'
-    import visaCategory from '@/assets/js/arrays/visa_category_array'
+    // import visaCategory from '@/assets/js/arrays/visa_category_array'
     
 
     const router = useRouter()
@@ -46,7 +46,8 @@
     let user_id = profileStore.id
     let hasMedicalExam = true
     let is_first_med_exam = true
-    let has_alias =  true
+    let subClassKind = ref(null)
+    let trn = ref(null)
     let wasFirstMedicalExam = ref(null)
     let prevClinicName = ref(null)
     let passportNumber = ref(null)
@@ -67,27 +68,22 @@
     let city = ref(null)
     let provinceField = ref(null)
     let postalCode = ref(null)
-    let prevCategory = ref(null)
-    let alias_lastName = ref(null)
-    let alias_firstName = ref(null)
-    let alias_middleName = ref(null)
+    let intendedStay = ref(null)
+    let intentToWork = ref(null)
+    let intentToStay = ref(null)
+    let prevSubClass = ref(null)
     let applicantCategory = ref(null)
     let fileNumber = ref(null)
     let agencyField = ref(null)
-
     let branch = ref(null)
-    let preferred_medical_exam_date = ref(null)
-    let priority_time = ref(null)
     let printHash = ref(null);
     let PayCode = ref(null);
     let receiveDate = ref(null);
-
     let errors = ref([])
     let inputName = ref(null)
     let inputError = ref(null)
 
-    let check_alias = ref(null)
-    let isButtonDisabled = true
+
     
 // const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
 const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
@@ -104,15 +100,17 @@ onMounted(async () => {
 })
 
 const showInformation = async () => {
-  let res = await axios.get("ca-show/" + regId);
+  let res = await axios.get("au-show/" + regId);
   let showApplication = res.data.result;
 
   for (var i = 0; i < showApplication.length; i++) {
     wasFirstMedicalExam.value = showApplication[i].Prev_AUMed || ''
+    subClassKind.value = showApplication[i].SubClass || ''
+    trn.value = showApplication[i].App_TRN || ''
     prevClinicName.value = showApplication[i].PrevMedDetail1 || ''
-    prevCategory.value = showApplication[i].PrevMedDetail2 || ''
-    issuedCountry.value = showApplication[i].IssuedCountry || ''
+    prevSubClass.value = showApplication[i].PrevMedDetail2 || ''
     passportNumber.value = showApplication[i].PassNo || ''
+    issuedCountry.value = showApplication[i].IssuedCountry || ''
     issuedDate.value = showApplication[i].IssuedDate || ''
     ad_lastName.value = showApplication[i].LastName || ''
     ad_firstName.value = showApplication[i].FirstName || ''
@@ -129,10 +127,9 @@ const showInformation = async () => {
     city.value = showApplication[i].Add2 || ''
     provinceField.value = showApplication[i].Add3 || ''
     postalCode.value = showApplication[i].AddPost || ''
-    check_alias.value = showApplication[i].AKALastName == "" || showApplication[i].AKALastName == null ? "" : "checked" || ''
-    alias_lastName.value = showApplication[i].AKALastName || ''
-    alias_firstName.value = showApplication[i].AKAFirstName || ''
-    alias_middleName.value = showApplication[i].AKAMiddleName || ''
+    intendedStay.value = showApplication[i].Stay || ''
+    intentToWork.value = showApplication[i].intent_work || ''
+    intentToStay.value = showApplication[i].intend_apply || ''
     applicantCategory.value = showApplication[i].SubClass || ''
     fileNumber.value = showApplication[i].App_TRN || ''
     agencyField.value = showApplication[i].agency || ''
@@ -140,16 +137,10 @@ const showInformation = async () => {
     PayCode.value = showApplication[i].PayCode;
     branch.value = showApplication[i].branch;
     receiveDate.value = showApplication[i].RcvDate;
-    preferred_medical_exam_date.value = showApplication[i].PreferredMedicalExamDate || ''
-    priority_time.value = showApplication[i].priorityTime || ''
 
     wasFirstMedicalExam.value === 'N' ? hasMedicalExam = false : hasMedicalExam = true
     wasFirstMedicalExam.value === 'N' ? prevClinicName.value = showApplication[i].PrevMedDetail1 : prevClinicName.value = ""
-    wasFirstMedicalExam.value === 'N' ? prevCategory.value = showApplication[i].PrevMedDetail2 : prevCategory.value = ""
-    check_alias.value === 'checked' ? isButtonDisabled = false : isButtonDisabled = true
-    // check_alias.value === 'checked' ? alias_lastName.value = showApplication[i].alias_lastName : alias_lastName.value = ""
-    // check_alias.value === 'checked' ? alias_firstName.value = showApplication[i].alias_firstName : alias_firstName.value = ""
-    // check_alias.value === 'checked' ? alias_middleName.value = showApplication[i].alias_middleName : alias_middleName.value = ""
+    wasFirstMedicalExam.value === 'N' ? prevSubClass.value = showApplication[i].PrevMedDetail2 : prevSubClass.value = ""
   }
 
 
@@ -161,24 +152,11 @@ const showInformation = async () => {
         if(wasFirstMedicalExam.value === 'Y') {
             hasMedicalExam = true
             prevClinicName.value = ""
-            prevCategory.value = ""
+            prevSubClass.value = ""
             is_first_med_exam = true
         } else {
             hasMedicalExam = false
             is_first_med_exam = false
-        }
-    }
-
-    const hasAlias = () => {
-        if(check_alias.value == 'checked') {
-            isButtonDisabled = false
-            has_alias = false
-        } else {
-            isButtonDisabled = true
-            alias_lastName.value = ""
-            alias_firstName.value = ""
-            alias_middleName.value = ""
-            has_alias = true
         }
     }
 
@@ -187,6 +165,7 @@ const showInformation = async () => {
     }
 
     const schema = yup.object().shape({
+        subClassKind: yup.string().required('This field is required, please choose an option!'),
         wasFirstMedicalExam: yup.string().required('This field is required, please choose an option!'),
         is_first_med_exam:yup.string(),
         prevClinicName: yup.string().when('is_first_med_exam', {
@@ -194,42 +173,28 @@ const showInformation = async () => {
             then: (schema) => schema.required('Previous clinic name required!'),
             otherwise: (schema) => schema.nullable()
         }),
-        prevCategory: yup.string().when('is_first_med_exam', {
+        prevSubClass: yup.string().when('is_first_med_exam', {
             is: 'false',
-            then: (schema) => schema.required('Previous category name required!'),
+            then: (schema) => schema.required('Previous subclass required!'),
             otherwise: (schema) => schema.nullable()
         }),
-        // passportNumber: yup.string().nullable().max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
-        issuedCountry: yup.string().nullable(),
+        trn: yup.string().required("TRN is required!"),
         ad_lastName: yup.string().required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(25, 'Last name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
         ad_firstName: yup.string().required('First name is required!').min(2, 'First name must be atleast 2 characters').max(25, 'First name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-        ad_middleName: yup.string().optional('Middle name is required!').min(2, 'Middle name must be atleast 2 characters').max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
-        has_alias: yup.string(),
-        alias_lastName: yup.string().when('has_alias', {
-            is: 'false',
-            then: (schema) => schema.required('Last name is required!').min(2, 'Last name must be atleast 2 characters').max(30, 'Last name must be at most 30 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-            otherwise: (schema) => schema.nullable()
-        }),
-        alias_firstName: yup.string().when('has_alias', {
-            is: 'false',
-            then: (schema) => schema.required('First name is required!').min(2, 'First name must be atleast 2 characters').max(30, 'First name must be at most 30 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^"),
-            otherwise: (schema) => schema.nullable()
-        }),
-        // alias_middleName: yup.string().max(25, 'Middle name must be at most 25 characters').matches(nameRegex, "Please avoid using numbers and special characters ex: !@#$%^").nullable(),
-        maiden_name: yup.string().required("Maiden's name is required!").min(2, 'Maiden name must be atleast 2 characters').max(75, 'Maiden name must be at most 75 characters'),
         validate_date_of_birth: yup.string().required("Date of Birth is Required!"),
         gender:yup.string().required('Gender is required!'),
-        civil_status:yup.string().required('This field is required, please choose from options!'),
-        nationality: yup.string().required('This field is required, please choose from options!'),
+        civil_status:yup.string().required('This field is required, please choose an option!'),
+        nationality: yup.string().required('This field is required, please choose an option!'),
         contactNumber: yup.string().required('Contact number is required!').min(11, 'Contact number must be exactly 11').max(11, 'Contact number must be exactly 11').matches(contactNumberRegex, "Please avoid using letters and special characters ex: abc!@#$%^"),
-        street: yup.string().required('Street is required').min(2, 'Minimmum of 2 character').max(20, 'maximum of 20 characters'),
+        street: yup.string().required('Street is required').min(1, 'Minimmum of 1 character').max(15, 'maximum of 15 characters'),
         barangay: yup.string().required('Barangay is required').min(5, 'This field must be atleast 5 characters').max(25, 'This field must be at most 25 characters'),
         city: yup.string().required('City is required').min(5, 'City must be atleast 5 characters').max(25,'This field must be at most 25 characters'),
         provinceField: yup.string().required('Province is required!').min(4, 'This field atleast 4 characters').max(25, 'This field must be at most 25 characters'),
         postalCode: yup.string().required('Postal code is required!').min(4, 'Postal code must be atleast 4 numbers').max(4, 'Postal code must be atleast 4 numbers').matches(numOnlyRegex, "Postal Code must be number only!"),
-        applicantCategory: yup.string().required('This field is required, please choose an options'),
-        fileNumber: yup.string().required('File Number / IME is required!').min(2, 'File Number / IME must be atleast 2 characters').max(25,'File Number / IME must be at most 25 characters'),
-        agencyField: yup.string().required("This field is required, please choose from options"),
+        intendedStay: yup.string().required('This field is required, please choose an option!'),
+        intentToWork: yup.string().required('This field is required, please choose an option!'),
+        intentToStay: yup.string().required('This field is required, please choose an option!'),
+        agencyField: yup.string().required('Agency is required!'),
     })
 
     
@@ -242,24 +207,22 @@ const showInformation = async () => {
         errors.value = []
 
         let dob = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
-        let isuedDate = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
+        // let issued_date = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
       
-        const requestPAYLOAD = {
+        const jsonRequest = {
                 json_registrationID: regId,
                 json_user_id: user_id,
+                json_subClassKind: values.subClassKind,
                 json_wasFirstMedicalExam: values.wasFirstMedicalExam,
                 json_prevClinicName: values.prevClinicName,
-                json_prevCategory: values.prevCategory,
+                json_prevSubClass: values.prevSubClass,
+                json_trn: values.trn,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
-                json_issuedDate: isuedDate,
-                json_ad_lastName: values.ad_lastName,
-                json_ad_firstName: values.ad_firstName,
-                json_ad_middleName: values.ad_middleName,
-                json_check_alias: values.check_alias,
-                json_alias_lastName: values.alias_lastName,
-                json_alias_firstName: values.alias_firstName,
-                json_alias_middleName: values.alias_middleName,
+                json_issuedDate: values.issuedDate,
+                json_ad_lastName:values.ad_lastName,
+                json_ad_firstName:values.ad_firstName,
+                json_ad_middleName:values.ad_middleName,
                 json_maiden_name: values.maiden_name,
                 json_date_of_birth: dob,
                 json_gender: values.gender,
@@ -272,23 +235,21 @@ const showInformation = async () => {
                 json_city: values.city,
                 json_provinceField: values.provinceField,
                 json_postalCode: values.postalCode,
-                json_applicantCategory: values.applicantCategory,
-                json_fileNumber: values.fileNumber,
+                json_intendedStay: values.intendedStay,
+                json_intentToWork: values.intentToWork,
+                json_intentToStay: values.intentToStay,
+                json_printHash: values.printHash,
+                json_PayCode: values.PayCode,
+                json_receiveDate: values.receiveDate,
                 json_agencyField: values.agencyField,
-                json_printHash: printHash.value,
-                json_PayCode: PayCode.value,
-                json_branch: branch.value,
-                json_receiveDate: receiveDate.value,
-                json_sched_date: preferred_medical_exam_date.value,
-                json_sched_time: priority_time.value
         }
 
         try {
-            let validateRequest = await axios.post('ca-validate', requestPAYLOAD)
+            let validateRequest = await axios.post('au-validate', jsonRequest)
 
             if (validateRequest.data.status_code === 200) {
               
-              let updateRequest = await axios.post('ca-update', requestPAYLOAD)
+              let updateRequest = await axios.post('au-update', jsonRequest)
               
               if (updateRequest.data.status_code === 200) {
                 
@@ -347,23 +308,31 @@ const showInformation = async () => {
       </div>
     </div>
     <div class="wrapper_container row bg-white border">
-        <div class="col-12 mb-5">
-            <h1 class="text-secondary text-center fs-1 fw-bold" >Canada</h1>
+        <div class="col-12 mb-2">
+            <h1 class="text-secondary text-center fs-1 fw-bold" >Australia</h1>
         </div>
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-        
         <Form @submit="updateDetails" :validation-schema="schema"  class="col-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="col-12">
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
-                    <div class="mb-3 col-12">
-                        <strong>Is this your first medical examination for the Canadian Embassy? <b class="text-danger">*</b></strong>
+                    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                        <RequiredSelectField 
+                            label="What subclass did you apply for?"
+                            FieldName="subClassKind"
+                            ErrorName="subClassKind"
+                            v-model:input="subClassKind"
+                            :items="subClass"
+                        />
                     </div>
-                    <div class=" col-lg-2 col-md-3 col-sm-12 examRadioLeft">
+                    <div class="mb-3 col-12">
+                        <strong>Is this your first medical examination for the Australian Embassy? <b class="text-danger">*</b></strong>
+                    </div>
+                    <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
                         <RadioButton 
                                 RadioLabel="Yes"
                                 RadioLabelClass="font-weight-normal"
@@ -374,7 +343,7 @@ const showInformation = async () => {
                         />
                     </div>
                    
-                    <div class="col-lg-10 col-md-9 col-sm-12 examRadioRight">
+                    <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
                         <RadioButton 
                                 RadioLabel="No"
                                 RadioLabelClass="font-weight-normal"
@@ -399,18 +368,27 @@ const showInformation = async () => {
                                     v-model:input="prevClinicName"
                                 />
                             </div>
-                            <div class="col-lg-8 col-md-12 col-sm-12">
-                                <InputField 
-                                    label="Category Applied for"
-                                    type="text"
-                                    FieldName="prevCategory"
-                                    ErrorName="prevCategory"
-                                    v-model:input="prevCategory"
-                                />
+                            <div class="col-lg-8 col-md-12 col-sm-12 pb-3">
+                                    <SelectField 
+                                        label="What subclass did you apply for?"
+                                        FieldName="prevSubClass"
+                                        ErrorName="prevSubClass"
+                                        v-model:input="prevSubClass"
+                                        :items="subClass"
+                                    />
                             </div>
+
                         </div>
                     </div>
-
+                    <div class="col-lg-8 col-md-12 col-sm-12">
+                        <RequiredInputField 
+                            label="TRN/HAP I.D."
+                            type="text"
+                            FieldName="trn"
+                            ErrorName="trn"
+                            v-model:input="trn"
+                        />
+                    </div>
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <InputField 
                             label="Passport Number"
@@ -421,7 +399,7 @@ const showInformation = async () => {
                         />
                     </div>
                     <div class="col-lg-8 col-md-12 col-sm-12">
-                        <SelectField
+                        <SelectField 
                             label="Country of Issue"
                             FieldName="issuedCountry"
                             ErrorName="issuedCountry"
@@ -436,6 +414,7 @@ const showInformation = async () => {
                             requiredClass="d-none"
                             :disabledDate="disableBirthdayState.disabledDates"
                             v-model:input="issuedDate"
+                            :onChange="showBooster1"
                             :error="(errors.json_issuedDate) ? (errors.json_issuedDate[0]) : ((inputName == 'json_issuedDate') ? (inputError) : '')"
                         />
                     </div>
@@ -478,50 +457,8 @@ const showInformation = async () => {
                                         v-model:input="ad_middleName"
                                     />
                                 </div>
-                                <div class="col-lg-8 col-md-12 col-sm-12 pl-4 pt-3">
-                                    <CheckBox 
-                                            CheckBoxName="check_alias"
-                                            CheckBoxValue="checked"
-                                            v-model:input="check_alias"
-                                            :onChange="hasAlias"
-                                    />
-                                    <label class="form-check-label font-weight-bold " for="flexCheckDefault">
-                                        ALIAS/A.K.A. Name on Passport, if any.
-                                    </label>
-                                    <Field type="hidden" name="has_alias" :value="has_alias" v-model="has_alias"/>
-                                </div>
-                                <div class="col-lg-8 col-md-12 col-sm-12" :hidden="isButtonDisabled">
-                                    <InputField 
-                                        label="Last Name"
-                                        labelClassName="font-weight-normal"
-                                        type="text"
-                                        FieldName="alias_lastName"
-                                        ErrorName="alias_lastName"
-                                        v-model:input="alias_lastName"
-                                    />
-                                </div>
-                                <div class="col-lg-8 col-md-12 col-sm-12" :hidden="isButtonDisabled">
-                                    <InputField 
-                                        label="First Name"
-                                        labelClassName="font-weight-normal"
-                                        type="text"
-                                        FieldName="alias_firstName"
-                                        ErrorName="alias_firstName"
-                                        v-model:input="alias_firstName"
-                                    />
-                                </div>
-                                <div class="col-lg-8 col-md-12 col-sm-12" :hidden="isButtonDisabled">
-                                    <InputField 
-                                        label="Middle Name"
-                                        labelClassName="font-weight-normal"
-                                        type="text"
-                                        FieldName="alias_middleName"
-                                        ErrorName="alias_middleName"
-                                        v-model:input="alias_middleName"
-                                    />
-                                </div>
                             </div>
-                            <li class="mt-3">Mother's Maiden Name (Last Name, First Name, Middle Name)</li>
+                            <li>Mother's Maiden Name (Last Name, First Name, Middle Name)</li>
                             <div class="row pb-3">
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <RequiredInputField 
@@ -540,12 +477,13 @@ const showInformation = async () => {
                                 <div class="col-12">
                                     <DateField 
                                         divLabelClass="d-none"
+                                        requiredClass="d-none p-0 dateField"
                                         placeholder="Date of Birth"
                                         color="red"
                                         :disabledDate="disableBirthdayState.disabledDates"
                                         v-model:input="date_of_birth"
                                         :onChange="alertChange"
-                                        :error="(errors.json_date_of_birth) ? (errors.json_date_of_birth[0]) : ((inputName == 'json_date_of_birth') ? (inputError) : '')"
+                                        :error="(errors.date_of_birth) ? (errors.date_of_birth[0]) : ((inputName == 'date_of_birth') ? (inputError) : '')"
                                     />
                                 </div>
                                 <Field
@@ -610,7 +548,7 @@ const showInformation = async () => {
                             </div>
                             <li>Contact Number <b class="text-danger">*</b></li>
                             <div class="row pb-3">
-                                <div class="col-8">
+                                <div class="col-12">
                                     <InputField 
                                         inputClassName="contact_num"
                                         type="text"
@@ -676,57 +614,98 @@ const showInformation = async () => {
                                 </div>
                                 
                             </div>
-                            
-                        </ol>
-                    </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="VISA APPLICATION INFORMATION"
-                        />
-                    </div>
-                    <div class="col-12">
-                        <ol>
-                            <li>Category of Applicant <b class="text-danger">*</b></li>
-                            <div class="row pb-3"> 
-                                <div class="col-lg-8 col-md-12 col-sm-12">
-                                    <SelectField 
-                                        className="civil_stat_select"
-                                        FieldName="applicantCategory"
-                                        ErrorName="applicantCategory"
-                                        v-model:input="applicantCategory"
-                                        :items="visaCategory"
+                            <li>How long do you intend staying in Australia? <b class="text-danger">*</b></li>
+                            <div class="row">
+                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
+                                    <RadioButton 
+                                            RadioLabel="Temporary"
+                                            RadioLabelClass="font-weight-normal"
+                                            RadioBtnName="intendedStay"
+                                            RadioValue="Y"
+                                            v-model:input="intendedStay"
+                                            :onChange="handlePrevMedicalExam"
                                     />
+                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
+                                </div>
+                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
+                                    <RadioButton 
+                                            RadioLabel="Permanent"
+                                            RadioLabelClass="font-weight-normal"
+                                            RadioBtnName="intendedStay"
+                                            RadioValue="N"
+                                            v-model:input="intendedStay"
+                                            :onChange="handlePrevMedicalExam"
+                                    />
+                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                                 </div>
                             </div>
-                        <div class="row pb-3"> 
-                                <div class="col-lg-8 col-md-12 col-sm-12">
-                                    
-                                   <li class="pb-3">File Number/IME <b class="text-danger">*</b></li>
-                                   <InputField divLabelClass="d-none"
-                                        type="text"
-                                        FieldName="fileNumber"
-                                        ErrorName="fileNumber"
-                                        v-model:input="fileNumber"
+                            <div class="col-12 pb-3">
+                                <ErrorMessage name="intendedStay" class="text-danger"/>
+                            </div>
+                            <li>Do you intent to work as, or study to be, a doctor, dentist, nurse or paramedic during your stay in Australia? <b class="text-danger">*</b></li>
+                            <div class="row">
+                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
+                                    <RadioButton 
+                                            RadioLabel="Yes"
+                                            RadioLabelClass="font-weight-normal"
+                                            RadioBtnName="intentToWork"
+                                            RadioValue="Y"
+                                            v-model:input="intentToWork"
+                                            :onChange="handlePrevMedicalExam"
                                     />
+                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
+                                </div>
+                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
+                                    <RadioButton 
+                                            RadioLabel="No"
+                                            RadioLabelClass="font-weight-normal"
+                                            RadioBtnName="intentToWork"
+                                            RadioValue="N"
+                                            v-model:input="intentToWork"
+                                            :onChange="handlePrevMedicalExam"
+                                    />
+                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
                                 </div>
                             </div>
-
-                        </ol>
-                    </div>
-                    <div class="mb-3 col-12">
-                        <FormHeader
-                            headerText="ADDITIONAL QUESTIONS"
-                        />
-                    </div>
-                    <div class="col-12">
-                        <ol>
+                            <div class="col-12 pb-3">
+                                <ErrorMessage name="intentToWork" class="text-danger"/>
+                            </div>
+                            <li>For Temporary Visa: Do you intend to apply for a permanent stay in Australia within the next 6-12 months? <b class="text-danger">*</b></li>
+                            <div class="row pb-3">
+                                <div class=" col-lg-3 col-md-4 col-sm-12 examRadioLeft">
+                                    <RadioButton 
+                                            RadioLabel="Yes"
+                                            RadioLabelClass="font-weight-normal"
+                                            RadioBtnName="intentToStay"
+                                            RadioValue="Y"
+                                            v-model:input="intentToStay"
+                                            :onChange="handlePrevMedicalExam"
+                                    />
+                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="yes" /><label for="">Yes</label> -->
+                                </div>
+                                <div class="col-lg-9 col-md-8 col-sm-12 examRadioRight">
+                                    <RadioButton 
+                                            RadioLabel="No"
+                                            RadioLabelClass="font-weight-normal"
+                                            RadioBtnName="intentToStay"
+                                            RadioValue="N"
+                                            v-model:input="intentToStay"
+                                            :onChange="handlePrevMedicalExam"
+                                    />
+                                    <!-- <input class="form-check-input mt-2" @change="handleVaccine" type="radio" name="vaccine_receive" v-model.lazy="vaccine_receive" value="no" /><label for="">No</label> -->
+                                </div>
+                            </div>
+                            <div class="col-12 pb-3">
+                                <ErrorMessage name="intentToStay" class="text-danger"/>
+                            </div>
                             <li>Agency? <b class="text-danger">*</b></li>
-                            <div class="row pb-3"> 
+                            <div class="row">
                                 <div class="col-lg-8 col-md-12 col-sm-12">
                                     <SelectField 
-                                        className="civil_stat_select"
+                                        labelClassName="font-weight-normal"
                                         FieldName="agencyField"
                                         ErrorName="agencyField"
+                                        className="agency_select mb-5 w-75"
                                         v-model:input="agencyField"
                                         :items="agency"
                                     />
@@ -737,11 +716,11 @@ const showInformation = async () => {
 
             <!-- <div class="col-lg-3 col-md-12 col-sm-12"></div> -->
             <div class="col-12 d-flex justify-content-center">
-              <SubmitFormButton
-                btnType="submit"
-                className="btn btn-primary btn-lg w-25"
-                btnText="Update"
-              />
+                <SubmitFormButton
+                    btnType="submit"
+                    className="btn btn-primary btn-lg w-25"
+                    btnText="Update"
+                />
             </div>
             </div>
             </div>
