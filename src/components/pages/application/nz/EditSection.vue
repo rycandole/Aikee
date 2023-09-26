@@ -85,6 +85,12 @@ const examType = new Map([
     ["Limited", "Limited Medical Examination"],
 ])
 
+const medical_certificate = new Map([
+    ['Full Medical Examination', 'Full'],
+    ['Chest X-ray only', 'CXR'],
+    ['Limited Medical Examination', 'Limited']
+])
+
 
     
 // const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
@@ -233,84 +239,102 @@ const schema = yup.object().shape({
     agencyField: yup.string().required('This field is required, please choose from options'),
 })
 
-    
-    /**
-     * Submit US individual form
-     * 
-     */
-     const updateDetails = async (values) => {
+const modifyDetails = async (regInformation) => {
+    let validateRequest = await axios.post('nz-validate', regInformation)
 
-        errors.value = []
+        if (validateRequest.data.status_code === 200) {
+            
+            let res = await axios.post('nz-update', regInformation)
 
-        let dob = moment(new Date(dateOfBirth.value)).format('YYYY-MM-DD')
-        let issued_date = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
-      
-        const requestPayload = {
-                json_registrationID: regId,
-                json_user_id: user_id,
-                json_medCertType: values.medCertType,
-                json_wasFirstMedicalExam: values.wasFirstMedicalExam,
-                json_prevClinic: values.prevClinicName,
-                json_prevCategory: values.prevCategory,
-                json_passportNumber: values.passportNumber,
-                json_issuedCountry: values.issuedCountry,
-                json_issuedDate: issued_date,
-                json_ad_lastName: values.ad_lastName,
-                json_ad_firstName: values.ad_firstName,
-                json_ad_middleName: values.ad_middleName,
-                json_gender: values.gender,
-                json_maiden_name: values.maiden_name,
-                json_dateOfBirth: dob,
-                json_civil_status: values.civil_status,
-                json_nationality: values.nationality,
-                json_contactNumber: values.contactNumber,
-                json_street: values.street,
-                json_barangay: values.barangay,
-                json_city: values.city,
-                json_provinceField: values.provinceField,
-                json_postalCode: values.postalCode,
-                json_intendedOccupation: values.intendedOccupation,
-                json_intendedStay: values.intendedStay,
-                json_stayYear: values.stayYear,
-                json_stayMonth: values.stayMonth,
-                json_visaCategory: values.visaCategory,
-                json_agencyField: values.agencyField,
-        }
+            let status_code = res.data.status_code;
+            let error_msg = res.data.error_msg;
+            let message = res.data.message;
+            
+            if (status_code === 200) {
+            
+            Swal.fire({
+                icon: 'success',
+                title: error_msg,
+                text: message,
+            })
 
-        try {
-            let validateRequest = await axios.post('nz-validate', requestPayload)
-
-            if (validateRequest.data.status_code === 200) {
-              
-              let updateRequest = await axios.post('nz-update', requestPayload)
-              
-              if (updateRequest.data.status_code === 200) {
-                
-                Swal.fire({
-                        icon: 'success',
-                        title: 'Successfully updated',
-                        text: 'Please check also your email',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-
-                router.push("/application/show/"+country+"/"+regId+"/"+payCode)
-
-              } else {
-                Swal.fire("Update Failed", "Check your internet connection", "error");
-              }
-                
+            router.push("/application/show/"+country+"/"+regId+"/"+payCode)
 
             } else {
-                inputName.value = validateRequest.data.name
-                inputError.value = validateRequest.data.error
+            Swal.fire("Update Failed", "Check your internet connection", "error");
             }
+            
 
-        } catch (err) {
-          errors.value = err.response.data.errors
+        } else {
+            inputName.value = validateRequest.data.name
+            inputError.value = validateRequest.data.error
         }
+}
+    
+/**
+ * Submit US individual form
+ * 
+ */
+const updateDetails = async (values) => {
 
+    errors.value = []
+
+    let dob = moment(new Date(dateOfBirth.value)).format('YYYY-MM-DD')
+    let issued_date = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
+    
+    try {
+
+        Swal.fire({
+            title: "Are you sure you want to update?",
+            text: "Confirm your action",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            icon: "question",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const requestPAYLOAD = {
+                        json_registrationID: regId,
+                        json_user_id: user_id,
+                        json_medCertType: medical_certificate.get(values.medCertType),
+                        json_wasFirstMedicalExam: values.wasFirstMedicalExam,
+                        json_prevClinic: values.prevClinicName,
+                        json_prevCategory: values.prevCategory,
+                        json_passportNumber: values.passportNumber,
+                        json_issuedCountry: values.issuedCountry,
+                        json_issuedDate: issued_date,
+                        json_ad_lastName: values.ad_lastName,
+                        json_ad_firstName: values.ad_firstName,
+                        json_ad_middleName: values.ad_middleName,
+                        json_gender: values.gender,
+                        json_maiden_name: values.maiden_name,
+                        json_dateOfBirth: dob,
+                        json_civil_status: values.civil_status,
+                        json_nationality: values.nationality,
+                        json_contactNumber: values.contactNumber,
+                        json_emailAdd: email,
+                        json_street: values.street,
+                        json_barangay: values.barangay,
+                        json_city: values.city,
+                        json_provinceField: values.provinceField,
+                        json_postalCode: values.postalCode,
+                        json_intendedOccupation: values.intendedOccupation,
+                        json_intendedStay: values.intendedStay,
+                        json_stayYear: values.stayYear,
+                        json_stayMonth: values.stayMonth,
+                        json_visaCategory: values.visaCategory,
+                        json_agencyField: values.agencyField,
+                }
+                modifyDetails(requestPAYLOAD);
+            } else if (result.isDenied) {
+                Swal.fire("Update failed", "Check your internet connection", "error");
+            }
+        });
+
+    } catch (err) {
+        errors.value = err.response.data.errors
     }
+
+}
 
 
     // Get the current year

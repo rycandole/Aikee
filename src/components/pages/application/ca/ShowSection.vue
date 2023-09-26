@@ -40,13 +40,12 @@ const showInformation = async () => {
         </div>
     </div>
     <div v-if="CA_Information" class="wrapper_container row bg-white border">
-        <div class="col-12 mb-3">
+        <div class="col-12">
             <h1 class="text-secondary text-center fs-1 fw-bold" >Canada</h1>
         </div>
          <!-- ============================================================== -->
                             <!-- Main Container -->
         <!-- ============================================================== -->
-
         <form v-for="(row, index) in CA_Information" :key="index" class="col-12 mb-3">
             <div class="col-12 mb-3">
                 <div class="card-body row">

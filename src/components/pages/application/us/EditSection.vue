@@ -342,7 +342,7 @@ const showInformation = async () => {
     PayCode.value = showApplication[i].PayCode;
     receiveDate.value = showApplication[i].RcvDate;
 
-    cv_category.value ? (covidHidden = false) : (covidHidden = true);
+    // cv_category.value ? (covidHidden = false) : (covidHidden = true);
     cv_received.value === "yes" ? (is_cv_received = false) : (is_cv_received = true);
     cv_received.value === "yes" ? (isVaccinated = false) : (isVaccinated = true);
     cv_received.value === "yes"
@@ -356,6 +356,8 @@ const showInformation = async () => {
     cv_booster1.value !== "" ? (hideBooster1 = false) : (hideBooster1 = true);
     cv_booster2.value !== "" ? (hideBooster2 = false) : (hideBooster2 = true);
     ad_has_been_issued_visa.value == "y" ? (showVisaDate = false) : (showVisaDate = true);
+
+    alertChange();
   }
 };
 
@@ -822,14 +824,17 @@ const hasVisa = () => {
 const modifyDetails = async (regInformation) => {
   let res = await axios.post("us-update", regInformation);
 
-  if (res.data.status_code == 200) {
-    let motherName = res.data.message;
+  let status_code = res.data.status_code;
+  let error_msg = res.data.error_msg;
+  let message = res.data.message;
 
-    Swal.fire(
-      "Successfully updated ",
-      "Please check your email " + motherName,
-      "success"
-    );
+  if (status_code == 200) {
+
+    Swal.fire({
+        icon: 'success',
+        title: error_msg,
+        text: message,
+    })
 
     router.push("/application/show/" + country + "/" + regId + "/" + paycode);
   } else {
@@ -1027,8 +1032,8 @@ const schema = yup.object().shape({
   petitioner_us_postal_code: yup
     .string()
     .required("Postal code is required!")
-    .min(5, "Postal code must be exactly 5 numbers")
-    .max(5, "Postal code must be exactly 5 numbers")
+    .min(4, "Postal code must be exactly 4 numbers")
+    .max(4, "Postal code must be exactly 4 numbers")
     .matches(numOnlyRegex, "Postal Code must be number only!"),
   petitioner_contact_no: yup
     .string()
@@ -1067,6 +1072,7 @@ const updateDetails = async (values) => {
   let ad_expiration_date = moment(new Date(add_expiration_date.value)).format(
     "YYYY-MM-DD"
   );
+  //  alert(first_dose)
 
   try {
     Swal.fire({
@@ -1087,18 +1093,18 @@ const updateDetails = async (values) => {
           json_cv_received: values.cv_received,
           json_is_cv_received: is_cv_received,
           json_cv_brand_name: values.cv_brand_name,
-          json_firstDose: first_dose,
-          json_secondDose: second_dose,
+          json_firstDose: first_dose == 'Invalid date' ? null : first_dose,
+          json_secondDose: second_dose == 'Invalid date' ? null : second_dose,
           json_cv_booster1: values.cv_booster1,
-          json_first_doseBooster: first_doseBooster,
+          json_first_doseBooster: first_doseBooster == 'Invalid date' ? null : first_doseBooster,
           json_cv_booster2: values.cv_booster2,
-          json_second_doseBooster: second_doseBooster,
+          json_second_doseBooster: second_doseBooster == 'Invalid date' ? null : second_doseBooster,
           json_ci_nvc_number: values.ci_nvc_number,
           json_ci_nvc_confirm: values.ci_nvc_confirm,
           json_ci_visa_pref_category: visaPrefCategoryCode.get(
             values.ci_visa_pref_category
           ),
-          json_ci_interview_date: ci_interview_date,
+          json_ci_interview_date: ci_interview_date == 'Invalid date' ? null : ci_interview_date,
           json_ci_interview_source: values.ci_interview_source,
           json_ad_last_name: values.ad_last_name,
           json_ad_first_name: values.ad_first_name,
@@ -1124,11 +1130,11 @@ const updateDetails = async (values) => {
           json_ad_prior_residence: values.ad_prior_residence,
           json_ad_passport_number: values.ad_passport_number,
           json_ad_passport_issued_by: values.ad_passport_issued_by,
-          json_ad_passport_date: ad_passport_date,
-          json_ad_passport_expiration_date: ad_passport_expiration_date,
+          json_ad_passport_date: ad_passport_date == 'Invalid date' ? null : ad_passport_date,
+          json_ad_passport_expiration_date: ad_passport_expiration_date == 'Invalid date' ? null : ad_passport_expiration_date,
           json_ad_has_been_issued_visa: values.ad_has_been_issued_visa,
-          json_ad_issuance_date: ad_issuance_date,
-          json_ad_expiration_date: ad_expiration_date,
+          json_ad_issuance_date: ad_issuance_date == 'Invalid date' ? null : ad_issuance_date,
+          json_ad_expiration_date: ad_expiration_date == 'Invalid date' ? null : ad_expiration_date,
           json_ad_prev_medical_exam_month: values.ad_prev_medical_exam_month,
           json_ad_prev_medical_exam_year: values.ad_prev_medical_exam_year,
           json_ad_prev_xray_month: values.ad_prev_xray_month,
@@ -1145,7 +1151,7 @@ const updateDetails = async (values) => {
           json_intended_port_of_entry: values.intended_port_of_entry,
           json_printHash: printHash.value,
           json_PayCode: PayCode.value,
-          json_receiveDate: receiveDate.value,
+          json_receiveDate: receiveDate.value == 'Invalid date' ? null : receiveDate.value,
         };
 
         modifyDetails(requestPAYLOAD);
@@ -1323,13 +1329,13 @@ const disablePastDateState = {
               "
             />
             <Field
-              type="text"
+              type="hidden"
               name="validate_date_of_birth"
               width="100px"
               v-model="validate_date_of_birth"
             />
             <ErrorMessage name="validate_date_of_birth" class="text-danger pt-3 pl-3" />
-            <Field type="text" name="date_boolean" v-model="date_boolean" width="100px" />
+            <Field type="hidden" name="date_boolean" v-model="date_boolean" width="100px" />
           </div>
           <div class="mb-1 col-lg-4 col-md-12 col-sm-12">
             <RequiredSelectField
@@ -1570,7 +1576,7 @@ const disablePastDateState = {
               "
             />
             <Field
-              type="text"
+              type="hidden"
               name="validate_add_passport_date"
               width="100px"
               v-model="validate_add_passport_date"
@@ -1597,7 +1603,7 @@ const disablePastDateState = {
               "
             />
             <Field
-              type="text"
+              type="hidden"
               name="validate_passport_expiration_date"
               width="100px"
               v-model="validate_passport_expiration_date"
@@ -1636,7 +1642,7 @@ const disablePastDateState = {
                 />
               </div>
               <Field
-                type="text"
+                type="hidden"
                 name="ad_has_been_issued_visa_boolean"
                 :value="ad_has_been_issued_visa_boolean"
                 v-model="ad_has_been_issued_visa_boolean"
@@ -1657,7 +1663,7 @@ const disablePastDateState = {
               :onChange="alertIssueVisa"
             />
             <Field
-              type="text"
+              type="hidden"
               name="validate_issuance_date"
               width="100px"
               v-model="validate_issuance_date"
@@ -1674,7 +1680,7 @@ const disablePastDateState = {
               :onChange="alertIssueVisaExpired"
             />
             <Field
-              type="text"
+              type="hidden"
               name="validate_issuance_expiration_date"
               width="100px"
               v-model="validate_issuance_expiration_date"
@@ -1750,7 +1756,7 @@ const disablePastDateState = {
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-12">
                   <Field
-                    type="text"
+                    type="hidden"
                     name="cvReceivedBoolean"
                     v-model="cv_received_boolean"
                     width="100px"
@@ -1769,13 +1775,13 @@ const disablePastDateState = {
                       @change="changeVaccine"
                     />
                     <Field
-                      type="text"
+                      type="hidden"
                       name="cv_brand_name_boolean"
                       width="100px"
                       v-model="cv_brand_name_boolean"
                     />
                     <Field
-                      type="text"
+                      type="hidden"
                       name="cv_brand_name_boolean_1"
                       width="100px"
                       v-model="cv_brand_name_boolean_1"
@@ -1791,7 +1797,7 @@ const disablePastDateState = {
                       :onChange="showBooster1"
                     />
                     <Field
-                      type="text"
+                      type="hidden"
                       name="cv_date_01"
                       width="100px"
                       v-model="validate_first_dose"
@@ -1808,7 +1814,7 @@ const disablePastDateState = {
                       :onChange="showBooster1"
                     />
                     <Field
-                      type="text"
+                      type="hidden"
                       name="cv_date_02"
                       width="100px"
                       v-model="validate_second_dose"
