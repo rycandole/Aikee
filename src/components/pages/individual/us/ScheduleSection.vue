@@ -66,6 +66,7 @@ for (let a = 0; a <= full_dates.length - 1; a++) {
 
 const handleSlots = async () => {
   const prefDate = moment(dateInput.value).format("YYYY-MM-DD");
+  timeInput.value = ""
 
   const JSONdata = {
     date: prefDate,

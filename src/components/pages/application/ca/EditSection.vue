@@ -103,58 +103,56 @@ onMounted(async () => {
   
 })
 
-const showInformation = async () => {
-  let res = await axios.get("ca-show/" + regId);
-  let showApplication = res.data.result;
+    const showInformation = async () => {
+    let res = await axios.get("ca-show/" + regId);
+    let showApplication = res.data.result;
 
-  for (var i = 0; i < showApplication.length; i++) {
-    wasFirstMedicalExam.value = showApplication[i].Prev_AUMed || ''
-    prevClinicName.value = showApplication[i].PrevMedDetail1 || ''
-    prevCategory.value = showApplication[i].PrevMedDetail2 || ''
-    issuedCountry.value = showApplication[i].IssuedCountry || ''
-    passportNumber.value = showApplication[i].PassNo || ''
-    issuedDate.value = showApplication[i].IssuedDate || ''
-    ad_lastName.value = showApplication[i].LastName || ''
-    ad_firstName.value = showApplication[i].FirstName || ''
-    ad_middleName.value = showApplication[i].MiddleName || ''
-    maiden_name.value = showApplication[i].MaidenName || ''
-    date_of_birth.value = showApplication[i].DOB || ''
-    validate_date_of_birth.value = showApplication[i].DOB || ''
-    gender.value = showApplication[i].Gender || ''
-    civil_status.value = showApplication[i].CivStatus || ''
-    nationality.value = showApplication[i].country_nationality || ''
-    contactNumber.value = showApplication[i].ContactNo || ''
-    street.value = showApplication[i].Add1 || ''
-    barangay.value = showApplication[i].AddBrgy || ''
-    city.value = showApplication[i].Add2 || ''
-    provinceField.value = showApplication[i].Add3 || ''
-    postalCode.value = showApplication[i].AddPost || ''
-    check_alias.value = showApplication[i].AKALastName == "" || showApplication[i].AKALastName == null ? "" : "checked" || ''
-    alias_lastName.value = showApplication[i].AKALastName || ''
-    alias_firstName.value = showApplication[i].AKAFirstName || ''
-    alias_middleName.value = showApplication[i].AKAMiddleName || ''
-    applicantCategory.value = showApplication[i].SubClass || ''
-    fileNumber.value = showApplication[i].App_TRN || ''
-    agencyField.value = showApplication[i].agency || ''
-    printHash.value = showApplication[i].printhash;
-    PayCode.value = showApplication[i].PayCode;
-    branch.value = showApplication[i].branch;
-    receiveDate.value = showApplication[i].RcvDate;
-    preferred_medical_exam_date.value = showApplication[i].PreferredMedicalExamDate || ''
-    priority_time.value = showApplication[i].priorityTime || ''
+    for (var i = 0; i < showApplication.length; i++) {
+        wasFirstMedicalExam.value = showApplication[i].Prev_AUMed || ''
+        prevClinicName.value = showApplication[i].PrevMedDetail1 || ''
+        prevCategory.value = showApplication[i].PrevMedDetail2 || ''
+        issuedCountry.value = showApplication[i].IssuedCountry || ''
+        passportNumber.value = showApplication[i].PassNo || ''
+        issuedDate.value = showApplication[i].IssuedDate || ''
+        ad_lastName.value = showApplication[i].LastName || ''
+        ad_firstName.value = showApplication[i].FirstName || ''
+        ad_middleName.value = showApplication[i].MiddleName || ''
+        maiden_name.value = showApplication[i].MaidenName || ''
+        date_of_birth.value = showApplication[i].DOB || ''
+        validate_date_of_birth.value = showApplication[i].DOB || ''
+        gender.value = showApplication[i].Gender || ''
+        civil_status.value = showApplication[i].CivStatus || ''
+        nationality.value = showApplication[i].country_nationality || ''
+        contactNumber.value = showApplication[i].ContactNo || ''
+        street.value = showApplication[i].Add1 || ''
+        barangay.value = showApplication[i].AddBrgy || ''
+        city.value = showApplication[i].Add2 || ''
+        provinceField.value = showApplication[i].Add3 || ''
+        postalCode.value = showApplication[i].AddPost || ''
+        check_alias.value = showApplication[i].AKALastName == "" || showApplication[i].AKALastName == null ? "" : "checked" || ''
+        alias_lastName.value = showApplication[i].AKALastName || ''
+        alias_firstName.value = showApplication[i].AKAFirstName || ''
+        alias_middleName.value = showApplication[i].AKAMiddleName || ''
+        applicantCategory.value = showApplication[i].SubClass || ''
+        fileNumber.value = showApplication[i].App_TRN || ''
+        agencyField.value = showApplication[i].agency || ''
+        printHash.value = showApplication[i].printhash;
+        PayCode.value = showApplication[i].PayCode;
+        branch.value = showApplication[i].branch;
+        receiveDate.value = showApplication[i].RcvDate;
+        preferred_medical_exam_date.value = showApplication[i].PreferredMedicalExamDate || ''
+        priority_time.value = showApplication[i].priorityTime || ''
 
-    wasFirstMedicalExam.value === 'N' ? hasMedicalExam = false : hasMedicalExam = true
-    wasFirstMedicalExam.value === 'N' ? prevClinicName.value = showApplication[i].PrevMedDetail1 : prevClinicName.value = ""
-    wasFirstMedicalExam.value === 'N' ? prevCategory.value = showApplication[i].PrevMedDetail2 : prevCategory.value = ""
-    check_alias.value === 'checked' ? isButtonDisabled = false : isButtonDisabled = true
-    // check_alias.value === 'checked' ? alias_lastName.value = showApplication[i].alias_lastName : alias_lastName.value = ""
-    // check_alias.value === 'checked' ? alias_firstName.value = showApplication[i].alias_firstName : alias_firstName.value = ""
-    // check_alias.value === 'checked' ? alias_middleName.value = showApplication[i].alias_middleName : alias_middleName.value = ""
-  }
-
-
- 
-}
+        wasFirstMedicalExam.value === 'N' ? hasMedicalExam = false : hasMedicalExam = true
+        wasFirstMedicalExam.value === 'N' ? prevClinicName.value = showApplication[i].PrevMedDetail1 : prevClinicName.value = ""
+        wasFirstMedicalExam.value === 'N' ? prevCategory.value = showApplication[i].PrevMedDetail2 : prevCategory.value = ""
+        check_alias.value === 'checked' ? isButtonDisabled = false : isButtonDisabled = true
+        // check_alias.value === 'checked' ? alias_lastName.value = showApplication[i].alias_lastName : alias_lastName.value = ""
+        // check_alias.value === 'checked' ? alias_firstName.value = showApplication[i].alias_firstName : alias_firstName.value = ""
+        // check_alias.value === 'checked' ? alias_middleName.value = showApplication[i].alias_middleName : alias_middleName.value = ""
+    }
+    
+    }
     
     
     const handlePrevMedicalExam = () => {
@@ -232,73 +230,23 @@ const showInformation = async () => {
         agencyField: yup.string().required("This field is required, please choose from options"),
     })
 
-    
-    /**
-     * Submit US individual form
-     * 
-     */
-     const updateDetails = async (values) => {
-
-        errors.value = []
-
-        let dob = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
-        let isuedDate = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
-      
-        const requestPAYLOAD = {
-                json_registrationID: regId,
-                json_user_id: user_id,
-                json_wasFirstMedicalExam: values.wasFirstMedicalExam,
-                json_prevClinicName: values.prevClinicName,
-                json_prevCategory: values.prevCategory,
-                json_passportNumber: values.passportNumber,
-                json_issuedCountry: values.issuedCountry,
-                json_issuedDate: isuedDate,
-                json_ad_lastName: values.ad_lastName,
-                json_ad_firstName: values.ad_firstName,
-                json_ad_middleName: values.ad_middleName,
-                json_check_alias: values.check_alias,
-                json_alias_lastName: values.alias_lastName,
-                json_alias_firstName: values.alias_firstName,
-                json_alias_middleName: values.alias_middleName,
-                json_maiden_name: values.maiden_name,
-                json_date_of_birth: dob,
-                json_gender: values.gender,
-                json_civil_status: values.civil_status,
-                json_nationality: values.nationality,
-                json_contactNumber: values.contactNumber,
-                json_email: email,
-                json_street: values.street,
-                json_barangay: values.barangay,
-                json_city: values.city,
-                json_provinceField: values.provinceField,
-                json_postalCode: values.postalCode,
-                json_applicantCategory: values.applicantCategory,
-                json_fileNumber: values.fileNumber,
-                json_agencyField: values.agencyField,
-                json_printHash: printHash.value,
-                json_PayCode: PayCode.value,
-                json_branch: branch.value,
-                json_receiveDate: receiveDate.value,
-                json_sched_date: preferred_medical_exam_date.value,
-                json_sched_time: priority_time.value
-        }
-
-        try {
-            let validateRequest = await axios.post('ca-validate', requestPAYLOAD)
+    const modifyDetails = async (regInformation) => {
+        let validateRequest = await axios.post('ca-validate', regInformation)
 
             if (validateRequest.data.status_code === 200) {
+                let res = await axios.post('ca-update', regInformation)
+
+                let status_code = res.data.status_code;
+                let error_msg = res.data.error_msg;
+                let message = res.data.message;
               
-              let updateRequest = await axios.post('ca-update', requestPAYLOAD)
-              
-              if (updateRequest.data.status_code === 200) {
+              if (status_code === 200) {
                 
                 Swal.fire({
-                        icon: 'success',
-                        title: 'Successfully updated',
-                        text: 'Please check also your email',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
+                    icon: 'success',
+                    title: error_msg,
+                    text: message,
+                })
 
                 router.push("/application/show/"+country+"/"+regId+"/"+payCode)
 
@@ -306,12 +254,77 @@ const showInformation = async () => {
                 Swal.fire("Update Failed", "Check your internet connection", "error");
               }
                 
-
             } else {
                 inputName.value = validateRequest.data.name
                 inputError.value = validateRequest.data.error
             }
 
+    }
+    /**
+     * Submit CA individual form
+     * 
+     */
+     const updateDetails = async (values) => {
+
+        errors.value = []
+
+        let dob = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
+        let isuedDate = issuedDate.value == "" ? null : moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
+      
+        try {
+            Swal.fire({
+                title: "Are you sure you want to update?",
+                text: "Confirm your action",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                icon: "question",
+            }).then((result) => {
+            if (result.isConfirmed) {
+                const requestPAYLOAD = {
+                        json_registrationID: regId,
+                        json_user_id: user_id,
+                        json_wasFirstMedicalExam: values.wasFirstMedicalExam,
+                        json_prevClinicName: values.prevClinicName,
+                        json_prevCategory: values.prevCategory,
+                        json_passportNumber: values.passportNumber,
+                        json_issuedCountry: values.issuedCountry,
+                        json_issuedDate: isuedDate,
+                        json_ad_lastName: values.ad_lastName,
+                        json_ad_firstName: values.ad_firstName,
+                        json_ad_middleName: values.ad_middleName,
+                        json_check_alias: values.check_alias,
+                        json_alias_lastName: values.alias_lastName,
+                        json_alias_firstName: values.alias_firstName,
+                        json_alias_middleName: values.alias_middleName,
+                        json_maiden_name: values.maiden_name,
+                        json_date_of_birth: dob,
+                        json_gender: values.gender,
+                        json_civil_status: values.civil_status,
+                        json_nationality: values.nationality,
+                        json_contactNumber: values.contactNumber,
+                        json_email: email,
+                        json_street: values.street,
+                        json_barangay: values.barangay,
+                        json_city: values.city,
+                        json_provinceField: values.provinceField,
+                        json_postalCode: values.postalCode,
+                        json_applicantCategory: values.applicantCategory,
+                        json_fileNumber: values.fileNumber,
+                        json_agencyField: values.agencyField,
+                        json_printHash: printHash.value,
+                        json_PayCode: PayCode.value,
+                        json_branch: branch.value,
+                        json_receiveDate: receiveDate.value,
+                        json_sched_date: preferred_medical_exam_date.value,
+                        json_sched_time: priority_time.value
+                }
+
+                modifyDetails(requestPAYLOAD);
+            } else if (result.isDenied) {
+                Swal.fire("Update failed", "Check your internet connection", "error");
+            }
+            });
+            
         } catch (err) {
           errors.value = err.response.data.errors
         }

@@ -147,6 +147,7 @@
 
     const handleSlots = async () => {
         const prefDate = moment(dateInput.value).format('YYYY-MM-DD')
+        timeInput.value = ""
         countryValue = 'CA'
         branchValue = clinic_code.get(clinic_location.value)
 

@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios';
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router';
+import { useRoute } from "vue-router";
 import { Form } from 'vee-validate'
 import SubmitFormButton from "@/components/global/SubmitFormButton.vue";
 import RouterWithIcon from "@/components/global/RouterLinkBtnWithIcon.vue";
@@ -11,6 +13,8 @@ import * as yup from 'yup';
 
 
 const router = useRouter()
+const route = useRoute()
+const TOKEN = route.params.token
 
 let errors = ref([])
 let firstName = ref(null)
@@ -21,11 +25,43 @@ let username = ref(null)
 let email = ref(null)
 let password = ref(null)
 let confirmPassword = ref(null)
+let email_verify = ref(null)
+let token = ref(null)
+let expired = ref(null)
+let expired_date = ref(null)
+
+onMounted(async () => {
+  checkVerificationTOKEN()
+});
+
+const checkVerificationTOKEN = async () => {
+
+  let responsePAYLOAD = await axios.get("verify_token/"+ TOKEN);
+  let status_code = responsePAYLOAD.data.status_code
+  let count = responsePAYLOAD.data.count
+  email_verify = responsePAYLOAD.data.result
+  
+
+  // alert(count)
+
+  if (status_code == 200 && count > 0) {
+    for (let i = 0; i < count; i++) {
+     token.value = email_verify[i].code
+     expired.value = email_verify[i].expired
+     expired_date.value = email_verify[i].expired_date
+    }
+
+    alert("TOKEN: "+ token.value)
+  } else {
+    alert("Token not exist!")
+  }
+
+}
 
 const handleSignUp = async () => {
   errors.value = []
 
-  const JSONData = {
+  const requestPAYLOAD = {
           first_name: firstName.value,
           middle_name: middleName.value,
           last_name: lastName.value,
@@ -38,7 +74,7 @@ const handleSignUp = async () => {
 
       try {
 
-          let res = await axios.post('signup/', JSONData )
+          let res = await axios.post('signup/', requestPAYLOAD )
 
           if (res.data.status_code === 200 ) {
               

@@ -198,7 +198,7 @@ const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) =
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
                       >
                     </li>
-                    <li :hidden="`${row.Seen}` == 1 ? true : false">
+                    <li :hidden="`${row.Seen}` == 1 || `${row.Cancelled}` == 1 ? true : false">
                       <router-link 
                          :to="
                          'application/edit/' +
@@ -217,7 +217,7 @@ const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) =
                         <i class="fas fa-window-close mr-2 text-danger"></i> Cancel
                       </button>
                     </li>
-                    <li>
+                    <li :hidden="`${row.Seen}` == 1 ? true : false">
                       <router-link  
                       :to="
                       'application/redirect/' +
@@ -232,7 +232,7 @@ const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) =
                         Re-schedule</router-link
                       >
                     </li>
-                    <li>
+                    <li :hidden="`${row.Cancelled}` == 1 ? true : false">
                       <button @click="re_sendEmail(`${row.ID}`, `${row.Country}`, `${row.branch}`, `${row.PreferredMedicalExamDate}`, `${row.priorityTime}`)" class="dropdown-item">
                         <i class="fas fa-envelope mr-2 text-primary"></i> Re-send email
                       </button>
@@ -278,7 +278,7 @@ const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) =
                         ><i class="fas fa-eye mr-2 text-info"></i> View</router-link
                       >
                     </li>
-                    <li :hidden="`${row.Seen}` == 1 ? true : false">
+                    <li :hidden="`${row.Seen}` == 1 || `${row.Cancelled}` == 1 ? true : false">
                       <router-link 
                         :to="
                         'application/edit/' +
@@ -296,7 +296,7 @@ const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) =
                         <i class="fas fa-window-close mr-2 text-danger"></i> Cancel
                       </button>
                     </li>
-                    <li>
+                    <li :hidden="`${row.Seen}` == 1 ? true : false">
                       <router-link 
                       :to="
                       'application/redirect/' +
@@ -311,7 +311,7 @@ const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) =
                         Re-schedule</router-link
                       >
                     </li>
-                    <li>
+                    <li :hidden="`${row.Cancelled}` == 1 ? true : false">
                       <button @click="re_sendEmail(`${row.Id}`, `${row.Country}`)" class="dropdown-item">
                         <i class="fas fa-envelope mr-2 text-primary"></i> Re-send email
                       </button>

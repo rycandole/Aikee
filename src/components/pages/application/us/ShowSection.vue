@@ -144,7 +144,7 @@ const showInformation = async () => {
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Interview Date"
-              v-bind:previewText="moment(`${row.InterviewDate}`).format('LL')"
+              v-bind:previewText="`${row.InterviewDate}` == 'null' ? 'None' : moment(`${row.InterviewDate}`).format('LL')"
             />
           </div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
@@ -362,19 +362,19 @@ const showInformation = async () => {
             </div>
           </div>
           <div class="col-12"><hr /></div>
-          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+          <div :hidden="`${row.US_NIV}` === 'y' ? false : true" class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Issuance Date"
-              v-bind:previewText="moment(`${row.NIV_IssueDate}`).format('LL')"
+              v-bind:previewText="`${row.NIV_IssueDate}` == 'null' ? 'None' : moment(`${row.NIV_IssueDate}`).format('LL')"
             />
           </div>
-          <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
+          <div :hidden="`${row.US_NIV}` === 'y' ? false : true" class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Expiration Date"
-              v-bind:previewText="moment(`${row.NIV_ExpireDate}`).format('LL')"
+              v-bind:previewText="`${row.NIV_ExpireDate}` == 'null' ? 'None' : moment(`${row.NIV_ExpireDate}`).format('LL')"
             />
           </div>
-          <div class="col-12"><hr /></div>
+          <div :hidden="`${row.US_NIV}` === 'y' ? false : true" class="col-12"><hr /></div>
           <div class="mb-1 col-lg-6 col-md-12 col-sm-12">
             <PreviewText
               previewLabel="Previous Medical Examination at SLEC"
@@ -399,50 +399,50 @@ const showInformation = async () => {
               v-bind:previewText="`${row.received_vaccine === 'y' ? 'Yes' : 'No'}`"
             />
           
-            <ol type="I" :hidden="`${row.received_vaccine == 'y' ? true : false}`">
-              <li>
+            <ol type="I" :hidden="`${row.received_vaccine }` == 'y' ? false : true">
+              <li :hidden="`${row.vaccine_brand}` == 'null' ? true : false">
                 <PreviewText
                   previewLabel="Vaccine Brand Name"
-                  v-bind:previewText="`${row.vaccine_brand}`"
+                  v-bind:previewText="`${row.vaccine_brand}` == 'null' ? 'None' : `${row.vaccine_brand}`"
                 />
                 
               </li>
-              <li>
+              <li :hidden="`${row.first_dose}` == 'null' ? true : false">
                 <PreviewText
                   previewLabel="Vaccine Dose 1 Date Received "
-                  v-bind:previewText="moment(`${row.first_dose}`).format('LL')"
+                  v-bind:previewText="`${row.first_dose}` == 'null' ? 'None' : moment(`${row.first_dose}`).format('LL')"
                 />
               </li>
-              <li>
+              <li :hidden="`${row.second_dose}` == 'null' ? true : false">
                 <PreviewText
                   previewLabel="Vaccine Dose 2 Date Received "
-                  v-bind:previewText="moment(`${row.second_dose}`).format('LL')"
+                  v-bind:previewText="`${row.second_dose}` == 'null' ? 'None' : moment(`${row.second_dose}`).format('LL')"
                 />
               </li>
-              <li>
+              <li :hidden="`${row.booster1_brand}` == 'null' ? true : false">
                 <hr />
                 <PreviewText
                   previewLabel="Vaccine Booster 1 Brand Name"
-                  v-bind:previewText="`${row.booster1_brand}`"
+                  v-bind:previewText="`${row.booster1_brand}` == 'null' ? 'None' : `${row.booster1_brand}`"
                 />
               </li>
-              <li>
+              <li :hidden="`${row.booster1}` == 'null' ? true : false">
                 <PreviewText
                   previewLabel="Vaccine Booster 1 Date Received"
-                  v-bind:previewText="moment(`${row.booster1}`).format('LL')"
+                  v-bind:previewText="`${row.booster1}` == 'null' ? 'None' : moment(`${row.booster1}`).format('LL')"
                 />
               </li>
-              <li>
+              <li :hidden="`${row.booster2_brand}` == 'null' ? true : false">
                 <hr />
                 <PreviewText
                   previewLabel="Vaccine Booster 2 Brand Name"
-                  v-bind:previewText="`${row.booster2_brand}`"
+                  v-bind:previewText="`${row.booster2_brand}` == 'null' ? 'None' : `${row.booster2_brand}`"
                 />
               </li>
-              <li>
+              <li :hidden="`${row.booster2}` == 'null' ? true : false">
                 <PreviewText
                   previewLabel="Vaccine Booster 2 Date Received"
-                  v-bind:previewText="moment(`${row.booster2}`).format('LL')"
+                  v-bind:previewText="`${row.booster2}` == 'null' ? 'None' : moment(`${row.booster2}`).format('LL')"
                 />
               </li>
             </ol>

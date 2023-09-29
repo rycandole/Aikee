@@ -161,6 +161,7 @@ watch(() => clinic_location.value, (newValue) => {
 
 const handleSlots = async () => {
   const prefDate = moment(dateInput.value).format("YYYY-MM-DD");
+  timeInput.value = ""
   countryValue = regCountry;
   branchValue = clinic_code.get(clinic_location.value);
 

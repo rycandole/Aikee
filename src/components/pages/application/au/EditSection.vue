@@ -197,6 +197,36 @@ const showInformation = async () => {
         agencyField: yup.string().required('Agency is required!'),
     })
 
+    const modifyDetails = async (regInformation) => {
+        let validateRequest = await axios.post('au-validate', regInformation)
+
+        if (validateRequest.data.status_code === 200) {
+        let res = await axios.post('au-update', regInformation)
+
+        let status_code = res.data.status_code;
+        let error_msg = res.data.error_msg;
+        let message = res.data.message;
+        
+        if (status_code === 200) {
+            
+            Swal.fire({
+                icon: 'success',
+                title: error_msg,
+                text: message,
+            }) 
+
+            router.push("/application/show/"+country+"/"+regId+"/"+payCode)
+
+        } else {
+            Swal.fire("Update Failed", "Check your internet connection", "error");
+        }
+            
+
+        } else {
+            inputName.value = validateRequest.data.name
+            inputError.value = validateRequest.data.error
+        }
+    }
     
     /**
      * Submit US individual form
@@ -208,70 +238,55 @@ const showInformation = async () => {
 
         let dob = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
         // let issued_date = moment(new Date(issuedDate.value)).format('YYYY-MM-DD')
-      
-        const jsonRequest = {
-                json_registrationID: regId,
-                json_user_id: user_id,
-                json_subClassKind: values.subClassKind,
-                json_wasFirstMedicalExam: values.wasFirstMedicalExam,
-                json_prevClinicName: values.prevClinicName,
-                json_prevSubClass: values.prevSubClass,
-                json_trn: values.trn,
-                json_passportNumber: values.passportNumber,
-                json_issuedCountry: values.issuedCountry,
-                json_issuedDate: values.issuedDate,
-                json_ad_lastName:values.ad_lastName,
-                json_ad_firstName:values.ad_firstName,
-                json_ad_middleName:values.ad_middleName,
-                json_maiden_name: values.maiden_name,
-                json_date_of_birth: dob,
-                json_gender: values.gender,
-                json_civil_status: values.civil_status,
-                json_nationality: values.nationality,
-                json_contactNumber: values.contactNumber,
-                json_email: email,
-                json_street: values.street,
-                json_barangay: values.barangay,
-                json_city: values.city,
-                json_provinceField: values.provinceField,
-                json_postalCode: values.postalCode,
-                json_intendedStay: values.intendedStay,
-                json_intentToWork: values.intentToWork,
-                json_intentToStay: values.intentToStay,
-                json_printHash: values.printHash,
-                json_PayCode: values.PayCode,
-                json_receiveDate: values.receiveDate,
-                json_agencyField: values.agencyField,
-        }
 
         try {
-            let validateRequest = await axios.post('au-validate', jsonRequest)
-
-            if (validateRequest.data.status_code === 200) {
-              
-              let updateRequest = await axios.post('au-update', jsonRequest)
-              
-              if (updateRequest.data.status_code === 200) {
-                
-                Swal.fire({
-                        icon: 'success',
-                        title: 'Successfully updated',
-                        text: 'Please check also your email',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-
-                router.push("/application/show/"+country+"/"+regId+"/"+payCode)
-
-              } else {
-                Swal.fire("Update Failed", "Check your internet connection", "error");
-              }
-                
-
-            } else {
-                inputName.value = validateRequest.data.name
-                inputError.value = validateRequest.data.error
+            Swal.fire({
+                title: "Are you sure you want to update?",
+                text: "Confirm your action",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                icon: "question",
+            }).then((result) => {
+            if (result.isConfirmed) {
+                const requestPAYLOAD = {
+                        json_registrationID: regId,
+                        json_user_id: user_id,
+                        json_subClassKind: values.subClassKind,
+                        json_wasFirstMedicalExam: values.wasFirstMedicalExam,
+                        json_prevClinicName: values.prevClinicName,
+                        json_prevSubClass: values.prevSubClass,
+                        json_trn: values.trn,
+                        json_passportNumber: values.passportNumber,
+                        json_issuedCountry: values.issuedCountry,
+                        json_issuedDate: values.issuedDate,
+                        json_ad_lastName:values.ad_lastName,
+                        json_ad_firstName:values.ad_firstName,
+                        json_ad_middleName:values.ad_middleName,
+                        json_maiden_name: values.maiden_name,
+                        json_date_of_birth: dob,
+                        json_gender: values.gender,
+                        json_civil_status: values.civil_status,
+                        json_nationality: values.nationality,
+                        json_contactNumber: values.contactNumber,
+                        json_email: email,
+                        json_street: values.street,
+                        json_barangay: values.barangay,
+                        json_city: values.city,
+                        json_provinceField: values.provinceField,
+                        json_postalCode: values.postalCode,
+                        json_intendedStay: values.intendedStay,
+                        json_intentToWork: values.intentToWork,
+                        json_intentToStay: values.intentToStay,
+                        json_printHash: values.printHash,
+                        json_PayCode: values.PayCode,
+                        json_receiveDate: values.receiveDate,
+                        json_agencyField: values.agencyField,
+                }
+                modifyDetails(requestPAYLOAD);
+            } else if (result.isDenied) {
+                Swal.fire("Update failed", "Check your internet connection", "error");
             }
+            });
 
         } catch (err) {
           errors.value = err.response.data.errors
