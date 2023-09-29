@@ -7,9 +7,13 @@
 
     import { useUSIndividualSched } from '@/store/us-individual-sched.js'
     import { useUSIndividualDetails } from '@/store/us-individual-details.js'
+    import { useUSHolidates } from '@/store/us-holidates.js'
 
     import { useCAIndividualSched } from '@/store/ca-individual-sched.js'
     import { useCAIndividualDetails } from '@/store/ca-individual-details.js'
+
+    import { use_TRIPLETS_BGC_Holidates } from '@/store/triplets-holidates-bgc.js'
+    import { use_TRIPLETS_MNL_Holidates } from '@/store/triplets-holidates-mnl.js'
 
     import { useAUIndividualSched } from '@/store/au-individual-sched.js'
     import { useAUIndividualDetails } from '@/store/au-individual-details.js'
@@ -33,6 +37,10 @@
 
     const US_IndividualSched = useUSIndividualSched()
     const US_IndividualDetails = useUSIndividualDetails()
+    const US_Holidates = useUSHolidates()
+
+    const TRIPLETS_Holidates_BGC = use_TRIPLETS_BGC_Holidates()
+    const TRIPLETS_Holidates_MNL = use_TRIPLETS_MNL_Holidates()
 
     const CA_IndividualSched = useCAIndividualSched()
     const CA_IndividualDetails = useCAIndividualDetails()
@@ -86,6 +94,10 @@
 
                             US_IndividualSched.clearUSIndividualSched()
                             US_IndividualDetails.clearUSIndividualDetails()
+                            US_Holidates.clearHolidays()
+
+                            TRIPLETS_Holidates_BGC.clearHolidays();
+                            TRIPLETS_Holidates_MNL.clearHolidays();
 
                             CA_IndividualSched.clearCAIndividualSched()
                             CA_IndividualDetails.clearCAIndividualDetails()

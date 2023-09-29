@@ -3,7 +3,7 @@ import axios from "axios";
 import { ref } from "vue";
 import { onMounted } from "vue";
 import { defineExpose } from "vue";
-import { useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useProfileStore } from "@/store/profile-store";
 import { useUSIndividualSched } from "@/store/us-individual-sched";
 import { useUSIndividualDetails } from "@/store/us-individual-details";
@@ -238,6 +238,7 @@ onMounted(async () => {
     ? (showVisaDate = false)
     : (showVisaDate = true);
 });
+
 
 // Expose String, Objects, Methods on parent component
 
@@ -1071,7 +1072,6 @@ const disablePastDateState = {
   },
 };
 // ============ Inline End =================== //
-
 const handleBack = () => {
   Swal.fire({
     icon: "warning",
@@ -1112,6 +1112,20 @@ const sampleFunction = () => {
 defineExpose({
   sampleFunction,
 });
+
+onBeforeRouteLeave(() => {
+  const answer = window.confirm(
+    'Do you really want to leave? The slot you saved and the details you filled up will be gone.'
+  )
+  // cancel the navigation and stay on the same page
+  if (!answer) {
+    return false
+  } else {
+    moveBackSlot();
+    return true
+  }
+})
+
 </script>
 
 <template>

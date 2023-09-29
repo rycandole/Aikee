@@ -31,6 +31,7 @@ import ConfirmationPage from '@/views/application/ConfirmationPage.vue'
 import EditApplication from '@/views/application/EditApplication.vue'
 import ReschedulePage from '@/views/application/ReschedulePage.vue'
 import RedirectPage from '@/views/application/RedirectPage.vue'
+import ErrorHandlingPage from '@/views/application/ErrorHandlingPage.vue'
 
 // ================== INDIVIDUAL CHILD =========================== //
 import IndividualCountryPage from '@/views/individual/CountryPage.vue'
@@ -126,6 +127,11 @@ const routes = [
         path: '',
         name: 'application',
         component: ApplicationPage,
+      },
+      {
+        path: '/application/error/:error/:id/:paycode',
+        name: 'errorHandlingPage',
+        component: ErrorHandlingPage,
       },
       {
         path: '/application/confirmation/:country/:id/:paycode',
@@ -334,7 +340,7 @@ const routes = [
     ]
   },
   {
-    path: '/signup',
+    path: '/signup/:token',
     beforeEnter: (to, from, next) => {
       useUserStore().id ? next('/') : next()
     },

@@ -189,6 +189,7 @@ for (let a = 0; a <= full_dates_bgc.length - 1; a++) {
 
 const handleSlots = async () => {
   const prefDate = moment(dateInput.value).format("YYYY-MM-DD");
+  timeInput.value = ""
   countryValue = country
   branchValue = clinic_code.get(clinic_location.value)
 
@@ -210,7 +211,7 @@ const handleDateTime = async () => {
   const date = moment(dateInput.value).format("YYYY-MM-DD");
 
   const confirmedSchedule = async () => {
-    const jsonDATA = {
+    const requestPAYLOAD = {
         branch: clinic_code.get(clinic_location.value),
         current_branch: current_branch.value,
         country: country,
@@ -221,15 +222,18 @@ const handleDateTime = async () => {
         paycode: pay_code.value,
         id: regId
       }; 
-      let save_slot = await axios.post("update_slot/", jsonDATA);
+      let save_slot = await axios.post("update_slot/", requestPAYLOAD);
+      let status_code = save_slot.data.status_code;
+      let error_msg = save_slot.data.error_msg;
+      let message = save_slot.data.message;
 
-      if (save_slot.data.status_code == 200) {
-        Swal.fire(save_slot.data.message, "", "success");
+      if (status_code == 200) {
+        Swal.fire(error_msg, message, "success");
         router.push("/application/show/"+country+"/"+regId+"/"+pay_code.value);
-      } else if (save_slot.data.status_code === 400) {
-        Swal.fire("Changes are not saved", save_slot.data.message, "error");
+      } else if (status_code === 400) {
+         Swal.fire(error_msg, message, "error");
       } else {
-        Swal.fire(save_slot.data.message, save_slot.data.error, "error");
+        Swal.fire(error_msg, message, "error");
       }
     }
 

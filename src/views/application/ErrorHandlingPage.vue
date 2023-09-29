@@ -4,15 +4,14 @@ import TopNavBar from "@/components/includes/TopNavBar.vue";
 import SideNavigation from "@/components/includes/SideNavigation.vue";
 import FooterSection from "@/components/includes/FooterSection.vue";
 
-import ShowSection_US from "@/components/pages/application/us/ShowSection.vue";
-import ShowSection_CA from "@/components/pages/application/ca/ShowSection.vue";
-import ShowSection_AU from "@/components/pages/application/au/ShowSection.vue";
-import ShowSection_NZ from "@/components/pages/application/nz/ShowSection.vue";
-import ShowSection_OT from "@/components/pages/application/ot/ShowSection.vue";
+import ErrorHandlerSection from "@/components/pages/application/ErrorHandlerSection.vue";
 
 const route = useRoute();
 
 const country = route.params.country;
+
+alert(country)
+
 </script>
 <template>
   <div class="wrapper">
@@ -24,7 +23,7 @@ const country = route.params.country;
       <div class="container-md">
         <div class="row mb-2 pt-5 pb-5 class_for_padding">
           <div class="col-sm-6">
-            <h1 class="m-0">Application Details</h1>
+            <h1 class="m-0">Warning</h1>
           </div>
           <!-- /.col -->
           <div class="col-sm-6">
@@ -34,26 +33,14 @@ const country = route.params.country;
               </li>
               <li class="breadcrumb-item">
                 <router-link to="/" class="text-secondary">
-                  Application Details
+                  Error
                 </router-link>
               </li>
             </ol>
           </div>
           <!-- /.col -->
-          <div v-if="country === 'US'" class="col-12 mb-2">
-            <ShowSection_US />
-          </div>
-          <div v-else-if="country === 'CA'" class="col-12 mb-2">
-            <ShowSection_CA />
-          </div>
-          <div v-else-if="country === 'AU'" class="col-12 mb-2">
-            <ShowSection_AU />
-          </div>
-          <div v-else-if="country === 'NZ'" class="col-12 mb-2">
-            <ShowSection_NZ />
-          </div>
-          <div v-else class="col-12  mb-2">
-            <ShowSection_OT />
+          <div class="col-12 mb-2">
+            <ErrorHandlerSection />
           </div>
         </div>
         <!-- /.row -->
