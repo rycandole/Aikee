@@ -13,9 +13,9 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <router-link to="/" class="nav-link">Home</router-link>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
+                <!-- <li class="nav-item d-none d-sm-inline-block">
                     <router-link to="/profile" class="nav-link">Profile</router-link>
-                </li>
+                </li> -->
             </ul>
 
             <!-- Right navbar links -->

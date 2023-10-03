@@ -14,6 +14,7 @@ import * as yup from 'yup';
 
 const router = useRouter()
 const route = useRoute()
+const COUNTRY = route.params.category
 const TOKEN = route.params.token
 
 let errors = ref([])
@@ -25,10 +26,10 @@ let username = ref(null)
 let email = ref(null)
 let password = ref(null)
 let confirmPassword = ref(null)
-let email_verify = ref(null)
-let token = ref(null)
-let expired = ref(null)
-let expired_date = ref(null)
+// let email_verify = ref(null)
+// let token = ref(null)
+// let expired = ref(null)
+// let expired_date = ref(null)
 
 onMounted(async () => {
   checkVerificationTOKEN()
@@ -36,22 +37,15 @@ onMounted(async () => {
 
 const checkVerificationTOKEN = async () => {
 
-  let responsePAYLOAD = await axios.get("verify_token/"+ TOKEN);
+  let responsePAYLOAD = await axios.get("verify_token/"+ COUNTRY +"/"+ TOKEN);
   let status_code = responsePAYLOAD.data.status_code
-  let count = responsePAYLOAD.data.count
-  email_verify = responsePAYLOAD.data.result
-  
-
+  let error_tittle = responsePAYLOAD.data.error_title
+  let error_msg = responsePAYLOAD.data.error_msg
   // alert(count)
-
-  if (status_code == 200 && count > 0) {
-    for (let i = 0; i < count; i++) {
-     token.value = email_verify[i].code
-     expired.value = email_verify[i].expired
-     expired_date.value = email_verify[i].expired_date
-    }
-
-    alert("TOKEN: "+ token.value)
+  if (status_code == 200) {
+    Swal.fire(error_tittle, error_msg, "info" )
+  } else if (status_code == 406) {
+    Swal.fire(error_tittle, error_msg, "warning" )
   } else {
     alert("Token not exist!")
   }
