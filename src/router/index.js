@@ -340,7 +340,7 @@ const routes = [
     ]
   },
   {
-    path: '/signup/:token',
+    path: '/signup/:category/:token',
     beforeEnter: (to, from, next) => {
       useUserStore().id ? next('/') : next()
     },
