@@ -1,7 +1,48 @@
 <script setup>
+import axios from 'axios'
+import { ref } from 'vue'
+// import { useUserStore } from '@/store/user-store'
+// import { useProfileStore } from '@/store/profile-store'
 import SubmitFormButton from "../../global/SubmitFormButton.vue";
 import TextInput from "../../global/TextInput.vue";
 import RouterButton from "../../global/RouterButton.vue";
+import { Form } from 'vee-validate'
+import Swal from '@/sweetalert2'
+import * as yup from 'yup';
+
+// const userStore = useUserStore()
+// const profileStore = useProfileStore()
+
+let email = ref(null)
+let errors = ref([])
+
+const schema = yup.object({
+  email: yup.string().required('Email is required!').email('Email must be a valid email'),
+})
+
+const handleChangepassword = async () => {
+  errors.value = []
+  const requestPAYLOAD = { email: email.value}
+
+  try {
+    let responsePAYLOAD = await axios.post('forgot-password/', requestPAYLOAD);
+    let status_code = responsePAYLOAD.data.status_code
+    let error_title = responsePAYLOAD.data.error_title
+    let error_msg = responsePAYLOAD.data.error_msg
+
+    if (status_code === 200) {
+      Swal.fire(error_title, error_msg, "success")
+    } else if (status_code === 400) {
+      Swal.fire(error_title, error_msg, "error")
+    } else {
+      Swal.fire("Undefined error", "Please contact administrator for this request", "error");
+    }
+  } catch (err) {
+          errors.value = err.response.data.errors
+  }
+ 
+}
+
 </script>
 
 <template>
@@ -15,7 +56,7 @@ import RouterButton from "../../global/RouterButton.vue";
           <p class="fw-light text-secondary">Enter your Email and instructions will be sent to you!</p>
         </div>
         <div class="card-body">
-          <form action="../../index3.html" method="post">
+          <Form @submit="handleChangepassword" :validation-schema="schema">
             <div class="mb-4">
               <TextInput
                     labelClassName="
@@ -26,9 +67,13 @@ import RouterButton from "../../global/RouterButton.vue";
                     "
                     label="email"
                     inputType="email"
+                    v-model:input="email"      
                     inputClassName="form-control"
-                    placeholder="Email or Username"
+                    placeholder="Email"
                     iconClassName="fas fa-envelope"
+                    FieldName="email"
+                    ErrorName="email"
+                    :error="errors.email ? errors.email[0] : ''"
               />
             </div>
 
@@ -41,7 +86,7 @@ import RouterButton from "../../global/RouterButton.vue";
                 />
               </div>
             </div>
-          </form>
+          </Form>
           <div class="social-auth-links text-center mt-4 mb-3">
               <RouterButton
                 btnClassName="btn btn-block btn-secondary"

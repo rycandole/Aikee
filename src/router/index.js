@@ -17,6 +17,7 @@ import FamilyView from '@/views/FamilyView.vue'
 // --- Sign In Child ---- //
 import SignInPage from '@/views/signin/SignInPage.vue'
 import ForgotPasswordPage from '@/views/signin/ForgotPasswordPage.vue'
+import NewPasswordPage from '@/views/signin/NewPasswordPage.vue'
 
 
 // --- Profile Child ------ //
@@ -363,6 +364,11 @@ const routes = [
         path: 'forgot-password',
         name: 'ForgotPasswordPage',
         component: ForgotPasswordPage,
+      },
+      {
+        path: 'new-password',
+        name: 'NewPasswordPage',
+        component: NewPasswordPage,
       },
     ]
   }

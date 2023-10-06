@@ -78,6 +78,8 @@ let agencyField = ref(null)
 let errors = ref([])
 let inputName = ref(null)
 let inputError = ref(null)
+let arrived = ref(null);
+let cancelled = ref(null);
 
 const examType = new Map([
     ["Full", "Full Medical Examination"],
@@ -140,6 +142,9 @@ const showInformation = async () => {
     stayMonth.value = showApplication[i].StayMt || ''
     visaCategory.value = showApplication[i].SubClass || ''
     agencyField.value = showApplication[i].agency || ''
+    arrived.value = showApplication[i].Seen;
+    cancelled.value = showApplication[i].Cancelled;
+    
     
 
     wasFirstMedicalExam.value === 'Y' ? hasMedicalExam = true : hasMedicalExam = false
@@ -149,6 +154,12 @@ const showInformation = async () => {
     intendedStay.value === 'P' ? stayYear.value = "" : stayYear.value = showApplication[i].StayYr
     intendedStay.value === 'P' ? stayMonth.value = "" : stayMonth.value = showApplication[i].StayMt
     validate_intended_stay = intendedStay.value === 'P' ? false : true
+
+    if (arrived.value === 1) {
+      router.push("/application/show/"+country+"/"+regId+"/"+payCode);
+    } else if (cancelled.value === 1) {
+      router.push("/application/show/"+country+"/"+regId+"/"+payCode);
+    }
   }
 
 

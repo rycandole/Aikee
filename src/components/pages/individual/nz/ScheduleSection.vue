@@ -184,7 +184,7 @@
             country: "NZ",
             date: date,
             time: timeInput.value,
-            timer: moment(new Date().getTime()).add(30, "seconds")
+            timer: moment(new Date().getTime()).add(30, "minutes")
         }
 
         let save_slot = await axios.post("save_slot/", jsonDATA);

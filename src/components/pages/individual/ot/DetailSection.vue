@@ -3,8 +3,7 @@
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { defineExpose } from  "vue";
-    import { useRouter } from 'vue-router'
-    import {useRoute} from "vue-router"
+    import { onBeforeRouteLeave, useRouter, useRoute } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useOTIndividualDetails } from '@/store/ot-individual-details'
     import { useOTIndividualSched } from '@/store/ot-individual-sched'
@@ -79,6 +78,7 @@
     let errors = ref([])
     let inputName = ref(null)
     let inputError = ref(null)
+    let is_form_submitted = false;
 
     const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
     const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
@@ -152,7 +152,7 @@
      * 
      */
      const handleDetails = async (values) => {
-
+        is_form_submitted = true;
         errors.value = []
 
         let dob = moment(new Date(dateOfBirth.value)).format('YYYY-MM-DD')
@@ -208,6 +208,7 @@
 
 
     const handleBack = () => {
+        is_form_submitted = true;
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure you want to go back?',
@@ -264,6 +265,22 @@
     }
     defineExpose({
         sampleFunction,
+    })
+
+    onBeforeRouteLeave(() => {
+        if (is_form_submitted == false) {
+            const answer = window.confirm(
+            'Are you sure you want to leave page? The slot you saved and the details you filled up will be gone.'
+            )
+            if (!answer) {
+            return false
+            } else {
+            moveBackSlot();
+            return true
+            }
+        } else {
+            return true
+        }
     })
 </script>
 

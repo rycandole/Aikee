@@ -8,6 +8,7 @@ import { Form } from 'vee-validate'
 import SubmitFormButton from "@/components/global/SubmitFormButton.vue";
 import RouterWithIcon from "@/components/global/RouterLinkBtnWithIcon.vue";
 import TextInput from "@/components/global/TextInput.vue";
+import InputField from "@/components/global/InputField.vue";
 import Swal from '@/sweetalert2'
 import * as yup from 'yup';
 
@@ -26,7 +27,7 @@ let username = ref(null)
 let email = ref(null)
 let password = ref(null)
 let confirmPassword = ref(null)
-// let email_verify = ref(null)
+let email_verify = ref(null)
 // let token = ref(null)
 // let expired = ref(null)
 // let expired_date = ref(null)
@@ -41,13 +42,17 @@ const checkVerificationTOKEN = async () => {
   let status_code = responsePAYLOAD.data.status_code
   let error_tittle = responsePAYLOAD.data.error_title
   let error_msg = responsePAYLOAD.data.error_msg
+  let verified_email = responsePAYLOAD.data.verified_email
   // alert(count)
   if (status_code == 200) {
-    Swal.fire(error_tittle, error_msg, "info" )
+    email.value = verified_email
+    email_verify.value = verified_email
+    Swal.fire(error_tittle, error_msg, "success")
   } else if (status_code == 406) {
-    Swal.fire(error_tittle, error_msg, "warning" )
+    Swal.fire(error_tittle, error_msg, "warning")
+    router.push('/signup');
   } else {
-    alert("Token not exist!")
+    router.push('/signup');
   }
 
 }
@@ -83,7 +88,7 @@ const handleSignUp = async () => {
             // axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token
             // userStore.setUserDetails(res)
 
-            router.push('signin')
+            router.push('/signin')
 
           } else {
             Swal.fire({
@@ -225,10 +230,9 @@ const schema = yup.object({
                     ErrorName="username"
                     v-model:input="username"
                     :error="errors.username ? errors.username[0] : ''"
-                   
               />
             </div>
-            <div class="mb-4 col-lg-6 col-md-12 col-sm-12">
+            <div class=" col-lg-6 col-md-12 col-sm-12">
               <TextInput
                     labelClassName="
                         text-uppercase 
@@ -243,9 +247,16 @@ const schema = yup.object({
                     iconClassName="fas fa-envelope"
                     FieldName="email"
                     ErrorName="email"
-                    v-model:input="email"
+                    v-model:input="email_verify"
                     :error="errors.email ? errors.email[0] : ''"
-                  
+                    :disabled="true"
+              />
+              <InputField
+                  type="hidden"
+                  inputClassName="form-control"
+                  FieldName="email"
+                  ErrorName="email"
+                  v-model:input="email"
               />
             </div>
             <div class="mb-4 col-lg-6 col-md-12 col-sm-12">
