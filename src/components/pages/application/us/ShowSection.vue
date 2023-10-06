@@ -77,7 +77,13 @@ const showInformation = async () => {
   let res = await axios.get("us-show/" + regId);
 
   showApplication = res.data.result;
+  // let count = res.data.result.length
   US_Information.value = showApplication;
+  // console.log(res.data.result.length)
+
+  // for (let i = 0; i <= count; i++) {
+  //   alert(res.data.result[i].Seen)
+  // }
 };
 </script>
 
@@ -102,8 +108,8 @@ const showInformation = async () => {
       <div class="col-12 mb-3">
         <div class="card-body row">
           <div class="col-12 pb-3" :hidden="`${row.Seen}` == 1 ? false : true">
-            <h2 class="text-danger text-center">
-              This application was arrived. Edit information is not abled!
+            <h2 class="text-success text-center">
+              This application was arrived.
             </h2>
           </div>
           <div class="col-12">

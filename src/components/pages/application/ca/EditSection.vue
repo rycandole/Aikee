@@ -74,20 +74,19 @@
     let applicantCategory = ref(null)
     let fileNumber = ref(null)
     let agencyField = ref(null)
-
     let branch = ref(null)
     let preferred_medical_exam_date = ref(null)
     let priority_time = ref(null)
     let printHash = ref(null);
     let PayCode = ref(null);
     let receiveDate = ref(null);
-
     let errors = ref([])
     let inputName = ref(null)
     let inputError = ref(null)
-
     let check_alias = ref(null)
     let isButtonDisabled = true
+    let arrived = ref(null);
+    let cancelled = ref(null);
     
 // const caseNumberRegex = /^[\p{L}\p{N}\p{M}]+$/u;
 const nameRegex = /^[\p{L}\p{M}\s-]+$/u;
@@ -142,6 +141,8 @@ onMounted(async () => {
         receiveDate.value = showApplication[i].RcvDate;
         preferred_medical_exam_date.value = showApplication[i].PreferredMedicalExamDate || ''
         priority_time.value = showApplication[i].priorityTime || ''
+        arrived.value = showApplication[i].Seen;
+        cancelled.value = showApplication[i].Cancelled;
 
         wasFirstMedicalExam.value === 'N' ? hasMedicalExam = false : hasMedicalExam = true
         wasFirstMedicalExam.value === 'N' ? prevClinicName.value = showApplication[i].PrevMedDetail1 : prevClinicName.value = ""
@@ -150,6 +151,12 @@ onMounted(async () => {
         // check_alias.value === 'checked' ? alias_lastName.value = showApplication[i].alias_lastName : alias_lastName.value = ""
         // check_alias.value === 'checked' ? alias_firstName.value = showApplication[i].alias_firstName : alias_firstName.value = ""
         // check_alias.value === 'checked' ? alias_middleName.value = showApplication[i].alias_middleName : alias_middleName.value = ""
+
+        if (arrived.value === 1) {
+            router.push("/application/show/"+country+"/"+regId+"/"+payCode);
+        } else if (cancelled.value === 1) {
+            router.push("/application/show/"+country+"/"+regId+"/"+payCode);
+        }
     }
     
     }

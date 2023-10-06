@@ -82,6 +82,8 @@
     let errors = ref([])
     let inputName = ref(null)
     let inputError = ref(null)
+    let arrived = ref(null);
+    let cancelled = ref(null);
 
 
     
@@ -137,10 +139,19 @@ const showInformation = async () => {
     PayCode.value = showApplication[i].PayCode;
     branch.value = showApplication[i].branch;
     receiveDate.value = showApplication[i].RcvDate;
+    arrived.value = showApplication[i].Seen;
+    cancelled.value = showApplication[i].Cancelled;
 
     wasFirstMedicalExam.value === 'N' ? hasMedicalExam = false : hasMedicalExam = true
     wasFirstMedicalExam.value === 'N' ? prevClinicName.value = showApplication[i].PrevMedDetail1 : prevClinicName.value = ""
     wasFirstMedicalExam.value === 'N' ? prevSubClass.value = showApplication[i].PrevMedDetail2 : prevSubClass.value = ""
+
+    if (arrived.value === 1) {
+      router.push("/application/show/"+country+"/"+regId+"/"+payCode);
+    } else if (cancelled.value === 1) {
+      router.push("/application/show/"+country+"/"+regId+"/"+payCode);
+    }
+
   }
 
 

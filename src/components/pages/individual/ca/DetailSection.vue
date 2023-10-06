@@ -3,7 +3,7 @@
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { defineExpose } from  "vue";
-    import { useRouter } from 'vue-router'
+    import { onBeforeRouteLeave, useRouter } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useCAIndividualSched } from '@/store/ca-individual-sched'
     import { useCAIndividualDetails } from '@/store/ca-individual-details'
@@ -79,6 +79,7 @@
     let errors = ref([])
     let inputName = ref(null)
     let inputError = ref(null)
+    let is_form_submitted = false;
 
     let check_alias = ref(null)
     let isButtonDisabled = true
@@ -104,8 +105,8 @@
         mother_lastName.value = details.mother_lastName || ''
         mother_firstName.value = details.mother_firstName || ''
         mother_middleName.value = details.mother_middleName || ''
-        date_of_birth.value = details.dob || ''
-        validate_date_of_birth.value = details.dob || ''
+        date_of_birth.value = details.date_of_birth || ''
+        validate_date_of_birth.value = details.date_of_birth || ''
         gender.value = details.gender || ''
         civil_status.value = details.civil_status || ''
         nationality.value = details.nationality || ''
@@ -216,7 +217,7 @@
      * 
      */
      const handleDetails = async (values) => {
-
+        is_form_submitted = true;
         errors.value = []
 
         let dob = moment(new Date(date_of_birth.value)).format('YYYY-MM-DD')
@@ -296,6 +297,7 @@
     }
 
     const handleBack = () => {
+        is_form_submitted = true;
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure you want to go back?',
@@ -337,6 +339,23 @@ const sampleFunction = () => {
 }
 defineExpose({
   sampleFunction,
+})
+
+onBeforeRouteLeave(() => {
+  if (is_form_submitted == false) {
+    const answer = window.confirm(
+      'Are you sure you want to leave page? The slot you saved and the details you filled up will be gone.'
+    )
+    if (!answer) {
+      return false
+    } else {
+      moveBackSlot();
+      return true
+    }
+  } else {
+    return true
+  }
+  
 })
 </script>
 

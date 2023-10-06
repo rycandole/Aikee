@@ -128,6 +128,8 @@ let petitioner_us_postal_code = ref(null);
 let petitioner_contact_no = ref(null);
 let petitioner_email_addr = ref(null);
 let intended_port_of_entry = ref(null);
+let arrived = ref(null);
+let cancelled = ref(null);
 
 let printHash = ref(null);
 let PayCode = ref(null);
@@ -341,6 +343,8 @@ const showInformation = async () => {
     printHash.value = showApplication[i].printhash;
     PayCode.value = showApplication[i].PayCode;
     receiveDate.value = showApplication[i].RcvDate;
+    arrived.value = showApplication[i].Seen;
+    cancelled.value = showApplication[i].Cancelled;
 
     // cv_category.value ? (covidHidden = false) : (covidHidden = true);
     cv_received.value === "yes" ? (is_cv_received = false) : (is_cv_received = true);
@@ -358,6 +362,13 @@ const showInformation = async () => {
     ad_has_been_issued_visa.value == "y" ? (showVisaDate = false) : (showVisaDate = true);
 
     alertChange();
+
+    if (arrived.value === 1) {
+      router.push("/application/show/"+country+"/"+regId+"/"+paycode);
+    } else if (cancelled.value === 1) {
+      router.push("/application/show/"+country+"/"+regId+"/"+paycode);
+    }
+
   }
 };
 

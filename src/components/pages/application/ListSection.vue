@@ -171,7 +171,7 @@ const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) =
                 <b v-else-if="`${row.Expired}` == 1">Expired<i class="fas fa-hourglass-end fa-lg text-secondary ml-2"></i></b>
                 <b v-else-if="`${row.paid}` == 1">Paid <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
                 <b v-else-if="`${row.Seen}` == 1">Arrived <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
-                <b v-else>Awaiting payment <i class="fas fa-minus-circle fa-lg text-info ml-2"></i></b>
+                <b v-else>Pending <i class="fas fa-minus-circle fa-lg text-info ml-2"></i></b>
               </td>
               <td>
                 <div class="dropdown">
@@ -251,7 +251,7 @@ const cancelBtn = async (id, country, branch, sched_date, sched_time, paycode) =
                 <b v-else-if="`${row.Expired}` == 1">Expired<i class="fas fa-hourglass-end fa-lg text-secondary ml-2"></i></b>
                 <b v-else-if="`${row.paid}` == 1">Paid <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
                 <b v-else-if="`${row.Seen}` == 1">Arrived <i class="fas fa-check-circle fa-lg text-success ml-2"></i></b>
-                <b v-else>Awaiting payment <i class="fas fa-minus-circle fa-lg text-info ml-2"></i></b>
+                <b v-else>Pending <i class="fas fa-minus-circle fa-lg text-info ml-2"></i></b>
               </td>
               <td>
                 <div class="dropdown">

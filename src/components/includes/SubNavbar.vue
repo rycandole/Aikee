@@ -27,7 +27,7 @@ const payCode = route.params.paycode;
         target="__blank"
         class="btn btn-outline-secondary btn-lg"
       > -->
-      <a
+      <!-- <a
         :href="
           'http://localhost/slec-fullstack/backend/resources/views/confirmation/' +
           country +
@@ -38,7 +38,7 @@ const payCode = route.params.paycode;
         class="btn btn-outline-secondary btn-lg"
       >
         Print <i class="fas fa-print pl-2"></i>
-      </a>
+      </a> -->
     </div>
     <button
       class="navbar-toggler"
@@ -55,14 +55,14 @@ const payCode = route.params.paycode;
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <!-- Don't delete this router!!!! -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <router-link
             :to="'/application/confirmation/' + country + '/' + regID + '/' + payCode"
             class="nav-link"
           >
             <i class="fas fa-file-pdf pr-2"></i> Confirmation
           </router-link>
-        </li>
+        </li> -->
         <li class="nav-item">
           <router-link
             :to="'/application/show/' + country + '/' + regID + '/' + payCode"

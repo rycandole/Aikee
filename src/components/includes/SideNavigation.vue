@@ -1,7 +1,7 @@
 <script setup>
     import axios from 'axios'
     import { onMounted } from 'vue'
-    import { useRouter } from 'vue-router'
+    import { useRouter, useRoute } from 'vue-router'
     import { useUserStore } from '@/store/user-store.js'
     import { useProfileStore } from '@/store/profile-store.js'
 
@@ -32,6 +32,7 @@
 
 
     const router = useRouter()
+    const location = useRoute();
     const userStore = useUserStore()
     const profileStore = useProfileStore()
 
@@ -87,7 +88,13 @@
                         if (res) {
                             // Cleard all the state
                                                     
-                            Swal.fire('Logged out', '', 'success')
+                            // Swal.fire('Logged out', '', 'success')
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Logged out',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
 
                             userStore.clearUser()
                             profileStore.clearProfile()
@@ -116,6 +123,7 @@
                             router.push(process.env.BASE_URL +"signin")
                         } else {
                             Swal.fire(res.data.message, '', 'error')
+                            
                         }
 
                     } catch (err) {
@@ -149,10 +157,10 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="img/icons/favicon.ico" class="img-circle elevation-2" alt="User Image">
+                    <!-- <img src="img/icons/favicon.ico" class="img-circle elevation-2" alt="User Image"> -->
                 </div>
                 <div class="info">
-                    <router-link to="/profile" class="d-block">{{ full_name }}</router-link>
+                    <router-link to="/" class="d-block">{{ full_name }}</router-link>
                 </div>
             </div>
 
@@ -163,7 +171,7 @@
                     <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <router-link to="/" class="nav-link">
+                        <router-link to="/" class="nav-link" :class="location.name == 'home' || location.name == 'individual' ? 'active' : ''">
                             <i class="nav-icon fas fa-home"></i>
                             <p>
                                 Home
@@ -171,14 +179,14 @@
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/application" class="nav-link">
+                        <router-link to="/application" class="nav-link" :class="location.name == 'application' ? 'active' : ''">
                             <i class="nav-icon fas fa-tasks"></i>
                             <p>
                                 Application
                             </p>
                         </router-link>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link to="" class="nav-link">
                             <i class="nav-icon fas fa-edit"></i>
                             <p>
@@ -186,7 +194,7 @@
                                 <span class="right badge badge-danger">New</span>
                             </p>
                         </router-link>
-                    </li>
+                    </li> -->
                     <li class="nav-item" @click="logout">
                         <router-link to="" class="nav-link">
                             <i class="nav-icon fas fa-sign-out-alt"></i>

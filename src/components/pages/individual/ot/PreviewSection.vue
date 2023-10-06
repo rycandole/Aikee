@@ -2,8 +2,7 @@
     import axios from 'axios'
     import { ref } from 'vue'
     import { onMounted } from 'vue'
-    import { useRouter } from 'vue-router'
-    import {useRoute} from "vue-router"
+    import { onBeforeRouteLeave, useRouter, useRoute } from 'vue-router'
     import { useProfileStore } from '@/store/profile-store'
     import { useOTIndividualSched } from '@/store/ot-individual-sched.js'
     import { useOTIndividualDetails } from '@/store/ot-individual-details.js'
@@ -67,6 +66,7 @@
     let sched_date = moment(schedule.date).format('LL');
     let sched_time = schedule.time
     let sched_branch = clinic_code.get(schedule.branch)
+    let is_form_submitted = false;
 
     let embassyOfVisa = details.embassyOfVisa
     let visaCategoryField = details.visaCategoryField
@@ -105,7 +105,7 @@
     
 
     const handleStore = async () => {
-
+        is_form_submitted = true;
         errors.value = []
 
         const JSONdata = {
@@ -176,7 +176,7 @@
 
 
     const handleEdit = () => {
-
+        is_form_submitted = true;
         Swal.fire({
             icon: 'question',
             title: 'Are you sure you want to edit?',
@@ -193,6 +193,40 @@
             }
         })
     }
+
+    const moveBackSlot = async () => {
+        const jsonDATA = {
+            branch: useOTIndividualSched().branch,
+            country: useOTIndividualSched().country,
+            date: useOTIndividualSched().date,
+            time: useOTIndividualSched().time,
+            timer: useOTIndividualSched().timer,
+        };
+
+        let remove_slot = await axios.post("remove_slot/", jsonDATA);
+
+        if (remove_slot.data.status_code === 200) {
+            OT_IndividualSched.clearOTIndividualSched();
+            OT_IndividualDetails.clearOTIndividualDetails();
+        }
+    };
+
+    onBeforeRouteLeave(() => {
+        if (is_form_submitted == false) {
+            const answer = window.confirm(
+            'Are you sure you want to leave page? The slot you saved and the details you filled up will be gone.'
+            )
+            if (!answer) {
+            return false
+            } else {
+            moveBackSlot();
+            return true
+            }
+        } else {
+            return true
+        }
+    
+    })
 
 
 </script>

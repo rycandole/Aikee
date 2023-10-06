@@ -59,6 +59,11 @@ const showInformation = async () => {
         <form v-for="(row, index) in OT_Information" :key="index" class="col-12 mb-3">
             <div class="col-12 mb-2">
                 <div class="card-body row">
+                    <div class="col-12 pb-3" :hidden="`${row.Seen}` == 1 ? false : true">
+                        <h2 class="text-success text-center">
+                            This application was arrived.
+                        </h2>
+                    </div>
                     <div class="mb-3 col-12">
                         <FormHeader
                             headerText="Medical Examination Schedule"

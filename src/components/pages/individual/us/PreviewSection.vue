@@ -2,7 +2,7 @@
 import axios from "axios";
 import { ref } from "vue";
 import { onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useProfileStore } from "@/store/profile-store";
 import { useUSIndividualSched } from "@/store/us-individual-sched.js";
 import { useUSIndividualDetails } from "@/store/us-individual-details.js";
@@ -108,6 +108,7 @@ const wasChecked = () => {
 // Schedule Store
 let sched_date = moment(schedule.date).format("LL");
 let sched_time = schedule.time;
+let is_form_submitted = false;
 
 // Details Store
 let detail_date_of_birth = moment(details.date_of_birth).format("LL");
@@ -179,6 +180,7 @@ const schema = yup.object({
 });
 
 const handleStore = async () => {
+  is_form_submitted = true;
   errors.value = [];
 
   const JSONdata = {
@@ -288,6 +290,7 @@ const handleStore = async () => {
 };
 
 const handleBack = () => {
+  is_form_submitted = true;
   Swal.fire({
     icon: "question",
     title: "Are you sure you want to edit?",
@@ -302,6 +305,40 @@ const handleBack = () => {
     }
   });
 };
+
+const moveBackSlot = async () => {
+  const jsonDATA = {
+    branch: useUSIndividualSched().branch,
+    country: useUSIndividualSched().country,
+    date: useUSIndividualSched().date,
+    time: useUSIndividualSched().time,
+    timer: useUSIndividualSched().timer,
+  };
+
+  let remove_slot = await axios.post("remove_slot/", jsonDATA);
+
+  if (remove_slot.data.status_code === 200) {
+    US_IndividualSched.clearUSIndividualSched();
+    US_IndividualDetails.clearUSIndividualDetails();
+  }
+};
+
+onBeforeRouteLeave(() => {
+  if (is_form_submitted == false) {
+    const answer = window.confirm(
+      'Are you sure you want to leave page? The slot you saved and the details you filled up will be gone.'
+    )
+    if (!answer) {
+      return false
+    } else {
+      moveBackSlot();
+      return true
+    }
+  } else {
+    return true
+  }
+  
+})
 </script>
 
 <template>

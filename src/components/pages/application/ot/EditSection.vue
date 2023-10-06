@@ -77,6 +77,8 @@ let errors = ref([])
 let inputName = ref(null)
 let inputError = ref(null)
 let received_date = ref(null)
+let arrived = ref(null);
+let cancelled = ref(null);
 
 // const examType = new Map([
 //     ["Full", "Full Medical Examination"],
@@ -126,6 +128,14 @@ const showInformation = async () => {
     provinceField.value = showApplication[i].Add3 || ''
     postalCode.value = showApplication[i].AddPost || ''
     received_date.value = showApplication[i].RcvDate || ''
+    arrived.value = showApplication[i].Seen;
+    cancelled.value = showApplication[i].Cancelled;
+
+    if (arrived.value === 1) {
+      router.push("/application/show/"+country+"/"+regId+"/"+payCode);
+    } else if (cancelled.value === 1) {
+      router.push("/application/show/"+country+"/"+regId+"/"+payCode);
+    }
 
   }
  

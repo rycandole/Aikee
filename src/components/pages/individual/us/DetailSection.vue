@@ -38,6 +38,7 @@ import years from "@/assets/js/arrays/year_list_array";
 import relationship from "@/assets/js/arrays/relationship_array";
 import states from "@/assets/js/arrays/states_array";
 import vaccine from "@/assets/js/arrays/vaccine_list_array";
+// import { next } from "bootstrap/js/dist/dom/selector-engine";
 // import YearList from '@/assets/js/arrays/year_list_array'
 
 const router = useRouter();
@@ -130,6 +131,7 @@ let petitioner_us_postal_code = ref(null);
 let petitioner_contact_no = ref(null);
 let petitioner_email_addr = ref(null);
 let intended_port_of_entry = ref(null);
+let is_form_submitted = false;
 
 let errors = ref([]);
 let inputName = ref(null);
@@ -923,7 +925,9 @@ const schema = yup.object().shape({
  *
  */
 const handleDetails = async (values) => {
+  is_form_submitted = true;
   errors.value = [];
+  // alert(is_form_submitted)
 
   let birthDate = moment(new Date(date_of_birth.value)).format("YYYY-MM-DD");
   let first_dose = moment(new Date(firstDose.value)).format("YYYY-MM-DD");
@@ -1029,6 +1033,7 @@ const handleDetails = async (values) => {
 
     if (validateRequest.data.status_code === 200) {
       let res = JSON.stringify(jsonDATA);
+      
 
       USIndividualDetails.setUSIndividualDetails(res);
       router.push("/individual/us/preview/");
@@ -1073,9 +1078,10 @@ const disablePastDateState = {
 };
 // ============ Inline End =================== //
 const handleBack = () => {
+  is_form_submitted = true;
   Swal.fire({
     icon: "warning",
-    title: "Are you sure you want to go back?",
+    title: "Are you sure you want to leave page?",
     text: "The slot you saved and the details you filled up will be gone.",
     showCancelButton: true,
     confirmButtonText: "Yes",
@@ -1112,18 +1118,22 @@ const sampleFunction = () => {
 defineExpose({
   sampleFunction,
 });
-
+// alert(is_form_submitted)
 onBeforeRouteLeave(() => {
-  const answer = window.confirm(
-    'Do you really want to leave? The slot you saved and the details you filled up will be gone.'
-  )
-  // cancel the navigation and stay on the same page
-  if (!answer) {
-    return false
+  if (is_form_submitted == false) {
+    const answer = window.confirm(
+      'Are you sure you want to leave page? The slot you saved and the details you filled up will be gone.'
+    )
+    if (!answer) {
+      return false
+    } else {
+      moveBackSlot();
+      return true
+    }
   } else {
-    moveBackSlot();
     return true
   }
+  
 })
 
 </script>

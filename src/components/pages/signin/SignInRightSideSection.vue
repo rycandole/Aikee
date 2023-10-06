@@ -5,9 +5,11 @@
     import { useUserStore } from '@/store/user-store'
     import { useProfileStore } from '@/store/profile-store'
     import SubmitFormButton from '@/components/global/SubmitFormButton.vue'
-    import RouterWithIcon from '@/components/global/RouterLinkBtnWithIcon.vue'
+    import { Form } from "vee-validate";
+    // import RouterWithIcon from '@/components/global/RouterLinkBtnWithIcon.vue'
     import TextInput from '@/components/global/TextInput.vue'
     import Swal from '@/sweetalert2'
+    import * as yup from "yup";
 
 
     const router = useRouter()
@@ -17,6 +19,11 @@
     let errors = ref([])
     let email = ref(null)
     let password = ref(null)
+
+    const schema = yup.object().shape({
+      email: yup.string().required("Email or Username is required!"),
+      password: yup.string().required("Password is required!")
+    })
 
     const handleSignIn = async () => {
 
@@ -32,11 +39,12 @@
             let res = await axios.post("signin/", JSONdata )
             
             if (res.data.status_code === 200 ) {
-              Swal.fire(
-                res.data.error,
-                'You clicked the button!',
-                'success'
-              )
+              Swal.fire({
+                icon: 'success',
+                title: res.data.error,
+                showConfirmButton: false,
+                timer: 2000
+              })
               // alert(res.data.error)
 
               axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token
@@ -83,7 +91,8 @@
           <p class="fw-light text-secondary">Enter your details below</p>
         </div>
         <div class="card-body">
-          <form  @submit.prevent="handleSignIn">
+          
+          <Form  @submit="handleSignIn" :validation-schema="schema" >
             <div class="mb-4">
               <TextInput
                     labelClassName="
@@ -91,12 +100,14 @@
                         mb-2 
                         text-dark
                     "
-                    label="Username"
+                    label="Email"
                     type="text"
                     v-model:input="email"
                     inputClassName="form-control"
                     placeholder="Email or Username"
                     iconClassName="fas fa-envelope"
+                    FieldName="email"
+                    ErrorName="email"
                     :error="errors.email ? errors.email[0] : ''"
               />
             </div>
@@ -113,13 +124,15 @@
                 inputClassName="form-control"
                 placeholder="Password"
                 iconClassName="fas fa-lock"
+                FieldName="password"
+                ErrorName="password"
                 :error="errors.password ? errors.password[0] : ''"
               />
             </div>
             <div class="row">
               <div class="col-12">
                 <router-link to="/signin/forgot-password" class="forgot_pass mb-4"
-                  ><i class="fa fa-lock m-r-5"></i> Forgot your
+                  ><i class="fas fa-unlock mr-2"></i> Forgot your
                   password?</router-link
                 >
               </div>
@@ -132,16 +145,16 @@
               </div>
               
             </div>
-          </form>
+          </Form>
 
-          <div class="social-auth-links text-center mt-4 mb-3">
+          <!-- <div class="social-auth-links text-center mt-4 mb-3">
             <RouterWithIcon
               className="btn btn-block btn-danger"
               url=""
               routerText="Sign in using Google+"
               iconClassName="fab fa-google-plus mr-2"
             />
-          </div>
+          </div> -->
 
           <p class="mb-0 text-secondary">
             Don't have an account?

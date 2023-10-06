@@ -18,10 +18,11 @@ const props = defineProps({
     ErrorName: String,
     error: String,
     minLength: Number,
-    maxLength: Number
+    maxLength: Number,
+    disabled: String
 })
 
-const { labelClassName, label, input, type, inputClassName, placeholder, iconClassName, optLabelClassName, optionalLabel, error, minLength, maxLength, FieldName, ErrorName  } = toRefs(props)
+const { labelClassName, label, input, type, inputClassName, placeholder, iconClassName, optLabelClassName, optionalLabel, error, minLength, maxLength, FieldName, ErrorName, disabled  } = toRefs(props)
 
 const inputComputed = computed({
     get: () => input.value,
@@ -52,6 +53,7 @@ const inputComputed = computed({
                 :minlength="minLength"
                 :maxlength="maxLength"
                 v-model="inputComputed"
+                :disabled="disabled"
             />
             <div class="input-group-append">
                 <div class="input-group-text">
