@@ -28,6 +28,7 @@
     import years from '@/assets/js/arrays/year_list_array'
     import province from '@/assets/js/arrays/province_array'
     import visaCategory from '@/assets/js/arrays/visa_category_array'
+    import koica from '@/assets/js/arrays/koica_array'
     
 
     const router = useRouter()
@@ -53,6 +54,7 @@
     let textSuccess = "text-success"
     let textSuccess1 = "text-success"
     let embassyOfVisa = regCountry
+    let south_korea_category = ref(null)
     let visaCategoryField = ref(null)
     let validate_date_of_issue = ref(null)
     let passportNumber = ref(null)
@@ -91,6 +93,7 @@
 
     onMounted( async () => {
         visaCategoryField.value = details.visaCategoryField || ''
+        south_korea_category.value = details.south_korea_category || ''
         passportNumber.value = details.passportNumber || ''
         issuedCountry.value = details.issuedCountry || ''
         issuedDate.value = details.issuedDate || ''
@@ -124,6 +127,12 @@
     }
     
     const schema = yup.object().shape({
+        is_korea: yup.string(),
+        south_korea_category: yup.string().when("is_korea", {
+            is: "true",
+            then: (schema) => schema.required('South Korea Category is required!'),
+            otherwise: (schema) => schema.nullable(),
+        }),
         visaCategoryField: yup.string().required('This field is required, please choose an option!'),
         passportNumber: yup.string().required('This field is required!').max(13, 'NVC Case Number must be exactly 13 characters').matches(caseNumberRegex, "Please avoid using spaces and special characters ex: !@#$%^"),
         issuedCountry: yup.string().required('This field is required, please choose an option!'),
@@ -161,6 +170,7 @@
         const jsonDATA = {
                 json_user_id: user_id,
                 json_embassyOfVisa: embassyOfVisa,
+                json_sk_category: values.south_korea_category,
                 json_visaCategoryField: values.visaCategoryField,
                 json_passportNumber: values.passportNumber,
                 json_issuedCountry: values.issuedCountry,
@@ -302,21 +312,28 @@
                             <!-- Main Container -->
         <!-- ============================================================== -->
         
-        <Form @submit="handleDetails" :validation-schema="schema"  class="col-lg-9 col-md-12 col-sm-12 mb-3">
+        <Form @submit="handleDetails" :validation-schema="schema"  class="col-lg-9 col-md-12 col-sm-12 mb-3" autocomplete="off">
             <div class="col-12 mb-3">
                 <div class="card-body row">
                     <div class="col-12">
                         <span class="text-danger">Fields with asterisks(*) are required</span>
                     </div>
-                    <!-- <div class="col-lg-8 col-md-12 col-sm-12">
+                    <!-- :hidden="regCountry == 'kr' ? false : true" -->
+                    <div class="col-lg-8 col-md-12 col-sm-12">
                         <RequiredSelectField 
-                            label="Embassy of Visa Application"
-                            FieldName="embassyOfVisa"
-                            ErrorName="embassyOfVisa"
-                            v-model:input="embassyOfVisa"
+                            label="South Korea Category"
+                            FieldName="south_korea_category"
+                            ErrorName="south_korea_category"
+                            v-model:input="south_korea_category"
                             :items="koica"
                         />
-                    </div> -->
+                    </div>
+                    <Field
+                        type="hidden"
+                        name="is_korea"
+                        :value="regCountry == 'kr' ? true : false"
+                        width="100px"
+                    />
                     <div class="col-lg-8 col-md-12 col-sm-12">
                         <RequiredSelectField 
                             label="Visa category"

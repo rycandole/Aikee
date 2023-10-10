@@ -15,6 +15,7 @@ const profileStore = useProfileStore();
 // const TRIPLETS_BGC_Holidates = use_TRIPLETS_BGC_Holidates()
 
 let user_id = profileStore.id;
+let email = profileStore.email;
 
 let showApplication = ref([]);
 let showApplication1 = ref([]);
@@ -37,7 +38,7 @@ onMounted(async () => {
 
 // ============= For displaying list of applications ========= //
 const showList = async () => {
-  let res = await axios.get("registration-list/" + user_id);
+  let res = await axios.get("registration-list/"+ user_id+"/"+email);
   showApplication = res.data.result;
   USList.value = showApplication;
 
