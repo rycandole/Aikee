@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 import { useRoute } from "vue-router";
 import { Form } from 'vee-validate'
 import SubmitFormButton from "@/components/global/SubmitFormButton.vue";
-import RouterWithIcon from "@/components/global/RouterLinkBtnWithIcon.vue";
+// import RouterWithIcon from "@/components/global/RouterLinkBtnWithIcon.vue";
 import TextInput from "@/components/global/TextInput.vue";
 import InputField from "@/components/global/InputField.vue";
 import Swal from '@/sweetalert2'
@@ -47,7 +47,7 @@ const checkVerificationTOKEN = async () => {
   if (status_code == 200) {
     email.value = verified_email
     email_verify.value = verified_email
-    Swal.fire(error_tittle, error_msg, "success")
+    // Swal.fire(error_tittle, error_msg, "success")
   } else if (status_code == 406) {
     Swal.fire(error_tittle, error_msg, "warning")
     router.push('/signup');
@@ -319,14 +319,14 @@ const schema = yup.object({
             </div>
           </Form>
 
-          <div class="social-auth-links text-center mt-4 mb-3">
+          <!-- <div class="social-auth-links text-center mt-4 mb-3">
             <RouterWithIcon
               className="btn btn-block btn-danger"
               url=""
               routerText="Sign Up using Google+"
               iconClassName="fab fa-google-plus mr-2"
             />
-          </div>
+          </div> -->
 
           <p class="mb-0 text-secondary">
             Already have an account?

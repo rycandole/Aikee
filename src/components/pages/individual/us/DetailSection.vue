@@ -1853,7 +1853,6 @@ onBeforeRouteLeave(() => {
               type="text"
               FieldName="petitioner_fullname"
               ErrorName="petitioner_fullname"
-              smallLabel="(Area Code)<space>Tel.Number."
               v-model:input="petitioner_fullname"
             />
           </div>

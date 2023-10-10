@@ -5,6 +5,7 @@ export const useOTIndividualDetails = defineStore('ot-individual-details', {
   state: () => ({
     user_id: null,
     embassyOfVisa: null,
+    south_korea_category: null,
     visaCategoryField: null,
     passportNumber: null,
     issuedCountry: null,
@@ -33,6 +34,7 @@ export const useOTIndividualDetails = defineStore('ot-individual-details', {
         
         this.$state.user_id = jsonPARSE.json_user_id
         this.$state.embassyOfVisa = jsonPARSE.json_embassyOfVisa
+        this.$state.south_korea_category = jsonPARSE.json_sk_category
         this.$state.visaCategoryField = jsonPARSE.json_visaCategoryField
         this.$state.passportNumber = jsonPARSE.json_passportNumber
         this.$state.issuedCountry = jsonPARSE.json_issuedCountry
@@ -58,6 +60,7 @@ export const useOTIndividualDetails = defineStore('ot-individual-details', {
     clearOTIndividualDetails() {
         this.$state.user_id = null
         this.$state.embassyOfVisa = null
+        this.$state.south_korea_category = null
         this.$state.visaCategoryField = null
         this.$state.passportNumber = null
         this.$state.issuedCountry = null

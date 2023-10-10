@@ -32,6 +32,13 @@
                 ["BGC", "Bonifacio Global City(BGC)"],
             ]);
 
+    const countryCode = new Map([
+        ["kr", "South Korea"],
+        ["fk", "Falkland Islands"],
+        ["lv", "Latvia"],
+        ["mu", "Mauritius"],
+    ]);
+
     const route = useRoute();
     const regCountry = route.params.country;
     
@@ -68,7 +75,8 @@
     let sched_branch = clinic_code.get(schedule.branch)
     let is_form_submitted = false;
 
-    let embassyOfVisa = details.embassyOfVisa
+    let embassyOfVisa = countryCode.get(details.embassyOfVisa)
+    let south_korea_category = details.south_korea_category
     let visaCategoryField = details.visaCategoryField
     let passportNumber = details.passportNumber
     let country_issue = details.issuedCountry
@@ -114,6 +122,7 @@
                 json_sched_time: sched_time,
                 json_sched_branch: branch,
                 json_embassyOfVisa: embassyOfVisa,
+                json_sk_category: south_korea_category,
                 json_visaCategoryField: visaCategoryField,
                 json_passportNumber: passportNumber,
                 json_issuedCountry: country_issue,
@@ -287,6 +296,13 @@
                         <PreviewText 
                             previewLabel="Embassy of Visa Application"
                             v-bind:previewText="embassyOfVisa"
+                        />
+                    </div>
+                    <div class="col-12"><hr /></div>
+                    <div class="col-12">
+                        <PreviewText 
+                            previewLabel="South Korea Category"
+                            v-bind:previewText="south_korea_category"
                         />
                     </div>
                     <div class="col-12"><hr /></div>

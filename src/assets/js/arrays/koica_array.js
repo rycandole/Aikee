@@ -1,8 +1,6 @@
 const koica = [
-    "Falkland Islands",
-    "South Korea / KOICA",
-    "Latvia",
-    "Mauritius"
+    "KOICA",
+    "South Korea TB Screening"
 ]
 
 
