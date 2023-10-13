@@ -52,7 +52,7 @@ const registrationTimer = () => {
             country: useCAIndividualSched().country,
             date: useCAIndividualSched().date,
             time: useCAIndividualSched().time,
-            timer: moment(new Date().getTime()).add(10, "seconds"),
+            timer: moment(new Date().getTime()).add(5, "minutes"),
           };
 
           let res = JSON.stringify(requestPAYLOAD);

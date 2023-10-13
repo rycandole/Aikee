@@ -7,7 +7,7 @@ import {useRoute} from "vue-router"
 import { use_TRIPLETS_MNL_Holidates } from '@/store/triplets-holidates-mnl'
 import { use_TRIPLETS_BGC_Holidates } from '@/store/triplets-holidates-bgc'
 import { useOTIndividualSched } from "@/store/ot-individual-sched";
-import { Form } from "vee-validate";
+import { Form, Field } from "vee-validate";
 import { ErrorMessage } from "vee-validate";
 import SubmitFormButton from "@/components/global/SubmitFormButton.vue";
 import FormHeader from "@/components/global/FormHeader.vue";
@@ -20,6 +20,7 @@ import Swal from "@/sweetalert2";
 import moment from "moment";
 import * as yup from "yup";
 import { ucwords } from '@/assets/js/string_functions'
+import koica from '@/assets/js/arrays/koica_array'
 
 const router = useRouter();
 const OTIndividualSched = useOTIndividualSched();
@@ -63,12 +64,17 @@ let timeSched = ref(null);
 let timeSlots = ref([]);
 let countryValue = ref(null);
 let branchValue = ref(null);
+let south_korea_category = ref(null);
 let hasBranch = true;
 let branch = ""
 let textSuccess = "text-success";
 let selectIsActive = true
+let clinic_branch = ref(null)
+
 
 const clinics = ["Ermita, Manila", "Bonifacio Global City"];
+const mnl_clinic = ["Ermita, Manila"];
+const bgc_clinic = ["Bonifacio Global City"];
 const clinic_code = new Map([
                       ["", null],
                       ["Ermita, Manila", "MNL"],
@@ -158,6 +164,18 @@ watch(() => clinic_location.value, (newValue) => {
         }
     }
     // ========== End of Inline Date =============== //
+const handle_sk_category = async () => {
+  clinic_location.value = ""
+  dateInput.value = ""
+  timeInput.value = ""
+  if (regCountry === 'kr') {
+    if (south_korea_category.value == "KOICA") {
+        clinic_branch.value = "mnl"
+    } else {
+        clinic_branch.value = "bgc"
+    }
+  }
+}
 
 const handleSlots = async () => {
   const prefDate = moment(dateInput.value).format("YYYY-MM-DD");
@@ -221,6 +239,12 @@ const handleBack = () => {
 };
 
 const schema = yup.object().shape({
+  is_korea: yup.string(),
+  south_korea_category: yup.string().when("is_korea", {
+      is: "true",
+      then: (schema) => schema.required('South Korea Category is required!'),
+      otherwise: (schema) => schema.nullable(),
+  }),
   clinic_location: yup.string().required("Please select preferred clinic"),
   timeInput: yup.string().required("Please select preferred time"),
 });
@@ -253,7 +277,44 @@ const schema = yup.object().shape({
       <div class="card-body">
         <div class="mb-4">
           <div class="row">
-            <div :hidden="selectIsActive" class="col-lg-10 col-md-12 col-sm-12 mb-5">
+            <Field
+                type="hidden"
+                name="is_korea"
+                :value="regCountry == 'kr' ? true : false"
+                width="100px"
+            />
+            <div :hidden="regCountry == 'kr' ? false : true" class="col-lg-10 col-md-12 col-sm-12 mb-5">
+              <RequiredSelectField
+                  label="South Korea Category"
+                  FieldName="south_korea_category"
+                  ErrorName="south_korea_category"
+                  v-model:input="south_korea_category"
+                  :items="koica"
+                  :onChange="handle_sk_category"
+                  className="w-75"
+              />
+            </div>
+            <div v-if="clinic_branch == 'mnl'" :hidden="selectIsActive" class="col-lg-10 col-md-12 col-sm-12 mb-5">
+              <RequiredSelectField
+                label="Please select your preferred St. Luke's Extension Clinic location"
+                FieldName="clinic_location"
+                ErrorName="clinic_location"
+                className="w-75"
+                v-model:input="clinic_location"
+                :items="mnl_clinic"
+              />
+            </div>
+            <div v-else-if="clinic_branch == 'bgc'" :hidden="selectIsActive" class="col-lg-10 col-md-12 col-sm-12 mb-5">
+              <RequiredSelectField
+                label="Please select your preferred St. Luke's Extension Clinic location"
+                FieldName="clinic_location"
+                ErrorName="clinic_location"
+                className="w-75"
+                v-model:input="clinic_location"
+                :items="bgc_clinic"
+              />
+              </div>
+              <div v-else :hidden="selectIsActive" class="col-lg-10 col-md-12 col-sm-12 mb-5">
               <RequiredSelectField
                 label="Please select your preferred St. Luke's Extension Clinic location"
                 FieldName="clinic_location"
