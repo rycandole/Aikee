@@ -181,8 +181,6 @@
 
     }
 
-
-
     const handleEdit = () => {
         is_form_submitted = true;
         Swal.fire({
