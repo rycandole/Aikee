@@ -15,7 +15,7 @@
     onMounted(async () => {
         await profileStore.fetchProfileById(route.params.id)
     })
-
+    // for testing
 </script>
 
 <template>
