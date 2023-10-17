@@ -5,6 +5,10 @@
 npm install
 ```
 
+```
+npm yarn
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm serve
